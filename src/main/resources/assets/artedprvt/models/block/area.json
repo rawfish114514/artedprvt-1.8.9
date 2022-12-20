@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "artedprvt:blocks/area_base",
+    "down": "artedprvt:blocks/area_negG",
+    "up": "artedprvt:blocks/area_posG",
+    "north": "artedprvt:blocks/area_negB",
+    "east": "artedprvt:blocks/area_posR",
+    "south": "artedprvt:blocks/area_posB",
+    "west": "artedprvt:blocks/area_negR"
+  }
+}

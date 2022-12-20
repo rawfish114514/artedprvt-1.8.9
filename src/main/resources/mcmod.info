@@ -1,0 +1,14 @@
+[{
+  "modid": "artedprvt",
+  "name": "ArtedPrvt Frame",
+  "description": "§4AP Frame.",
+  "version": "1.0.0",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Rawfishc"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}]

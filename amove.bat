@@ -1,0 +1,1 @@
+copy build\libs\artedprvt-1.0.jar "E:\Release 2.3.0\.minecraft\versions\1.8.9-Forge_11.15.1.2318-LiteLoader-OptiFine_M5\mods"

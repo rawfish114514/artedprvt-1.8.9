@@ -1,0 +1,17 @@
+//item
+item.goldenEgg.name=Golden Egg
+
+
+
+//itemGroup
+itemGroup.artedprvt=Artedprvt
+
+
+
+//book
+book.page.0=Artedprvt Frame
+
+
+
+//file
+fileType.text=Text
