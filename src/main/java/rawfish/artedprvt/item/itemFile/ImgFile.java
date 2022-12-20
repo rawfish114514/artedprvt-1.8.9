@@ -43,7 +43,7 @@ public class ImgFile {
                         succeed[0] =false;
                     }
                 });
-                //创建gui操作图片啊
+                //创建gui操作图片
                 BlockPos pos = playerIn.getPosition();
                 int id = GuiElementLoader.GUI_IMAGE;
                 GuiElementLoader.data=data;
