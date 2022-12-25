@@ -24,30 +24,6 @@ public class EventLoader
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    @SubscribeEvent
-    public void onPlayerItemPickup(PlayerEvent.ItemPickupEvent event) throws IOException {
-        if (event.player.isServerWorld())
-        {
-            String info = String.format("%s picks up: %s", event.player.getName(), event.pickedUp.getEntityItem());
-            ConfigLoader.logger().info(info);
-
-
-
-            InputStreamReader isr=new InputStreamReader(new FileInputStream("C:\\Users\\Administrator\\Desktop\\text.txt"),"UTF-8");
-            StringBuilder s= new StringBuilder();
-            for (;;) {
-                int n = isr.read();
-                if (n == -1) {
-                    break;
-                }
-                s.append((char) n);
-            }
-            isr.close();
-            event.player.addChatComponentMessage(new ChatComponentText("info: "+s));
-
-        }
-
-    }
 
     public static int chat=1;
     @SubscribeEvent

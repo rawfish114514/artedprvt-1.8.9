@@ -10,7 +10,7 @@ var sby=function(x,y,z){
 	sb(-x,y,-z);
 	sb(-z,y,-x);
 	sb(-z,y,x);
-	sb(-x,y,z)
+	sb(-x,y,z);
 };
 var l=25;
 var x=0;
