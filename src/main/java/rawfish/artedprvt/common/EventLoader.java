@@ -10,7 +10,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import rawfish.artedprvt.item.itemFile.PlayerFileSpace;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -51,8 +50,8 @@ public class EventLoader
     }
 
     public void onPlayerJoinWorld(EntityPlayer entity){
-        //创建玩家文件空间
-        PlayerFileSpace.set(new PlayerFileSpace(entity));
+        //玩家列表
+        PlayerList.pl.put(entity.getName(),entity);
     }
 
 }
