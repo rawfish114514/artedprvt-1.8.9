@@ -7,6 +7,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
 import rawfish.artedprvt.common.EventLoader;
 
+/**
+ * artedprvt调试用命令
+ */
 public class CommandDebug extends CommandBase {
     @Override
     public String getCommandName()
@@ -36,6 +39,6 @@ public class CommandDebug extends CommandBase {
     @Override
     public int getRequiredPermissionLevel()
     {
-        return 4;
+        return 1;
     }
 }

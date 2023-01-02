@@ -1,42 +1,8 @@
-//item
-
-
-
-//itemGroup
-itemGroup.artedprvt=Artedprvt
-
 //commands
 commands.debug.usage=更改调试信息是否显示
 commands.file.usage=读取文件
-
-//book
-book.page.0=Artedprvt Frame(AP框架)\n方便操作世界的数据
-
+commands.script.usage=运行脚本
+commands.stop.usage=终止脚本
 
 
-//item.file
-fileType.text=文本
-fileType.cmd=命令
-fileType.img=图像
-fileType.world=地图
-fileType.js=脚本
-fileType.py=脚本
-fileType.pack=包
-fileType.json=数据
-fileType.rs=红石
-fileType.mic=音乐
-fileType.mov=动画
-
-
-fileDescribe.text=文本文件 主要给玩家看
-fileDescribe.cmd=命令集文件 按顺序发送多个命令
-fileDescribe.img=图像文件 主要给玩家看
-fileDescribe.world=地图数据文件
-fileDescribe.js=脚本文件 使用js引擎
-fileDescribe.py=脚本文件 使用python引擎
-fileDescribe.pack=包文件 包含多个文件
-fileDescribe.json=数据交换文件 使用json规则
-fileDescribe.rs=红石电路文件 模拟红石系统的程序文件
-fileDescribe.mic=乐谱文件
-fileDescribe.mov=动画工程文件
 

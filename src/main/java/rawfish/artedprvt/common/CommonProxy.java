@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import rawfish.artedprvt.command.CommandLoader;
+import rawfish.artedprvt.script.ScriptProcess;
 
 import java.util.Map;
 
