@@ -5,7 +5,7 @@ package rawfish.artedprvt.script;
  * 受主线程管理
  */
 public class ScriptThread extends Thread{
-    protected int n=0;
+    protected static int n=0;
     protected ScriptProcess pro;
     public ScriptThread(ScriptProcess proIn,Runnable target){
         super(target);

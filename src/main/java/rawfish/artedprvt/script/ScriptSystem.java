@@ -2,8 +2,11 @@ package rawfish.artedprvt.script;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
+import rawfish.artedprvt.id.FormatCode;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,12 +22,29 @@ public class ScriptSystem {
     }
 
     //获取参数
-    public List getArgs(){
+    public List getArgs(String pack){
         return Arrays.asList(pro.args);
     }
     //输出消息
-    public void print(Object object){
-        sender.addChatMessage(new ChatComponentText(String.valueOf(object)));
+    public void print(String pack,Object object){
+        if(ScriptConst.chat) {
+            sender.addChatMessage(new ChatComponentText(String.valueOf(object)));
+        }
+    }
+
+    protected SimpleDateFormat datef = new SimpleDateFormat("HH:mm:ss");
+    //输出记录
+    public void log(String pack,Object object){
+        if(ScriptConst.debug) {
+            Date date=new Date();
+            String head;
+            if(pro.pack.equals(pack)) {
+                head = String.format("[%s] [%s] ", datef.format(date), Thread.currentThread().getName());
+            }else{
+                head = String.format("[%s] [%s] [%s] ", datef.format(date), Thread.currentThread().getName(),pack);
+            }
+            sender.addChatMessage(new ChatComponentText(FormatCode.COLOR_7+head+FormatCode.FONT_r+String.valueOf(object)));
+        }
     }
 
     //导入模块
@@ -45,7 +65,12 @@ public class ScriptSystem {
     }
 
     //创建线程
-    public Thread createThread(Runnable target){
+    public Thread createThread(String pack,Runnable target){
         return new ScriptThread(pro,target);
+    }
+
+    //测试接口
+    public Object runFunction(String pack,Function function,Object[] args){
+        return function.invoke(args);
     }
 }

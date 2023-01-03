@@ -13,7 +13,9 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         if(!String.valueOf(e.getMessage()).equals("null")){
-            sender.addChatMessage(new ChatComponentText("\u00a74" + pack + ": " + String.valueOf(e.getMessage())));
+            if(ScriptConst.debug) {
+                sender.addChatMessage(new ChatComponentText("\u00a74" + pack + ": " + String.valueOf(e.getMessage())));
+            }
         }
     }
 }

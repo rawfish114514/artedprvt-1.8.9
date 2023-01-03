@@ -7,6 +7,7 @@ public class CommandLoader
 {
     public CommandLoader(FMLServerStartingEvent event)
     {
+        event.registerServerCommand(new CommandChat());
         event.registerServerCommand(new CommandDebug());
         event.registerServerCommand(new CommandScript());
         event.registerServerCommand(new CommandStop());

@@ -1,4 +1,5 @@
 //commands
+commands.chat.usage=更改聊天信息是否显示
 commands.debug.usage=更改调试信息是否显示
 commands.file.usage=读取文件
 commands.script.usage=运行脚本

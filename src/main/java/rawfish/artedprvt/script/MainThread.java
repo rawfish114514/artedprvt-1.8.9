@@ -13,7 +13,7 @@ public class MainThread extends Thread{
     public MainThread(ScriptProcess proIn){
         super();
         pro=proIn;
-        setName(String.format("(%s)Main",pro.pack));
+        setName(String.format("%s-Main",pro.pack));
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro.sender,pro.pack));
     }

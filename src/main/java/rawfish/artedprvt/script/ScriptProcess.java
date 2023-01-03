@@ -91,7 +91,7 @@ public class ScriptProcess {
     public void begin(){
         time=new Date().getTime();
         ret=0;
-        sys.print("\u00a77run:\u00a7a " + pack);
+        sys.print(pack,"\u00a77run:\u00a7a " + pack);
     }
     //终止进程
     public void stop(){
@@ -102,9 +102,9 @@ public class ScriptProcess {
     public void end(){
         time=new Date().getTime()-time;
         if(ret==0) {
-            sys.print("\u00a77end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
+            sys.print(pack,"\u00a77end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
         }else{
-            sys.print("\u00a74end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
+            sys.print(pack,"\u00a74end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
         }
         proList.remove(this);
     }
