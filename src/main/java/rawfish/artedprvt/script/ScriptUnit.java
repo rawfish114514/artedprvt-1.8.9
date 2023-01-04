@@ -37,24 +37,13 @@ public class ScriptUnit{
      */
     public void run(String invokerIn){
         invoker=invokerIn;
-        scope.put("_114514",scope,sys);
-        scope.put("_1919810",scope,pack);
-        scope.put("_18140",scope,invoker);
-        rhino.evaluateString(scope,initScript(),pack,1,null);
+        scope.put(InitScript.varSys,scope,sys);
+        scope.put(InitScript.varPack,scope,pack);
+        scope.put(InitScript.varInvoker,scope,invoker);
+        rhino.evaluateString(scope,InitScript.script,pack,1,null);
         rhino.evaluateString(scope,script,pack,1,null);
     }
 
     protected Object export=null;
 
-    protected String initScript(){
-        return  "var invoker=function(){return _18140;};" +
-                "var pack=function(){return _1919810;};" +
-                "var args=function(){return _114514.getArgs(_1919810);};" +
-                "var print=function(object){_114514.print(_1919810,object);};" +
-                "var log=function(object){_114514.log(_1919810,object);};" +
-                "var import=function(pack){return _114514.importModule(_1919810,pack);};" +
-                "var export=function(object){_114514.exportModule(_1919810,object);};" +
-                "var thread=function(runnable){return _114514.createThread(_1919810,runnable);};" +
-                "var runf=function(func,args){return _114514.runFunction(_1919810,func,args);};";
-    }
 }

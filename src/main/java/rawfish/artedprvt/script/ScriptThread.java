@@ -13,6 +13,6 @@ public class ScriptThread extends Thread{
         setName(String.format("%s_%s",Thread.currentThread().getName(),n++));
         pro.tl.add(this);
 
-        setUncaughtExceptionHandler(new ScriptExceptionHandler(pro.sender,pro.pack));
+        setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
     }
 }

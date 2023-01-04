@@ -22,9 +22,10 @@ public class CommandScript extends CommandBase {
         if(args.length<1){
             throw new WrongUsageException("commands.script.usage");
         }
+        String pack=args[0];
         String[] sargs=new String[args.length-1];
         System.arraycopy(args, 1, sargs, 0, sargs.length);
-        ScriptProcess script=new ScriptProcess(sender,args[0],sargs);
+        ScriptProcess script=new ScriptProcess(sender,pack,sargs);
 
         script.start();
     }

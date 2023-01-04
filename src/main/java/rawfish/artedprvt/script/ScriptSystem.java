@@ -39,9 +39,9 @@ public class ScriptSystem {
             Date date=new Date();
             String head;
             if(pro.pack.equals(pack)) {
-                head = String.format("[%s] [%s] ", datef.format(date), Thread.currentThread().getName());
+                head = String.format("[%s] [%s] [%s] ", datef.format(date),pro.pack,Thread.currentThread().getName());
             }else{
-                head = String.format("[%s] [%s] [%s] ", datef.format(date), Thread.currentThread().getName(),pack);
+                head = String.format("[%s] [%s] [%s] [%s] ", datef.format(date),pro.pack,Thread.currentThread().getName(),pack);
             }
             sender.addChatMessage(new ChatComponentText(FormatCode.COLOR_7+head+FormatCode.FONT_r+String.valueOf(object)));
         }

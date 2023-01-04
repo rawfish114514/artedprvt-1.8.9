@@ -13,9 +13,9 @@ public class MainThread extends Thread{
     public MainThread(ScriptProcess proIn){
         super();
         pro=proIn;
-        setName(String.format("%s-Main",pro.pack));
+        setName("Main");
 
-        setUncaughtExceptionHandler(new ScriptExceptionHandler(pro.sender,pro.pack));
+        setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MainThread extends Thread{
         for(int i=0;i<pro.tl.size();i++) {
             pro.tl.get(i).stop();
         }
-        stop();
         pro.end();
+        stop();
     }
 }

@@ -1,0 +1,9 @@
+function invoker();//获取第一次加载此脚本的模块
+function pack();//获取此脚本的模块名
+function args();//获取运行参数
+function print(object);//发送聊天消息
+function log(object);//发送调试信息
+function import(pack);//导入模块
+function export(object);//导出模块
+function thread(runnable);//创建脚本等待线程
+function runf(func,args);//以java单方法接口实例运行函数

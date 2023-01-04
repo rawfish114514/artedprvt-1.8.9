@@ -25,28 +25,36 @@ public class ScriptProcess {
     protected long time;
     protected int ret;
     public ScriptProcess(ICommandSender senderIn,String packIn, String[] argsIn){
+        ret=0;//进程创建 无效退出
         sender=senderIn;
         pack=packIn;
         args=argsIn;
-        dir=System.getProperties().get("user.dir").toString()+"/artedprvt/";
+        dir=System.getProperties().get("user.dir").toString()+"/artedprvt/script/";
 
         proList.add(this);
     }
 
     /**
      * 读取工作目录下的文件
-     * @param pack 模块名
+     * @param packIn 模块名
      * @return
      */
-    protected String readString(String pack){
-        if(pack.indexOf("/")!=-1){
+    protected String readString(String packIn){
+        if(packIn.indexOf("/")!=-1){
             try {
-                throw new FileNotFoundException("pack: "+pack+" (用'.'分隔符而不是'/')");
+                throw new FileNotFoundException("pack: "+packIn+" (用'.'分隔符而不是'/')");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
         }
-        String path=pack.replace('.','/')+".js";
+        if(!withPackRule(packIn)){
+            try {
+                throw new FileNotFoundException("pack: "+packIn+" (开头为英文字母后接英文字母数字下划线)");
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        String path=packIn.replace('.','/')+".js";
         File file=new File(dir+path);
         Reader reader;
         StringBuilder sb;
@@ -68,6 +76,16 @@ public class ScriptProcess {
         return sb.toString();
     }
 
+    protected boolean withPackRule(String path){
+        String[] layers=path.split("\\.");
+        for(String s:layers){
+            if(!s.matches("^[a-zA-Z][a-zA-Z0-9_]*$")){
+                return false;
+            }
+        }
+        return true;
+    }
+
     /**
      * 加载模块
      * @param packIn 包名
@@ -82,30 +100,39 @@ public class ScriptProcess {
 
     //准备工作并运行
     public void start(){
+        ret=1;//进程启动 无效退出
+        time=0;
         tl=new ArrayList<>();
+        ScriptThread.n=0;
         thread=new MainThread(this);
 
         thread.start();
     }
     //准备工作完成
     public void begin(){
+        ret=2;//进程准备 正常退出
         time=new Date().getTime();
-        ret=0;
         sys.print(pack,"\u00a77run:\u00a7a " + pack);
     }
     //终止进程
     public void stop(){
-        ret=-1;
+        if(ret==1) {
+            ret=-1;//进程终止 无效退出
+        }
+        if(ret==2){
+            ret=-2;//进程终止 非正常退出
+        }
         thread.jstop();
     }
     //运行结束
     public void end(){
         time=new Date().getTime()-time;
-        if(ret==0) {
+        if(ret==2) {
             sys.print(pack,"\u00a77end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
-        }else{
+        }else if(ret==-2){
             sys.print(pack,"\u00a74end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
         }
         proList.remove(this);
+        ret=-2;//进程结束
     }
 }
