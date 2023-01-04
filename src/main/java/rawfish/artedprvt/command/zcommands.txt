@@ -1,7 +1,7 @@
 #Client
-chat //是否接受来自脚本的信息 默认true
-debug //是否接受调试信息 默认false
+ac //是否接受来自脚本的信息 默认true
+ad //是否接受调试信息 默认false
 
 #Common
-script <path> [args]... //运行脚本
-stop //终止所有脚本
+script <pack> [args ...] //运行脚本
+stops //终止所有脚本

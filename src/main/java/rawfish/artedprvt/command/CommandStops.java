@@ -6,22 +6,22 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import rawfish.artedprvt.script.ScriptProcess;
 
-public class CommandStop extends CommandBase {
+public class CommandStops extends CommandBase {
     @Override
     public String getCommandName() {
-        return "stop";
+        return "stops";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "commands.stop.usage";
+        return "commands.stops.usage";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         ScriptProcess[] pros=new ScriptProcess[ScriptProcess.proList.size()];
         if(pros.length==0){
-            throw new WrongUsageException("commands.stop.usage");
+            throw new WrongUsageException("commands.stops.usage");
         }
         ScriptProcess.proList.toArray(pros);
         for(ScriptProcess pro:pros){

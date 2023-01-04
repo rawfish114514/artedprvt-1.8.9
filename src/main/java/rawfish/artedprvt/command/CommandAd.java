@@ -5,30 +5,29 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
-import rawfish.artedprvt.common.EventLoader;
 import rawfish.artedprvt.script.ScriptConst;
 
-public class CommandChat extends CommandBase {
+public class CommandAd extends CommandBase {
     @Override
     public String getCommandName()
     {
-        return "chat";
+        return "ad";
     }
 
     @Override
     public String getCommandUsage(ICommandSender sender)
     {
-        return "commands.chat.usage";
+        return "commands.ad.usage";
     }
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if (args.length > 0) {
-            throw new WrongUsageException("commands.chat.usage");
+            throw new WrongUsageException("commands.ad.usage");
         }
-        ScriptConst.chat=!ScriptConst.chat;
-        sender.addChatMessage(new ChatComponentText("Chat模式: "+ScriptConst.chat));
+        ScriptConst.debug=!ScriptConst.debug;
+        sender.addChatMessage(new ChatComponentText("Debug模式: "+ScriptConst.debug));
     }
     @Override
     public int getRequiredPermissionLevel()
