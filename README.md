@@ -3,7 +3,7 @@
 
 **#运行javascript脚本**
 
-.minecraft/artedprvt/main.js
+.minecraft/artedprvt/script/main.js
 
 `print("Hello Minecraft");`
 
