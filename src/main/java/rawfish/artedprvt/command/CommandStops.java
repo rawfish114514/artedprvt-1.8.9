@@ -25,7 +25,7 @@ public class CommandStops extends CommandBase {
         }
         ScriptProcess.proList.toArray(pros);
         for(ScriptProcess pro:pros){
-            pro.stop();
+            pro.stop(null);
         }
     }
 

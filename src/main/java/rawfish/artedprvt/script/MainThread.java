@@ -51,11 +51,27 @@ public class MainThread extends Thread{
     /**
      * 中断所有等待线程和主线程
      */
-    public void jstop(){
-        for(int i=0;i<pro.tl.size();i++) {
-            pro.tl.get(i).stop();
+    public void jstop(ScriptThread st){
+        //st是终止源线程 要最后一个终止
+        if(st==null) {
+            //主线程
+            for (int i = 0; i < pro.tl.size(); i++) {
+                pro.tl.get(i).stop();
+            }
+            pro.end();
+            stop();
+        }else{
+            //等待线程
+            ScriptThread t;
+            for (int i = 0; i < pro.tl.size(); i++) {
+                t=pro.tl.get(i);
+                if(!t.equals(st)){
+                    t.stop();
+                }
+            }
+            pro.end();
+            stop();
+            st.stop();
         }
-        pro.end();
-        stop();
     }
 }

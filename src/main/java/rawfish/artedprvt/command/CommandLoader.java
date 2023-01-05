@@ -10,5 +10,7 @@ public class CommandLoader
         event.registerServerCommand(new CommandAd());
         event.registerServerCommand(new CommandScript());
         event.registerServerCommand(new CommandStops());
+        event.registerServerCommand(new CommandApf());
+        event.registerServerCommand(new CommandApf.CommandArtedprvt());
     }
 }

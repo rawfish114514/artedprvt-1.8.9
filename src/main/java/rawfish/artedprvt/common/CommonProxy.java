@@ -35,5 +35,6 @@ public class CommonProxy
         System.out.println(commands);
 
         new CommandLoader(event);
+        ScriptProcess.initSargs();
     }
 }

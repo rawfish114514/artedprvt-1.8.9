@@ -1,8 +1,9 @@
 //commands
 commands.ac.usage=/ac
 commands.ad.usage=/ad
-commands.script.usage=/script <pack> [args ...]
+commands.script.usage=/script [sargs ...] <pack> [args ...]
 commands.stops.usage=/stops
+commands.apf.usage=/artedprvt|apf <args ...>
 
 
 

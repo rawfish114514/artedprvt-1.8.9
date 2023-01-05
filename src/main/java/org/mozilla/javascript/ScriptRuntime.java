@@ -4559,7 +4559,7 @@ public class ScriptRuntime {
             MessageFormat formatter = new MessageFormat(formatString);
 
             for(int i=0;i<arguments.length;i++){
-                arguments[i]="\u00a77"+String.valueOf(arguments[i])+"\u00a7r\u00a74";
+                arguments[i]="\u00a74"+String.valueOf(arguments[i])+"\u00a7r\u00a74";
             }
             return formatter.format(arguments);
         }

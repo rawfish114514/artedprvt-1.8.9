@@ -1,7 +1,7 @@
 [{
   "modid": "artedprvt",
   "name": "ArtedPrvt Frame",
-  "description": "§4AP Frame.",
+  "description": "AP Frame.",
   "version": "1.0.0",
   "mcversion": "${mcversion}",
   "url": "",
