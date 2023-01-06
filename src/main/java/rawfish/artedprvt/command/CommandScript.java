@@ -26,7 +26,7 @@ public class CommandScript extends CommandBase {
 
         int packindex=calpack(argsIn);
         if(packindex==-1){
-            //没有合法包名
+            //没有包名
             throw new CommandException("找不到包名 请检查参数");
         }
 

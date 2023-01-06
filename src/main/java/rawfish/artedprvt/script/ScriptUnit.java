@@ -1,7 +1,11 @@
 package rawfish.artedprvt.script;
 
+import net.minecraft.init.Blocks;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.ScriptableObject;
+
+
 
 /**
  * 脚本单位
@@ -37,11 +41,15 @@ public class ScriptUnit{
      */
     public void run(String invokerIn){
         invoker=invokerIn;
+
+        scope.put("Blocks",scope,new NativeJavaClass(scope,Blocks.class));
+
         scope.put(InitScript.varSys,scope,sys);
         scope.put(InitScript.varPack,scope,pack);
         scope.put(InitScript.varInvoker,scope,invoker);
         rhino.evaluateString(scope,InitScript.script,pack,1,null);
         rhino.evaluateString(scope,script,pack,1,null);
+
     }
 
     protected Object export=null;

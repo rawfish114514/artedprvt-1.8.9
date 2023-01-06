@@ -1,7 +1,12 @@
 package rawfish.artedprvt.script;
 
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.HoverEvent;
+import net.minecraft.util.ChatComponentSelector;
+import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import rawfish.artedprvt.id.FormatCode;
 
 import java.text.SimpleDateFormat;
@@ -34,7 +39,7 @@ public class ScriptSystem {
 
     protected SimpleDateFormat datef = new SimpleDateFormat("HH:mm:ss");
     //输出记录
-    public void log(String pack,Object object){
+    public void log(String pack,Object object,Object hover){
         if(ScriptConst.debug) {
             Date date=new Date();
             String head;
@@ -43,8 +48,18 @@ public class ScriptSystem {
             }else{
                 head = String.format("[%s] [%s] [%s] [%s] ", datef.format(date),pro.pack,Thread.currentThread().getName(),pack);
             }
-            sender.addChatMessage(new ChatComponentText(FormatCode.COLOR_7+head+FormatCode.FONT_r+String.valueOf(object)));
+            ChatComponentText chat=new ChatComponentText(FormatCode.COLOR_7+head+FormatCode.FONT_r+String.valueOf(object));
+            String hs=String.valueOf(hover);
+            if(!(hs.equals("null")||hs.equals("undefined"))){
+                chat.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(String.valueOf(hover)))));
+            }
+
+            sender.addChatMessage(chat);
+
         }
+    }
+    public void log(String pack,Object object){
+        log(pack,object,null);
     }
 
     //导入模块
