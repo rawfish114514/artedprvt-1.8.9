@@ -23,19 +23,24 @@ public class ScriptProcess {
         sargList.add("-st");//单线程模式
         sargList.add("-pm");//线程最大优先级
     }
-    protected String dir;
-    protected ICommandSender sender;
-    protected String[] sargs;
-    protected String pack;
-    protected String[] args;
-    protected Context rhino;
-    protected ScriptSystem sys;
-    protected Map<String,ScriptUnit> env;
-    protected MainThread thread;
-    protected List<ScriptThread> tl;
 
-    protected long time;
-    protected int ret;
+    protected static int spid=0;//进程起始id
+    protected int pid;//进程id
+
+
+    protected String dir;//脚本目录
+    protected ICommandSender sender;//用户
+    protected String[] sargs;//命令参数
+    protected String pack;//主包名 进程名
+    protected String[] args;//脚本参数
+    protected Context rhino;//脚本上下文
+    protected ScriptSystem sys;//脚本系统
+    protected Map<String,ScriptUnit> env;//包加载集合
+    protected MainThread thread;//主线程
+    protected List<ScriptThread> tl;//等待线程列表
+
+    protected long time;//开始时间
+    protected int ret;//状态
     public ScriptProcess(ICommandSender senderIn,String[] sargsIn,String packIn, String[] argsIn){
         ret=0;//进程创建 无效退出
         sender=senderIn;
@@ -44,8 +49,36 @@ public class ScriptProcess {
         args=argsIn;
         dir=System.getProperties().get("user.dir").toString()+"/artedprvt/script/";
 
+        if(proList.size()==0){
+            spid=0;
+        }
+        pid=spid++;
         proList.add(this);
         systemArgs(sargs);
+    }
+
+    public String getName(){
+        return pack;
+    }
+
+    public int getId(){
+        return pid;
+    }
+
+    public int getRet(){
+        return ret;
+    }
+
+    public long getTime(){
+        return time;
+    }
+
+    public String[] getSargs(){
+        return sargs;
+    }
+
+    public String[] getArgs(){
+        return args;
     }
 
     protected void systemArgs(String[] sargs){
@@ -158,11 +191,11 @@ public class ScriptProcess {
             return;
         }
         onEnd=true;
-        time=new Date().getTime()-time;
+        long t=new Date().getTime()-time;
         if(ret==2) {
-            sys.print(pack,"\u00a72end:\u00a7a " + pack + "\u00a77(" + time + "ms)");
+            sys.print(pack,"\u00a72end:\u00a7a " + pack + "\u00a77(" + t + "ms)");
         }else if(ret==-2){
-            sys.print(pack,"\u00a74break:\u00a7a " + pack + "\u00a77(" + time + "ms)");
+            sys.print(pack,"\u00a74break:\u00a7a " + pack + "\u00a77(" + t + "ms)");
         }
         proList.remove(this);
         ret=7;//进程结束
