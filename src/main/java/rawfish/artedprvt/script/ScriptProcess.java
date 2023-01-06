@@ -89,6 +89,12 @@ public class ScriptProcess {
             if(sarg.equals("-m")){
                 sarg_M();
             }
+            if(sarg.equals("-st")){
+                sarg_ST();
+            }
+            if(sarg.equals("-pm")){
+                sarg_PM();
+            }
         }
     }
 
@@ -201,9 +207,9 @@ public class ScriptProcess {
         ret=7;//进程结束
     }
 
-    protected boolean eh_value=false;
 
     //线程处理模式 等待线程异常不会终结主线程
+    protected boolean eh_value=false;
     protected void sarg_EH(){
         eh_value=true;
     }
@@ -214,13 +220,15 @@ public class ScriptProcess {
     }
 
     //单线程模式 等待线程开始运行不会启动新线程
+    protected boolean st_value=false;
     protected void sarg_ST(){
-
+        st_value=true;
     }
 
     //线程最大优先级 线程默认优先级为10 稍微提高运行速度
+    protected boolean pm_value=false;
     protected void sarg_PM(){
-
+        pm_value=true;
     }
 
 }

@@ -16,6 +16,9 @@ public class MainThread extends Thread{
         setName("Main");
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
+        if(pro.pm_value){
+            setPriority(10);
+        }
     }
 
     @Override

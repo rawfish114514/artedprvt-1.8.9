@@ -11,14 +11,35 @@ public class ScriptThread extends Thread{
 
     //错误处理 不处理则发生错误直接终止进程
     protected boolean errorHandle;
+
+    protected boolean notStart;
     public ScriptThread(ScriptProcess proIn,Runnable target){
         super(target);
         pro=proIn;
         errorHandle=pro.eh_value;
+        notStart=pro.st_value;
         setName(String.format("%s_%s",Thread.currentThread().getName(),n++));
         pro.tl.add(this);
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
+        if(pro.pm_value){
+            setPriority(10);
+        }
+    }
+
+    private boolean isr=true;
+    @Override
+    public void start(){
+        if(notStart){
+            if(isr) {
+                run();
+            }else{
+                throw new IllegalThreadStateException();
+            }
+            isr=false;
+        }else{
+            super.start();
+        }
     }
 
     public boolean isErrorHandle(){
