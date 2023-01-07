@@ -27,6 +27,7 @@ public class MainThread extends Thread{
         pro.rhino.setOptimizationLevel(-1);
         pro.rhino.setLocale(Locale.ENGLISH);
         pro.sys=new ScriptSystem(pro,pro.sender);
+        pro.port=new PortClass(pro);
 
         pro.env=new HashMap<>();
         ScriptUnit main=new ScriptUnit(pro,pro.readString(pro.pack),pro.pack);

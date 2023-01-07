@@ -35,6 +35,7 @@ public class ScriptProcess {
     protected String[] args;//脚本参数
     protected Context rhino;//脚本上下文
     protected ScriptSystem sys;//脚本系统
+    protected PortClass port;//导入类
     protected Map<String,ScriptUnit> env;//包加载集合
     protected MainThread thread;//主线程
     protected List<ScriptThread> tl;//等待线程列表

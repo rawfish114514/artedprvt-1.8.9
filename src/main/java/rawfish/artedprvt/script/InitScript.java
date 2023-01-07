@@ -1,5 +1,10 @@
 package rawfish.artedprvt.script;
 
+import net.minecraft.init.Blocks;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeJavaClass;
+import org.mozilla.javascript.ScriptableObject;
+
 public class InitScript {
     public static String script=
                     "var invoker=function(){return _18140;};" +

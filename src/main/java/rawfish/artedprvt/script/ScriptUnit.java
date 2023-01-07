@@ -5,6 +5,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.ScriptableObject;
 
+import java.util.Map;
 
 
 /**
@@ -42,14 +43,22 @@ public class ScriptUnit{
     public void run(String invokerIn){
         invoker=invokerIn;
 
-        scope.put("Blocks",scope,new NativeJavaClass(scope,Blocks.class));
-
+        //添加系统相关功能
         scope.put(InitScript.varSys,scope,sys);
         scope.put(InitScript.varPack,scope,pack);
         scope.put(InitScript.varInvoker,scope,invoker);
         rhino.evaluateString(scope,InitScript.script,pack,1,null);
-        rhino.evaluateString(scope,script,pack,1,null);
 
+
+        //添加游戏相关功能
+        Map<String,NativeJavaClass> map=pro.port.classes;
+
+        for(String key:map.keySet()){
+            scope.put(key,scope,map.get(key));
+        }
+
+        //运行脚本内容
+        rhino.evaluateString(scope,script,pack,1,null);
     }
 
     protected Object export=null;
