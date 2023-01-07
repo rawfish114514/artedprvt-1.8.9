@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.ScriptableObject;
+import rawfish.artedprvt.script.mi.EventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class PortClass {
     private void add(){
         put(Items.class);
         put(Blocks.class);
+        put(EventListener.class);
     }
     private void put(Class clas){
         classes.put(clas.getSimpleName(),new NativeJavaClass(scope,clas));

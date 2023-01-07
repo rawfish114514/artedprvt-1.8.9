@@ -1,8 +1,11 @@
 package rawfish.artedprvt.script;
 
 import org.mozilla.javascript.Context;
+import rawfish.artedprvt.script.mi.LifeDepend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -10,6 +13,8 @@ import java.util.Locale;
  */
 public class MainThread extends Thread{
     protected ScriptProcess pro;
+
+    protected List<LifeDepend> lo;
     public MainThread(ScriptProcess proIn){
         super();
         pro=proIn;
@@ -19,8 +24,17 @@ public class MainThread extends Thread{
         if(pro.pm_value){
             setPriority(10);
         }
-    }
 
+        lo=new ArrayList<>();
+    }
+    public void addld(LifeDepend ld){
+        lo.add(ld);
+    }
+    public void endld(){
+        for(LifeDepend l:lo){
+            l.end();
+        }
+    }
     @Override
     public void run(){
         pro.rhino = Context.enter();
@@ -47,9 +61,8 @@ public class MainThread extends Thread{
             throw new RuntimeException(e);
         }
 
-
+        endld();
         pro.end();
-
     }
 
     /**
@@ -62,6 +75,7 @@ public class MainThread extends Thread{
             for (int i = 0; i < pro.tl.size(); i++) {
                 pro.tl.get(i).stop();
             }
+            endld();
             pro.end();
             stop();
         }else{
@@ -73,6 +87,7 @@ public class MainThread extends Thread{
                     t.stop();
                 }
             }
+            endld();
             pro.end();
             stop();
             st.stop();

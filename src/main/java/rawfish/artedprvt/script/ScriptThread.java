@@ -26,6 +26,9 @@ public class ScriptThread extends Thread{
             setPriority(10);
         }
     }
+    public MainThread getMainThread(){
+        return pro.thread;
+    }
 
     private boolean isr=true;
     @Override
