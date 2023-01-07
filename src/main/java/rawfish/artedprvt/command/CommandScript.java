@@ -7,9 +7,14 @@ import net.minecraft.command.WrongUsageException;
 import rawfish.artedprvt.script.ScriptProcess;
 
 public class CommandScript extends CommandBase {
+    public CommandScript(String nameIn){
+        name=nameIn;
+    }
+
+    public final String name;
     @Override
     public String getCommandName() {
-        return "script";
+        return name;
     }
 
     @Override

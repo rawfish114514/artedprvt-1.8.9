@@ -15,10 +15,14 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class CommandPros extends CommandBase {
+    public CommandPros(String nameIn){
+        name=nameIn;
+    }
+
+    public final String name;
     @Override
-    public String getCommandName()
-    {
-        return "pros";
+    public String getCommandName() {
+        return name;
     }
 
     @Override

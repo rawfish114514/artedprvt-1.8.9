@@ -6,12 +6,12 @@ public class CommandLoader
 {
     public CommandLoader(FMLServerStartingEvent event)
     {
-        event.registerServerCommand(new CommandAc());
-        event.registerServerCommand(new CommandAd());
-        event.registerServerCommand(new CommandScript());
-        event.registerServerCommand(new CommandStops());
-        event.registerServerCommand(new CommandApf());
-        event.registerServerCommand(new CommandApf.CommandArtedprvt());
-        event.registerServerCommand(new CommandPros());
+        event.registerServerCommand(new CommandApf("artedprvt"));
+        event.registerServerCommand(new CommandApf("apf"));
+        event.registerServerCommand(new CommandAc("ac"));
+        event.registerServerCommand(new CommandAd("ad"));
+        event.registerServerCommand(new CommandScript("script"));
+        event.registerServerCommand(new CommandStops("stops"));
+        event.registerServerCommand(new CommandPros("pros"));
     }
 }

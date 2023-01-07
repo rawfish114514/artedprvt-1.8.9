@@ -3,7 +3,7 @@ ac //是否接受来自脚本的信息 默认true
 ad //是否接受调试信息 默认false
 
 #Common
+apf //模组命令查询
 script //运行脚本
 stops //终止所有脚本
-apf //模组命令查询
 pros //查看进程

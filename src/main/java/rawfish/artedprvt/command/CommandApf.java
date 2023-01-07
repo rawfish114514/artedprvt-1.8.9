@@ -8,10 +8,14 @@ import net.minecraft.util.ChatComponentText;
 import rawfish.artedprvt.script.ScriptConst;
 
 public class CommandApf extends CommandBase {
+    public CommandApf(String nameIn){
+        name=nameIn;
+    }
+
+    public final String name;
     @Override
-    public String getCommandName()
-    {
-        return "apf";
+    public String getCommandName() {
+        return name;
     }
 
     @Override
@@ -29,13 +33,5 @@ public class CommandApf extends CommandBase {
     public int getRequiredPermissionLevel()
     {
         return 1;
-    }
-
-    public static class CommandArtedprvt extends CommandApf{
-        @Override
-        public String getCommandName()
-        {
-            return "artedprvt";
-        }
     }
 }

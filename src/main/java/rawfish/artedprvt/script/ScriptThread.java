@@ -32,11 +32,11 @@ public class ScriptThread extends Thread{
     public void start(){
         if(notStart){
             if(isr) {
+                isr=false;
                 run();
             }else{
                 throw new IllegalThreadStateException();
             }
-            isr=false;
         }else{
             super.start();
         }

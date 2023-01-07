@@ -8,10 +8,14 @@ import net.minecraft.util.ChatComponentText;
 import rawfish.artedprvt.script.ScriptConst;
 
 public class CommandAd extends CommandBase {
+    public CommandAd(String nameIn){
+        name=nameIn;
+    }
+
+    public final String name;
     @Override
-    public String getCommandName()
-    {
-        return "ad";
+    public String getCommandName() {
+        return name;
     }
 
     @Override
