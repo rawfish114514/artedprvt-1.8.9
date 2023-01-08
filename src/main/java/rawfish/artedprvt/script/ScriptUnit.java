@@ -1,6 +1,5 @@
 package rawfish.artedprvt.script;
 
-import net.minecraft.init.Blocks;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.ScriptableObject;

@@ -1,9 +1,5 @@
 package rawfish.artedprvt.script;
 
-import net.minecraft.init.Blocks;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeJavaClass;
-import org.mozilla.javascript.ScriptableObject;
 
 public class InitScript {
     public static String script=
@@ -15,7 +11,8 @@ public class InitScript {
                     "var import=function(pack){return _114514.importModule(_1919810,pack);};" +
                     "var export=function(object){_114514.exportModule(_1919810,object);};" +
                     "var thread=function(runnable){return _114514.createThread(_1919810,runnable);};" +
-                    "var runf=function(func,args){return _114514.runFunction(_1919810,func,args);};";
+                    "var runf=function(func,args){return _114514.runFunction(_1919810,func,args);};" +
+                    "var sleep=function(millis){java.lang.Thread.sleep(millis);};";
 
     public static String varSys="_114514";
     public static String varPack="_1919810";

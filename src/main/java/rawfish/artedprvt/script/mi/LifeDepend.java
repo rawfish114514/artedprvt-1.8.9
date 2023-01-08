@@ -15,7 +15,7 @@ public abstract class LifeDepend {
             if(t instanceof ScriptThread){
                 main=((ScriptThread)t).getMainThread();
             }else{
-                throw new RuntimeException("Not in ScriptProcess");
+                throw new RuntimeException("对象构造不在主线程或子线程");
             }
         }
 
