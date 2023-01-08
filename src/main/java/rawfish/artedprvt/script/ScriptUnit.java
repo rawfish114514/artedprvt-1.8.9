@@ -1,8 +1,10 @@
 package rawfish.artedprvt.script;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.ScriptableObject;
+import rawfish.artedprvt.script.mi.Events;
 
 import java.util.Map;
 
@@ -56,8 +58,21 @@ public class ScriptUnit{
             scope.put(key,scope,map.get(key));
         }
 
+
+        //添加事件监听器 前置函数定义
+        if(pro.al_value){
+            StringBuilder sb=new StringBuilder();
+            for(Events type: Events.values()){
+                sb.append(SupplementScript.getEventListenerRegisterCode(type));
+            }
+            script=sb.append(script).toString();
+        }
+
+
         //运行脚本内容
         rhino.evaluateString(scope,script,pack,1,null);
+
+
     }
 
     protected Object export=null;

@@ -22,6 +22,7 @@ public class ScriptProcess {
         sargList.add("-m");//备忘录模式
         sargList.add("-st");//单线程模式
         sargList.add("-pm");//线程最大优先级
+        sargList.add("-al");//自动设置监听器
     }
 
     protected static int spid=0;//进程起始id
@@ -95,6 +96,9 @@ public class ScriptProcess {
             }
             if(sarg.equals("-pm")){
                 sarg_PM();
+            }
+            if(sarg.equals("-al")){
+                sarg_AL();
             }
         }
     }
@@ -230,6 +234,12 @@ public class ScriptProcess {
     protected boolean pm_value=false;
     protected void sarg_PM(){
         pm_value=true;
+    }
+
+    //自动设置监听器 无需手动创建和注册监听器 以声明事件同名函数完成监听
+    protected boolean al_value=false;
+    protected void sarg_AL(){
+        al_value=true;
     }
 
 }
