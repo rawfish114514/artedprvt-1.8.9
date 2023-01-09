@@ -1,5 +1,6 @@
 package rawfish.artedprvt.script;
 
+import net.minecraft.client.Minecraft;
 import org.mozilla.javascript.Context;
 import rawfish.artedprvt.script.mi.LifeDepend;
 
@@ -41,6 +42,9 @@ public class MainThread extends Thread{
         pro.rhino.setOptimizationLevel(-1);
         pro.rhino.setLocale(Locale.ENGLISH);
         pro.sys=new ScriptSystem(pro,pro.sender);
+        if(pro.isClient){
+            pro.client=new ScriptClient();
+        }
         pro.port=new PortClass(pro);
 
         pro.env=new HashMap<>();

@@ -15,11 +15,13 @@ public class CommonProxy
 {
     public void preInit(FMLPreInitializationEvent event)
     {
+
     }
 
     public void init(FMLInitializationEvent event)
     {
         new EventLoader();
+
     }
 
     public void postInit(FMLPostInitializationEvent event)
@@ -27,13 +29,8 @@ public class CommonProxy
 
     }
 
-    public static CommandHandler ch;
     public void serverStarting(FMLServerStartingEvent event)
     {
-        ch = (CommandHandler) event.getServer().getCommandManager();
-        Map<String, ICommand> commands= ch.getCommands();
-        System.out.println(commands);
-
         new CommandLoader(event);
         ScriptProcess.initSargs();
     }

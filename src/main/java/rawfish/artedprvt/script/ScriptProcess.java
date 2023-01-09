@@ -1,5 +1,6 @@
 package rawfish.artedprvt.script;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import org.mozilla.javascript.Context;
 import rawfish.artedprvt.id.FormatCode;
@@ -14,6 +15,7 @@ import java.util.*;
 public class ScriptProcess {
     public static List<ScriptProcess> proList=new ArrayList<>();//运行的进程
     public static List<String> sargList=new ArrayList<>();//可用的参数
+    public boolean isClient;
     public static void initSargs() {
         if (sargList.size() != 0) {
             return;
@@ -36,6 +38,7 @@ public class ScriptProcess {
     protected String[] args;//脚本参数
     protected Context rhino;//脚本上下文
     protected ScriptSystem sys;//脚本系统
+    protected ScriptClient client;//脚本客户端
     protected PortClass port;//导入类
     protected Map<String,ScriptUnit> env;//包加载集合
     protected MainThread thread;//主线程
@@ -44,6 +47,7 @@ public class ScriptProcess {
     protected long time;//开始时间
     protected int ret;//状态
     public ScriptProcess(ICommandSender senderIn,String[] sargsIn,String packIn, String[] argsIn){
+        isClient= Minecraft.getMinecraft().theWorld.isRemote;
         ret=0;//进程创建 无效退出
         sender=senderIn;
         sargs=sargsIn;

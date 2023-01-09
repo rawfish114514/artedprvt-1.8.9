@@ -55,6 +55,6 @@ public class CommandStops extends CommandBase {
     @Override
     public int getRequiredPermissionLevel()
     {
-        return 1;
+        return 0;
     }
 }

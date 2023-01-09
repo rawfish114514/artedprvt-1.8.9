@@ -2,6 +2,7 @@ package rawfish.artedprvt.script;
 
 
 public class InitScript {
+    //put: System Pack Invoker
     public static String script=
                     "var invoker=function(){return _18140;};" +
                     "var pack=function(){return _1919810;};" +
@@ -17,4 +18,11 @@ public class InitScript {
     public static String varSys="_114514";
     public static String varPack="_1919810";
     public static String varInvoker="_18140";
+
+
+
+    public static String clientscript=
+                    "var sendChat=function(message){_client.sendChat(message);};";
+
+    public static String varClient="_client";
 }

@@ -1,5 +1,6 @@
 package rawfish.artedprvt.script;
 
+import net.minecraft.client.Minecraft;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeFunction;
 import org.mozilla.javascript.NativeJavaClass;
@@ -50,6 +51,11 @@ public class ScriptUnit{
         scope.put(InitScript.varInvoker,scope,invoker);
         rhino.evaluateString(scope,InitScript.script,pack,1,null);
 
+        //添加客户端功能
+        if(pro.isClient){
+            scope.put(InitScript.varClient,scope,pro.client);
+            rhino.evaluateString(scope,InitScript.clientscript,pack,1,null);
+        }
 
         //添加游戏相关功能
         Map<String,NativeJavaClass> map=pro.port.classes;

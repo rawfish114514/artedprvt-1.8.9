@@ -36,6 +36,6 @@ public class CommandAc extends CommandBase {
     @Override
     public int getRequiredPermissionLevel()
     {
-        return 1;
+        return 0;
     }
 }
