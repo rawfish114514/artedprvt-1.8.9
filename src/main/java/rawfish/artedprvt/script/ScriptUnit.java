@@ -52,10 +52,8 @@ public class ScriptUnit{
         rhino.evaluateString(scope,InitScript.script,pack,1,null);
 
         //添加客户端功能
-        if(pro.isClient){
-            scope.put(InitScript.varClient,scope,pro.client);
-            rhino.evaluateString(scope,InitScript.clientscript,pack,1,null);
-        }
+        scope.put(InitScript.varClient,scope,pro.client);
+        rhino.evaluateString(scope,InitScript.clientscript,pack,1,null);
 
         //添加游戏相关功能
         Map<String,NativeJavaClass> map=pro.port.classes;

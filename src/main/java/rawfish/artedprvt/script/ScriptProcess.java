@@ -16,7 +16,6 @@ import java.util.*;
 public class ScriptProcess {
     public static List<ScriptProcess> proList=new ArrayList<>();//运行的进程
     public static List<String> sargList=new ArrayList<>();//可用的参数
-    public boolean isClient;
     public static void initSargs() {
         if (sargList.size() != 0) {
             return;
@@ -71,7 +70,6 @@ public class ScriptProcess {
             Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacket(new C01PacketChatMessage(sb.toString()));
             return;
         }
-        isClient= Minecraft.getMinecraft().theWorld.isRemote;
         ret=0;//进程创建 无效退出
         dir=System.getProperties().get("user.dir").toString()+"/artedprvt/script/";
 
