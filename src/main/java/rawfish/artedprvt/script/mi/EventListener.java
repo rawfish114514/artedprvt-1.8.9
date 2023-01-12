@@ -1,5 +1,6 @@
 package rawfish.artedprvt.script.mi;
 
+import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
@@ -27,6 +28,12 @@ public class EventListener extends LifeDepend{
         }
         if(type==Events.use){
             listener=new UseEventListener(f);
+        }
+
+
+        //SideOnly Client
+        if(type==Events.c_chat){
+            listener=new ClientChatEventListener(f);
         }
 
         if(listener==null){
@@ -71,4 +78,27 @@ public class EventListener extends LifeDepend{
             f.run(event);
         }
     }
+
+    public static class ClientChatEventListener extends EventListener{
+        public ClientChatEventListener(EventFunction f) {
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(ClientChatReceivedEvent event){
+            f.run(event);
+        }
+    }
+
+
+    //未定义事件监听器
+    public static class _EventListener extends EventListener{
+        public _EventListener(EventFunction f) {
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(Event event){
+            f.run(event);
+        }
+    }
+
 }

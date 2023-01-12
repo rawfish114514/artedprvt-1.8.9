@@ -9,4 +9,7 @@ public enum Events {
     tick,//TickEvent.ServerTickEvent
     click,//PlayerInteractEvent
     use,//PlayerUseItemEvent.Finish
+
+    //SideOnly Client
+    c_chat,//ClientChatReceivedEvent
 }

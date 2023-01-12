@@ -2,6 +2,7 @@ package rawfish.artedprvt.script;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.network.play.client.C01PacketChatMessage;
 import org.mozilla.javascript.Context;
 import rawfish.artedprvt.id.FormatCode;
 
@@ -20,9 +21,10 @@ public class ScriptProcess {
         if (sargList.size() != 0) {
             return;
         }
-        sargList.add("-eh");//线程处理模式
-        sargList.add("-m");//备忘录模式
-        sargList.add("-st");//单线程模式
+        sargList.add("-s");//服务端处理
+        sargList.add("-eh");//线程处理
+        sargList.add("-m");//备忘录
+        sargList.add("-st");//单线程
         sargList.add("-pm");//线程最大优先级
         sargList.add("-al");//自动设置监听器
     }
@@ -47,12 +49,30 @@ public class ScriptProcess {
     protected long time;//开始时间
     protected int ret;//状态
     public ScriptProcess(ICommandSender senderIn,String[] sargsIn,String packIn, String[] argsIn){
-        isClient= Minecraft.getMinecraft().theWorld.isRemote;
-        ret=0;//进程创建 无效退出
         sender=senderIn;
         sargs=sargsIn;
         pack=packIn;
         args=argsIn;
+        systemArgs(sargs);
+        if(s_value){
+            StringBuilder sb = new StringBuilder("/script");
+            for (String arg:sargs) {
+                if(!arg.equals("-s")) {
+                    sb.append(' ');
+                    sb.append(arg);
+                }
+            }
+            sb.append(' ');
+            sb.append(pack);
+            for(String arg:args){
+                sb.append(' ');
+                sb.append(arg);
+            }
+            Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacket(new C01PacketChatMessage(sb.toString()));
+            return;
+        }
+        isClient= Minecraft.getMinecraft().theWorld.isRemote;
+        ret=0;//进程创建 无效退出
         dir=System.getProperties().get("user.dir").toString()+"/artedprvt/script/";
 
         if(proList.size()==0){
@@ -60,9 +80,11 @@ public class ScriptProcess {
         }
         pid=spid++;
         proList.add(this);
-        systemArgs(sargs);
     }
 
+    public ICommandSender getSender(){
+        return sender;
+    };
     public String getName(){
         return pack;
     }
@@ -89,6 +111,9 @@ public class ScriptProcess {
 
     protected void systemArgs(String[] sargs){
         for(String sarg:sargs){
+            if(sarg.equals("-s")){
+                sarg_S();
+            }
             if(sarg.equals("-eh")){
                 sarg_EH();
             }
@@ -217,7 +242,13 @@ public class ScriptProcess {
     }
 
 
-    //线程处理模式 等待线程异常不会终结主线程
+    //服务端处理 这个进程将任务推给服务端
+    protected boolean s_value;
+    protected void sarg_S(){
+        s_value=true;
+    }
+
+    //线程处理 等待线程异常不会终结主线程
     protected boolean eh_value=false;
     protected void sarg_EH(){
         eh_value=true;
@@ -228,7 +259,7 @@ public class ScriptProcess {
 
     }
 
-    //单线程模式 等待线程开始运行不会启动新线程
+    //单线程 等待线程开始运行不会启动新线程
     protected boolean st_value=false;
     protected void sarg_ST(){
         st_value=true;

@@ -1,10 +1,14 @@
 package rawfish.artedprvt.command;
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.client.Minecraft;
+import net.minecraft.command.*;
+import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.server.MinecraftServer;
 import rawfish.artedprvt.script.ScriptProcess;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class CommandScript extends CommandBase {
     public CommandScript(String nameIn){

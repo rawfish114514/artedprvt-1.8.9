@@ -22,7 +22,9 @@ public class InitScript {
 
 
     public static String clientscript=
-                    "var sendChat=function(message){_client.sendChat(message);};";
+                    "var sendChat=function(message){_client.sendChat(message);};" +
+                    "var getAllEntity=function(){return _client.getAllEntity();};" +
+                    "var getThisPlayer=function(){return _client.getThisPlayer();};";
 
     public static String varClient="_client";
 }

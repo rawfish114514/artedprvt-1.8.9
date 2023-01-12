@@ -2,11 +2,13 @@ package rawfish.artedprvt.script;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.util.BlockPos;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.script.mi.EventListener;
 import rawfish.artedprvt.script.mi.Events;
+import rawfish.artedprvt.script.mi.WorldManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +33,8 @@ public class PortClass {
         put(Blocks.class);
         put(Events.class);
         put(EventListener.class);
+        put(WorldManager.class);
+        put(BlockPos.class);
     }
     private void put(Class clas){
         classes.put(clas.getSimpleName(),new NativeJavaClass(scope,clas));

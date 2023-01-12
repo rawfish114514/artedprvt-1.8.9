@@ -97,4 +97,7 @@ public class MainThread extends Thread{
             st.stop();
         }
     }
+    public ScriptProcess getProcess(){
+        return pro;
+    }
 }
