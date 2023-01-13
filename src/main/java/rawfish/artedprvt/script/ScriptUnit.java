@@ -49,11 +49,11 @@ public class ScriptUnit{
         scope.put(InitScript.varSys,scope,sys);
         scope.put(InitScript.varPack,scope,pack);
         scope.put(InitScript.varInvoker,scope,invoker);
-        rhino.evaluateString(scope,InitScript.script,pack,1,null);
+        rhino.evaluateString(scope,InitScript.script,"init_sys",1,null);
 
         //添加客户端功能
         scope.put(InitScript.varClient,scope,pro.client);
-        rhino.evaluateString(scope,InitScript.clientscript,pack,1,null);
+        rhino.evaluateString(scope,InitScript.clientscript,"init_client",1,null);
 
         //添加游戏相关功能
         Map<String,NativeJavaClass> map=pro.port.classes;

@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.util.BlockPos;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
+import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.script.mi.EventListener;
 import rawfish.artedprvt.script.mi.Events;

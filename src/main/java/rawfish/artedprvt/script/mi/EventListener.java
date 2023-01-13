@@ -11,14 +11,35 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 事件监听器
+ */
 public class EventListener extends LifeDepend{
+    /**
+     * 回调函数
+     */
     public EventFunction f;
+    /**
+     * 监听器代理
+     */
     public EventListener listener=null;
+
+    /**
+     * 构造一个事件监听器但不会监听任何事件
+     * 不要使用此构造函数
+     * @param f 回调函数
+     */
     public EventListener(EventFunction f){
         this.f=f;
         listener=this;
         up();
     }
+
+    /**
+     * 构造一个事件监听器
+     * @param type 事件类型
+     * @param f 回调函数
+     */
     public EventListener(Events type,EventFunction f){
         if(type==Events.tick){
             listener=new TickEventListener(f);
@@ -41,9 +62,16 @@ public class EventListener extends LifeDepend{
         }
     }
 
+    /**
+     * 注册监听器
+     */
     public void register(){
         MinecraftForge.EVENT_BUS.register(listener);
     }
+
+    /**
+     * 注销监听器
+     */
     @Override
     public void terminate() {
         MinecraftForge.EVENT_BUS.unregister(listener);

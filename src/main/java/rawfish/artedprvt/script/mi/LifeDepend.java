@@ -4,10 +4,18 @@ import rawfish.artedprvt.script.MainThread;
 import rawfish.artedprvt.script.ScriptProcess;
 import rawfish.artedprvt.script.ScriptThread;
 
-//依赖主线程的生命周期
+/**
+ * 此类的生命周期依赖MainThread
+ */
 public abstract class LifeDepend {
+    /**
+     * 目标进程
+     */
     public ScriptProcess pro;
-    //构造对象时添加到主线程
+
+    /**
+     * 添加到主线程中
+     */
     public void up(){
         Thread t=Thread.currentThread();
         MainThread main;
@@ -24,10 +32,17 @@ public abstract class LifeDepend {
         pro=main.getProcess();
         main.addld(this);
     }
-    //主线程结束时调用
+
+    /**
+     * 主线程结束时被调用
+     */
     public void end(){
         terminate();
     }
 
+    /**
+     * 主线程结束时被调用
+     * 在此处理数据
+     */
     public abstract void terminate();
 }

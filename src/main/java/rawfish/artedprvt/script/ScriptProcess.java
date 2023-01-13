@@ -136,19 +136,11 @@ public class ScriptProcess {
      * @return
      */
     protected String readString(String packIn){
-        if(packIn.indexOf("/")!=-1){
-            try {
-                throw new Exception("pack: "+packIn+" (用'.'分隔符而不是'/')");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+        if(packIn.contains("/")){
+            throw new RuntimeException("pack: "+packIn+" (用'.'分隔符而不是'/')");
         }
         if(!withPackRule(packIn)){
-            try {
-                throw new Exception("pack: "+packIn+" (开头为英文字母后接英文字母数字下划线)");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            throw new RuntimeException("pack: "+packIn+" (开头为英文字母后接英文字母数字下划线)");
         }
         String path=packIn.replace('.','/')+".js";
         File file=new File(dir+path);

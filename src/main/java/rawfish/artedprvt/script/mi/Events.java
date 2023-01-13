@@ -1,15 +1,33 @@
 package rawfish.artedprvt.script.mi;
 
-import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * 常用的事件
  */
 public enum Events {
-    tick,//TickEvent.ServerTickEvent
-    click,//PlayerInteractEvent
-    use,//PlayerUseItemEvent.Finish
+    /**
+     * 刻事件
+     * 源: TickEvent.ServerTickEvent
+     */
+    tick,
+
+    /**
+     * 点击事件
+     * 源: PlayerInteractEvent
+     */
+    click,
+
+    /**
+     * 使用物品事件
+     * 源: PlayerUseItemEvent.Finish
+     */
+    use,
 
     //SideOnly Client
-    c_chat,//ClientChatReceivedEvent
+
+    /**
+     * 客户端聊天事件
+     * 源: ClientChatReceivedEvent
+     */
+    c_chat,
 }
