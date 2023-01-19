@@ -54,7 +54,9 @@ public class CommandScript extends CommandBase {
 
         ScriptProcess script=new ScriptProcess(senderIn,sargs,pack,args);
 
-        script.start();
+        if(script.getRet()==0) {
+            script.start();
+        }
     }
 
     //计算包名索引

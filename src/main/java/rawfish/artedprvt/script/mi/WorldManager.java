@@ -1,11 +1,10 @@
 package rawfish.artedprvt.script.mi;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-import net.minecraftforge.common.MinecraftForge;
+import rawfish.artedprvt.id.FormatCode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 世界管理
@@ -17,12 +16,15 @@ public class WorldManager extends LifeDepend{
      */
     public World world;
 
+    public List<WorldGraphics> graphicsList;
+
     /**
      * 构造世界管理对象
      */
     public WorldManager(){
         up();
         world=pro.getSender().getEntityWorld();
+        graphicsList=new ArrayList<>();
     }
 
     /**
@@ -30,12 +32,21 @@ public class WorldManager extends LifeDepend{
      * @return 操作这个世界的WorldGraphics对象
      */
     public WorldGraphics getGraphics(){
-        return new WorldGraphics(this);
+        WorldGraphics graphics=new WorldGraphics(this);
+        graphicsList.add(graphics);
+        return graphics;
     }
 
     @Override
     public void terminate() {
-
+        //计算操作方块数
+        int blockOper=0;
+        for(WorldGraphics graphics:graphicsList){
+            blockOper+=graphics.getDrawCount();
+        }
+        if(blockOper>0){
+            pro.getSys().print(pro.getPack(), FormatCode.COLOR_d+"任务结束 操作方块: "+blockOper);
+        }
     }
 }
 

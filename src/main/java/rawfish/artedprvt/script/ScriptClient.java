@@ -5,7 +5,20 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C01PacketChatMessage;
+import org.apache.commons.io.input.ReaderInputStream;
+import org.mozilla.javascript.NativeJavaObject;
+import org.mozilla.javascript.Scriptable;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CoderResult;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
@@ -20,7 +33,7 @@ public class ScriptClient {
 
     }
 
-    public void sendChat(String message){
+    public void sendChat(String message) throws IOException {
         manager.sendPacket(new C01PacketChatMessage(message));
     }
 
@@ -33,6 +46,14 @@ public class ScriptClient {
         return minecraft.thePlayer;
     }
 
-
-
+    public Object getDemoObject(Scriptable scope){
+        EntityPlayerSP p=getThisPlayer();
+        return new NativeJavaObject(scope,p,p.getClass()){
+            @Override
+            public Object get(String name, Scriptable start) {
+                System.out.println("访问字段: "+name);
+                return super.get(name,start);
+            }
+        };
+    }
 }

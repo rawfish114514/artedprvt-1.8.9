@@ -630,6 +630,10 @@ public class Context implements Closeable {
         this.sealKey = null;
     }
 
+    public void unseal(){
+        this.sealed=false;
+    }
+
     static void onSealedMutation() {
         throw new IllegalStateException();
     }

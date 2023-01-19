@@ -23,7 +23,7 @@ public class ScriptThread extends Thread{
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
         if(pro.pm_value){
-            setPriority(10);
+            setPriority(Thread.MAX_PRIORITY);
         }
     }
     public MainThread getMainThread(){

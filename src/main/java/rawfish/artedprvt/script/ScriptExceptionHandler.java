@@ -12,7 +12,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
     public void uncaughtException(Thread t, Throwable e) {
         if(!e.getMessage().equals("null")){
             if(ScriptConst.debug) {
-                pro.sys.log(pro.pack,"\u00a74" +": " + e.getMessage());
+                pro.sys.log(pro.pack,"\u00a74" +": " + e.getMessage(),e.getClass().getName());
             }
             if(t instanceof ScriptThread){
                 ScriptThread st=(ScriptThread)t;

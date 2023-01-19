@@ -5,7 +5,6 @@ import net.minecraft.init.Items;
 import net.minecraft.util.BlockPos;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
-import org.mozilla.javascript.NativeJavaPackage;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.script.mi.EventListener;
 import rawfish.artedprvt.script.mi.Events;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PortClass {
-    protected Map<String,NativeJavaClass> classes;//类简单名:本地java对象
+    protected Map<String,NativeJavaClass> classes;//类简单名:本地java类
     protected ScriptProcess pro;
     protected Context rhino;
     protected ScriptableObject scope;

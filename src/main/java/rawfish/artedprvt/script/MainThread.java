@@ -1,9 +1,11 @@
 package rawfish.artedprvt.script;
 
-import net.minecraft.client.Minecraft;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.script.mi.LifeDepend;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +25,7 @@ public class MainThread extends Thread{
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
         if(pro.pm_value){
-            setPriority(10);
+            setPriority(Thread.MAX_PRIORITY);
         }
 
         lo=new ArrayList<>();
@@ -39,8 +41,11 @@ public class MainThread extends Thread{
     @Override
     public void run(){
         pro.rhino = Context.enter();
+        pro.rhino.unseal();
         pro.rhino.setOptimizationLevel(-1);
         pro.rhino.setLocale(Locale.ENGLISH);
+
+
         pro.sys=new ScriptSystem(pro,pro.sender);
         pro.client=new ScriptClient();
         pro.port=new PortClass(pro);

@@ -6,6 +6,8 @@
 
 package org.mozilla.javascript;
 
+import rawfish.artedprvt.script.js.ClassLevel;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -17,6 +19,12 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
+
+/*
+
+
+在此基础上修改
+ */
 
 /**
  * This class reflects non-Array Java objects into the JavaScript environment. It reflect fields
@@ -51,7 +59,11 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         this.staticType = staticType;
         this.isAdapter = isAdapter;
         initMembers();
+
+        isConfuse=ClassLevel.isConfuseClass(staticType);
     }
+
+    public boolean isConfuse;
 
     protected void initMembers() {
         Class<?> dynamicType;
@@ -84,6 +96,10 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
 
     @Override
     public Object get(String name, Scriptable start) {
+        if(isConfuse){
+            //转换为混淆名
+
+        }
         if (fieldAndMethods != null) {
             Object result = fieldAndMethods.get(name);
             if (result != null) {

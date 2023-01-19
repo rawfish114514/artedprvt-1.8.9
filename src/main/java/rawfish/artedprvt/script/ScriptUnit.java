@@ -1,10 +1,6 @@
 package rawfish.artedprvt.script;
 
-import net.minecraft.client.Minecraft;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeFunction;
-import org.mozilla.javascript.NativeJavaClass;
-import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.*;
 import rawfish.artedprvt.script.mi.Events;
 
 import java.util.Map;

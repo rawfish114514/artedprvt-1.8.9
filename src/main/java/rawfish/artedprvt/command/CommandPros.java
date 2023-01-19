@@ -7,11 +7,8 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
-import net.minecraft.util.StringUtils;
-import rawfish.artedprvt.script.ScriptConst;
 import rawfish.artedprvt.script.ScriptProcess;
 
-import java.util.Arrays;
 import java.util.Date;
 
 public class CommandPros extends CommandBase {
@@ -41,7 +38,7 @@ public class CommandPros extends CommandBase {
             throw new WrongUsageException("commands.pros.usage");
         }
         for(ScriptProcess pro:ScriptProcess.proList){
-            ChatComponentText chat=new ChatComponentText(String.format("process: %s pid: %s",pro.getName(),pro.getId()));
+            ChatComponentText chat=new ChatComponentText(String.format("process: %s pid: %s",pro.getPack(),pro.getId()));
             int ret=pro.getRet();
             if(ret!=0&&ret!=1){
                 StringBuilder sargl= new StringBuilder();

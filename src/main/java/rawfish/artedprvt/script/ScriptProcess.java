@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import org.mozilla.javascript.Context;
-import rawfish.artedprvt.id.FormatCode;
 
 import java.io.*;
 import java.util.*;
@@ -68,6 +67,7 @@ public class ScriptProcess {
                 sb.append(arg);
             }
             Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacket(new C01PacketChatMessage(sb.toString()));
+            ret=11;//进程失效
             return;
         }
         ret=0;//进程创建 无效退出
@@ -83,7 +83,7 @@ public class ScriptProcess {
     public ICommandSender getSender(){
         return sender;
     };
-    public String getName(){
+    public String getPack(){
         return pack;
     }
 
@@ -105,6 +105,10 @@ public class ScriptProcess {
 
     public String[] getArgs(){
         return args;
+    }
+
+    public ScriptSystem getSys(){
+        return sys;
     }
 
     protected void systemArgs(String[] sargs){

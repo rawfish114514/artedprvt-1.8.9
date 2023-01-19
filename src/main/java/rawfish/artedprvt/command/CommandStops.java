@@ -37,7 +37,7 @@ public class CommandStops extends CommandBase {
             String sp=args[0];
             boolean nisp=true;
             for (ScriptProcess pro : pros) {
-                if(sp.equals(pro.getName())||sp.equals(String.valueOf(pro.getId()))){
+                if(sp.equals(pro.getPack())||sp.equals(String.valueOf(pro.getId()))){
                     pro.stop(null);
                     nisp=false;
                 }
