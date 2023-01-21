@@ -1,6 +1,7 @@
 package rawfish.artedprvt.script;
 
 import org.mozilla.javascript.*;
+import rawfish.artedprvt.script.js.ClassLevel;
 import rawfish.artedprvt.script.mi.Events;
 
 import java.util.Map;
@@ -51,7 +52,10 @@ public class ScriptUnit{
         scope.put(InitScript.varClient,scope,pro.client);
         rhino.evaluateString(scope,InitScript.clientscript,"init_client",1,null);
 
-        //添加游戏相关功能
+        //定义重混淆
+        scope.put(ClassLevel.varRc,scope,String.valueOf(pro.getValueRc()));
+
+        //添加游戏相关类
         Map<String,NativeJavaClass> map=pro.port.classes;
 
         for(String key:map.keySet()){
@@ -59,8 +63,9 @@ public class ScriptUnit{
         }
 
 
+
         //添加事件监听器 前置函数定义
-        if(pro.al_value){
+        if(pro.getValueAl()){
             StringBuilder sb=new StringBuilder();
             for(Events type: Events.values()){
                 sb.append(SupplementScript.getEventListenerRegisterCode(type));

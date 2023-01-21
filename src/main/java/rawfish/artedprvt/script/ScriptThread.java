@@ -16,13 +16,13 @@ public class ScriptThread extends Thread{
     public ScriptThread(ScriptProcess proIn,Runnable target){
         super(target);
         pro=proIn;
-        errorHandle=pro.eh_value;
-        notStart=pro.st_value;
+        errorHandle=pro.getValueEh();
+        notStart=pro.getValueSt();
         setName(String.format("%s_%s",Thread.currentThread().getName(),n++));
         pro.tl.add(this);
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
-        if(pro.pm_value){
+        if(pro.getValuePm()){
             setPriority(Thread.MAX_PRIORITY);
         }
     }

@@ -24,7 +24,7 @@ public class MainThread extends Thread{
         setName("Main");
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));
-        if(pro.pm_value){
+        if(pro.getValuePm()){
             setPriority(Thread.MAX_PRIORITY);
         }
 

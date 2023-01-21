@@ -4,8 +4,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import org.mozilla.javascript.Context;
+import rawfish.artedprvt.script.js.ClassCollection;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -20,6 +22,7 @@ public class ScriptProcess {
             return;
         }
         sargList.add("-s");//服务端处理
+        sargList.add("-rc");//重混淆
         sargList.add("-eh");//线程处理
         sargList.add("-m");//备忘录
         sargList.add("-st");//单线程
@@ -52,7 +55,7 @@ public class ScriptProcess {
         pack=packIn;
         args=argsIn;
         systemArgs(sargs);
-        if(s_value){
+        if(getValueS()){
             StringBuilder sb = new StringBuilder("/script");
             for (String arg:sargs) {
                 if(!arg.equals("-s")) {
@@ -69,6 +72,9 @@ public class ScriptProcess {
             Minecraft.getMinecraft().getNetHandler().getNetworkManager().sendPacket(new C01PacketChatMessage(sb.toString()));
             ret=11;//进程失效
             return;
+        }
+        if(getValueRc()) {
+            ClassCollection.putExtend();
         }
         ret=0;//进程创建 无效退出
         dir=System.getProperties().get("user.dir").toString()+"/artedprvt/script/";
@@ -116,6 +122,9 @@ public class ScriptProcess {
             if(sarg.equals("-s")){
                 sarg_S();
             }
+            if(sarg.equals("-rc")){
+                sarg_Rc();
+            }
             if(sarg.equals("-eh")){
                 sarg_EH();
             }
@@ -151,7 +160,7 @@ public class ScriptProcess {
         Reader reader;
         StringBuilder sb;
         try {
-            reader=new FileReader(file);
+            reader=new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             sb=new StringBuilder();
             while(true){
                 int n=reader.read();
@@ -237,13 +246,28 @@ public class ScriptProcess {
 
 
     //服务端处理 这个进程将任务推给服务端
-    protected boolean s_value;
+    protected boolean s_value=false;
+    public boolean getValueS(){
+        return s_value;
+    }
     protected void sarg_S(){
         s_value=true;
     }
 
+    //重混淆 访问字段或方法时将MCP名映射到Srg名 在非开发环境中使用
+    protected boolean rc_value=false;
+    public boolean getValueRc(){
+        return rc_value;
+    }
+    protected void sarg_Rc(){
+        rc_value=true;
+    }
+
     //线程处理 等待线程异常不会终结主线程
     protected boolean eh_value=false;
+    public boolean getValueEh(){
+        return eh_value;
+    }
     protected void sarg_EH(){
         eh_value=true;
     }
@@ -255,18 +279,27 @@ public class ScriptProcess {
 
     //单线程 等待线程开始运行不会启动新线程
     protected boolean st_value=false;
+    public boolean getValueSt(){
+        return st_value;
+    }
     protected void sarg_ST(){
         st_value=true;
     }
 
     //线程最大优先级 线程默认优先级为10 稍微提高运行速度
     protected boolean pm_value=false;
+    public boolean getValuePm(){
+        return pm_value;
+    }
     protected void sarg_PM(){
         pm_value=true;
     }
 
     //自动设置监听器 无需手动创建和注册监听器 以声明事件同名函数完成监听
     protected boolean al_value=false;
+    public boolean getValueAl(){
+        return al_value;
+    }
     protected void sarg_AL(){
         al_value=true;
     }

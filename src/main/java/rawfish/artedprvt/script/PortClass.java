@@ -5,7 +5,9 @@ import net.minecraft.init.Items;
 import net.minecraft.util.BlockPos;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.NativeJavaClass;
+import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.ScriptableObject;
+import rawfish.artedprvt.script.js.ClassLevel;
 import rawfish.artedprvt.script.mi.EventListener;
 import rawfish.artedprvt.script.mi.Events;
 import rawfish.artedprvt.script.mi.WorldManager;
@@ -24,6 +26,8 @@ public class PortClass {
 
         rhino=pro.rhino;
         scope=rhino.initStandardObjects();
+        //混淆化
+        scope.put(ClassLevel.varRc,scope,String.valueOf(pro.getValueRc()));
 
         add();
     }

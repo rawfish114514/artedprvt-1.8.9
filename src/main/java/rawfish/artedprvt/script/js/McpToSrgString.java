@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class McpToSrgString {
     public static String str=null;
-    public static String getMcpToSrgString(){
+    public static synchronized String getMcpToSrgString(){
         if(str==null) {
             StringBuilder sb = new StringBuilder();
             try {
@@ -21,7 +21,7 @@ public class McpToSrgString {
                     }
                     sb.append((char) c);
                 }
-                reader.close(); // 关闭流
+                reader.close();
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

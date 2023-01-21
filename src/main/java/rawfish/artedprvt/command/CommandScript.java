@@ -6,6 +6,7 @@ import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.server.MinecraftServer;
 import rawfish.artedprvt.script.ScriptProcess;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,18 @@ public class CommandScript extends CommandBase {
     public void processCommand(ICommandSender senderIn, String[] argsIn) throws CommandException {
         if(argsIn.length<1){
             throw new WrongUsageException("commands.script.usage");
+        }
+
+        //去空参数
+        List<String> slist=new ArrayList<>();
+        for(String arg:argsIn){
+            if(!arg.equals("")){
+                slist.add(arg);
+            }
+        }
+        argsIn=new String[slist.size()];
+        for(int i=0;i<slist.size();i++){
+            argsIn[i]=slist.get(i);
         }
 
 

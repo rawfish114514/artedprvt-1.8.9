@@ -6,7 +6,9 @@
 
 package org.mozilla.javascript;
 
+import rawfish.artedprvt.script.js.ClassCollection;
 import rawfish.artedprvt.script.js.ClassLevel;
+import rawfish.artedprvt.script.js.ClassMember;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -60,7 +62,11 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         this.isAdapter = isAdapter;
         initMembers();
 
-        isConfuse=ClassLevel.isConfuseClass(staticType);
+        Class clas=staticType;
+        if(javaObject instanceof Class){
+            clas=(Class)javaObject;
+        }
+        isConfuse=ClassLevel.isConfuseClass(scope,clas);
     }
 
     public boolean isConfuse;
@@ -98,8 +104,24 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     public Object get(String name, Scriptable start) {
         if(isConfuse){
             //转换为混淆名
-
+            ClassMember member=ClassCollection.classMap.get(staticType.getName());
+            if(member!=null){
+                String srg = member.get(name);
+                if(!srg.equals(ClassLevel.memberNull)) {
+                    String[] vs=srg.split(ClassLevel.link);
+                    for(String v:vs) {
+                        Object rObj = get_(srg);
+                        if(!rObj.equals(UniqueTag.NOT_FOUND)){
+                            return rObj;
+                        }
+                    }
+                }
+            }
         }
+        return get_(name);
+
+    }
+    public Object get_(String name){
         if (fieldAndMethods != null) {
             Object result = fieldAndMethods.get(name);
             if (result != null) {
@@ -126,7 +148,27 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     }
 
     @Override
-    public void put(String name, Scriptable start, Object value) {
+    public void put(String name, Scriptable start, Object value){
+
+        if(isConfuse){
+            //转换为混淆名
+            ClassMember member=ClassCollection.classMap.get(staticType.getName());
+            if(member!=null){
+                String srg = member.get(name);
+                if(!srg.equals(ClassLevel.memberNull)) {
+                    String[] vs=srg.split(ClassLevel.link);
+                    for(String v:vs) {
+                        put_(v,start,value);
+                        return;
+                        //对于赋值来说仅限于字段所以不存在重载
+                    }
+                }
+            }
+        }
+        put_(name,start,value);
+    }
+
+    public void put_(String name, Scriptable start, Object value) {
         // We could be asked to modify the value of a property in the
         // prototype. Since we can't add a property to a Java object,
         // we modify it in the prototype rather than copy it down.
