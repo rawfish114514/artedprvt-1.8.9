@@ -41,7 +41,6 @@ public class ClassCollection {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
             for(int i=0,l=items.size();i<l;i++){
                 String item=items.get(i);
                 char c=item.charAt(0);

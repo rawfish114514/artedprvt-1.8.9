@@ -63,7 +63,6 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
         if(isConfuse){
             //转换为混淆名
             ClassMember member= ClassCollection.classMap.get(((Class)javaObject).getName());
-            System.out.println("访问静态成员: "+((Class)javaObject).getName());
             if(member!=null){
                 String srg = member.get(name);
                 if(!srg.equals(ClassLevel.memberNull)) {

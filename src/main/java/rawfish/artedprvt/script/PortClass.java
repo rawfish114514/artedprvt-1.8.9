@@ -8,9 +8,7 @@ import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.script.js.ClassLevel;
-import rawfish.artedprvt.script.mi.EventListener;
-import rawfish.artedprvt.script.mi.Events;
-import rawfish.artedprvt.script.mi.WorldManager;
+import rawfish.artedprvt.script.mi.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,11 +31,14 @@ public class PortClass {
     }
 
     private void add(){
-        put(Items.class);
-        put(Blocks.class);
+        //mi.*
         put(Events.class);
         put(EventListener.class);
         put(WorldManager.class);
+
+        //net.minecraft
+        put(Items.class);
+        put(Blocks.class);
         put(BlockPos.class);
     }
     private void put(Class clas){

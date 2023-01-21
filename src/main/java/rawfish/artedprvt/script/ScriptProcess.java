@@ -54,7 +54,11 @@ public class ScriptProcess {
         sargs=sargsIn;
         pack=packIn;
         args=argsIn;
-        systemArgs(sargs);
+        ScriptConfig config=ScriptConfig.load();
+        if(config!=null) {
+            systemArgs(config.options);
+        }
+        systemArgs(Arrays.asList(sargs));
         if(getValueS()){
             StringBuilder sb = new StringBuilder("/script");
             for (String arg:sargs) {
@@ -117,7 +121,7 @@ public class ScriptProcess {
         return sys;
     }
 
-    protected void systemArgs(String[] sargs){
+    protected void systemArgs(Collection<String> sargs){
         for(String sarg:sargs){
             if(sarg.equals("-s")){
                 sarg_S();
