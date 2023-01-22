@@ -65,17 +65,19 @@ public class ScriptUnit{
 
 
         //添加事件监听器 前置函数定义
+        int n=0;
         if(pro.getValueAl()){
             StringBuilder sb=new StringBuilder();
             for(Events type: Events.values()){
                 sb.append(SupplementScript.getEventListenerRegisterCode(type));
+                n++;
             }
             script=sb.append(script).toString();
         }
 
 
         //运行脚本内容
-        rhino.evaluateString(scope,script,pack,1,null);
+        rhino.evaluateString(scope,script,pack,1-n,null);
 
 
     }

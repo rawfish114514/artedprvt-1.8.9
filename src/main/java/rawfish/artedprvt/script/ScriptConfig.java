@@ -47,21 +47,30 @@ public class ScriptConfig {
         scope.put("str",scope,str);
         rhino.evaluateString(scope,getScript(),"114514",114514,null);
 
-        Object object=scope.get("optionsList");
-        if(object instanceof List){
-            List options=(List)object;
+        Object optionsList=scope.get("optionsList");
+        if(optionsList instanceof List){
+            List options=(List)optionsList;
             config.options.addAll(options);
         }
+        Object errTag=scope.get("errTag");
+        config.err=String.valueOf(errTag);
 
         return config;
     }
     public List<String> options=new ArrayList<>();
+    public String err="";
 
 
     public static String getScript(){
-        return "var config=JSON.parse(str);" +
-                "var options=config.options;" +
-                "var optionsList=new java.util.ArrayList();" +
+        return "var errTag=null;\n" +
+                "var config={};\n" +
+                "try{\n" +
+                "config=JSON.parse(str);\n" +
+                "}catch(e){\n" +
+                "errTag=\"Unexpected\";\n" +
+                "}\n" +
+                "var options=config.options;\n" +
+                "var optionsList=new java.util.ArrayList();\n" +
                 "if(options instanceof Array){for(var i=0;i<options.length;i++){optionsList.add(options[i]);}};";
     }
 }

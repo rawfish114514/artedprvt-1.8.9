@@ -85,6 +85,7 @@ public class WorldGraphics {
     public void drawBlock(BlockPos pos){
         Chunk chunk = world.getChunkFromBlockCoords(pos);
         chunk.setBlockState(pos, block);
+        drawCount++;
     }
 
     /**
@@ -95,7 +96,6 @@ public class WorldGraphics {
      */
     public void drawBlock(double x,double y,double z){
         drawBlock(new BlockPos(x,y,z));
-        drawCount++;
     }
 
     /**

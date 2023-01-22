@@ -142,7 +142,7 @@ public class ScriptNode extends Scope {
      * and throws an exception if the line number has already been set.
      */
     public void setBaseLineno(int lineno) {
-        if (lineno < 0 || this.lineno >= 0) codeBug();
+        //if (lineno < 0 || this.lineno >= 0) codeBug();
         this.lineno = lineno;
     }
 

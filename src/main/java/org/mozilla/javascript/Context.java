@@ -1387,10 +1387,10 @@ public class Context implements Closeable {
      */
     public final Script compileString(
             String source, String sourceName, int lineno, Object securityDomain) {
-        if (lineno < 0) {
+        /*if (lineno < 0) {
             // For compatibility IllegalArgumentException can not be thrown here
             lineno = 0;
-        }
+        }*/
         return compileString(source, null, null, sourceName, lineno, securityDomain);
     }
 

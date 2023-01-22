@@ -1,6 +1,7 @@
 package rawfish.artedprvt.script;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import org.mozilla.javascript.Context;
@@ -49,13 +50,16 @@ public class ScriptProcess {
 
     protected long time;//开始时间
     protected int ret;//状态
-    public ScriptProcess(ICommandSender senderIn,String[] sargsIn,String packIn, String[] argsIn){
+    public ScriptProcess(ICommandSender senderIn,String[] sargsIn,String packIn, String[] argsIn) throws CommandException {
         sender=senderIn;
         sargs=sargsIn;
         pack=packIn;
         args=argsIn;
         ScriptConfig config=ScriptConfig.load();
         if(config!=null) {
+            if(config.err.equals("Unexpected")){
+                throw new CommandException("script: 读取配置时发生意外");
+            }
             systemArgs(config.options);
         }
         systemArgs(Arrays.asList(sargs));
