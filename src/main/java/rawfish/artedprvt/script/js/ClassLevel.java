@@ -35,7 +35,11 @@ public class ClassLevel {
         return false;
     }
     private static boolean isNetMinecraft(Class clas){
-        return clas.getName().substring(0,14).equals("net.minecraft.");
+        String name=clas.getName();
+        if(name.length()<14){
+            return false;
+        }
+        return name.substring(0,14).equals("net.minecraft.");
     }
     private static boolean isReConfuse(Scriptable scope){
         return scope.get(ClassLevel.varRc,scope).equals("true");

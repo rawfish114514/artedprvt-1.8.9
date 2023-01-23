@@ -30,6 +30,7 @@ public class ScriptSystem {
     public List getArgs(String pack){
         return Arrays.asList(pro.args);
     }
+
     //输出消息
     public void print(String pack,Object object){
         if(ScriptConst.chat) {
@@ -58,6 +59,7 @@ public class ScriptSystem {
 
         }
     }
+
     public void log(String pack,Object object){
         log(pack,object,null);
     }
