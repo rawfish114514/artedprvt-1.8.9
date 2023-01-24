@@ -33,15 +33,26 @@ public class ScriptClient {
 
     }
 
-    public void sendChat(String message) throws IOException {
+    /**
+     * 发送消息数据包
+     * @param message 消息
+     */
+    public void sendChat(String message) {
         manager.sendPacket(new C01PacketChatMessage(message));
     }
 
+    /**
+     * 获取所有实体
+     * @return
+     */
     public List<EntityPlayer> getAllEntity(){
         return Minecraft.getMinecraft().theWorld.playerEntities;
     }
 
-
+    /**
+     * 获取自己实体
+     * @return
+     */
     public EntityPlayerSP getThisPlayer(){
         return minecraft.thePlayer;
     }
