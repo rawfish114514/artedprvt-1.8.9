@@ -40,19 +40,15 @@ public class CommandScript extends CommandBase {
                 slist.add(arg);
             }
         }
-        argsIn=new String[slist.size()];
-        for(int i=0;i<slist.size();i++){
-            argsIn[i]=slist.get(i);
-        }
 
 
-        int packindex=calpack(argsIn);
+        int packindex=calpack(slist);
         if(packindex==-1){
             //没有包名
             throw new CommandException("找不到包名 请检查参数");
         }
 
-        String[] sargs=sargs(argsIn,packindex);//命令参数
+        List<String> sargs=sargs(slist,packindex);//命令参数
         for(String sarg:sargs){
             if(!containsSargs(sarg)){
                 throw new CommandException("无效参数: "+sarg);
@@ -62,8 +58,8 @@ public class CommandScript extends CommandBase {
             }
         }
 
-        String pack=pack(argsIn,packindex);//脚本包名
-        String[] args=args(argsIn,packindex);//脚本参数
+        String pack=pack(slist,packindex);//脚本包名
+        List<String> args=args(slist,packindex);//脚本参数
 
         ScriptProcess script=new ScriptProcess(senderIn,sargs,pack,args);
 
@@ -73,10 +69,10 @@ public class CommandScript extends CommandBase {
     }
 
     //计算包名索引
-    public int calpack(String [] argsIn){
+    public int calpack(List<String> argsIn){
         //每次都匹配命令参数直到匹配到非命令参数 再区分包名和脚本参数
-        for(int i=0;i<argsIn.length;i++){
-            if(!isSarg(argsIn[i])){
+        for(int i=0;i<argsIn.size();i++){
+            if(!isSarg(argsIn.get(i))){
                 //包名索引
                 return i;
             }
@@ -84,21 +80,25 @@ public class CommandScript extends CommandBase {
         return -1;
     }
     //分配参数
-    public String[] sargs(String [] argsIn,int packindex){
+    public List<String> sargs(List<String> argsIn,int packindex){
         //[0,p)
-        String[] sargs=new String[packindex];
-        System.arraycopy(argsIn, 0, sargs, 0, sargs.length);
-        return sargs;
+        List<String> list=new ArrayList<>();
+        for(int i=0;i<packindex;i++){
+            list.add(argsIn.get(i));
+        }
+        return list;
     }
-    public String pack(String [] argsIn,int packindex){
+    public String pack(List<String> argsIn,int packindex){
         //[p]
-        return argsIn[packindex];
+        return argsIn.get(packindex);
     }
-    public String[] args(String [] argsIn,int packindex){
+    public List<String> args(List<String> argsIn,int packindex){
         //[p+1,l)
-        String[] args=new String[argsIn.length-packindex-1];
-        System.arraycopy(argsIn, packindex+1, args, 0, args.length);
-        return args;
+        List<String> list=new ArrayList<>();
+        for(int i=0;i<argsIn.size()-packindex-1;i++){
+            list.add(argsIn.get(i+packindex+1));
+        }
+        return list;
     }
 
 
@@ -108,7 +108,7 @@ public class CommandScript extends CommandBase {
     }
 
     //判断命令参数重复
-    public boolean repeatSargs(String[] sargs,String sarg){
+    public boolean repeatSargs(List<String> sargs,String sarg){
         int n=0;
         for(String s:sargs){
             if(s.equals(sarg)){

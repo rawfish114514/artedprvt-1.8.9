@@ -1,5 +1,6 @@
 package rawfish.artedprvt.script;
 
+import com.google.common.collect.Sets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -37,9 +38,9 @@ public class ScriptProcess {
 
     protected String dir;//脚本目录
     protected ICommandSender sender;//用户
-    protected String[] sargs;//命令参数
+    protected List<String> sargs;//命令参数
     protected String pack;//主包名 进程名
-    protected String[] args;//脚本参数
+    protected List<String> args;//脚本参数
     protected Context rhino;//脚本上下文
     protected ScriptSystem sys;//脚本系统
     protected ScriptClient client;//脚本客户端
@@ -50,7 +51,10 @@ public class ScriptProcess {
 
     protected long time;//开始时间
     protected int ret;//状态
-    public ScriptProcess(ICommandSender senderIn,String[] sargsIn,String packIn, String[] argsIn) throws CommandException {
+
+    protected int nativeobject;//创建的java对象数
+
+    public ScriptProcess(ICommandSender senderIn,List<String> sargsIn,String packIn, List<String> argsIn) throws CommandException {
         sender=senderIn;
         sargs=sargsIn;
         pack=packIn;
@@ -60,9 +64,13 @@ public class ScriptProcess {
             if(config.err.equals("Unexpected")){
                 throw new CommandException("script: 读取配置时发生意外");
             }
-            systemArgs(config.options);
+            for(String sarg:config.options){
+                if(sargList.contains(sarg)){
+                    sargs.add(sarg);
+                }
+            }
         }
-        systemArgs(Arrays.asList(sargs));
+        systemArgs(sargs);
         if(getValueS()){
             StringBuilder sb = new StringBuilder("/script");
             for (String arg:sargs) {
@@ -113,11 +121,11 @@ public class ScriptProcess {
         return time;
     }
 
-    public String[] getSargs(){
+    public List<String> getSargs(){
         return sargs;
     }
 
-    public String[] getArgs(){
+    public List<String> getArgs(){
         return args;
     }
 
@@ -125,7 +133,11 @@ public class ScriptProcess {
         return sys;
     }
 
-    protected void systemArgs(Collection<String> sargs){
+    public void addNativeObjectNumber(){
+        nativeobject++;
+    }
+
+    protected void systemArgs(List<String> sargs){
         for(String sarg:sargs){
             if(sarg.equals("-s")){
                 sarg_S();
@@ -213,7 +225,6 @@ public class ScriptProcess {
         ret=1;//进程启动 无效退出
         time=0;
         tl=new ArrayList<>();
-        ScriptThread.n=0;
         thread=new MainThread(this);
 
         thread.start();
@@ -242,11 +253,11 @@ public class ScriptProcess {
             return;
         }
         onEnd=true;
-        long t=new Date().getTime()-time;
+        long t=new Date().getTime();
         if(ret==2) {
-            sys.print(pack,"\u00a72end:\u00a7a " + pack + "\u00a77(" + t + "ms)");
+            sys.print(pack,"\u00a72end:\u00a7a " + pack + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
         }else if(ret==-2){
-            sys.print(pack,"\u00a74break:\u00a7a " + pack + "\u00a77(" + t + "ms)");
+            sys.print(pack,"\u00a74break:\u00a7a " + pack + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
         }
         proList.remove(this);
         ret=7;//进程结束
@@ -312,4 +323,24 @@ public class ScriptProcess {
         al_value=true;
     }
 
+    public String getStatistics(){
+        return getStatistics(new Date().getTime());
+    }
+
+    public String getStatistics(long time){
+        //ret: 状态 runtime: 运行时间 [系统参数;脚本参数]
+        String line1;
+        //nativejava: 创建java对象数
+        String line2;
+
+        line1=String.format("ret: %s runtime: %s",ret,time-getTime());
+        String as=String.format(" [%s;%s]",String.join(" ",getSargs()),String.join(" ",getArgs()));
+        if(!as.equals(" [;]")){
+            line1+=as;
+        }
+
+        line2=String.format("nativeobject: %s",nativeobject);
+
+        return String.join("\n",line1,line2);
+    }
 }

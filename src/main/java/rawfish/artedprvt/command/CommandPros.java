@@ -41,19 +41,7 @@ public class CommandPros extends CommandBase {
             ChatComponentText chat=new ChatComponentText(String.format("process: %s pid: %s",pro.getPack(),pro.getId()));
             int ret=pro.getRet();
             if(ret!=0&&ret!=1){
-                StringBuilder sargl= new StringBuilder();
-                for(String s:pro.getSargs()){
-                    sargl.append(s);
-                }
-                StringBuilder argl= new StringBuilder();
-                for(String s:pro.getArgs()){
-                    argl.append(s);
-                }
-                String hover=String.format("ret: %s runtime: %s",ret,new Date().getTime()-pro.getTime());
-                String as=String.format(" [%s;%s]",sargl,argl);
-                if(!as.equals(" [;]")){
-                    hover+=as;
-                }
+                String hover=pro.getStatistics();
                 chat.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(String.valueOf(hover)))));
             }
             sender.addChatMessage(chat);

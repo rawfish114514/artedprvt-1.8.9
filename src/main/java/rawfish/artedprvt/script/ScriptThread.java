@@ -6,7 +6,7 @@ package rawfish.artedprvt.script;
  */
 public class ScriptThread extends Thread{
     //进程的线程创建次数 不包括主线程
-    protected static int n=0;
+    protected int n=0;
     protected ScriptProcess pro;
 
     //错误处理 不处理则发生错误直接终止进程

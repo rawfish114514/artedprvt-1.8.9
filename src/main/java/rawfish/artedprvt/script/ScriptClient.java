@@ -2,9 +2,11 @@ package rawfish.artedprvt.script;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.client.C01PacketChatMessage;
+import net.minecraft.network.play.client.C02PacketUseEntity;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.Scriptable;
@@ -42,11 +44,19 @@ public class ScriptClient {
     }
 
     /**
+     * 发送交互实体数据包
+     * @param entity 攻击的实体
+     */
+    public void sendUse(Entity entity){
+        manager.sendPacket(new C02PacketUseEntity(entity,C02PacketUseEntity.Action.ATTACK));
+    }
+
+    /**
      * 获取所有实体
      * @return
      */
-    public List<EntityPlayer> getAllEntity(){
-        return Minecraft.getMinecraft().theWorld.playerEntities;
+    public List<Entity> getAllEntity(){
+        return Minecraft.getMinecraft().theWorld.getLoadedEntityList();
     }
 
     /**

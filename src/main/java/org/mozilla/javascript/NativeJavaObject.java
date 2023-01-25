@@ -6,6 +6,8 @@
 
 package org.mozilla.javascript;
 
+import rawfish.artedprvt.script.MainThread;
+import rawfish.artedprvt.script.ScriptThread;
 import rawfish.artedprvt.script.js.ClassCollection;
 import rawfish.artedprvt.script.js.ClassLevel;
 import rawfish.artedprvt.script.js.ClassMember;
@@ -67,6 +69,12 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
             clas=(Class)javaObject;
         }
         isConfuse=ClassLevel.isConfuseClass(scope,clas);
+        Thread t=Thread.currentThread();
+        if(t instanceof MainThread){
+            ((MainThread)t).getProcess().addNativeObjectNumber();
+        }else if(t instanceof ScriptThread){
+            ((ScriptThread)t).getMainThread().getProcess().addNativeObjectNumber();
+        }
     }
 
     public boolean isConfuse;

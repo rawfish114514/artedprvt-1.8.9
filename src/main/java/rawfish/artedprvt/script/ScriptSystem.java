@@ -11,10 +11,7 @@ import org.mozilla.javascript.NativeJavaClass;
 import rawfish.artedprvt.id.FormatCode;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 脚本系统
@@ -33,19 +30,29 @@ public class ScriptSystem {
      * @param pack 调用者
      * @return 写在包名后的参数列表
      */
-    public List getArgs(String pack){
-        return Arrays.asList(pro.args);
+    public List<String> getArgs(String pack){
+        return new ArrayList<>(pro.args);
     }
 
     /**
      * 打印消息
      * @param pack 调用者
      * @param object 消息
+     * @param hover 鼠标悬浮信息 可为null
      */
-    public void print(String pack,Object object){
+    public void print(String pack,Object object,Object hover){
         if(ScriptConst.chat) {
-            sender.addChatMessage(new ChatComponentText(String.valueOf(object)));
+            ChatComponentText chat=new ChatComponentText(String.valueOf(object));
+            String hs=String.valueOf(hover);
+            if(!(hs.equals("null")||hs.equals("undefined"))){
+                chat.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(String.valueOf(hover)))));
+            }
+            sender.addChatMessage(chat);
         }
+    }
+
+    public void print(String pack,Object object){
+        print(pack,object,null);
     }
 
     protected SimpleDateFormat datef = new SimpleDateFormat("HH:mm:ss");
@@ -70,9 +77,7 @@ public class ScriptSystem {
             if(!(hs.equals("null")||hs.equals("undefined"))){
                 chat.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(String.valueOf(hover)))));
             }
-
             sender.addChatMessage(chat);
-
         }
     }
 
