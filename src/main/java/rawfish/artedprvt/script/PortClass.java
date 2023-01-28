@@ -40,6 +40,8 @@ public class PortClass {
         put(Items.class);
         put(Blocks.class);
         put(BlockPos.class);
+
+        //test
     }
     private void put(Class clas){
         classes.put(clas.getSimpleName(),new NativeJavaClass(scope,clas));

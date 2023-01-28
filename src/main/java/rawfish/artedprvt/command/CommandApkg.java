@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class CommandScript extends CommandBase {
-    public CommandScript(String nameIn){
+public class CommandApkg extends CommandBase {
+    public CommandApkg(String nameIn){
         name=nameIn;
     }
 
@@ -24,13 +24,13 @@ public class CommandScript extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "commands.script.usage";
+        return "commands.apkg.usage";
     }
 
     @Override
     public void processCommand(ICommandSender senderIn, String[] argsIn) throws CommandException {
         if(argsIn.length<1){
-            throw new WrongUsageException("commands.script.usage");
+            throw new WrongUsageException("commands.apkg.usage");
         }
 
         //去空参数
@@ -44,8 +44,8 @@ public class CommandScript extends CommandBase {
 
         int packindex=calpack(slist);
         if(packindex==-1){
-            //没有包名
-            throw new CommandException("找不到包名 请检查参数");
+            //没有文件
+            throw new CommandException("找不到文件 请检查参数");
         }
 
         List<String> sargs=sargs(slist,packindex);//命令参数
@@ -60,7 +60,7 @@ public class CommandScript extends CommandBase {
 
         String pack=pack(slist,packindex);//脚本包名
         List<String> args=args(slist,packindex);//脚本参数
-        String dir=System.getProperties().get("user.dir").toString()+"/artedprvt/src";//项目目录
+        String dir=System.getProperties().get("user.dir").toString()+"/artedprvt/lib/"+pack.replace('.','/')+".apkg";//项目目录
         ScriptProcess script=new ScriptProcess(senderIn,getCommandName(),dir,sargs,pack,args);
 
         if(script.getRet()==0) {

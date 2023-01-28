@@ -12,6 +12,7 @@ public class CommandLoader
         event.registerServerCommand(new CommandAc("ac"));
         event.registerServerCommand(new CommandAd("ad"));
         event.registerServerCommand(new CommandScript("script"));
+        event.registerServerCommand(new CommandApkg("apkg"));
         event.registerServerCommand(new CommandStops("stops"));
         event.registerServerCommand(new CommandPros("pros"));
     }
@@ -22,6 +23,7 @@ public class CommandLoader
         handler.registerCommand(new CommandAc("ac"));
         handler.registerCommand(new CommandAd("ad"));
         handler.registerCommand(new CommandScript("script"));
+        handler.registerCommand(new CommandApkg("apkg"));
         handler.registerCommand(new CommandStops("stops"));
         handler.registerCommand(new CommandPros("pros"));
     }

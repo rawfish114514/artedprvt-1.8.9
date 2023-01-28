@@ -15,11 +15,8 @@ public class ScriptConfig {
     /**
      * 更新配置
      */
-    public static ScriptConfig load(){
-        ScriptConfig config=new ScriptConfig();
-        String path=System.getProperties().get("user.dir").toString()+"/artedprvt/config.json";
-        Context rhino=Context.enter();
-        ScriptableObject scope=rhino.initStandardObjects();
+    public static ScriptConfig load(String dir){
+        String path=dir+"/config.json";
 
         File file=new File(path);
         if(!file.exists()){
@@ -44,6 +41,16 @@ public class ScriptConfig {
         }
         String str=sb.toString();
 
+        return loads(str);
+    }
+
+    public static ScriptConfig loads(String str){
+        if(str==null){
+            return null;
+        }
+        ScriptConfig config=new ScriptConfig();
+        Context rhino=Context.enter();
+        ScriptableObject scope=rhino.initStandardObjects();
         scope.put("str",scope,str);
         rhino.evaluateString(scope,getScript(),"114514",114514,null);
 
@@ -57,6 +64,7 @@ public class ScriptConfig {
 
         return config;
     }
+
     public List<String> options=new ArrayList<>();
     public String err="";
 

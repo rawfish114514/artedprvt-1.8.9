@@ -70,6 +70,7 @@ public class MainThread extends Thread{
 
         endld();
         pro.end();
+        Context.exit();
     }
 
     /**
@@ -99,6 +100,7 @@ public class MainThread extends Thread{
             stop();
             st.stop();
         }
+        Context.exit();
     }
     public ScriptProcess getProcess(){
         return pro;

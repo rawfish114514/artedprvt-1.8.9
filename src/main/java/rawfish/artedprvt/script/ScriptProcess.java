@@ -9,8 +9,11 @@ import org.mozilla.javascript.Context;
 import rawfish.artedprvt.script.js.ClassCollection;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * 脚本进程
@@ -34,9 +37,12 @@ public class ScriptProcess {
 
     protected static int spid=0;//进程起始id
     protected int pid;//进程id
-
-
-    protected String dir;//脚本目录
+    protected boolean pkg;//是pkg
+    protected Map<String,String> pkgs;//文件内容
+    protected ScriptConfig config;//配置
+    protected String commandName;//命令
+    protected String dir;//项目目录
+    protected String spath;//脚本路径
     protected ICommandSender sender;//用户
     protected List<String> sargs;//命令参数
     protected String pack;//主包名 进程名
@@ -54,12 +60,32 @@ public class ScriptProcess {
 
     protected int nativeobject;//创建的java对象数
 
-    public ScriptProcess(ICommandSender senderIn,List<String> sargsIn,String packIn, List<String> argsIn) throws CommandException {
+    public ScriptProcess(ICommandSender senderIn,String commandNameIn,String dirIn,List<String> sargsIn,String packIn, List<String> argsIn) throws CommandException {
         sender=senderIn;
+        commandName=commandNameIn;
+        dir=dirIn;
         sargs=sargsIn;
         pack=packIn;
         args=argsIn;
-        ScriptConfig config=ScriptConfig.load();
+
+        pkg=!new File(dir).isDirectory();
+
+        if(pkg){
+            //配置必要
+            try {
+                readPkg();
+            } catch (Exception e) {
+                throw new CommandException("apkg: 加载文件失败");
+            }
+            config=ScriptConfig.loads(pkgs.get("config.json"));
+            if(config==null){
+                throw new CommandException("apkg: 未找到配置文件");
+            }
+        }else {
+            //配置非必要
+            config=ScriptConfig.load(dir);
+        }
+
         if(config!=null) {
             if(config.err.equals("Unexpected")){
                 throw new CommandException("script: 读取配置时发生意外");
@@ -72,7 +98,8 @@ public class ScriptProcess {
         }
         systemArgs(sargs);
         if(getValueS()){
-            StringBuilder sb = new StringBuilder("/script");
+            StringBuilder sb = new StringBuilder("/");
+            sb.append(commandName);
             for (String arg:sargs) {
                 if(!arg.equals("-s")) {
                     sb.append(' ');
@@ -93,7 +120,8 @@ public class ScriptProcess {
             ClassCollection.putExtend();
         }
         ret=0;//进程创建 无效退出
-        dir=System.getProperties().get("user.dir").toString()+"/artedprvt/script/";
+
+        spath=dir+"/script/";
 
         if(proList.size()==0){
             spid=0;
@@ -164,6 +192,33 @@ public class ScriptProcess {
     }
 
     /**
+     * 读取文件
+     */
+    public void readPkg() throws Exception {
+        pkgs=new HashMap<>();
+
+        ZipInputStream zip = new ZipInputStream(
+                new FileInputStream(dir),
+                Charset.forName("GBK"));
+
+        Reader reader=new InputStreamReader(zip,StandardCharsets.UTF_8);
+
+        ZipEntry entry = null;
+        while ((entry = zip.getNextEntry()) != null) {
+            String name = entry.getName();
+            if (!entry.isDirectory()) {
+                int n;
+                int i=0;
+                StringBuilder sb=new StringBuilder(0);
+                while ((n = reader.read()) != -1) {
+                    sb.append((char)n);
+                }
+                pkgs.put(entry.getName(),sb.toString());
+            }
+        }
+    }
+
+    /**
      * 读取工作目录下的文件
      * @param packIn 模块名
      * @return
@@ -176,7 +231,16 @@ public class ScriptProcess {
             throw new RuntimeException("pack: "+packIn+" (开头为英文字母后接英文字母数字下划线)");
         }
         String path=packIn.replace('.','/')+".js";
-        File file=new File(dir+path);
+
+        if(pkg){
+            String str=pkgs.get("script/"+path);
+            if(str==null){
+                throw new RuntimeException("Invalid file path");
+            }
+            return str;
+        }
+
+        File file=new File(spath+path);
         Reader reader;
         StringBuilder sb;
         try {
