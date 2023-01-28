@@ -81,25 +81,30 @@ public class ScriptProcess {
             if(config==null){
                 throw new CommandException("apkg: 未找到配置文件");
             }
+
+            if(config.pkgError){
+                throw new CommandException("script: 读取配置时发生意外");
+            }
+            pack=(String)config.pkg.get("pack");
         }else {
             //配置非必要
             config=ScriptConfig.load(dir);
         }
 
         if(config!=null) {
-            if(config.err.equals("Unexpected")){
+            if(config.error){
                 throw new CommandException("script: 读取配置时发生意外");
             }
-            for(String sarg:config.options){
-                if(sargList.contains(sarg)){
-                    sargs.add(sarg);
+            for(Object sarg:config.options){
+                if(sargList.contains(String.valueOf(sarg))){
+                    sargs.add(String.valueOf(sarg));
                 }
             }
         }
         systemArgs(sargs);
         if(getValueS()){
             StringBuilder sb = new StringBuilder("/");
-            sb.append(commandName);
+            sb.append(commandNameIn);
             for (String arg:sargs) {
                 if(!arg.equals("-s")) {
                     sb.append(' ');
@@ -107,7 +112,7 @@ public class ScriptProcess {
                 }
             }
             sb.append(' ');
-            sb.append(pack);
+            sb.append(packIn);
             for(String arg:args){
                 sb.append(' ');
                 sb.append(arg);

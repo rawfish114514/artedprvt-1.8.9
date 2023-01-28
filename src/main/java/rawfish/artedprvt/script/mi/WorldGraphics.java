@@ -144,8 +144,9 @@ public class WorldGraphics {
      * @param pos 方块坐标
      */
     public void drawBlock(BlockPos pos){
-        Chunk chunk = world.getChunkFromBlockCoords(pos);
-        chunk.setBlockState(pos.add(center), block);
+        BlockPos thePos=pos.add(center);
+        Chunk chunk = world.getChunkFromBlockCoords(thePos);
+        chunk.setBlockState(thePos, block);
         drawCount++;
     }
 
