@@ -19,7 +19,7 @@ public class Artedprvt
     public static CommonProxy proxy;
     public static final String MODID="artedprvt";
     public static final String NAME="ArtedPrvt Frame";
-    public static final String VERSION="1.0.0";
+    public static final String VERSION="@version@";
 
     @Instance(Artedprvt.MODID)
     public static Artedprvt instance;

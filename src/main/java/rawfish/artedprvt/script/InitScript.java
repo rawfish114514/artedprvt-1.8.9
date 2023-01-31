@@ -11,6 +11,7 @@ public class InitScript {
                     "var log=function(object,hover){_114514.log(_1919810,object,hover);};\n" +
                     "var import=function(pack){return _114514.importModule(_1919810,pack);};\n" +
                     "var export=function(object){_114514.exportModule(_1919810,object);};\n" +
+                    "var class=function(object){return _114514.getJavaClass(_1919810,object);};\n" +
                     "var thread=function(runnable){return _114514.createThread(_1919810,runnable);};\n" +
                     "var runf=function(func,args){return _114514.runFunction(_1919810,func,args);};\n" +
                     "var sleep=function(millis){java.lang.Thread.sleep(millis);};\n";

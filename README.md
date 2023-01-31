@@ -1,9 +1,9 @@
-这是forge(1.8.9)项目,扩展minecraft
+扩展minecraft
 
 
 **#运行javascript脚本**
 
-.minecraft/artedprvt/script/main.js
+.minecraft/artedprvt/src/script/main.js
 
 `print("Hello Minecraft");`
 

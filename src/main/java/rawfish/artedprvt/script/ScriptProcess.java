@@ -45,7 +45,8 @@ public class ScriptProcess {
     protected String spath;//脚本路径
     protected ICommandSender sender;//用户
     protected List<String> sargs;//命令参数
-    protected String pack;//主包名 进程名
+    protected String pack;//主包名
+    protected String name;//进程名
     protected List<String> args;//脚本参数
     protected Context rhino;//脚本上下文
     protected ScriptSystem sys;//脚本系统
@@ -66,9 +67,10 @@ public class ScriptProcess {
         dir=dirIn;
         sargs=sargsIn;
         pack=packIn;
+        name=pack;
         args=argsIn;
 
-        pkg=!new File(dir).isDirectory();
+        pkg=new File(dir).isFile();
 
         if(pkg){
             //配置必要
@@ -86,6 +88,7 @@ public class ScriptProcess {
                 throw new CommandException("script: 读取配置时发生意外");
             }
             pack=(String)config.pkg.get("pack");
+            name=packIn;
         }else {
             //配置非必要
             config=ScriptConfig.load(dir);
@@ -101,6 +104,9 @@ public class ScriptProcess {
                 }
             }
         }
+        Set<String> ss=new HashSet<>(sargs);
+        sargs=new ArrayList<>();
+        sargs.addAll(ss);
         systemArgs(sargs);
         if(getValueS()){
             StringBuilder sb = new StringBuilder("/");
@@ -302,7 +308,7 @@ public class ScriptProcess {
     public void begin(){
         ret=2;//进程准备 正常退出
         time=new Date().getTime();
-        sys.print(pack,"\u00a73run:\u00a7a " + pack);
+        sys.print(pack,"\u00a73run:\u00a7a " + name);
     }
     //终止进程
     public void stop(ScriptThread st){
@@ -324,9 +330,9 @@ public class ScriptProcess {
         onEnd=true;
         long t=new Date().getTime();
         if(ret==2) {
-            sys.print(pack,"\u00a72end:\u00a7a " + pack + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
+            sys.print(pack,"\u00a72end:\u00a7a " + name + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
         }else if(ret==-2){
-            sys.print(pack,"\u00a74break:\u00a7a " + pack + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
+            sys.print(pack,"\u00a74break:\u00a7a " + name + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
         }
         proList.remove(this);
         ret=7;//进程结束

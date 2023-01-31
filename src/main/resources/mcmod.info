@@ -1,14 +1,16 @@
 [{
   "modid": "artedprvt",
   "name": "ArtedPrvt Frame",
-  "description": "AP Frame.",
-  "version": "1.0.0",
+  "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://gitcode.net/group-apf/artedprvt",
   "updateUrl": "",
   "authorList": ["Rawfishc"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "logo.png",
   "screenshots": [],
-  "dependencies": []
+  "dependencies": [],
+
+
+  "description": "ArtedPrvt Frame是一个js运行环境，允许玩家编写js脚本实现对Minecraft的简单修改。\n\n作者 ↓\nhttps://space.bilibili.com/455906194"
 }]
