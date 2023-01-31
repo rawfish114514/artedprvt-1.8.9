@@ -172,6 +172,22 @@ public class ScriptProcess {
         return sys;
     }
 
+    public MainThread getThread(){
+        return thread;
+    }
+
+    public boolean getPkg(){
+        return pkg;
+    }
+
+    public String getDir(){
+        return dir;
+    }
+
+    public String getName(){
+        return name;
+    }
+
     public void addNativeObjectNumber(){
         nativeobject++;
     }

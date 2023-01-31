@@ -65,12 +65,11 @@ public class ScriptSystem {
      */
     public void log(String pack,Object object,Object hover){
         if(ScriptConst.debug) {
-            Date date=new Date();
             String head;
             if(pro.pack.equals(pack)&&(!pro.pkg)) {
-                head = String.format("[%s] [%s] [%s] ", datef.format(date),pro.name,Thread.currentThread().getName());
+                head = String.format("[%s] [%s] ", pro.name,Thread.currentThread().getName());
             }else{
-                head = String.format("[%s] [%s] [%s] [%s] ", datef.format(date),pro.name,Thread.currentThread().getName(),pack);
+                head = String.format("[%s] [%s] [%s] ", pro.name,Thread.currentThread().getName(),pack);
             }
             ChatComponentText chat=new ChatComponentText(FormatCode.COLOR_7+head+FormatCode.FONT_r+String.valueOf(object));
             String hs=String.valueOf(hover);

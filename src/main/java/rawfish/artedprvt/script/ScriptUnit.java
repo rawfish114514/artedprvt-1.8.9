@@ -46,11 +46,11 @@ public class ScriptUnit{
         scope.put(InitScript.varSys,scope,sys);
         scope.put(InitScript.varPack,scope,pack);
         scope.put(InitScript.varInvoker,scope,invoker);
-        rhino.evaluateString(scope,InitScript.script,"init_sys",1,null);
+        rhino.evaluateString(scope,InitScript.script,"/init_sys",1,null);
 
         //添加客户端功能
         scope.put(InitScript.varClient,scope,pro.client);
-        rhino.evaluateString(scope,InitScript.clientscript,"init_client",1,null);
+        rhino.evaluateString(scope,InitScript.clientscript,"/init_client",1,null);
 
         //定义重混淆
         scope.put(ClassLevel.varRc,scope,String.valueOf(pro.getValueRc()));

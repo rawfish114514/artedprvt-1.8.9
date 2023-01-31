@@ -36,6 +36,20 @@ public class EventListener extends LifeDepend{
     }
 
     /**
+     * 调用监听函数
+     * 在此进行异常捕获
+     * @param event 事件
+     */
+    public void run(Event event){
+        try {
+            f.run(event);
+        }catch(Exception e){
+            terminate();
+            pro.getThread().getUncaughtExceptionHandler().uncaughtException(pro.getThread(),e);
+        }
+    }
+
+    /**
      * 构造一个事件监听器
      * @param type 事件类型
      * @param f 回调函数
@@ -83,7 +97,7 @@ public class EventListener extends LifeDepend{
         }
         @SubscribeEvent
         public void onEvent(TickEvent.ServerTickEvent event){
-            f.run(event);
+            run(event);
         }
     }
 
@@ -93,7 +107,7 @@ public class EventListener extends LifeDepend{
         }
         @SubscribeEvent
         public void onEvent(PlayerInteractEvent event){
-            f.run(event);
+            run(event);
         }
     }
 
@@ -103,7 +117,7 @@ public class EventListener extends LifeDepend{
         }
         @SubscribeEvent
         public void onEvent(PlayerUseItemEvent.Finish event){
-            f.run(event);
+            run(event);
         }
     }
 
@@ -113,7 +127,7 @@ public class EventListener extends LifeDepend{
         }
         @SubscribeEvent
         public void onEvent(ClientChatReceivedEvent event){
-            f.run(event);
+            run(event);
         }
     }
 
@@ -125,7 +139,7 @@ public class EventListener extends LifeDepend{
         }
         @SubscribeEvent
         public void onEvent(Event event){
-            f.run(event);
+            run(event);
         }
     }
 
