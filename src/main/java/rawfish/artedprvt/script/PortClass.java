@@ -9,6 +9,7 @@ import org.mozilla.javascript.NativeJavaObject;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.script.js.ClassLevel;
 import rawfish.artedprvt.script.mi.*;
+import scala.Int;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +33,11 @@ public class PortClass {
 
     private void add(){
         //mi.*
+        put(LifeDepend.class);
         put(Events.class);
         put(EventListener.class);
         put(WorldManager.class);
-
+        
         //net.minecraft
         put(Items.class);
         put(Blocks.class);
