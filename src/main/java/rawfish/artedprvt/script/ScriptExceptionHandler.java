@@ -62,7 +62,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
      * @return
      */
     public String color(String s){
-        return "at script(\u00a7b"+s+"\u00a7r)";
+        return "\u00a7rat script(\u00a7b"+s+"\u00a7r)";
     }
 
     /**

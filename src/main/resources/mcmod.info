@@ -1,8 +1,8 @@
 [{
   "modid": "artedprvt",
   "name": "ArtedPrvt Frame",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "version": "1.0@keyboard",
+  "mcversion": "1.8.9",
   "url": "\nhttps://gitcode.net/group-apf/artedprvt\nhttps://gitee.com/rawfishc/artedprvt-1.8.9",
   "updateUrl": "",
   "authorList": ["Rawfishc"],
