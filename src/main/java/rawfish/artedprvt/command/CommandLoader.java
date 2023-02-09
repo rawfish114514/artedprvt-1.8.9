@@ -15,6 +15,7 @@ public class CommandLoader
         event.registerServerCommand(new CommandApkg("apkg"));
         event.registerServerCommand(new CommandStops("stops"));
         event.registerServerCommand(new CommandPros("pros"));
+        event.registerServerCommand(new CommandIn("in"));
     }
 
     public CommandLoader(ClientCommandHandler handler){
@@ -26,5 +27,6 @@ public class CommandLoader
         handler.registerCommand(new CommandApkg("apkg"));
         handler.registerCommand(new CommandStops("stops"));
         handler.registerCommand(new CommandPros("pros"));
+        handler.registerCommand(new CommandIn("in"));
     }
 }

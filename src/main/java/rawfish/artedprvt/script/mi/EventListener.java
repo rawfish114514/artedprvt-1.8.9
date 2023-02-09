@@ -5,8 +5,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import rawfish.artedprvt.common.EventLoader;
+import rawfish.artedprvt.event.InputStringEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +54,7 @@ public class EventListener extends LifeDepend{
 
     /**
      * 构造一个事件监听器
+     * 这个构造函数没有添加对象到主线程，因为没有必要
      * @param type 事件类型
      * @param f 回调函数
      */
@@ -63,6 +67,10 @@ public class EventListener extends LifeDepend{
         }
         if(type==Events.use){
             listener=new UseEventListener(f);
+        }
+        if(type==Events.input){
+            listener=new InputStringEventListener(f);
+            setEventBus(this,EventLoader.EVENT_BUS);
         }
 
 
@@ -77,10 +85,21 @@ public class EventListener extends LifeDepend{
     }
 
     /**
+     * 设置事件监听器和代理监听器的事件总线
+     * @param listener
+     * @param bus
+     */
+    public static void setEventBus(EventListener listener,EventBus bus){
+        listener.EVENT_BUS=bus;
+        listener.listener.EVENT_BUS=bus;
+    }
+
+    public EventBus EVENT_BUS=MinecraftForge.EVENT_BUS;
+    /**
      * 注册监听器
      */
     public void register(){
-        MinecraftForge.EVENT_BUS.register(listener);
+        EVENT_BUS.register(listener);
     }
 
     /**
@@ -88,7 +107,7 @@ public class EventListener extends LifeDepend{
      */
     @Override
     public void terminate() {
-        MinecraftForge.EVENT_BUS.unregister(listener);
+        EVENT_BUS.unregister(listener);
     }
 
     public static class TickEventListener extends EventListener{
@@ -127,6 +146,16 @@ public class EventListener extends LifeDepend{
         }
         @SubscribeEvent
         public void onEvent(ClientChatReceivedEvent event){
+            run(event);
+        }
+    }
+
+    public static class InputStringEventListener extends EventListener{
+        public InputStringEventListener(EventFunction f){
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(InputStringEvent event){
             run(event);
         }
     }

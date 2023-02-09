@@ -16,9 +16,11 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import rawfish.artedprvt.event.InputStringEvent;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -28,31 +30,8 @@ import java.util.Properties;
 
 public class EventLoader
 {
+    public static final EventBus EVENT_BUS = new EventBus();
     public EventLoader()
     {
-        MinecraftForge.EVENT_BUS.register(this);
     }
-
-
-    public static int chat=1;
-    @SubscribeEvent
-    public void onPlayerInteract(PlayerInteractEvent event)
-    {
-        if (event.world.isRemote)
-        {
-            ItemStack item=event.entityPlayer.getHeldItem();
-            if(!(item ==null)){
-                if(chat==0) {
-                    event.entityPlayer.addChatComponentMessage(new ChatComponentText(String.valueOf(item.getTagCompound())));
-                }
-            }
-        }
-
-    }
-
-    @SubscribeEvent
-    public void onEntityJoinWorld(EntityJoinWorldEvent event){
-
-    }
-
 }

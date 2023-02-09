@@ -23,6 +23,12 @@ public enum Events {
      */
     use,
 
+    /**
+     * 用户输入字符串事件
+     * 源: InputStringEvent
+     */
+    input,
+
     //SideOnly Client
 
     /**
