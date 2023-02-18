@@ -21,6 +21,7 @@ public class CommandApf extends CommandBase {
         cmdm.put("pros",new CommandPros("pros"));
         cmdm.put("script",new CommandScript("script"));
         cmdm.put("stops",new CommandStops("stops"));
+        cmdm.put("workspace",new CommandWorkspace("workspace"));
     }
 
     public Map<String,CommandBase> cmdm;
