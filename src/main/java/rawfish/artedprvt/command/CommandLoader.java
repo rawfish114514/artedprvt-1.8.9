@@ -1,5 +1,6 @@
 package rawfish.artedprvt.command;
 
+import net.minecraft.command.CommandBase;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
@@ -7,26 +8,22 @@ public class CommandLoader
 {
     public CommandLoader(FMLServerStartingEvent event)
     {
-        event.registerServerCommand(new CommandApf("artedprvt"));
+        CommandApf commandApf=new CommandApf("artedprvt");
+        event.registerServerCommand(commandApf);
         event.registerServerCommand(new CommandApf("apf"));
-        event.registerServerCommand(new CommandAc("ac"));
-        event.registerServerCommand(new CommandAd("ad"));
-        event.registerServerCommand(new CommandScript("script"));
-        event.registerServerCommand(new CommandApkg("apkg"));
-        event.registerServerCommand(new CommandStops("stops"));
-        event.registerServerCommand(new CommandPros("pros"));
-        event.registerServerCommand(new CommandIn("in"));
+
+        for(CommandBase c:commandApf.cmdm.values()){
+            event.registerServerCommand(c);
+        }
     }
 
     public CommandLoader(ClientCommandHandler handler){
-        handler.registerCommand(new CommandApf("artedprvt"));
+        CommandApf commandApf=new CommandApf("artedprvt");
+        handler.registerCommand(commandApf);
         handler.registerCommand(new CommandApf("apf"));
-        handler.registerCommand(new CommandAc("ac"));
-        handler.registerCommand(new CommandAd("ad"));
-        handler.registerCommand(new CommandScript("script"));
-        handler.registerCommand(new CommandApkg("apkg"));
-        handler.registerCommand(new CommandStops("stops"));
-        handler.registerCommand(new CommandPros("pros"));
-        handler.registerCommand(new CommandIn("in"));
+
+        for(CommandBase c:commandApf.cmdm.values()){
+            handler.registerCommand(c);
+        }
     }
 }

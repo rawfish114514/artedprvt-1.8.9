@@ -21,6 +21,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,7 +33,6 @@ public class ScriptClient {
     public ScriptClient(){
         minecraft=Minecraft.getMinecraft();
         manager=minecraft.getNetHandler().getNetworkManager();
-
     }
 
     /**

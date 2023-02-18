@@ -1,17 +1,9 @@
-//item
-item.goldenEgg.name=Golden Egg
-
-
-
-//itemGroup
-itemGroup.artedprvt=Artedprvt
-
-
-
-//book
-book.page.0=Artedprvt Frame
-
-
-
-//file
-fileType.text=Text
+//commands
+commands.ac.usage=/ac
+commands.ad.usage=/ad
+commands.script.usage=/script [sargs ...] <pack> [args ...]
+commands.apkg.usage=/apkg [sargs ...] <pkg> [args ...]
+commands.stops.usage=/stops [pro]
+commands.apf.usage=/artedprvt|apf <args ...>
+commands.pros.usage=/pros
+commands.in.usage=/in [string ...]
