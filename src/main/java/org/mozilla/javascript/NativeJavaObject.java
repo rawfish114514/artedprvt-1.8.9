@@ -63,10 +63,9 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         this.staticType = staticType;
         this.isAdapter = isAdapter;
         initMembers();
-
-        Class clas=staticType;
+        this.clas=javaObject.getClass();
         if(javaObject instanceof Class){
-            clas=(Class)javaObject;
+            this.clas=(Class)javaObject;
         }
         isConfuse=ClassLevel.isConfuseClass(scope,clas);
         Thread t=Thread.currentThread();
@@ -78,6 +77,8 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     }
 
     public boolean isConfuse;
+
+    public Class clas;
 
     protected void initMembers() {
         Class<?> dynamicType;
@@ -112,13 +113,13 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     public Object get(String name, Scriptable start) {
         if(isConfuse){
             //转换为混淆名
-            ClassMember member=ClassCollection.classMap.get(staticType.getName());
+            ClassMember member=ClassCollection.classMap.get(clas.getName());
             if(member!=null){
                 String srg = member.get(name);
                 if(!srg.equals(ClassLevel.memberNull)) {
                     String[] vs=srg.split(ClassLevel.link);
                     for(String v:vs) {
-                        Object rObj = get_(srg);
+                        Object rObj = get_(v);
                         if(!rObj.equals(UniqueTag.NOT_FOUND)){
                             return rObj;
                         }
@@ -160,7 +161,7 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
 
         if(isConfuse){
             //转换为混淆名
-            ClassMember member=ClassCollection.classMap.get(staticType.getName());
+            ClassMember member=ClassCollection.classMap.get(clas.getName());
             if(member!=null){
                 String srg = member.get(name);
                 if(!srg.equals(ClassLevel.memberNull)) {

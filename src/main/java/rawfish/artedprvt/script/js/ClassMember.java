@@ -31,7 +31,10 @@ public class ClassMember {
             for(int i=0;i<srgList.length;i++){
                 srgs.add(srgList[i]);
             }
-            srgs.add(srgName);
+            String[] srgList2=srgName.split(ClassLevel.link);
+            for(int i=0;i<srgList2.length;i++){
+                srgs.add(srgList2[i]);
+            }
             nameTable.put(mcpName,String.join(ClassLevel.link,srgs));
         }
     }

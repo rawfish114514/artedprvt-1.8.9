@@ -27,12 +27,14 @@ public class ClassLevel {
         if(isNetMinecraft(clas)){
             return true;
         }
+        Class sup=clas.getSuperclass();
+        boolean issup=concla(sup);
         for(Class inf:clas.getInterfaces()){
             if(concla(inf)){
                 return true;
             }
         }
-        return false;
+        return issup;
     }
     private static boolean isNetMinecraft(Class clas){
         String name=clas.getName();

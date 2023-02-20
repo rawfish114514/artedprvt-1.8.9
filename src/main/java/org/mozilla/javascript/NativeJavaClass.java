@@ -68,7 +68,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
                 if(!srg.equals(ClassLevel.memberNull)) {
                     String[] vs=srg.split(ClassLevel.link);
                     for(String v:vs) {
-                        Object rObj = get_(srg,start);
+                        Object rObj = get_(v,start);
                         if(!rObj.equals(UniqueTag.NOT_FOUND)){
                             return rObj;
                         }

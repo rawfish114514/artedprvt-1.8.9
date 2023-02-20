@@ -112,7 +112,7 @@ public class ClassCollection {
     }
 
     public static boolean isE=false;
-    //将子类和接口的成员添加到父类上
+    //将父类和接口的成员添加到子类上
     public static void putExtend() {
         if(!isE) {
             isE=true;
@@ -128,30 +128,43 @@ public class ClassCollection {
                     notClass++;
                     continue;
                 }
-                while (true) {
-                    for (Class inf : clas.getInterfaces()) {
-                        ClassMember infMember = classMap.get(inf.getName());
-                        if (infMember == null) {
+                List<Class> cl=getClasses(clas);
+                if(cl!=null) {
+                    for (Class c : cl) {
+                        ClassMember superMember = classMap.get(c.getName());
+                        if (superMember == null) {
                             continue;
                         }
-                        member.up(infMember);
+                        member.up(superMember);
                     }
-                    clas = clas.getSuperclass();
-                    if (clas == Object.class) {
-                        break;
-                    }
-                    if (clas == null) {
-                        break;
-                    }
-                    ClassMember superMember = classMap.get(clas.getName());
-                    if (superMember == null) {
-                        continue;
-                    }
-                    member.up(superMember);
                 }
             }
 
             System.out.println("添加扩展notClass: "+notClass);
         }
+    }
+
+    //一直获取父类和接口直到Object和null
+    public static List<Class> getClasses(Class clas){
+        if(clas==Object.class){
+            return null;
+        }
+        if(clas==null){
+            return null;
+        }
+        List<Class> cl=new ArrayList<>();
+        cl.add(clas);
+        Class sup=clas.getSuperclass();
+        List<Class> scl = getClasses(sup);
+        if (scl != null) {
+            cl.addAll(scl);
+        }
+        for(Class inf:clas.getInterfaces()){
+            List<Class> icl=getClasses(inf);
+            if(icl!=null){
+                cl.addAll(icl);
+            }
+        }
+        return cl;
     }
 }
