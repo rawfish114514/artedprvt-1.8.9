@@ -2,6 +2,7 @@ package rawfish.artedprvt.script;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentSelector;
 import net.minecraft.util.ChatComponentStyle;
@@ -10,8 +11,11 @@ import net.minecraft.util.ChatStyle;
 import org.mozilla.javascript.NativeJavaClass;
 import rawfish.artedprvt.id.FormatCode;
 
+import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
  * 脚本系统
@@ -45,7 +49,12 @@ public class ScriptSystem {
             ChatComponentText chat=new ChatComponentText(String.valueOf(object));
             String hs=String.valueOf(hover);
             if(!(hs.equals("null")||hs.equals("undefined"))){
-                chat.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(String.valueOf(hover)))));
+                chat.setChatStyle(
+                        new ChatStyle()
+                                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ChatComponentText(hs)))
+                                .setChatClickEvent(new CopyEvnet(hs.replaceAll("\u00a7[0-9a-fk-or]","")))
+                );
+
             }
             sender.addChatMessage(chat);
         }
@@ -74,7 +83,11 @@ public class ScriptSystem {
             ChatComponentText chat=new ChatComponentText(FormatCode.COLOR_7+head+FormatCode.FONT_r+String.valueOf(object));
             String hs=String.valueOf(hover);
             if(!(hs.equals("null")||hs.equals("undefined"))){
-                chat.setChatStyle(new ChatStyle().setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText(String.valueOf(hover)))));
+                chat.setChatStyle(
+                        new ChatStyle()
+                                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,new ChatComponentText(hs)))
+                                .setChatClickEvent(new CopyEvnet(hs.replaceAll("\u00a7[0-9a-fk-or]","")))
+                );
             }
             sender.addChatMessage(chat);
         }
@@ -160,5 +173,25 @@ public class ScriptSystem {
     //测试接口
     public Object runFunction(String pack,Function function,Object[] args){
         return function.invoke(args);
+    }
+
+    /**
+     * 点击复制事件
+     */
+    public static class CopyEvnet extends ClickEvent{
+
+        public CopyEvnet(String theValue) {
+            super(null, theValue);
+        }
+
+        @Override
+        public ClickEvent.Action getAction(){
+            set(getValue());
+            return null;
+        }
+
+        public void set(String str){
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(str),null);
+        }
     }
 }
