@@ -170,6 +170,16 @@ public class ScriptSystem {
         return new ScriptThread(pro,target);
     }
 
+    /**
+     * 睡眠指定毫秒的时间
+     * @param pack 调用者
+     * @param millis
+     * @throws InterruptedException
+     */
+    public void sleep(String pack,long millis) throws InterruptedException {
+        Thread.sleep(millis);
+    }
+
     //测试接口
     public Object runFunction(String pack,Function function,Object[] args){
         return function.invoke(args);
