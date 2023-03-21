@@ -9,6 +9,7 @@ package org.mozilla.javascript;
 import rawfish.artedprvt.script.js.ClassCollection;
 import rawfish.artedprvt.script.js.ClassLevel;
 import rawfish.artedprvt.script.js.ClassMember;
+import rawfish.artedprvt.script.js.NativeJavaMethod2Srg;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
@@ -62,22 +63,25 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     public Object get(String name, Scriptable start) {
         if(isConfuse){
             //转换为混淆名
-            ClassMember member= ClassCollection.classMap.get(((Class)javaObject).getName());
+            ClassMember member=ClassCollection.classMap.get(clas.getName());
             if(member!=null){
                 String srg = member.get(name);
                 if(!srg.equals(ClassLevel.memberNull)) {
-                    String[] vs=srg.split(ClassLevel.link);
-                    for(String v:vs) {
-                        Object rObj = get_(v,start);
-                        if(!rObj.equals(UniqueTag.NOT_FOUND)){
-                            return rObj;
+                    if(srg.contains("/")){
+                        try {
+                            return NativeJavaMethod2Srg.getNativeJavaMethod2Srg(clas,name,srg);
+                        } catch (NoSuchMethodException e) {
+                            throw new RuntimeException(e);
                         }
+                    }
+                    Object obj=get_(srg);
+                    if(obj!=UniqueTag.NOT_FOUND){
+                        return obj;
                     }
                 }
             }
         }
-        return get_(name,start);
-
+        return get_(name);
     }
     public Object get_(String name, Scriptable start) {
         // When used as a constructor, ScriptRuntime.newObject() asks

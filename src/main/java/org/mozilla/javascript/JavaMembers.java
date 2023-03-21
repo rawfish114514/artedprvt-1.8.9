@@ -6,24 +6,15 @@
 
 package org.mozilla.javascript;
 
-import static java.lang.reflect.Modifier.isProtected;
-import static java.lang.reflect.Modifier.isPublic;
-
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import javax.lang.model.SourceVersion;
+import java.lang.reflect.*;
 import java.security.AccessControlContext;
 import java.security.AllPermission;
 import java.security.Permission;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.lang.model.SourceVersion;
+import java.util.*;
+
+import static java.lang.reflect.Modifier.isProtected;
+import static java.lang.reflect.Modifier.isPublic;
 
 /**
  * @author Mike Shaver
@@ -31,7 +22,7 @@ import javax.lang.model.SourceVersion;
  * @see NativeJavaObject
  * @see NativeJavaClass
  */
-class JavaMembers {
+public class JavaMembers {
 
     private static final boolean STRICT_REFLECTIVE_ACCESS =
             SourceVersion.latestSupported().ordinal() > 8;
@@ -68,7 +59,7 @@ class JavaMembers {
         return findExplicitFunction(name, isStatic) != null;
     }
 
-    Object get(Scriptable scope, String name, Object javaObject, boolean isStatic) {
+    public Object get(Scriptable scope, String name, Object javaObject, boolean isStatic) {
         Map<String, Object> ht = isStatic ? staticMembers : members;
         Object member = ht.get(name);
         if (!isStatic && member == null) {
@@ -759,7 +750,8 @@ class JavaMembers {
         int len = ht.size();
         Map<String, FieldAndMethods> result = new HashMap<String, FieldAndMethods>(len);
         for (FieldAndMethods fam : ht.values()) {
-            FieldAndMethods famNew = new FieldAndMethods(scope, fam.methods, fam.field);
+            FieldAndMethods famNew;
+            famNew=new FieldAndMethods(scope, fam.methods, fam.field);
             famNew.javaObject = javaObject;
             result.put(fam.field.getName(), famNew);
         }

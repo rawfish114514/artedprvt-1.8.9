@@ -119,6 +119,8 @@ public class NativeJavaMethod extends BaseFunction {
         return sb.toString();
     }
 
+
+    public static Object NO_METHOD=new Object();
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
         // Find a method that matches the types given.
@@ -128,9 +130,7 @@ public class NativeJavaMethod extends BaseFunction {
 
         int index = findCachedFunction(cx, args);
         if (index < 0) {
-            Class<?> c = methods[0].method().getDeclaringClass();
-            String sig = c.getName() + '.' + getFunctionName() + '(' + scriptSignature(args) + ')';
-            throw Context.reportRuntimeErrorById("msg.java.no_such_method", sig);
+            return NO_METHOD;
         }
 
         MemberBox meth = methods[index];
@@ -520,7 +520,7 @@ public class NativeJavaMethod extends BaseFunction {
     }
 
     MemberBox[] methods;
-    private String functionName;
+    public String functionName;
     private final transient CopyOnWriteArrayList<ResolvedOverload> overloadCache =
             new CopyOnWriteArrayList<>();
 }

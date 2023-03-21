@@ -11,6 +11,7 @@ import rawfish.artedprvt.script.ScriptThread;
 import rawfish.artedprvt.script.js.ClassCollection;
 import rawfish.artedprvt.script.js.ClassLevel;
 import rawfish.artedprvt.script.js.ClassMember;
+import rawfish.artedprvt.script.js.NativeJavaMethod2Srg;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -62,7 +63,6 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         this.javaObject = javaObject;
         this.staticType = staticType;
         this.isAdapter = isAdapter;
-        initMembers();
         this.clas=javaObject.getClass();
         if(javaObject instanceof Class){
             this.clas=(Class)javaObject;
@@ -74,6 +74,9 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         }else if(t instanceof ScriptThread){
             ((ScriptThread)t).getMainThread().getProcess().addNativeObjectNumber();
         }
+
+
+        initMembers();
     }
 
     public boolean isConfuse;
@@ -117,18 +120,21 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
             if(member!=null){
                 String srg = member.get(name);
                 if(!srg.equals(ClassLevel.memberNull)) {
-                    String[] vs=srg.split(ClassLevel.link);
-                    for(String v:vs) {
-                        Object rObj = get_(v);
-                        if(!rObj.equals(UniqueTag.NOT_FOUND)){
-                            return rObj;
+                    if(srg.contains("/")){
+                        try {
+                            return NativeJavaMethod2Srg.getNativeJavaMethod2Srg(clas,name,srg);
+                        } catch (NoSuchMethodException e) {
+                            throw new RuntimeException(e);
                         }
+                    }
+                    Object obj=get_(srg);
+                    if(obj!=UniqueTag.NOT_FOUND){
+                        return obj;
                     }
                 }
             }
         }
         return get_(name);
-
     }
     public Object get_(String name){
         if (fieldAndMethods != null) {
@@ -541,7 +547,7 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
      * Not intended for public use. Callers should use the public API Context.toType.
      *
      * @deprecated as of 1.5 Release 4
-     * @see org.mozilla.javascript.Context#jsToJava(Object, Class)
+     * @see Context#jsToJava(Object, Class)
      */
     @Deprecated
     public static Object coerceType(Class<?> type, Object value) {
@@ -1021,10 +1027,10 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     /** The parent scope of this object. */
     protected Scriptable parent;
 
-    protected transient Object javaObject;
+    public transient Object javaObject;
 
     protected transient Class<?> staticType;
-    protected transient JavaMembers members;
+    public transient JavaMembers members;
     private transient Map<String, FieldAndMethods> fieldAndMethods;
     protected transient boolean isAdapter;
 
