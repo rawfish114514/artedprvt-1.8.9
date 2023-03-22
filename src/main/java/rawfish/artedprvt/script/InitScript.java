@@ -14,7 +14,8 @@ public class InitScript {
                     "var class=function(object){return _114514.getJavaClass(_1919810,object);};\n" +
                     "var thread=function(runnable){return _114514.createThread(_1919810,runnable);};\n" +
                     "var runf=function(func,args){return _114514.runFunction(_1919810,func,args);};\n" +
-                    "var sleep=function(millis){_114514.sleep(_1919810,millis);};\n";
+                    "var sleep=function(millis){_114514.sleep(_1919810,millis);};\n" +
+                    "var exit=function(status){_114514.exit(_1919810,status);};\n";
 
     public static String varSys="_114514";
     public static String varPack="_1919810";

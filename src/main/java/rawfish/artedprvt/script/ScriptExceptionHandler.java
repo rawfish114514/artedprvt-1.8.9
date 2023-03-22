@@ -15,6 +15,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         if(!e.getMessage().equals("null")){
+            pro.hasError=true;
             e.printStackTrace();
             if(ScriptConst.debug) {
                 pro.sys.log(pro.pack,"\u00a74" +": " + e.getMessage(),getJsStackTrace(e));
@@ -22,10 +23,10 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
             if(t instanceof ScriptThread){
                 ScriptThread st=(ScriptThread)t;
                 if(!st.errorHandle){
-                    pro.stop(st);
+                    pro.stop(st,2);
                 }
             }else {
-                pro.stop(null);
+                pro.stop(null,2);
             }
         }
     }

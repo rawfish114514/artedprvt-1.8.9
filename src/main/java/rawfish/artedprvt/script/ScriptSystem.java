@@ -180,6 +180,15 @@ public class ScriptSystem {
         Thread.sleep(millis);
     }
 
+    /**
+     * 终止进程 状态码为0表示正常退出 负数表示异常退出 正数表示自动正常退出或其他退出 脚本调用exit请不要使用正数
+     * @param pack 调用者
+     * @param status 状态码
+     */
+    public void exit(String pack,int status){
+        pro.stop(null,status);
+    }
+
     //测试接口
     public Object runFunction(String pack,Function function,Object[] args){
         return function.invoke(args);

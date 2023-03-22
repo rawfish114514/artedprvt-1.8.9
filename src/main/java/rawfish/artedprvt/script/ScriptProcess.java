@@ -61,6 +61,8 @@ public class ScriptProcess {
 
     protected int nativeobject;//创建的java对象数
 
+    protected boolean hasError;
+
     public ScriptProcess(ICommandSender senderIn,String commandNameIn,String dirIn,List<String> sargsIn,String packIn, List<String> argsIn) throws CommandException {
         sender=senderIn;
         commandName=commandNameIn;
@@ -131,6 +133,8 @@ public class ScriptProcess {
             ClassCollection.putExtend();
         }
         ret=0;//进程创建 无效退出
+
+        hasError=false;
 
         spath=dir+"/script/";
 
@@ -327,18 +331,21 @@ public class ScriptProcess {
         sys.print(pack,"\u00a73run:\u00a7a " + name);
     }
     //终止进程
-    public void stop(ScriptThread st){
+    public void stop(ScriptThread st,int exitstatus){
         if(ret==1) {
             ret=-1;//进程终止 无效退出
         }
         if(ret==2){
             ret=-2;//进程终止 非正常退出
         }
-        thread.jstop(st);
+        if(exitstatus<1&&!hasError){
+            ret=3;
+        }
+        thread.jstop(st,exitstatus);
     }
     //运行结束
     protected boolean onEnd=false;
-    public void end(){
+    public void end(int exitstatus){
         if(onEnd){
             //防止有更多线程执行end
             return;
@@ -349,6 +356,12 @@ public class ScriptProcess {
             sys.print(pack,"\u00a72end:\u00a7a " + name + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
         }else if(ret==-2){
             sys.print(pack,"\u00a74break:\u00a7a " + name + "\u00a77(" + (t-time) + "ms)",getStatistics(t));
+        }else if(ret==3) {
+            if(exitstatus==0) {
+                sys.print(pack, "\u00a72exit:\u00a7a " + name + "\u00a77(" + (t - time) + "ms)", getStatistics(t));
+            }else{
+                sys.print(pack,"\u00a74exit:\u00a7a " + name + "\u00a77(" + (t-time) + "ms) "+exitstatus,getStatistics(t));
+            }
         }
         proList.remove(this);
         ret=7;//进程结束

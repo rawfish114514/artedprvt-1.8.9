@@ -38,7 +38,7 @@ public class CommandStops extends CommandBase {
             boolean nisp=true;
             for (ScriptProcess pro : pros) {
                 if(sp.equals(pro.getPack())||sp.equals(String.valueOf(pro.getId()))){
-                    pro.stop(null);
+                    pro.stop(null,3);
                     nisp=false;
                 }
             }
@@ -47,7 +47,7 @@ public class CommandStops extends CommandBase {
             }
         }else {
             for (ScriptProcess pro : pros) {
-                pro.stop(null);
+                pro.stop(null,3);
             }
         }
     }
