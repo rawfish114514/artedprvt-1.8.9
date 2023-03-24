@@ -1,6 +1,5 @@
 package rawfish.artedprvt.script;
 
-import com.google.common.collect.Sets;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -432,19 +431,21 @@ public class ScriptProcess {
     }
 
     public String getStatistics(long time){
-        //ret: 状态 runtime: 运行时间 [系统参数;脚本参数]
-        String line1;
-        //nativejava: 创建java对象数
-        String line2;
-
-        line1=String.format("ret: %s runtime: %s",ret,time-getTime());
+        List<String> lines=new ArrayList<>();
+        String str;
+        str=String.format("%s (%s)",pack,pid);
         String as=String.format(" [%s;%s]",String.join(" ",getSargs()),String.join(" ",getArgs()));
         if(!as.equals(" [;]")){
-            line1+=as;
+            str+=as;
         }
+        lines.add(str);//进程名 (进程id) [系统参数;脚本参数]
 
-        line2=String.format("nativeobject: %s",nativeobject);
+        str=String.format("ret: %s runtime: %s",ret,time-getTime());
+        lines.add(str);//ret: 进程状态 runtime: 运行时间
 
-        return String.join("\n",line1,line2);
+        str=String.format("native: %s",nativeobject);
+        lines.add(str);//native: 创建NativeJavaObject对象数量
+
+        return String.join("\n",lines);
     }
 }
