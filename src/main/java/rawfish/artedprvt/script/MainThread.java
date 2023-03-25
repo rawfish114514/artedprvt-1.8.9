@@ -59,7 +59,7 @@ public class MainThread extends Thread{
         main.run("<artedprvt>");
 
 
-        //等待线程
+        //脚本线程
         try {
             for(int i=0;i<pro.tl.size();i++) {
                 pro.tl.get(i).join();
@@ -74,7 +74,7 @@ public class MainThread extends Thread{
     }
 
     /**
-     * 中断所有等待线程和主线程
+     * 中断所有脚本线程和主线程
      */
     public void jstop(ScriptThread st,int exitstatus){
         //st是终止源线程 要最后一个终止
@@ -87,7 +87,7 @@ public class MainThread extends Thread{
             pro.end(exitstatus);
             stop();
         }else{
-            //等待线程
+            //脚本线程
             ScriptThread t;
             for (int i = 0; i < pro.tl.size(); i++) {
                 t=pro.tl.get(i);

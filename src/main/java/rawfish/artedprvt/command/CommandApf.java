@@ -4,8 +4,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatComponentText;
-import rawfish.artedprvt.script.ScriptConst;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +20,7 @@ public class CommandApf extends CommandBase {
         cmdm.put("script",new CommandScript("script"));
         cmdm.put("stops",new CommandStops("stops"));
         cmdm.put("workspace",new CommandWorkspace("workspace"));
+        cmdm.put("stt",new CommandStt("stt"));
     }
 
     public Map<String,CommandBase> cmdm;

@@ -5,5 +5,5 @@ function print(object);//发送聊天消息
 function log(object);//发送调试信息
 function import(pack);//导入模块
 function export(object);//导出模块
-function thread(runnable);//创建脚本等待线程
+function thread(runnable);//创建脚本线程
 function runf(func,args);//以java单方法接口实例运行函数

@@ -5,8 +5,6 @@ package rawfish.artedprvt.script;
  * 受主线程管理
  */
 public class ScriptThread extends Thread{
-    //进程的线程创建次数 不包括主线程
-    protected int n=0;
     protected ScriptProcess pro;
 
     //错误处理 不处理则发生错误直接终止进程
@@ -18,7 +16,7 @@ public class ScriptThread extends Thread{
         pro=proIn;
         errorHandle=pro.getValueEh();
         notStart=pro.getValueSt();
-        setName(String.format("%s_%s",Thread.currentThread().getName(),n++));
+        setName(String.format("%s_%s",Thread.currentThread().getName(),pro.tn++));
         pro.tl.add(this);
 
         setUncaughtExceptionHandler(new ScriptExceptionHandler(pro));

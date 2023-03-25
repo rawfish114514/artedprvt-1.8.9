@@ -7,8 +7,5 @@ commands.in.usage=/in [string ...]
 commands.pros.usage=/pros
 commands.script.usage=/script [sargs ...] <pack> [args ...]
 commands.stops.usage=/stops [pro]
+commands.stt.usage=/stt
 commands.workspace.usage=/workspace
-
-
-
-

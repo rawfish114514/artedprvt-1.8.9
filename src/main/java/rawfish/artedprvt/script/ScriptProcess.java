@@ -53,7 +53,8 @@ public class ScriptProcess {
     protected PortClass port;//导入类
     protected Map<String,ScriptUnit> env;//包加载集合
     protected MainThread thread;//主线程
-    protected List<ScriptThread> tl;//等待线程列表
+    protected List<ScriptThread> tl;//脚本线程列表
+    protected int tn;//脚本线程创建数
 
     protected long time;//开始时间
     protected int ret;//状态
@@ -319,6 +320,7 @@ public class ScriptProcess {
         ret=1;//进程启动 无效退出
         time=0;
         tl=new ArrayList<>();
+        tn=0;
         thread=new MainThread(this);
 
         thread.start();
@@ -385,7 +387,7 @@ public class ScriptProcess {
         rc_value=true;
     }
 
-    //线程处理 等待线程异常不会终结主线程
+    //线程处理 脚本线程异常不会终结主线程
     protected boolean eh_value=false;
     public boolean getValueEh(){
         return eh_value;
@@ -399,7 +401,7 @@ public class ScriptProcess {
 
     }
 
-    //单线程 等待线程开始运行不会启动新线程
+    //单线程 脚本线程开始运行不会启动新线程
     protected boolean st_value=false;
     public boolean getValueSt(){
         return st_value;
