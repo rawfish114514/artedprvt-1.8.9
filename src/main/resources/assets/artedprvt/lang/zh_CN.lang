@@ -3,6 +3,7 @@ commands.ac.usage=/ac
 commands.ad.usage=/ad
 commands.apf.usage=/artedprvt|apf <args ...>
 commands.apkg.usage=/apkg [sargs ...] <pkg> [args ...]
+commands.download.usage=/download <<type> <key ...> |conn>
 commands.in.usage=/in [string ...]
 commands.pros.usage=/pros
 commands.script.usage=/script [sargs ...] <pack> [args ...]

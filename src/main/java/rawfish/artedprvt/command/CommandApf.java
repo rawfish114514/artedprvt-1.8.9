@@ -15,12 +15,13 @@ public class CommandApf extends CommandBase {
         cmdm.put("ac",new CommandAc("ac"));
         cmdm.put("ad",new CommandAd("ad"));
         cmdm.put("apkg",new CommandApkg("apkg"));
+        cmdm.put("download",new CommandDownload("download"));
         cmdm.put("in",new CommandIn("in"));
         cmdm.put("pros",new CommandPros("pros"));
         cmdm.put("script",new CommandScript("script"));
         cmdm.put("stops",new CommandStops("stops"));
-        cmdm.put("workspace",new CommandWorkspace("workspace"));
         cmdm.put("stt",new CommandStt("stt"));
+        cmdm.put("workspace",new CommandWorkspace("workspace"));
     }
 
     public Map<String,CommandBase> cmdm;
