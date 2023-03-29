@@ -6,6 +6,10 @@ public class InitScript {
     public static String script=
                     "var invoker=function(){return _18140;};\n" +
                     "var pack=function(){return _1919810;};\n" +
+                    "var process=function(){return _114514.getProcess(_1919810);};\n" +
+                    "var sender=function(){return _114514.getSender(_1919810);};\n" +
+                    "var props=function(){return _114514.getProps(_1919810);};\n" +
+                    "var sargs=function(){return _114514.getSargs(_1919810);};\n" +
                     "var args=function(){return _114514.getArgs(_1919810);};\n" +
                     "var print=function(object,hover){_114514.print(_1919810,object,hover);};\n" +
                     "var log=function(object,hover){_114514.log(_1919810,object,hover);};\n" +

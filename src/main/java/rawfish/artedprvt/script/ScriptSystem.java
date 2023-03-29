@@ -30,6 +30,42 @@ public class ScriptSystem {
     }
 
     /**
+     * 获取系统进程
+     * @param pack 调用者
+     * @return 系统进程
+     */
+    public ScriptProcess getProcess(String pack){
+        return pro;
+    }
+
+    /**
+     * 获取用户
+     * @param pack 调用者
+     * @return 用户
+     */
+    public ICommandSender getSender(String pack){
+        return sender;
+    }
+
+    /**
+     * 获取系统属性
+     * @param pack 调用者
+     * @return 系统属性
+     */
+    public Map<String,String> getProps(String pack){
+        return new HashMap<>(pro.props);
+    }
+
+    /**
+     * 获取系统参数
+     * @param pack 调用者
+     * @return 写在包名前的系统参数列表
+     */
+    public List<String> getSargs(String pack){
+        return new ArrayList<>(pro.sargs);
+    }
+
+    /**
      * 获取参数
      * @param pack 调用者
      * @return 写在包名后的参数列表

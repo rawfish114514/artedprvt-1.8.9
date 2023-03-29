@@ -37,6 +37,7 @@ public class ScriptProcess {
     protected static int spid=0;//进程起始id
     protected int pid;//进程id
     protected boolean pkg;//是pkg
+    protected Map<String,String> props;//属性
     protected Map<String,String> pkgs;//文件内容
     protected ScriptConfig config;//配置
     protected String commandName;//命令

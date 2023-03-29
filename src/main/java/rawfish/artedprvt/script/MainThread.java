@@ -45,7 +45,7 @@ public class MainThread extends Thread{
         pro.rhino.setOptimizationLevel(-1);
         pro.rhino.setLocale(Locale.ENGLISH);
 
-
+        pro.props=ScriptProperties.props();
         pro.sys=new ScriptSystem(pro,pro.sender);
         pro.client=new ScriptClient();
         pro.port=new PortClass(pro);
