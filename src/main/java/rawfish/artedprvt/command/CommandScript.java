@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.*;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import rawfish.artedprvt.script.ScriptProcess;
 
 import java.util.ArrayList;
@@ -128,5 +129,23 @@ public class CommandScript extends CommandBase {
     public int getRequiredPermissionLevel()
     {
         return 0;
+    }
+
+    @Override
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
+    {
+        if(!sender.getEntityWorld().isRemote){
+            return null;
+        }
+        List<String> opt=new ArrayList<>();
+        String lastArgs=args[args.length-1];
+        if(lastArgs.length()>0&&lastArgs.charAt(0)=='-'){
+            //系统参数
+            opt.addAll(ScriptProcess.sargList);
+        }else{
+            //包名
+            opt.add("main");
+        }
+        return opt;
     }
 }
