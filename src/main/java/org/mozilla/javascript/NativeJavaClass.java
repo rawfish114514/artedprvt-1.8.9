@@ -14,6 +14,7 @@ import rawfish.artedprvt.script.js.NativeJavaMethod2Srg;
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class reflects Java classes into the JavaScript environment, mainly for constructors and
@@ -123,7 +124,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     public void put(String name, Scriptable start, Object value){
         if(isConfuse){
             //转换为混淆名
-            ClassMember member=ClassCollection.classMap.get(staticType.getName());
+            ClassMember member=ClassCollection.classMap.get(clas.getName());
             if(member!=null){
                 String srg = member.get(name);
                 if(!srg.equals(ClassLevel.memberNull)) {
@@ -197,6 +198,31 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
         if (args.length == 0) {
             throw Context.reportRuntimeErrorById("msg.adapter.zero.args");
         }
+        Object arg0=args[0];
+        if(arg0 instanceof NativeObject){
+            NativeObject nativeObject=(NativeObject)arg0;
+            if(isConfuse) {
+                //复制这个对象并对函数混淆 这意味着源对象不会被用来生成实现类
+                ClassMember member=ClassCollection.classMap.get(clas.getName());
+                if(member!=null) {
+                    NativeObject newObject = new NativeObject();
+                    newObject.setParentScope(nativeObject.getParentScope());
+                    Object[] keys = nativeObject.keySet().toArray();
+                    for (Object key : keys) {
+                        String name = (String) key;
+                        Object p = nativeObject.get(name, nativeObject);
+                        if (p instanceof Function) {
+                            String srg = member.get(name);
+                            if (!srg.equals(ClassLevel.memberNull)) {
+                                name = srg.split(ClassLevel.link)[0];
+                            }
+                        }
+                        newObject.put(name, newObject,p);
+                    }
+                    arg0=newObject;
+                }
+            }
+        }
         Scriptable topLevel = ScriptableObject.getTopLevelScope(this);
         String msg = "";
         try {
@@ -205,7 +231,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
             if ("Dalvik".equals(System.getProperty("java.vm.name")) && classObject.isInterface()) {
                 Object obj =
                         createInterfaceAdapter(
-                                classObject, ScriptableObject.ensureScriptableObject(args[0]));
+                                classObject, ScriptableObject.ensureScriptableObject(arg0));
                 return cx.getWrapFactory().wrapAsJavaObject(cx, scope, obj, null);
             }
             // use JavaAdapter to construct a new class on the fly that
@@ -214,7 +240,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
             if (v != NOT_FOUND) {
                 Function f = (Function) v;
                 // Args are (interface, js object)
-                Object[] adapterArgs = {this, args[0]};
+                Object[] adapterArgs = {this, arg0};
                 return f.construct(cx, topLevel, adapterArgs);
             }
         } catch (Exception ex) {
