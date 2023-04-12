@@ -1,6 +1,7 @@
 package rawfish.artedprvt.script.js;
 
 import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.script.MainThread;
 import rawfish.artedprvt.script.ScriptThread;
 
@@ -44,7 +45,7 @@ public class ClassLevel {
         return name.substring(0,14).equals("net.minecraft.");
     }
     private static boolean isReConfuse(Scriptable scope){
-        return scope.get(ClassLevel.varRc,scope).equals("true");
+        return ScriptableObject.getTopLevelScope(scope).get(ClassLevel.varRc,scope).equals("true");
     }
 
     //脚本系统变量
