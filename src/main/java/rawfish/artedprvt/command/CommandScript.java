@@ -7,6 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import rawfish.artedprvt.script.ScriptProcess;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -144,8 +145,46 @@ public class CommandScript extends CommandBase {
             opt.addAll(ScriptProcess.sargList);
         }else{
             //包名
-            opt.add("main");
+            File script=new File(System.getProperties().get("user.dir").toString()+"/artedprvt/src/script");
+            if(script.isDirectory()){
+                List<String> packs=pack(script,"");
+                opt.addAll(match(packs,lastArgs));
+            }
         }
         return opt;
+    }
+
+    public List<String> pack(File dir,String p){
+        List<String> packs=new ArrayList<>();
+        File[] files=dir.listFiles();
+        List<File> fileList=new ArrayList<>();
+        fileList.addAll(Arrays.asList(files));
+        for (int i = 0; i < fileList.size(); i++) {
+            File file=fileList.get(i);
+            if(file.isFile()){
+                //是文件
+                String name=file.getName();
+                int ind=name.lastIndexOf('.');
+                if(ind>0&&name.substring(ind).equals(".js")){
+                    packs.add(p+name.substring(0,ind));
+                }
+            }else{
+                //是目录
+                packs.addAll(pack(file,p+file.getName()+"."));
+            }
+        }
+        return packs;
+    }
+
+    public List<String> match(List<String> packs,String arg){
+        List<String> npacks=new ArrayList<>();
+        for(String pack:packs){
+            if(pack.length()>=arg.length()){
+                if(pack.substring(0,arg.length()).equals(arg)){
+                    npacks.add(pack);
+                }
+            }
+        }
+        return npacks;
     }
 }
