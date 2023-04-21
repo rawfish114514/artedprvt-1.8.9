@@ -8,11 +8,7 @@ import org.mozilla.javascript.Context;
 import rawfish.artedprvt.script.js.ClassCollection;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 /**
  * 脚本进程
@@ -37,12 +33,12 @@ public class ScriptProcess {
     protected static int spid=0;//进程起始id
     protected int pid;//进程id
     protected boolean pkg;//是pkg
+    protected FileLoader fileLoader;//文件加载器
+    protected ScriptLoader scriptLoader;//脚本加载器
     protected Map<String,String> props;//属性
-    protected Map<String,String> pkgs;//文件内容
     protected ScriptConfig config;//配置
     protected String commandName;//命令
     protected String dir;//项目目录
-    protected String spath;//脚本路径
     protected ICommandSender sender;//用户
     protected List<String> sargs;//命令参数
     protected String pack;//主包名
@@ -76,25 +72,30 @@ public class ScriptProcess {
         pkg=new File(dir).isFile();
 
         if(pkg){
-            //配置必要
             try {
-                readPkg();
+                fileLoader=new ApkgFileLoader(dir);
             } catch (Exception e) {
-                throw new CommandException("apkg: 加载文件失败");
+                throw new RuntimeException(e);
             }
-            config=ScriptConfig.loads(pkgs.get("config.json"));
+        }else{
+            fileLoader=new SourceFileLoader(dir);
+        }
+
+        String conf=fileLoader.readFile("config.json");
+        if(conf!=null){
+            config=ScriptConfig.loads(conf);
+        }
+
+        if(pkg){
+            //配置必要
             if(config==null){
                 throw new CommandException("apkg: 未找到配置文件");
             }
-
             if(config.pkgError){
                 throw new CommandException("script: 读取配置时发生意外");
             }
             pack=(String)config.pkg.get("pack");
             name=packIn;
-        }else {
-            //配置非必要
-            config=ScriptConfig.load(dir);
         }
 
         if(config!=null) {
@@ -137,13 +138,14 @@ public class ScriptProcess {
 
         hasError=false;
 
-        spath=dir+"/script/";
 
         if(proList.size()==0){
             spid=0;
         }
         pid=spid++;
         proList.add(this);
+
+        scriptLoader=new ScriptLoader(fileLoader);
     }
 
     public ICommandSender getSender(){
@@ -224,73 +226,22 @@ public class ScriptProcess {
     }
 
     /**
-     * 读取文件
-     */
-    public void readPkg() throws Exception {
-        pkgs=new HashMap<>();
-
-        ZipInputStream zip = new ZipInputStream(
-                new FileInputStream(dir),
-                Charset.forName("GBK"));
-
-        Reader reader=new InputStreamReader(zip,StandardCharsets.UTF_8);
-
-        ZipEntry entry = null;
-        while ((entry = zip.getNextEntry()) != null) {
-            String name = entry.getName();
-            if (!entry.isDirectory()) {
-                int n;
-                int i=0;
-                StringBuilder sb=new StringBuilder(0);
-                while ((n = reader.read()) != -1) {
-                    sb.append((char)n);
-                }
-                pkgs.put(entry.getName(),sb.toString());
-            }
-        }
-    }
-
-    /**
-     * 读取工作目录下的文件
+     * 读取工作目录下的脚本
      * @param packIn 模块名
      * @return
      */
-    protected String readString(String packIn){
+    protected String readScript(String packIn){
         if(packIn.contains("/")){
             throw new RuntimeException("pack: "+packIn+" (用'.'分隔符而不是'/')");
         }
         if(!withPackRule(packIn)){
             throw new RuntimeException("pack: "+packIn+" (开头为英文字母后接英文字母数字下划线)");
         }
-        String path=packIn.replace('.','/')+".js";
-
-        if(pkg){
-            String str=pkgs.get("script/"+path);
-            if(str==null){
-                throw new RuntimeException("Invalid file path");
-            }
-            return str;
+        String script=scriptLoader.readScript(packIn);
+        if(script==null){
+            throw new RuntimeException("找不到文件");
         }
-
-        File file=new File(spath+path);
-        Reader reader;
-        StringBuilder sb;
-        try {
-            reader=new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
-            sb=new StringBuilder();
-            while(true){
-                int n=reader.read();
-                if(n==-1) {
-                    break;
-                }
-                sb.append((char)n);
-            }
-            reader.close();
-
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return sb.toString();
+        return script;
     }
 
     protected static String packMatcher="^[a-zA-Z][a-zA-Z0-9_]*$";
@@ -310,7 +261,7 @@ public class ScriptProcess {
      * @param invokerIn 调用上级
      */
     public void load(String packIn,String invokerIn){
-        ScriptUnit module=new ScriptUnit(this,readString(packIn),packIn);
+        ScriptUnit module=new ScriptUnit(this, readScript(packIn),packIn);
         env.put(module.pack,module);
         module.run(invokerIn);
     }

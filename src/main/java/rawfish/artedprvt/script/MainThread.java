@@ -1,11 +1,8 @@
 package rawfish.artedprvt.script;
 
 import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.script.mi.LifeDepend;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +48,7 @@ public class MainThread extends Thread{
         pro.port=new PortClass(pro);
 
         pro.env=new HashMap<>();
-        ScriptUnit main=new ScriptUnit(pro,pro.readString(pro.pack),pro.pack);
+        ScriptUnit main=new ScriptUnit(pro,pro.readScript(pro.pack),pro.pack);
         pro.env.put(main.pack,main);
 
         pro.begin();
