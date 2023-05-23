@@ -6,15 +6,12 @@
 
 package org.mozilla.javascript;
 
-import rawfish.artedprvt.script.js.ClassCollection;
-import rawfish.artedprvt.script.js.ClassLevel;
-import rawfish.artedprvt.script.js.ClassMember;
-import rawfish.artedprvt.script.js.NativeJavaMethod2Srg;
+import org.mozilla.javascript.mapping.ClassRegisterer;
+import org.mozilla.javascript.mapping.MemberMapping;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class reflects Java classes into the JavaScript environment, mainly for constructors and
@@ -64,10 +61,10 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     public Object get(String name, Scriptable start) {
         if(isConfuse){
             //转换为混淆名
-            ClassMember member=ClassCollection.classMap.get(clas.getName());
+            MemberMapping member= ClassRegisterer.classMap.get(clas.getName());
             if(member!=null){
                 String srg = member.get(name);
-                if(!srg.equals(ClassLevel.memberNull)) {
+                if(!srg.equals("0")) {
                     if(srg.contains("/")){
                         try {
                             return NativeJavaMethod2Srg.getNativeJavaMethod2Srg(clas,name,srg);
@@ -124,11 +121,11 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     public void put(String name, Scriptable start, Object value){
         if(isConfuse){
             //转换为混淆名
-            ClassMember member=ClassCollection.classMap.get(clas.getName());
+            MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
             if(member!=null){
                 String srg = member.get(name);
-                if(!srg.equals(ClassLevel.memberNull)) {
-                    String[] vs=srg.split(ClassLevel.link);
+                if(!srg.equals("0")) {
+                    String[] vs=srg.split("/");
                     for(String v:vs) {
                         put_(v,start,value);
                         return;
@@ -203,7 +200,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
             NativeObject nativeObject=(NativeObject)arg0;
             if(isConfuse) {
                 //复制这个对象并对函数混淆 这意味着源对象不会被用来生成实现类
-                ClassMember member=ClassCollection.classMap.get(clas.getName());
+                MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
                 if(member!=null) {
                     NativeObject newObject = new NativeObject();
                     newObject.setParentScope(nativeObject.getParentScope());
@@ -213,8 +210,8 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
                         Object p = nativeObject.get(name, nativeObject);
                         if (p instanceof Function) {
                             String srg = member.get(name);
-                            if (!srg.equals(ClassLevel.memberNull)) {
-                                name = srg.split(ClassLevel.link)[0];
+                            if (!srg.equals("0")) {
+                                name = srg.split("/")[0];
                             }
                         }
                         newObject.put(name, newObject,p);

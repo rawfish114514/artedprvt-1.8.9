@@ -1,17 +1,14 @@
-package rawfish.artedprvt.script.js;
+package org.mozilla.javascript.mapping;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * 类成员
- */
-public class ClassMember {
+public class MemberMapping {
     public Map<String,String> nameTable;
 
-    public ClassMember(){
+    public MemberMapping(){
         nameTable=new HashMap<>();
     }
 
@@ -27,15 +24,15 @@ public class ClassMember {
         }else{
             //串联
             Set<String> srgs=new HashSet<>();
-            String[] srgList=oldValue.split(ClassLevel.link);
+            String[] srgList=oldValue.split("/");
             for(int i=0;i<srgList.length;i++){
                 srgs.add(srgList[i]);
             }
-            String[] srgList2=srgName.split(ClassLevel.link);
+            String[] srgList2=srgName.split("/");
             for(int i=0;i<srgList2.length;i++){
                 srgs.add(srgList2[i]);
             }
-            nameTable.put(mcpName,String.join(ClassLevel.link,srgs));
+            nameTable.put(mcpName,String.join("/",srgs));
         }
     }
 
@@ -43,7 +40,7 @@ public class ClassMember {
      * 添加所有成员到this
      * @param member
      */
-    public void up(ClassMember member){
+    public void up(MemberMapping member){
         for(String mcpName:member.nameTable.keySet()){
             up(mcpName,member.get(mcpName));
         }
@@ -56,6 +53,6 @@ public class ClassMember {
      */
     public String get(String mcpName){
         String srgName=nameTable.get(mcpName);
-        return srgName==null?ClassLevel.memberNull:srgName;
+        return srgName==null?"0":srgName;
     }
 }

@@ -50,10 +50,4 @@ public class ClassLevel {
 
     //脚本系统变量
     public static String varRc="__reconfuse__";
-
-    //空映射
-    public static String memberNull="0";
-
-    //连接符 区别于Srg名规则
-    public static String link="/";
 }

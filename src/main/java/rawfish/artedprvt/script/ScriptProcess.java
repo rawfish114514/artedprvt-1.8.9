@@ -56,8 +56,6 @@ public class ScriptProcess {
     protected long time;//开始时间
     protected int ret;//状态
 
-    protected int nativeobject;//创建的java对象数
-
     protected boolean hasError;
 
     public ScriptProcess(ICommandSender senderIn,String commandNameIn,String dirIn,List<String> sargsIn,String packIn, List<String> argsIn) throws CommandException {
@@ -193,10 +191,6 @@ public class ScriptProcess {
 
     public String getName(){
         return name;
-    }
-
-    public void addNativeObjectNumber(){
-        nativeobject++;
     }
 
     protected void systemArgs(List<String> sargs){
@@ -396,9 +390,6 @@ public class ScriptProcess {
 
         str=String.format("ret: %s runtime: %s",ret,time-getTime());
         lines.add(str);//ret: 进程状态 runtime: 运行时间
-
-        str=String.format("native: %s",nativeobject);
-        lines.add(str);//native: 创建NativeJavaObject对象数量
 
         return String.join("\n",lines);
     }

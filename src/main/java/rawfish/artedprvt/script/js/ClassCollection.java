@@ -1,8 +1,10 @@
 package rawfish.artedprvt.script.js;
 
 
+import org.mozilla.javascript.mapping.ClassRegisterer;
+import org.mozilla.javascript.mapping.MemberMapping;
+
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.Map;
  * 混淆类集合
  */
 public class ClassCollection {
-    public static Map<String,ClassMember> classMap=null;
+    public static Map<String, MemberMapping> classMap=null;
     /**
      * 加载数据
      * @param srg 源
@@ -72,6 +74,11 @@ public class ClassCollection {
         }
         */
 
+        //注册到ClassRegisterer
+        ClassRegisterer.classMap=classMap;
+
+        //注册额匹配器
+        ClassRegisterer.matcher=ClassLevel::isConfuseClass;
     }
 
 
@@ -79,7 +86,7 @@ public class ClassCollection {
         String[] values=item.split(" ");
         String className=values[1].replace('/','.');
 
-        classMap.put(className,new ClassMember());
+        classMap.put(className,new MemberMapping());
     }
 
     public static void loadFD(String item){
@@ -88,7 +95,7 @@ public class ClassCollection {
         String fieldSrg=values[2];
         fieldSrg=fieldSrg.replace("\r","");
         String className=fieldName.substring(0,fieldName.lastIndexOf("/")).replace('/','.');
-        ClassMember member=classMap.get(className);
+        MemberMapping member=classMap.get(className);
         if(member==null){
             return;
         }
@@ -102,7 +109,7 @@ public class ClassCollection {
         String methodName=values[1];
         String methodSrg=values[3];
         String className=methodName.substring(0,methodName.lastIndexOf("/")).replace('/','.');
-        ClassMember member=classMap.get(className);
+        MemberMapping member=classMap.get(className);
         if(member==null){
             return;
         }
@@ -119,7 +126,7 @@ public class ClassCollection {
             ClassLoader classLoader=ClassCollection.class.getClassLoader();
             int notClass=0;
             for (String className : classMap.keySet()) {
-                ClassMember member = classMap.get(className);
+                MemberMapping member = classMap.get(className);
 
                 Class clas= null;
                 try {
@@ -131,7 +138,7 @@ public class ClassCollection {
                 List<Class> cl=getClasses(clas);
                 if(cl!=null) {
                     for (Class c : cl) {
-                        ClassMember superMember = classMap.get(c.getName());
+                        MemberMapping superMember = classMap.get(c.getName());
                         if (superMember == null) {
                             continue;
                         }

@@ -1,9 +1,4 @@
-package rawfish.artedprvt.script.js;
-
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.NativeJavaMethod;
-import org.mozilla.javascript.NativeJavaObject;
-import org.mozilla.javascript.Scriptable;
+package org.mozilla.javascript;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,8 +29,8 @@ public class NativeJavaMethod2Srg extends NativeJavaMethod {
         Object obj=null;
         NativeJavaObject nativeJavaObject=(NativeJavaObject)thisObj;
         String srg=functionName;
-        if(!srg.equals(ClassLevel.memberNull)) {
-            String[] vs=srg.split(ClassLevel.link);
+        if(!srg.equals("0")) {
+            String[] vs=srg.split("/");
             for(String v:vs) {
                 obj=nativeJavaObject.members.get(
                         nativeJavaObject,
@@ -60,8 +55,8 @@ public class NativeJavaMethod2Srg extends NativeJavaMethod {
     public String toString(){
         StringBuilder sb = new StringBuilder();
         String srg=functionName;
-        if(!srg.equals(ClassLevel.memberNull)) {
-            String[] vs = srg.split(ClassLevel.link);
+        if(!srg.equals("0")) {
+            String[] vs = srg.split("/");
             sb.append(mcp);
             for(String v:vs){
                 sb.append("\n");
