@@ -24,12 +24,30 @@ public enum Events {
     use,
 
     /**
+     * 实体加入世界事件
+     * 源: EntityJoinWorldEvent
+     */
+    join,
+
+    /**
      * 用户输入字符串事件
      * 源: InputStringEvent
      */
     input,
 
     //SideOnly Client
+
+    /**
+     * 客户端刻事件
+     * 源: TickEvent.ClientTickEvent
+     */
+    c_tick,
+
+    /**
+     * 渲染刻事件
+     * 源: TickEvent.RenderTickEvent
+     */
+    r_tick,
 
     /**
      * 客户端聊天事件

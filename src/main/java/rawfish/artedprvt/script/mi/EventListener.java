@@ -2,6 +2,7 @@ package rawfish.artedprvt.script.mi;
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -68,6 +69,9 @@ public class EventListener extends LifeDepend{
         if(type==Events.use){
             listener=new UseEventListener(f);
         }
+        if(type==Events.join){
+            listener=new JoinEventListener(f);
+        }
         if(type==Events.input){
             listener=new InputStringEventListener(f);
             setEventBus(this,EventLoader.EVENT_BUS);
@@ -75,6 +79,12 @@ public class EventListener extends LifeDepend{
 
 
         //SideOnly Client
+        if(type==Events.c_tick){
+            listener=new ClientTickEventListener(f);
+        }
+        if(type==Events.r_tick){
+            listener=new RenderTickEventListener(f);
+        }
         if(type==Events.c_chat){
             listener=new ClientChatEventListener(f);
         }
@@ -140,12 +150,12 @@ public class EventListener extends LifeDepend{
         }
     }
 
-    public static class ClientChatEventListener extends EventListener{
-        public ClientChatEventListener(EventFunction f) {
+    public static class JoinEventListener extends EventListener{
+        public JoinEventListener(EventFunction f) {
             super(f);
         }
         @SubscribeEvent
-        public void onEvent(ClientChatReceivedEvent event){
+        public void onEvent(EntityJoinWorldEvent event){
             run(event);
         }
     }
@@ -159,6 +169,38 @@ public class EventListener extends LifeDepend{
             run(event);
         }
     }
+
+    public static class ClientTickEventListener extends EventListener{
+        public ClientTickEventListener(EventFunction f){
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(TickEvent.ClientTickEvent event){
+            run(event);
+        }
+    }
+
+    public static class RenderTickEventListener extends EventListener{
+        public RenderTickEventListener(EventFunction f){
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(TickEvent.RenderTickEvent event){
+            run(event);
+        }
+    }
+
+    public static class ClientChatEventListener extends EventListener{
+        public ClientChatEventListener(EventFunction f) {
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(ClientChatReceivedEvent event){
+            run(event);
+        }
+    }
+
+
 
 
     //未定义事件监听器

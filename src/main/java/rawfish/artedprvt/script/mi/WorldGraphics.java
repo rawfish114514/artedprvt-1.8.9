@@ -140,6 +140,26 @@ public class WorldGraphics {
     }
 
     /**
+     * 通知更新
+     * @param pos 坐标
+     */
+    public void updata(BlockPos pos){
+        BlockPos thePos=pos.add(center);
+        Chunk chunk = world.getChunkFromBlockCoords(thePos);
+        world.markAndNotifyBlock(thePos, chunk, null,null,2);
+    }
+
+    /**
+     * 通知更新
+     * @param x 坐标
+     * @param y 坐标
+     * @param z 坐标
+     */
+    public void updata(double x,double y,double z){
+        updata(wrapPos(x,y,z));
+    }
+
+    /**
      * 画一个方块
      * @param pos 方块坐标
      */
