@@ -5,7 +5,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
-import rawfish.artedprvt.script.ScriptConst;
+import rawfish.artedprvt.scriptold.ScriptConst;
 
 public class CommandAc extends CommandBase {
     public CommandAc(String nameIn){
