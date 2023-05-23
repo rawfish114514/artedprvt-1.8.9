@@ -3,10 +3,8 @@ package rawfish.artedprvt.command;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.util.ChatComponentText;
 import rawfish.artedprvt.id.FormatCode;
-import rawfish.artedprvt.script.ScriptConst;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

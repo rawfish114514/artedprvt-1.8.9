@@ -1,9 +1,7 @@
-package rawfish.artedprvt.script.js;
+package rawfish.artedprvt.scriptold.js;
 
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import rawfish.artedprvt.script.MainThread;
-import rawfish.artedprvt.script.ScriptThread;
 
 /**
  * 类特殊访问相关

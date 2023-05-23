@@ -1,17 +1,13 @@
 package rawfish.artedprvt.command;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.*;
-import net.minecraft.network.play.client.C01PacketChatMessage;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
-import rawfish.artedprvt.script.ScriptProcess;
+import rawfish.artedprvt.scriptold.ScriptProcess;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 public class CommandScript extends CommandBase {
     public CommandScript(String nameIn){

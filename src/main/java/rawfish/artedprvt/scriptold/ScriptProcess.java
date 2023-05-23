@@ -1,11 +1,11 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import org.mozilla.javascript.Context;
-import rawfish.artedprvt.script.js.ClassCollection;
+import rawfish.artedprvt.scriptold.js.ClassCollection;
 
 import java.io.*;
 import java.util.*;

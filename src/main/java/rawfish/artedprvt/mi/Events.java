@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script.mi;
+package rawfish.artedprvt.mi;
 
 
 /**

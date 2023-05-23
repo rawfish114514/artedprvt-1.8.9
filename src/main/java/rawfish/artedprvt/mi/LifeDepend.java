@@ -1,8 +1,8 @@
-package rawfish.artedprvt.script.mi;
+package rawfish.artedprvt.mi;
 
-import rawfish.artedprvt.script.MainThread;
-import rawfish.artedprvt.script.ScriptProcess;
-import rawfish.artedprvt.script.ScriptThread;
+import rawfish.artedprvt.scriptold.MainThread;
+import rawfish.artedprvt.scriptold.ScriptProcess;
+import rawfish.artedprvt.scriptold.ScriptThread;
 
 /**
  * 此类的生命周期依赖MainThread

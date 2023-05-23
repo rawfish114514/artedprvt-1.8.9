@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script.mi;
+package rawfish.artedprvt.mi;
 
 import net.minecraft.world.World;
 import rawfish.artedprvt.id.FormatCode;

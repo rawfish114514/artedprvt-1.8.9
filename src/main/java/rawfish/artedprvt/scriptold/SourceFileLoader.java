@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

@@ -1,7 +1,7 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 import org.mozilla.javascript.Context;
-import rawfish.artedprvt.script.mi.LifeDepend;
+import rawfish.artedprvt.mi.LifeDepend;
 
 import java.util.ArrayList;
 import java.util.HashMap;

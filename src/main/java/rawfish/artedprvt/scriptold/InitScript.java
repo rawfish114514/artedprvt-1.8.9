@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 
 public class InitScript {

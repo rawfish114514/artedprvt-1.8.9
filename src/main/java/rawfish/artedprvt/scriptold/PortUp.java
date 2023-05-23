@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

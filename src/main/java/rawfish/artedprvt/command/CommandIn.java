@@ -3,12 +3,9 @@ package rawfish.artedprvt.command;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
-import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import rawfish.artedprvt.common.EventLoader;
 import rawfish.artedprvt.event.InputStringEvent;
-import rawfish.artedprvt.script.ScriptConst;
 
 public class CommandIn extends CommandBase {
     public CommandIn(String nameIn){

@@ -1,7 +1,4 @@
-package rawfish.artedprvt.script;
-
-import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
+package rawfish.artedprvt.scriptold;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

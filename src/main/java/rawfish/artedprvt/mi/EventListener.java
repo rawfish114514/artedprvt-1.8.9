@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script.mi;
+package rawfish.artedprvt.mi;
 
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -11,9 +11,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import rawfish.artedprvt.common.EventLoader;
 import rawfish.artedprvt.event.InputStringEvent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 事件监听器

@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 public class ScriptConst {
     public static boolean chat=true;

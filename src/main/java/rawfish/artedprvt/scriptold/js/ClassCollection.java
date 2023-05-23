@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script.js;
+package rawfish.artedprvt.scriptold.js;
 
 
 import org.mozilla.javascript.mapping.ClassRegisterer;

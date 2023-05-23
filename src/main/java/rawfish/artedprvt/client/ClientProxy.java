@@ -7,9 +7,9 @@ import rawfish.artedprvt.common.CommonProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import rawfish.artedprvt.script.ScriptProcess;
-import rawfish.artedprvt.script.js.ClassCollection;
-import rawfish.artedprvt.script.js.McpToSrgString;
+import rawfish.artedprvt.scriptold.ScriptProcess;
+import rawfish.artedprvt.scriptold.js.ClassCollection;
+import rawfish.artedprvt.scriptold.js.McpToSrgString;
 
 
 public class ClientProxy extends CommonProxy

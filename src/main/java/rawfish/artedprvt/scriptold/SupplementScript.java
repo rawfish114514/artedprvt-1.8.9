@@ -1,6 +1,6 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
-import rawfish.artedprvt.script.mi.Events;
+import rawfish.artedprvt.mi.Events;
 
 public class SupplementScript {
 

@@ -1,11 +1,10 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

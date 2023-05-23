@@ -1,8 +1,8 @@
-package rawfish.artedprvt.script;
+package rawfish.artedprvt.scriptold;
 
 import org.mozilla.javascript.*;
-import rawfish.artedprvt.script.js.ClassLevel;
-import rawfish.artedprvt.script.mi.Events;
+import rawfish.artedprvt.scriptold.js.ClassLevel;
+import rawfish.artedprvt.mi.Events;
 
 import java.util.Map;
 

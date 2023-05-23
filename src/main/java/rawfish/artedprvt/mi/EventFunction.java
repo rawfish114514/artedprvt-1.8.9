@@ -1,4 +1,4 @@
-package rawfish.artedprvt.script.mi;
+package rawfish.artedprvt.mi;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
 
