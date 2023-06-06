@@ -15,7 +15,7 @@ import java.math.BigInteger;
  *
  * <p>It is based on the C source files jsscan.c and jsscan.h in the jsref package.
  *
- * @see org.mozilla.javascript.Parser
+ * @see Parser
  * @author Mike McCabe
  * @author Brendan Eich
  */

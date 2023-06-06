@@ -6,10 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
+import org.mozilla.javascript.Token;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.mozilla.javascript.Token;
 
 /**
  * AST node for an Object literal (also called an Object initialiser in Ecma-262). The elements list

@@ -1,27 +1,16 @@
 package org.mozilla.javascript.optimizer;
 
-import static org.mozilla.classfile.ClassFileWriter.ACC_PRIVATE;
-import static org.mozilla.classfile.ClassFileWriter.ACC_STATIC;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
 import org.mozilla.classfile.ByteCode;
 import org.mozilla.classfile.ClassFileWriter;
-import org.mozilla.javascript.CompilerEnvirons;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.NativeGenerator;
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.ScriptRuntime;
-import org.mozilla.javascript.Token;
+import org.mozilla.javascript.*;
 import org.mozilla.javascript.ast.FunctionNode;
 import org.mozilla.javascript.ast.Jump;
 import org.mozilla.javascript.ast.ScriptNode;
+
+import java.util.*;
+
+import static org.mozilla.classfile.ClassFileWriter.ACC_PRIVATE;
+import static org.mozilla.classfile.ClassFileWriter.ACC_STATIC;
 
 class BodyCodegen {
     void generateBodyCode() {

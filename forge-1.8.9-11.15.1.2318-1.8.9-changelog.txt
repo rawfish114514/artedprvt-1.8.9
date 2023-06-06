@@ -2421,7 +2421,7 @@ Build 1.9-12.16.0.1886:
 	fry: Fixed mod languages not being loaded on the server.
 	fry: Fixed some test mods not being marked as client-only.
 	iTitus: Fix dynbucket item transformation.
-	fry: Fixed zip being closed too early in the server language loading.
+	fry: Fixed zip being closed too early in the server scriptLanguage loading.
 	fry: Fixed forge fluid having a collision box.
 	kat.swales: Corrected CapabilityItemHandler.readNBT ignoring anything in slot 0 in 1.9
 	mezz: Fix #2717 Pick block hotkey not working in inventories
@@ -2718,7 +2718,7 @@ Build 1.8.9-11.15.1.1847:
 	kat.swales: Corrected readNBT ignoring anything in slot 0
 
 Build 1.9-12.16.0.1846-1.9:
-	fry: Fixed zip being closed too early in the server language loading.
+	fry: Fixed zip being closed too early in the server scriptLanguage loading.
 	fry: Fixed forge fluid having a collision box.
 
 Build 1.9-12.16.0.1845-1.9:
@@ -3656,9 +3656,9 @@ Build 1.8.8-11.15.0.1655:
 	cpw: Allow entity selectors to select "." in entity names. Closes #2125
 	cpw: Be noisy when API is in a coremod. It'll never work and modders should realize that fact.
 	cpw:
-		Fix language adapter loading.
+		Fix scriptLanguage adapter loading.
 		
-		The language adapter is now properly picked up after the mod is loaded
+		The scriptLanguage adapter is now properly picked up after the mod is loaded
 		on the classpath, fixing the ClassNotFoundException occurring before.
 		Also fixed some minor formatting and made it throw a full
 		RuntimeException on failure.
@@ -3916,9 +3916,9 @@ Build 1.8.8-11.15.0.1606-1.8.8:
 
 Build 1.8.8-11.15.0.1605-1.8.8:
 	cpw:
-		Fix language adapter loading.
+		Fix scriptLanguage adapter loading.
 		
-		The language adapter is now properly picked up after the mod is loaded
+		The scriptLanguage adapter is now properly picked up after the mod is loaded
 		on the classpath, fixing the ClassNotFoundException occurring before.
 		Also fixed some minor formatting and made it throw a full
 		RuntimeException on failure.
@@ -4735,7 +4735,7 @@ Build 1.8-11.14.2.1421:
 	cpw: Fix NPE - Closes #1794
 	cpw: And handle the null case in the constructor itself. Closes #1794 (again)
 	cpw:
-		MinecraftForge/FML@dfce4cd8d023a546c4c21405db182b8ddcd38633 Allow registering custom language adapters.
+		MinecraftForge/FML@dfce4cd8d023a546c4c21405db182b8ddcd38633 Allow registering custom scriptLanguage adapters.
 		MinecraftForge/FML@9fecd72cf0bd483ae7bc2ce821ae6b2f5e5b9c65 Some tidyup of the PR
 		MinecraftForge/FML@10ac2a4fd972e923a60d23d10e8f297b8584f565 Fix itemCtorArgs javadoc in registerBlock
 		MinecraftForge/FML@86f70d37a40bbeaf7c389a14adcd8311ba5584df Patch TracingPrintStream to handle Kotlin IO.
@@ -5068,13 +5068,13 @@ Build 1.7.10-10.13.3.1372-1.7.10:
 
 Build 1.8-11.14.1.1371:
 	cpw:
-		MinecraftForge/FML@888e489394e52abdfb349fbfbd7f8e153b5af124 Allow registering custom language adapters.
+		MinecraftForge/FML@888e489394e52abdfb349fbfbd7f8e153b5af124 Allow registering custom scriptLanguage adapters.
 		MinecraftForge/FML@906f94ca143f756f40404fde38af32b2481d0673 Some tidyup of the PR
 		MinecraftForge/FML@1c025f18433df868859022eea8e6d198444736de Patch TracingPrintStream to handle Kotlin IO.
 
 Build 1.7.10-10.13.3.1370-1.7.10:
 	cpw:
-		MinecraftForge/FML@dfce4cd8d023a546c4c21405db182b8ddcd38633 Allow registering custom language adapters.
+		MinecraftForge/FML@dfce4cd8d023a546c4c21405db182b8ddcd38633 Allow registering custom scriptLanguage adapters.
 		MinecraftForge/FML@9fecd72cf0bd483ae7bc2ce821ae6b2f5e5b9c65 Some tidyup of the PR
 		MinecraftForge/FML@10ac2a4fd972e923a60d23d10e8f297b8584f565 Fix itemCtorArgs javadoc in registerBlock
 		MinecraftForge/FML@86f70d37a40bbeaf7c389a14adcd8311ba5584df Patch TracingPrintStream to handle Kotlin IO.
@@ -5959,7 +5959,7 @@ Build 1.7.10-10.13.1.1217:
 		MinecraftForge/FML@21084941127fc882d9968316a8f0669531e484df Add a custom version range factory method. Should hush skyboy's complaints. Closes #486
 		MinecraftForge/FML@7c1e6aaa40704001231e602ceaedfa21a5df1edf Add a delegate to every item and block. this should help with renaming fun stuffs. Also, fix all the tabs from my previous commits. *sigh*
 		MinecraftForge/FML@61fcb4df06dc968fcc31d3e4e524e574acfdbb3b Tweak Itemstack patch to always delegate to the method call. Set the field, so it's in sync.
-		MinecraftForge/FML@eb8c5ab146f2eb3ad3833d40607da97831278ffb Fix nested directory for language resources. Closes MinecraftForge#1264
+		MinecraftForge/FML@eb8c5ab146f2eb3ad3833d40607da97831278ffb Fix nested directory for scriptLanguage resources. Closes MinecraftForge#1264
 		MinecraftForge/FML@7c05e5f70d5387512d0bee33ef99510ee5aac739 Default collections, so that we don't crash if useDependencyInfo is true. Closes #485
 		MinecraftForge/FML@9729fe23326a3d4f6b03e60b5cdaf78a484b3657 Kill net.minecraft.src warning. It hasn't served a purpose in a long time now. Closes #313
 		MinecraftForge/FML@21e875ef22eef6068ccd6df1bd71cf58cba48eed AllowPlayerLogins only after the server has completed the core init tasks. Closes #372
@@ -6144,7 +6144,7 @@ Build 1.7.10-10.13.0.1185:
 		MinecraftForge/FML@9d40b761974f10ec2b5868a992260792f8a98e5d Don't scan ObjectHolders if there was an error already, derpitude will ensure.
 		MinecraftForge/FML@76538c1781d6d6a1e4134fb317af99e6f13b46cc Add a terminal transformer and tweaker.
 		MinecraftForge/FML@aec9228845e50107112bd1f8693f9b4729694c8b Add ExitVisitor to the TerminalTransformer that finds and intercepts any calls to Runtime.exit or System.exit.
-		MinecraftForge/FML@908491d5e7ac26becdac938f38cc90d6b9d73ce1 Move LaunguageRegistry call above normal asset loading to allow resource packs to override mod's language systems.
+		MinecraftForge/FML@908491d5e7ac26becdac938f38cc90d6b9d73ce1 Move LaunguageRegistry call above normal asset loading to allow resource packs to override mod's scriptLanguage systems.
 		MinecraftForge/FML@d13295e28113a1c310d5bbb90ebfe241fefabe02 Fix FMLAT manifest AccessTransformers, class loader fun!
 
 Build 1.7.10-10.13.0.1184:
@@ -8246,7 +8246,7 @@ Build 1.6.1-8.9.0.769-newliquid:
 	richard: Complete it, got the bug figured out
 	Christian:
 		Updated FML:
-		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod language type. In general it should not be needed otherwise.
+		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod scriptLanguage type. In general it should not be needed otherwise.
 		MinecraftForge/FML@cd0466395a8f1af3ec44f124bf4088df2d318603 Fix sysout with trailing messages after a newline
 	LexManos: Disable ImageIO's File based cache, should speed up texturepack loading/stitching.
 	jadran.kotnik: Added rotation support for all vanilla blocks that can be rotated.
@@ -8582,7 +8582,7 @@ Build 1.5.2-7.8.0.726:
 Build 1.5.2-7.8.0.725:
 	Christian:
 		Updated FML:
-		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod language type. In general it should not be needed otherwise.
+		MinecraftForge/FML@24c405665105a789a0708a7e30c8bcb96899da6b Add in an optional modid identifier for @SidedProxy. It's main use is when both scala and java @Mods reside in the same package, and you want the @SidedProxy behaviour for a specific @Mod scriptLanguage type. In general it should not be needed otherwise.
 		MinecraftForge/FML@cd0466395a8f1af3ec44f124bf4088df2d318603 Fix sysout with trailing messages after a newline
 
 Build 1.5.2-7.8.0.724-newliquid:
@@ -8882,7 +8882,7 @@ Build 1.5.1-7.7.1.656:
 	Christian:
 		Updated FML:
 		MinecraftForge/FML@394f424185a044afcd6b31f400e731478171dd18 Fix to output versions in crash logs
-		MinecraftForge/FML@8f35adca7a41c280a4b63d4787f042f615966cac Use more expressive language when a version specifier is a simple unbounded above condition
+		MinecraftForge/FML@8f35adca7a41c280a4b63d4787f042f615966cac Use more expressive scriptLanguage when a version specifier is a simple unbounded above condition
 
 Build 1.5.1-7.7.1.655:
 	Christian:
@@ -10894,9 +10894,9 @@ Build 4.1.4.295:
 	Christian:
 		Update FML: ca1ca4f
 		ca1ca4f Fix maps supporting greater than byte() dimension sizing
-		15ee8bf Fix language registry additions, closes #113
+		15ee8bf Fix scriptLanguage registry additions, closes #113
 		a08b5b1 Merge pull request #112 from pahimar/master
-		8dac58f Added ability to query the Language Registry by key and language for specific localized text, as well as loading in localization text f
+		8dac58f Added ability to query the Language Registry by key and scriptLanguage for specific localized text, as well as loading in localization text f
 
 Build 4.1.4.294:
 	LexManos: Fix buckets, need to rethink for bukkit compatibility.

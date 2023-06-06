@@ -6,13 +6,14 @@
 
 package org.mozilla.classfile;
 
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.ObjArray;
+import org.mozilla.javascript.UintMap;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.ObjArray;
-import org.mozilla.javascript.UintMap;
 
 /**
  * ClassFileWriter
@@ -4407,7 +4408,7 @@ public class ClassFileWriter {
 
         final byte[] code;
 
-        BootstrapEntry(ClassFileWriter.MHandle bsm, Object... bsmArgs) {
+        BootstrapEntry(MHandle bsm, Object... bsmArgs) {
             int length = 2 + 2 + bsmArgs.length * 2;
             code = new byte[length];
             putInt16(itsConstantPool.addMethodHandle(bsm), code, 0);

@@ -6,17 +6,10 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.ast.*;
+
 import java.math.BigInteger;
 import java.util.List;
-import org.mozilla.javascript.ast.AstNode;
-import org.mozilla.javascript.ast.AstRoot;
-import org.mozilla.javascript.ast.Block;
-import org.mozilla.javascript.ast.FunctionNode;
-import org.mozilla.javascript.ast.Jump;
-import org.mozilla.javascript.ast.Scope;
-import org.mozilla.javascript.ast.ScriptNode;
-import org.mozilla.javascript.ast.TemplateCharacters;
-import org.mozilla.javascript.ast.VariableInitializer;
 
 /** Generates bytecode for the Interpreter. */
 class CodeGenerator extends Icode {

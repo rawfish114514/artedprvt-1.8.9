@@ -6,10 +6,11 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.debug.DebuggableScript;
+
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.mozilla.javascript.debug.DebuggableScript;
 
 final class InterpreterData implements Serializable, DebuggableScript {
     private static final long serialVersionUID = 5067677351589230234L;

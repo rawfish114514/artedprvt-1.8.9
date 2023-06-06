@@ -6,18 +6,9 @@
 
 package org.mozilla.javascript.regexp;
 
+import org.mozilla.javascript.*;
+
 import java.io.Serializable;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.IdFunctionObject;
-import org.mozilla.javascript.IdScriptableObject;
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.ScriptRuntime;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Symbol;
-import org.mozilla.javascript.SymbolKey;
-import org.mozilla.javascript.TopLevel;
-import org.mozilla.javascript.Undefined;
 
 /**
  * This class implements the RegExp native object.
@@ -148,7 +139,7 @@ public class NativeRegExp extends IdScriptableObject {
     /**
      * Gets the value to be returned by the typeof operator called on this object.
      *
-     * @see org.mozilla.javascript.ScriptableObject#getTypeOf()
+     * @see ScriptableObject#getTypeOf()
      * @return "object"
      */
     @Override

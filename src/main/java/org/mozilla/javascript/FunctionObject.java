@@ -8,13 +8,14 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.commonjs.module.ModuleScope;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import org.mozilla.javascript.commonjs.module.ModuleScope;
 
 public class FunctionObject extends BaseFunction {
     private static final long serialVersionUID = -5332312783643935019L;
@@ -77,7 +78,7 @@ public class FunctionObject extends BaseFunction {
      * @param methodOrConstructor a java.lang.reflect.Method or a java.lang.reflect.Constructor that
      *     defines the object
      * @param scope enclosing scope of function
-     * @see org.mozilla.javascript.Scriptable
+     * @see Scriptable
      */
     public FunctionObject(String name, Member methodOrConstructor, Scriptable scope) {
         if (methodOrConstructor instanceof Constructor) {
@@ -278,9 +279,9 @@ public class FunctionObject extends BaseFunction {
      *
      * @param scope the scope in which to define the constructor (typically the global object)
      * @param prototype the prototype object
-     * @see org.mozilla.javascript.Scriptable#setParentScope
-     * @see org.mozilla.javascript.Scriptable#setPrototype
-     * @see org.mozilla.javascript.Scriptable#getClassName
+     * @see Scriptable#setParentScope
+     * @see Scriptable#setPrototype
+     * @see Scriptable#getClassName
      */
     public void addAsConstructor(Scriptable scope, Scriptable prototype) {
         initAsConstructor(scope, prototype);
@@ -320,7 +321,7 @@ public class FunctionObject extends BaseFunction {
      *
      * <p>Implements Function.call.
      *
-     * @see org.mozilla.javascript.Function#call( Context, Scriptable, Scriptable, Object[])
+     * @see Function#call( Context, Scriptable, Scriptable, Object[])
      */
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {

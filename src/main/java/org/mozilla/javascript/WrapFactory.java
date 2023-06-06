@@ -19,7 +19,7 @@ import java.util.Map;
  * context), Rhino will call the methods of this class whenever it needs to wrap a value resulting
  * from a call to a Java method or an access to a Java field.
  *
- * @see org.mozilla.javascript.Context#setWrapFactory(WrapFactory)
+ * @see Context#setWrapFactory(WrapFactory)
  * @since 1.5 Release 4
  */
 public class WrapFactory {

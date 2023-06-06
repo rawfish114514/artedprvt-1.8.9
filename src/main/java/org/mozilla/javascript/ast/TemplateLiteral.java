@@ -4,12 +4,13 @@
 
 package org.mozilla.javascript.ast;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
+import org.mozilla.javascript.Token;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.mozilla.javascript.Token;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 /**
  * AST node for a Template literal.

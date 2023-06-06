@@ -6,11 +6,7 @@
 
 package org.mozilla.javascript.xml;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.IdScriptableObject;
-import org.mozilla.javascript.NativeWith;
-import org.mozilla.javascript.Ref;
-import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.*;
 
 /** This Interface describes what all XML objects (XML, XMLList) should have in common. */
 public abstract class XMLObject extends IdScriptableObject {
@@ -77,7 +73,7 @@ public abstract class XMLObject extends IdScriptableObject {
     /**
      * Gets the value returned by calling the typeof operator on this object.
      *
-     * @see org.mozilla.javascript.ScriptableObject#getTypeOf()
+     * @see ScriptableObject#getTypeOf()
      * @return "xml" or "undefined" if {@link #avoidObjectDetection()} returns <code>true</code>
      */
     @Override

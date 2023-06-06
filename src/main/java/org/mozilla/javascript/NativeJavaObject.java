@@ -63,14 +63,14 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         if(javaObject instanceof Class){
             this.clas=(Class)javaObject;
         }
-        isConfuse= ClassRegisterer.isMapping(scope,clas);
+        isMapping = ClassRegisterer.isMapping(scope,clas);
         Thread t=Thread.currentThread();
 
 
         initMembers();
     }
 
-    public boolean isConfuse;
+    public boolean isMapping;
 
     public Class clas;
 
@@ -105,7 +105,7 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
 
     @Override
     public Object get(String name, Scriptable start) {
-        if(isConfuse){
+        if(isMapping){
             //转换为混淆名
             MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
             if(member!=null){
@@ -156,7 +156,7 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     @Override
     public void put(String name, Scriptable start, Object value){
 
-        if(isConfuse){
+        if(isMapping){
             //转换为混淆名
             MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
             if(member!=null){

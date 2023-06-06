@@ -13,7 +13,7 @@ import org.mozilla.javascript.NativeArrayIterator.ARRAY_ITERATOR_TYPE;
  *
  * <p>See ECMA 10.1.8
  *
- * @see org.mozilla.javascript.NativeCall
+ * @see NativeCall
  * @author Norris Boyd
  */
 final class Arguments extends IdScriptableObject {

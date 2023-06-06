@@ -6,8 +6,9 @@
 
 package org.mozilla.javascript;
 
-import java.math.BigInteger;
 import org.mozilla.javascript.ast.FunctionNode;
+
+import java.math.BigInteger;
 
 /**
  * The following class save decompilation information about the source. Source information is

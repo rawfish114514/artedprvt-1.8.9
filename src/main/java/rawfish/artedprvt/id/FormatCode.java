@@ -4,7 +4,7 @@ import java.awt.*;
 
 //样式代码
 public class FormatCode {
-    public static String formatCharacter="\u00a7";
+    public static String formatCharacter="§";
 
     public static final String COLOR_0=formatCharacter+"0";//黑色/
     public static final String COLOR_1=formatCharacter+"1";//蓝色

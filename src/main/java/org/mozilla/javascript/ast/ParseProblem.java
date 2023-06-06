@@ -22,7 +22,7 @@ public class ParseProblem {
 
     /** Constructs a new ParseProblem. */
     public ParseProblem(
-            ParseProblem.Type type, String message, String sourceName, int offset, int length) {
+            Type type, String message, String sourceName, int offset, int length) {
         setType(type);
         setMessage(message);
         setSourceName(sourceName);
@@ -30,11 +30,11 @@ public class ParseProblem {
         setLength(length);
     }
 
-    public ParseProblem.Type getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(ParseProblem.Type type) {
+    public void setType(Type type) {
         this.type = type;
     }
 

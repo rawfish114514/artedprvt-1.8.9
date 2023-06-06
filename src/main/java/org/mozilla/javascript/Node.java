@@ -6,16 +6,11 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.ast.*;
+
 import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import org.mozilla.javascript.ast.Comment;
-import org.mozilla.javascript.ast.FunctionNode;
-import org.mozilla.javascript.ast.Jump;
-import org.mozilla.javascript.ast.Name;
-import org.mozilla.javascript.ast.NumberLiteral;
-import org.mozilla.javascript.ast.Scope;
-import org.mozilla.javascript.ast.ScriptNode;
 
 /**
  * This class implements the root of the intermediate representation.
@@ -366,7 +361,7 @@ public class Node implements Iterable<Node> {
         }
     }
 
-    /** Returns an {@link java.util.Iterator} over the node's children. */
+    /** Returns an {@link Iterator} over the node's children. */
     @Override
     public Iterator<Node> iterator() {
         return new NodeIterator();

@@ -14,7 +14,7 @@ import org.mozilla.javascript.ErrorReporter;
  * This is interface defines a protocol for the reporting of errors during JavaScript translation in
  * IDE-mode. If the {@link org.mozilla.javascript.Parser}'s error reporter is set to an instance of
  * this interface, then this interface's {@link #warning} and {@link #error} methods are called
- * instead of the {@link org.mozilla.javascript.ErrorReporter} versions.
+ * instead of the {@link ErrorReporter} versions.
  *
  * <p>These methods take a source char offset and a length. The rationale is that in interactive
  * IDE-type environments, the source is available and the IDE will want to indicate where the error

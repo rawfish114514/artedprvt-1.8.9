@@ -7,10 +7,8 @@ import rawfish.artedprvt.common.CommonProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import rawfish.artedprvt.scriptold.ScriptProcess;
-import rawfish.artedprvt.scriptold.js.ClassCollection;
-import rawfish.artedprvt.scriptold.js.McpToSrgString;
-
+import rawfish.artedprvt.core.rhino.ClassCollection;
+import rawfish.artedprvt.core.rhino.McpToSrgString;
 
 public class ClientProxy extends CommonProxy
 {
@@ -20,7 +18,6 @@ public class ClientProxy extends CommonProxy
         super.preInit(event);
 
         new CommandLoader(ClientCommandHandler.instance);
-        ScriptProcess.initSargs();
         ClassCollection.load(McpToSrgString.getMcpToSrgString());
     }
 

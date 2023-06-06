@@ -4,15 +4,12 @@
 
 package org.mozilla.javascript.engine;
 
+import org.mozilla.javascript.*;
+
+import javax.script.ScriptContext;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import javax.script.ScriptContext;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.ScriptRuntime;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
 
 /**
  * This class defines the following built-in functions for the RhinoScriptEngine.

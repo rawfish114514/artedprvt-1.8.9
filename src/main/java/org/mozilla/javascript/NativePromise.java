@@ -4,8 +4,9 @@
 
 package org.mozilla.javascript;
 
-import java.util.ArrayList;
 import org.mozilla.javascript.TopLevel.NativeErrors;
+
+import java.util.ArrayList;
 
 public class NativePromise extends ScriptableObject {
 
@@ -486,7 +487,7 @@ public class NativePromise extends ScriptableObject {
             return ((JavaScriptException) re).getValue();
         }
 
-        TopLevel.NativeErrors constructor = NativeErrors.Error;
+        NativeErrors constructor = NativeErrors.Error;
         if (re instanceof EcmaError) {
             EcmaError ee = (EcmaError) re;
             switch (ee.getName()) {

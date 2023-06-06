@@ -1,12 +1,11 @@
 //commands
 commands.ac.usage=/ac
 commands.ad.usage=/ad
-commands.apf.usage=/artedprvt|apf <args ...>
-commands.apkg.usage=/apkg [sargs ...] <pkg> [args ...]
-commands.download.usage=/download <<type> <key ...> |conn>
+commands.apf.usage=/artedprvt|apf <command> [args ...]
+commands.apkg.usage=/apkg <pack> [args ...]
 commands.in.usage=/in [string ...]
-commands.pros.usage=/pros
-commands.script.usage=/script [sargs ...] <pack> [args ...]
-commands.stops.usage=/stops [pro]
+commands.pros.usage=/pros [name|pid|id]
+commands.script.usage=/script <pack> [args ...]
+commands.stops.usage=/stops [name|pid|id]
 commands.stt.usage=/stt
 commands.workspace.usage=/workspace

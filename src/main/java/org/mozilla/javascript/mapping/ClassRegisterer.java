@@ -23,10 +23,10 @@ public class ClassRegisterer {
         if(matcher==null){
             return false;
         }
-        return matcher.match(scope,clas);
+        return matcher.match(clas);
     }
 
     public interface MappingMatcher{
-        public boolean match(Scriptable scope, Class clas);
+        public boolean match(Class clas);
     }
 }

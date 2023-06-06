@@ -6,16 +6,9 @@
 
 package org.mozilla.javascript;
 
-import java.util.AbstractCollection;
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
 import org.mozilla.javascript.ScriptRuntime.StringIdOrIndex;
+
+import java.util.*;
 
 /**
  * This class implements the Object native object. See ECMA 15.2.
@@ -772,7 +765,7 @@ public class NativeObject extends IdScriptableObject implements Map {
     }
 
     @Override
-    public Set<Map.Entry<Object, Object>> entrySet() {
+    public Set<Entry<Object, Object>> entrySet() {
         return new EntrySet();
     }
 
@@ -794,7 +787,7 @@ public class NativeObject extends IdScriptableObject implements Map {
     class EntrySet extends AbstractSet<Entry<Object, Object>> {
         @Override
         public Iterator<Entry<Object, Object>> iterator() {
-            return new Iterator<Map.Entry<Object, Object>>() {
+            return new Iterator<Entry<Object, Object>>() {
                 Object[] ids = getIds();
                 Object key = null;
                 int index = 0;
@@ -805,10 +798,10 @@ public class NativeObject extends IdScriptableObject implements Map {
                 }
 
                 @Override
-                public Map.Entry<Object, Object> next() {
+                public Entry<Object, Object> next() {
                     final Object ekey = key = ids[index++];
                     final Object value = get(key);
-                    return new Map.Entry<Object, Object>() {
+                    return new Entry<Object, Object>() {
                         @Override
                         public Object getKey() {
                             return ekey;
@@ -829,7 +822,7 @@ public class NativeObject extends IdScriptableObject implements Map {
                             if (!(other instanceof Map.Entry)) {
                                 return false;
                             }
-                            Map.Entry<?, ?> e = (Map.Entry<?, ?>) other;
+                            Entry<?, ?> e = (Entry<?, ?>) other;
                             return (ekey == null ? e.getKey() == null : ekey.equals(e.getKey()))
                                     && (value == null
                                             ? e.getValue() == null

@@ -8,31 +8,19 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.ScriptRuntime.StringIdOrIndex;
+import org.mozilla.javascript.annotations.*;
+import org.mozilla.javascript.debug.DebuggableObject;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.lang.reflect.*;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import org.mozilla.javascript.ScriptRuntime.StringIdOrIndex;
-import org.mozilla.javascript.annotations.JSConstructor;
-import org.mozilla.javascript.annotations.JSFunction;
-import org.mozilla.javascript.annotations.JSGetter;
-import org.mozilla.javascript.annotations.JSSetter;
-import org.mozilla.javascript.annotations.JSStaticFunction;
-import org.mozilla.javascript.debug.DebuggableObject;
 
 /**
  * This is the default implementation of the Scriptable interface. This class provides convenient
@@ -43,7 +31,7 @@ import org.mozilla.javascript.debug.DebuggableObject;
  *
  * <p>Classes extending ScriptableObject must define the getClassName method.
  *
- * @see org.mozilla.javascript.Scriptable
+ * @see Scriptable
  * @author Norris Boyd
  */
 public abstract class ScriptableObject
@@ -56,17 +44,17 @@ public abstract class ScriptableObject
      *
      * <p>Used by getAttributes() and setAttributes().
      *
-     * @see org.mozilla.javascript.ScriptableObject#getAttributes(String)
-     * @see org.mozilla.javascript.ScriptableObject#setAttributes(String, int)
+     * @see ScriptableObject#getAttributes(String)
+     * @see ScriptableObject#setAttributes(String, int)
      */
     public static final int EMPTY = 0x00;
 
     /**
      * Property attribute indicating assignment to this property is ignored.
      *
-     * @see org.mozilla.javascript.ScriptableObject #put(String, Scriptable, Object)
-     * @see org.mozilla.javascript.ScriptableObject#getAttributes(String)
-     * @see org.mozilla.javascript.ScriptableObject#setAttributes(String, int)
+     * @see ScriptableObject #put(String, Scriptable, Object)
+     * @see ScriptableObject#getAttributes(String)
+     * @see ScriptableObject#setAttributes(String, int)
      */
     public static final int READONLY = 0x01;
 
@@ -75,18 +63,18 @@ public abstract class ScriptableObject
      *
      * <p>Only enumerated properties will be returned by getIds().
      *
-     * @see org.mozilla.javascript.ScriptableObject#getIds()
-     * @see org.mozilla.javascript.ScriptableObject#getAttributes(String)
-     * @see org.mozilla.javascript.ScriptableObject#setAttributes(String, int)
+     * @see ScriptableObject#getIds()
+     * @see ScriptableObject#getAttributes(String)
+     * @see ScriptableObject#setAttributes(String, int)
      */
     public static final int DONTENUM = 0x02;
 
     /**
      * Property attribute indicating property cannot be deleted.
      *
-     * @see org.mozilla.javascript.ScriptableObject#delete(String)
-     * @see org.mozilla.javascript.ScriptableObject#getAttributes(String)
-     * @see org.mozilla.javascript.ScriptableObject#setAttributes(String, int)
+     * @see ScriptableObject#delete(String)
+     * @see ScriptableObject#getAttributes(String)
+     * @see ScriptableObject#setAttributes(String, int)
      */
     public static final int PERMANENT = 0x04;
 
@@ -458,11 +446,11 @@ public abstract class ScriptableObject
      * @param name the identifier for the property
      * @return the bitset of attributes
      * @exception EvaluatorException if the named property is not found
-     * @see org.mozilla.javascript.ScriptableObject#has(String, Scriptable)
-     * @see org.mozilla.javascript.ScriptableObject#READONLY
-     * @see org.mozilla.javascript.ScriptableObject#DONTENUM
-     * @see org.mozilla.javascript.ScriptableObject#PERMANENT
-     * @see org.mozilla.javascript.ScriptableObject#EMPTY
+     * @see ScriptableObject#has(String, Scriptable)
+     * @see ScriptableObject#READONLY
+     * @see ScriptableObject#DONTENUM
+     * @see ScriptableObject#PERMANENT
+     * @see ScriptableObject#EMPTY
      */
     public int getAttributes(String name) {
         return getAttributeSlot(name, 0).getAttributes();
@@ -474,11 +462,11 @@ public abstract class ScriptableObject
      * @param index the numeric index for the property
      * @exception EvaluatorException if the named property is not found is not found
      * @return the bitset of attributes
-     * @see org.mozilla.javascript.ScriptableObject#has(String, Scriptable)
-     * @see org.mozilla.javascript.ScriptableObject#READONLY
-     * @see org.mozilla.javascript.ScriptableObject#DONTENUM
-     * @see org.mozilla.javascript.ScriptableObject#PERMANENT
-     * @see org.mozilla.javascript.ScriptableObject#EMPTY
+     * @see ScriptableObject#has(String, Scriptable)
+     * @see ScriptableObject#READONLY
+     * @see ScriptableObject#DONTENUM
+     * @see ScriptableObject#PERMANENT
+     * @see ScriptableObject#EMPTY
      */
     public int getAttributes(int index) {
         return getAttributeSlot(null, index).getAttributes();
@@ -500,11 +488,11 @@ public abstract class ScriptableObject
      * @param name the name of the property
      * @param attributes the bitset of attributes
      * @exception EvaluatorException if the named property is not found
-     * @see org.mozilla.javascript.Scriptable#has(String, Scriptable)
-     * @see org.mozilla.javascript.ScriptableObject#READONLY
-     * @see org.mozilla.javascript.ScriptableObject#DONTENUM
-     * @see org.mozilla.javascript.ScriptableObject#PERMANENT
-     * @see org.mozilla.javascript.ScriptableObject#EMPTY
+     * @see Scriptable#has(String, Scriptable)
+     * @see ScriptableObject#READONLY
+     * @see ScriptableObject#DONTENUM
+     * @see ScriptableObject#PERMANENT
+     * @see ScriptableObject#EMPTY
      */
     public void setAttributes(String name, int attributes) {
         checkNotSealed(name, 0);
@@ -518,11 +506,11 @@ public abstract class ScriptableObject
      * @param index the numeric index for the property
      * @param attributes the bitset of attributes
      * @exception EvaluatorException if the named property is not found
-     * @see org.mozilla.javascript.Scriptable#has(String, Scriptable)
-     * @see org.mozilla.javascript.ScriptableObject#READONLY
-     * @see org.mozilla.javascript.ScriptableObject#DONTENUM
-     * @see org.mozilla.javascript.ScriptableObject#PERMANENT
-     * @see org.mozilla.javascript.ScriptableObject#EMPTY
+     * @see Scriptable#has(String, Scriptable)
+     * @see ScriptableObject#READONLY
+     * @see ScriptableObject#DONTENUM
+     * @see ScriptableObject#PERMANENT
+     * @see ScriptableObject#EMPTY
      */
     public void setAttributes(int index, int attributes) {
         checkNotSealed(null, index);
@@ -934,10 +922,10 @@ public abstract class ScriptableObject
      * @exception InstantiationException if unable to instantiate the named class
      * @exception InvocationTargetException if an exception is thrown during execution of methods of
      *     the named class
-     * @see org.mozilla.javascript.Function
-     * @see org.mozilla.javascript.FunctionObject
-     * @see org.mozilla.javascript.ScriptableObject#READONLY
-     * @see org.mozilla.javascript.ScriptableObject #defineProperty(String, Class, int)
+     * @see Function
+     * @see FunctionObject
+     * @see ScriptableObject#READONLY
+     * @see ScriptableObject #defineProperty(String, Class, int)
      */
     public static <T extends Scriptable> void defineClass(Scriptable scope, Class<T> clazz)
             throws IllegalAccessException, InstantiationException, InvocationTargetException {
@@ -1291,7 +1279,7 @@ public abstract class ScriptableObject
      * @param propertyName the name of the property to define.
      * @param value the initial value of the property
      * @param attributes the attributes of the JavaScript property
-     * @see org.mozilla.javascript.Scriptable#put(String, Scriptable, Object)
+     * @see Scriptable#put(String, Scriptable, Object)
      */
     public void defineProperty(String propertyName, Object value, int attributes) {
         checkNotSealed(propertyName, 0);
@@ -1362,7 +1350,7 @@ public abstract class ScriptableObject
      *     will be searched for "getFoo" and "setFoo" methods.
      * @param clazz the Java class to search for the getter and setter
      * @param attributes the attributes of the JavaScript property
-     * @see org.mozilla.javascript.Scriptable#put(String, Scriptable, Object)
+     * @see Scriptable#put(String, Scriptable, Object)
      */
     public void defineProperty(String propertyName, Class<?> clazz, int attributes) {
         int length = propertyName.length();
@@ -1855,7 +1843,7 @@ public abstract class ScriptableObject
      * @param names the names of the Methods to add as function properties
      * @param clazz the class to search for the Methods
      * @param attributes the attributes of the new properties
-     * @see org.mozilla.javascript.FunctionObject
+     * @see FunctionObject
      */
     public void defineFunctionProperties(String[] names, Class<?> clazz, int attributes) {
         Method[] methods = FunctionObject.getMethodList(clazz);

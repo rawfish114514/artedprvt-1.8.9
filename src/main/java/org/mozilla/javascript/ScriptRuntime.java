@@ -6,8 +6,14 @@
 
 package org.mozilla.javascript;
 
+import org.mozilla.javascript.ast.FunctionNode;
+import org.mozilla.javascript.resources.MessagesString;
+import org.mozilla.javascript.v8dtoa.DoubleConversion;
+import org.mozilla.javascript.v8dtoa.FastDtoa;
+import org.mozilla.javascript.xml.XMLLib;
+import org.mozilla.javascript.xml.XMLObject;
+
 import java.io.IOException;
-import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
@@ -16,16 +22,8 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.text.MessageFormat;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
-import org.mozilla.javascript.ast.FunctionNode;
-import org.mozilla.javascript.resources.MessagesString;
-import org.mozilla.javascript.v8dtoa.DoubleConversion;
-import org.mozilla.javascript.v8dtoa.FastDtoa;
-import org.mozilla.javascript.xml.XMLLib;
-import org.mozilla.javascript.xml.XMLObject;
 
 /**
  * This is the class that implements the runtime.
@@ -4558,9 +4556,6 @@ public class ScriptRuntime {
              */
             MessageFormat formatter = new MessageFormat(formatString);
 
-            for(int i=0;i<arguments.length;i++){
-                arguments[i]="\u00a74"+String.valueOf(arguments[i])+"\u00a7r\u00a74";
-            }
             return formatter.format(arguments);
         }
     }

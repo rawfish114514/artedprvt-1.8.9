@@ -6,17 +6,12 @@
 
 package org.mozilla.javascript;
 
-import java.lang.reflect.Array;
-import java.math.BigInteger;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Stack;
 import org.mozilla.javascript.json.JsonParser;
 import org.mozilla.javascript.xml.XMLObject;
+
+import java.lang.reflect.Array;
+import java.math.BigInteger;
+import java.util.*;
 
 /**
  * This class implements the JSON native object. See ECMA 15.12.

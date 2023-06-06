@@ -6,11 +6,7 @@
 
 package org.mozilla.javascript;
 
-import java.beans.BeanDescriptor;
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
+import java.beans.*;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.function.UnaryOperator;

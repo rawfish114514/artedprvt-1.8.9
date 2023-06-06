@@ -6,17 +6,9 @@
 
 package org.mozilla.javascript.jdk18;
 
-import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.ContextFactory;
-import org.mozilla.javascript.InterfaceAdapter;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.VMBridge;
+import org.mozilla.javascript.*;
+
+import java.lang.reflect.*;
 
 public class VMBridge_jdk18 extends VMBridge {
     private static final ThreadLocal<Object[]> contextLocal = new ThreadLocal<Object[]>();

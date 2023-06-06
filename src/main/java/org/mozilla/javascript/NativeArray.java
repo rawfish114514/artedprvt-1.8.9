@@ -6,21 +6,13 @@
 
 package org.mozilla.javascript;
 
-import static org.mozilla.javascript.ScriptRuntimeES6.requireObjectCoercible;
-
-import java.io.Serializable;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
 import org.mozilla.javascript.regexp.NativeRegExp;
 import org.mozilla.javascript.xml.XMLObject;
+
+import java.io.Serializable;
+import java.util.*;
+
+import static org.mozilla.javascript.ScriptRuntimeES6.requireObjectCoercible;
 
 /**
  * This class implements the Array native object.

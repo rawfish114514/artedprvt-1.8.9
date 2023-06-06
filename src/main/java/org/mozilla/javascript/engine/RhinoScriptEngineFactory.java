@@ -4,12 +4,13 @@
 
 package org.mozilla.javascript.engine;
 
+import org.mozilla.javascript.Context;
+
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import org.mozilla.javascript.Context;
 
 /**
  * This is an implementation of the standard Java "ScriptEngine" for Rhino. If the Rhino engine

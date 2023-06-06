@@ -59,7 +59,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     }
     @Override
     public Object get(String name, Scriptable start) {
-        if(isConfuse){
+        if(isMapping){
             //转换为混淆名
             MemberMapping member= ClassRegisterer.classMap.get(clas.getName());
             if(member!=null){
@@ -119,7 +119,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
 
     @Override
     public void put(String name, Scriptable start, Object value){
-        if(isConfuse){
+        if(isMapping){
             //转换为混淆名
             MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
             if(member!=null){
@@ -198,7 +198,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
         Object arg0=args[0];
         if(arg0 instanceof NativeObject){
             NativeObject nativeObject=(NativeObject)arg0;
-            if(isConfuse) {
+            if(isMapping) {
                 //复制这个对象并对函数混淆 这意味着源对象不会被用来生成实现类
                 MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
                 if(member!=null) {
