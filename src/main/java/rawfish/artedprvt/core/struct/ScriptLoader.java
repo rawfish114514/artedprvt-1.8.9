@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  * 脚本加载器
  */
 public class ScriptLoader {
-    private static Pattern moduleFullNamePattern =Pattern.compile("([a-z]+:|)(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
+    private static Pattern moduleFullNamePattern=Pattern.compile("([a-z]+:|)(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
     private static List<String> packageIgnore=new ArrayList<String>(){{
         add("default");
     }};

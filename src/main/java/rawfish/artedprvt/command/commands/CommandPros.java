@@ -49,7 +49,7 @@ public class CommandPros extends Command {
     }
 
     public void printPro(ScriptProcess pro){
-        CommandMessages.printChat.print(pro.getPid() + ": " + pro.getName(), new ChatProvider() {
+        CommandMessages.printChat.print("§6>§f"+pro.getPid() + ": " + pro.getName(), new ChatProvider() {
             public ScriptProcess p;
             public ChatProvider setP(ScriptProcess p){
                 this.p=p;
@@ -62,7 +62,7 @@ public class CommandPros extends Command {
                     s+="\n";
                     s+="pid: "+p.getPid();
                     s+="\n";
-                    s+=p.toRuntime();
+                    s+=p.getStatistics();
                     return s;
                 }
                 if(p.getRet()==ScriptProcess.END){

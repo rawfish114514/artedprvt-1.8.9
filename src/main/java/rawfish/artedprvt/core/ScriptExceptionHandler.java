@@ -10,6 +10,10 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
     public ScriptExceptionHandler(ScriptProcess scriptProcess){
         this.scriptProcess=scriptProcess;
     }
+
+    public void uncaughtException(Throwable e){
+        uncaughtException(Thread.currentThread(),e);
+    }
     @Override
     public void uncaughtException(Thread t, Throwable e) {
         if(e instanceof ThreadDeath){
@@ -35,9 +39,6 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
             }
         }
 
-        if(stackElements.size()==0){
-            return;
-        }
         StringBuilder sb=new StringBuilder();
         sb.append(message);
         for(ScriptStackElement[] stackElementArray:stackElements){
@@ -47,9 +48,17 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
             }
         }
 
-        print(message,sb.toString());
+        if(sb.length()>0) {
+            print(message, sb.toString());
+        }else{
+            print(message);
+        }
         scriptProcess.hasError();
         scriptProcess.getScriptSystem().exit(ScriptProcess.ERROR);
+    }
+
+    public void print(String chat){
+        scriptProcess.getScriptSystem().print(ScriptSystem.DEBUG,chat);
     }
 
     public void print(String chat,String hover){

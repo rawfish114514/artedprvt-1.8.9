@@ -6,20 +6,22 @@ package rawfish.artedprvt.core;
  * 通常是游戏接口相关的对象
  * 它们可能在进程结束后保持活动
  * 这样的类应该实现ScriptObject接口
- * 持有游戏资源的
  * 注册到游戏的
  * 以其他方式被游戏引用的
- * 基本所有和游戏交互相关的类都无法避免
  */
 public interface ScriptObject {
-    default void up(){
+    default ScriptProcess up(){
         Thread thread=Thread.currentThread();
+        ScriptProcess process=null;
         if(thread instanceof MainThread){
-            ((MainThread) thread).getProcess().addScriptObject(this);
+            process=((MainThread) thread).getProcess();
+            process.addScriptObject(this);
         }
         if(thread instanceof ScriptThread){
-            ((ScriptThread) thread).getProcess().addScriptObject(this);
+            process=((ScriptThread) thread).getProcess();
+            process.addScriptObject(this);
         }
+        return process;
     }
 
     void onClose();

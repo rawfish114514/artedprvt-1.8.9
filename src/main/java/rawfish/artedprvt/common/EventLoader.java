@@ -26,6 +26,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import rawfish.artedprvt.core.DebugInfo;
+import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.ScriptSystem;
 import rawfish.artedprvt.event.InputStringEvent;
 
 import java.io.*;
@@ -46,10 +48,7 @@ public class EventLoader
     RenderGameOverlayEvent b;
     @SubscribeEvent(priority=EventPriority.HIGHEST)
     public void onRenderOverlay(RenderGameOverlayEvent.Text event){
-        if(Minecraft.getMinecraft().gameSettings.showDebugInfo) {
-            event.left.add("");
-            event.left.addAll(DebugInfo.call());
-        }
+        event.right.addAll(DebugInfo.call(Minecraft.getMinecraft().gameSettings.showDebugInfo));
     }
 
     @SubscribeEvent(priority=EventPriority.HIGHEST)

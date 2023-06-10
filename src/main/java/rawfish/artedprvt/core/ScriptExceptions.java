@@ -7,7 +7,8 @@ import rawfish.artedprvt.core.rhino.SystemMethod;
  */
 public class ScriptExceptions {
     public static void exception(String str){
-        throw new RuntimeException(str);
+        Thread t=Thread.currentThread();
+        t.getUncaughtExceptionHandler().uncaughtException(t,new RuntimeException(str));
     }
     public static void exceptionModuleFullNameFormat(String str){
         exception("模块完整名格式错误: "+str);

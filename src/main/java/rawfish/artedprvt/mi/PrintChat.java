@@ -15,15 +15,30 @@ import java.awt.datatransfer.StringSelection;
  * 聊天消息打印
  */
 public class PrintChat{
-    private GuiNewChat guiNewChat;
+    public GuiNewChat guiNewChat;
+
+    @ScriptCallable
     public PrintChat(){
         guiNewChat=Minecraft.getMinecraft().ingameGUI.getChatGUI();
     }
 
+    /**
+     * 打印到聊天栏
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     */
+    @ScriptCallable
     public void print(String chat){
         guiNewChat.printChatMessage(new ChatComponentText(chat));
     }
 
+    /**
+     * 打印到聊天栏
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     * @param hover 悬浮信息字符串
+     */
+    @ScriptCallable
     public void print(String chat,String hover){
         ChatComponentText chatComponentText=new ChatComponentText(chat);
         ChatComponentText hoverComponent=new ChatComponentText(hover);
@@ -34,6 +49,13 @@ public class PrintChat{
         guiNewChat.printChatMessage(chatComponentText);
     }
 
+    /**
+     * 打印到聊天栏
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     * @param hover 悬浮信息供应商
+     */
+    @ScriptCallable
     public void print(String chat, ChatProvider hover){
         ChatComponentText chatComponentText=new ChatComponentText(chat);
         ChatComponentText hoverComponent=new ChatProviderComponent(hover);

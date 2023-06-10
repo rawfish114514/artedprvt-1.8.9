@@ -8,7 +8,7 @@ public class MainThread extends Thread{
     private ScriptProcess process;
     public MainThread(ScriptProcess process){
         this.process=process;
-        setName("MainThread");
+        setName("Main");
         setUncaughtExceptionHandler(process.getExceptionHandler());
     }
 

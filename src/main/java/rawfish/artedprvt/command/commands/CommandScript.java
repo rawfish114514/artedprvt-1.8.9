@@ -10,8 +10,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CommandScript extends Command {
+    public Pattern packPattern=Pattern.compile("([a-z]+:|)(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
+
     public CommandScript(String commandName) {
         super(commandName);
     }
@@ -23,6 +27,11 @@ public class CommandScript extends Command {
             return;
         }
         String pack=args.get(0);
+        Matcher matcher=packPattern.matcher(pack);
+        if(!matcher.matches()){
+            CommandMessages.exception(getCommandName(),"模块名格式异常");
+            return;
+        }
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {

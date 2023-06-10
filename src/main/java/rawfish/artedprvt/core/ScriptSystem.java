@@ -49,7 +49,7 @@ public class ScriptSystem {
         }
         if(type== DEBUG){
             if(B_DEBUG){
-                printChat.print("§7["+process.getName()+"]["+Thread.currentThread().getName()+"] "+chat);
+                printChat.print(getDebugHead()+chat);
                 return;
             }
         }
@@ -73,7 +73,7 @@ public class ScriptSystem {
         }
         if(type== DEBUG){
             if(B_DEBUG){
-                printChat.print("§7["+process.getName()+"]["+Thread.currentThread().getName()+"] "+chat,hover);
+                printChat.print(getDebugHead()+chat,hover);
                 return;
             }
         }
@@ -97,13 +97,26 @@ public class ScriptSystem {
         }
         if(type== DEBUG){
             if(B_DEBUG){
-                printChat.print("§7["+process.getName()+"]["+Thread.currentThread().getName()+"] "+chat,hover);
+                printChat.print(getDebugHead()+chat,hover);
                 return;
             }
         }
         if(type==HIGH){
             printChat.print(chat,hover);
         }
+    }
+
+    private String getDebugHead(){
+        String str="§7[";
+        str+=process.getName();
+        str+="] [";
+        if(process.isThread(Thread.currentThread())){
+            str+=Thread.currentThread().getName();
+        }else{
+            str+="§n"+Thread.currentThread().getName()+"§r§7";
+        }
+        str+="] ";
+        return str;
     }
 
     /**

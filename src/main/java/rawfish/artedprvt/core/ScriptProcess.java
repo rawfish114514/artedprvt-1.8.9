@@ -182,10 +182,10 @@ public class ScriptProcess {
             return;
         }
         onEnd=true;
+        closeScriptObject();
         ret=END;
         printEnd(exitCode,System.currentTimeMillis()-time);
         proList.remove(this);
-        closeScriptObject();
     }
 
     private void printStart(){
@@ -194,7 +194,7 @@ public class ScriptProcess {
 
     private void printEnd(int status,long runtime){
         rtime=runtime;
-        String s=toRuntime();
+        String s= getStatistics();
         if(status==EXIT){
             scriptSystem.print(ScriptSystem.HIGH,"§2end:§r "+name+"§7("+runtime+"ms)",s);
             return;
@@ -262,13 +262,8 @@ public class ScriptProcess {
     }
 
     private long rtime=-1;
-    public String toRuntime(){
-        long time;
-        if(rtime>=0){
-            time=rtime;
-        }else{
-            time=System.currentTimeMillis()-this.time;
-        }
+    public String getStatistics(){
+        long time=getRuntime();
 
         String line1="[";
         for(String arg:scriptArgument){
@@ -280,8 +275,14 @@ public class ScriptProcess {
         }
         line1+="]";
         String line2="ret: "+ret;
-        String line3="runtime: "+time;
-        String line4="object: "+scriptObjectNumber;
+        String line3="object: "+scriptObjectNumber;
+        String stime=String.valueOf(time);
+        if(stime.length()>3){
+            stime=stime.substring(0,stime.length()-3)+"§7"+stime.substring(stime.length()-3);
+        }else{
+            stime="§7"+stime;
+        }
+        String line4="runtime: "+stime;
 
         String str="";
         if(!line1.equals("[]")){
@@ -291,6 +292,28 @@ public class ScriptProcess {
         str+=line3+"\n";
         str+=line4;
         return str;
+    }
+
+    public long getRuntime(){
+        long time;
+        if(rtime>=0){
+            time=rtime;
+        }else{
+            time=System.currentTimeMillis()-this.time;
+        }
+        return time;
+    }
+
+    public boolean isThread(Thread thread) {
+        if(thread==mainThread){
+            return true;
+        }
+        for (int i = 0; i < threads.size(); i++) {
+            if(thread==threads.get(i)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static List<ScriptProcess> getProList() {

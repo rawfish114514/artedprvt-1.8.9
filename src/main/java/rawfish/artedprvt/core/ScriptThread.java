@@ -9,7 +9,7 @@ public class ScriptThread extends Thread {
         super(target);
         this.process = process;
         List<ScriptThread> threads = process.getThreads();
-        setName("ScriptThread-" + threads.size());
+        setName("Script-" + threads.size());
         setUncaughtExceptionHandler(process.getExceptionHandler());
 
         threads.add(this);
