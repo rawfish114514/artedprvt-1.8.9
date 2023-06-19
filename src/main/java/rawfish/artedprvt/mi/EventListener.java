@@ -3,6 +3,7 @@ package rawfish.artedprvt.mi;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -23,15 +24,20 @@ public class EventListener implements ScriptObject {
      * 回调函数
      */
     public EventFunction f;
+    
     /**
-     * 监听器代理
+     * 监听器
      */
     public EventListener listener=null;
 
     private ScriptProcess process;
 
+    private boolean breakk=false;
+
     /**
-     * 构造一个事件监听器但不会监听任何事件
+     * 构造一个事件监听器
+     * 这个类不会监听任何事件
+     * 必须通过子类订阅指定事件
      * @param f 回调函数
      */
     public EventListener(EventFunction f){
@@ -40,8 +46,8 @@ public class EventListener implements ScriptObject {
         process=up();
         if(process==null){
             ScriptExceptions.exception("脚本对象上下文异常");
+            breakk=true;
         }
-        register();
     }
 
     /**
@@ -58,11 +64,12 @@ public class EventListener implements ScriptObject {
 
     /**
      * 构造一个事件监听器
-     * 这个构造函数没有添加对象到主线程，因为没有必要
+     * 通过这个构造函数创建的事件监听器实际不监听事件
+     * 它仅通过事件类型创建相应的具体事件监听器
      * @param type 事件类型
      * @param f 回调函数
      */
-    @ScriptCallable
+    @ScriptUsable
     public EventListener(Events type,EventFunction f){
         if(type==Events.tick){
             listener=new TickEventListener(f);
@@ -80,7 +87,10 @@ public class EventListener implements ScriptObject {
             listener=new InputStringEventListener(f);
             setEventBus(this,EventLoader.EVENT_BUS);
         }
-
+        if(type==Events.tooltip){
+            listener=new ItemTooltipEventListener(f);
+            setEventBus(this,EventLoader.EVENT_BUS);
+        }
 
         //side only Client
         if(type==Events.c_tick){
@@ -114,8 +124,10 @@ public class EventListener implements ScriptObject {
     /**
      * 注册监听器
      */
-    private void register(){
-        EVENT_BUS.register(listener);
+    public void register(){
+        if(!listener.breakk){
+            EVENT_BUS.register(listener);
+        }
     }
 
     /**
@@ -128,7 +140,7 @@ public class EventListener implements ScriptObject {
 
 
     public static class TickEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public TickEventListener(EventFunction f) {
             super(f);
         }
@@ -139,7 +151,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClickEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public ClickEventListener(EventFunction f) {
             super(f);
         }
@@ -150,7 +162,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class UseEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public UseEventListener(EventFunction f) {
             super(f);
         }
@@ -161,7 +173,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class JoinEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public JoinEventListener(EventFunction f) {
             super(f);
         }
@@ -172,7 +184,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class InputStringEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public InputStringEventListener(EventFunction f){
             super(f);
         }
@@ -182,8 +194,19 @@ public class EventListener implements ScriptObject {
         }
     }
 
+    public static class ItemTooltipEventListener extends EventListener{
+        @ScriptUsable
+        public ItemTooltipEventListener(EventFunction f) {
+            super(f);
+        }
+        @SubscribeEvent
+        public void onEvent(ItemTooltipEvent event){
+            run(event);
+        }
+    }
+
     public static class ClientTickEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public ClientTickEventListener(EventFunction f){
             super(f);
         }
@@ -194,7 +217,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class RenderTickEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public RenderTickEventListener(EventFunction f){
             super(f);
         }
@@ -205,7 +228,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClientChatEventListener extends EventListener{
-        @ScriptCallable
+        @ScriptUsable
         public ClientChatEventListener(EventFunction f) {
             super(f);
         }

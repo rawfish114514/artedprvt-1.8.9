@@ -33,25 +33,8 @@ public abstract class SystemMethod extends BaseFunction {
     }
 
     @Override
-    public void put(String name, Scriptable start, Object value) {
-        ScriptExceptions.exception("系统方法禁止设置成员: "+name);
-    }
-
-    @Override
-    public void put(Symbol key, Scriptable start, Object value) {
-        ScriptExceptions.exception("系统方法禁止设置成员: "+key);
-    }
-
-    @Override
-    public Object get(String name, Scriptable start) {
-        ScriptExceptions.exception("系统方法禁止访问成员: "+name);
-        return null;
-    }
-
-    @Override
-    public Object get(Symbol key, Scriptable start) {
-        ScriptExceptions.exception("系统方法禁止访问成员: "+key);
-        return null;
+    public Object getDefaultValue(Class<?> typeHint) {
+        return new NativeString(toString());
     }
 
     /**
@@ -70,5 +53,10 @@ public abstract class SystemMethod extends BaseFunction {
             nobjs[i]=obj;
         }
         return nobjs;
+    }
+
+    @Override
+    public String toString(){
+        return "system method "+name;
     }
 }

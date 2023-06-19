@@ -15,7 +15,7 @@ public class GameClient implements ScriptObject {
     public Minecraft minecraft;
     public NetworkManager networkManager;
 
-    @ScriptCallable
+    @ScriptUsable
     public GameClient(){
         up();
         minecraft=Minecraft.getMinecraft();
@@ -26,7 +26,7 @@ public class GameClient implements ScriptObject {
      * 获取自己玩家
      * @return
      */
-    @ScriptCallable
+    @ScriptUsable
     public EntityPlayerSP getPlayer(){
         return minecraft.thePlayer;
     }
@@ -35,7 +35,7 @@ public class GameClient implements ScriptObject {
      * 获取自己世界
      * @return
      */
-    @ScriptCallable
+    @ScriptUsable
     public WorldClient getWorld(){
         return minecraft.theWorld;
     }
@@ -44,7 +44,7 @@ public class GameClient implements ScriptObject {
      * 发送数据包
      * @param packet 数据包
      */
-    @ScriptCallable
+    @ScriptUsable
     public void sendPacket(Packet packet){
         networkManager.sendPacket(packet);
     }
@@ -53,7 +53,7 @@ public class GameClient implements ScriptObject {
      * 发送聊天数据包
      * @param chat 聊天信息
      */
-    @ScriptCallable
+    @ScriptUsable
     public void sendChat(String chat){
         sendPacket(new C01PacketChatMessage(chat));
     }

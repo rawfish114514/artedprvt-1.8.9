@@ -1,4 +1,4 @@
-package rawfish.artedprvt.command.commands;
+package rawfish.artedprvt.command.item;
 
 import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.CommandMessages;

@@ -17,7 +17,7 @@ import java.awt.datatransfer.StringSelection;
 public class PrintChat{
     public GuiNewChat guiNewChat;
 
-    @ScriptCallable
+    @ScriptUsable
     public PrintChat(){
         guiNewChat=Minecraft.getMinecraft().ingameGUI.getChatGUI();
     }
@@ -27,7 +27,7 @@ public class PrintChat{
      * 但他们只对自己是可见的
      * @param chat 聊天信息字符串
      */
-    @ScriptCallable
+    @ScriptUsable
     public void print(String chat){
         guiNewChat.printChatMessage(new ChatComponentText(chat));
     }
@@ -38,7 +38,7 @@ public class PrintChat{
      * @param chat 聊天信息字符串
      * @param hover 悬浮信息字符串
      */
-    @ScriptCallable
+    @ScriptUsable
     public void print(String chat,String hover){
         ChatComponentText chatComponentText=new ChatComponentText(chat);
         ChatComponentText hoverComponent=new ChatComponentText(hover);
@@ -55,7 +55,7 @@ public class PrintChat{
      * @param chat 聊天信息字符串
      * @param hover 悬浮信息供应商
      */
-    @ScriptCallable
+    @ScriptUsable
     public void print(String chat, ChatProvider hover){
         ChatComponentText chatComponentText=new ChatComponentText(chat);
         ChatComponentText hoverComponent=new ChatProviderComponent(hover);

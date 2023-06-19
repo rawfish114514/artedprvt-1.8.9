@@ -20,7 +20,7 @@ public class WorldManager implements ScriptObject {
 
     public List<WorldGraphics> graphicsList;
 
-    @ScriptCallable
+    @ScriptUsable
     public WorldManager(String side){
         up();
         if(side.equals("server")) {
@@ -31,7 +31,7 @@ public class WorldManager implements ScriptObject {
         graphicsList=new ArrayList<>();
     }
 
-    @ScriptCallable
+    @ScriptUsable
     public WorldManager(World world){
         up();
         this.world=world;
@@ -42,20 +42,29 @@ public class WorldManager implements ScriptObject {
      * 创建并返回WorldGraphics对象
      * @return 操作这个世界的WorldGraphics对象
      */
-    @ScriptCallable
+    @ScriptUsable
     public WorldGraphics getGraphics(){
         WorldGraphics graphics=new WorldGraphics(this);
         graphicsList.add(graphics);
         return graphics;
     }
 
-    @Override
-    public void onClose() {
-        //计算操作方块数
+    /**
+     * 计算操作方块数
+     * @return
+     */
+    @ScriptUsable
+    public int getBlockOper(){
         int blockOper=0;
         for(WorldGraphics graphics:graphicsList){
             blockOper+=graphics.getDrawCount();
         }
+        return blockOper;
+    }
+
+    @Override
+    public void onClose() {
+        int blockOper=getBlockOper();
         if(blockOper>0){
             PrintChat printChat=new PrintChat();
             printChat.print("§d任务结束 操作方块: "+blockOper);

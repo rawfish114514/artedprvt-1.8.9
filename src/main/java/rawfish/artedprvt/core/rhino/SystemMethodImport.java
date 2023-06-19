@@ -6,6 +6,8 @@ import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
+import java.util.List;
+
 public class SystemMethodImport extends SystemMethod{
     public SystemMethodImport(ScriptSystem scriptSystem) {
         super(scriptSystem);
@@ -18,11 +20,23 @@ public class SystemMethodImport extends SystemMethod{
             if(args[0] instanceof String) {
                 String name=(String) args[0];
                 Object object=scriptSystem.importModule(name);
-                if(name.length()>0&&name.charAt(0)=='-'){
-                    Class clazz=(Class)object;
-                    Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
-                    scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
-                    return null;
+                if(name.length()>0) {
+                    if(name.charAt(0)=='-'){
+                        Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
+                        Class clazz=(Class)object;
+                        scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
+                        return null;
+                    }
+                    if(name.charAt(0)=='*'){
+                        Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
+                        List<Class> classList=(List<Class>)object;
+                        Class clazz;
+                        for(int i=0;i<classList.size();i++){
+                            clazz=classList.get(i);
+                            scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
+                        }
+                        return null;
+                    }
                 }
                 return object;
             }else{

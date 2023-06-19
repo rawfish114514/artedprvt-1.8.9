@@ -1,7 +1,8 @@
-package rawfish.artedprvt.command.commands;
+package rawfish.artedprvt.command.item;
 
 import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.CommandMessages;
+import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
 
@@ -12,10 +13,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CommandApkg extends Command {
-    public Pattern packPattern=Pattern.compile("(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
+public class CommandScript extends Command {
+    public Pattern packPattern=Pattern.compile("([a-z]+:|)(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
 
-    public CommandApkg(String commandName) {
+    public CommandScript(String commandName) {
         super(commandName);
     }
 
@@ -28,15 +29,16 @@ public class CommandApkg extends Command {
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getCommandName(),"包名格式异常");
+            CommandMessages.exception(getCommandName(),"模块名格式异常");
             return;
         }
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {
-            ScriptProcess scriptProcess=new ScriptProcess("apkg",pack,scriptArgs);
+            ScriptProcess scriptProcess=new ScriptProcess("script",pack,scriptArgs);
             scriptProcess.start();
         } catch (Exception e) {
+            e.printStackTrace();
             CommandMessages.exception(getCommandName(),"脚本进程创建失败");
         }
     }
@@ -53,7 +55,7 @@ public class CommandApkg extends Command {
             return opt;
         }
         //包名
-        File script=new File(FrameProperties.props.get("frame.dir")+"/lib");
+        File script=new File(FrameProperties.props.get("frame.dir")+"/src/script");
         if(script.isDirectory()){
             List<String> packs=pack(script,"");
             opt.addAll(match(packs,lastArgs));
@@ -73,8 +75,8 @@ public class CommandApkg extends Command {
                 String name=file.getName();
                 int ind=name.lastIndexOf('.');
                 String abbr=name.substring(ind+1);
-                if(ind>0&&abbr.equals("apkg")){
-                    packs.add(p+name.substring(0,ind));
+                if(ind>0&&(ScriptLanguage.abbrOf(abbr)!=null)){
+                    packs.add(abbr+":"+p+name.substring(0,ind));
                 }
             }else{
                 //是目录
@@ -90,6 +92,13 @@ public class CommandApkg extends Command {
             if(pack.length()>=arg.length()){
                 if(pack.startsWith(arg)){
                     npacks.add(pack);
+                }else{
+                    if(pack.contains(":")){
+                        String bpack=pack.substring(pack.indexOf(":")+1);
+                        if(bpack.startsWith(arg)){
+                            npacks.add(pack);
+                        }
+                    }
                 }
             }
         }

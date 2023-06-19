@@ -1,8 +1,7 @@
 package rawfish.artedprvt.command;
 
 import net.minecraftforge.client.ClientCommandHandler;
-import rawfish.artedprvt.command.commands.CommandApf;
-import rawfish.artedprvt.command.commands.CommandScript;
+import rawfish.artedprvt.command.item.CommandApf;
 
 public class CommandLoader {
     public CommandApf apf=new CommandApf("apf");

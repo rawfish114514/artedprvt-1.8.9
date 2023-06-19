@@ -121,13 +121,22 @@ public class ScriptSystem {
 
     /**
      * 导入模块
+     * 它还负责转义特殊格式的模块名
+     * "-"前缀的模块名表示java类名
+     * "*"前缀的模块名表示java类组名
      * @param moduleName 模块名
      * @return
      */
     public Object importModule(String moduleName){
-        if(moduleName.length()>0&&moduleName.charAt(0)=='-'){
-            //将导入java类
-            return importJava(moduleName.substring(1));
+        if (moduleName.length()>0) {
+            if (moduleName.charAt(0)=='-') {
+                //将导入java类
+                return importJava(moduleName.substring(1));
+            }
+            if (moduleName.charAt(0)=='*') {
+                //将导入java类组
+                return importJavaGroup(moduleName.substring(1));
+            }
         }
         return importModule(process.getScriptLoader().loadModule(moduleName));
     }
@@ -170,6 +179,18 @@ public class ScriptSystem {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * 导入java组
+     * @param groupName 组名
+     * @return
+     */
+    public List<Class> importJavaGroup(String groupName) {
+        if(groupName.equals("mi")){
+            return rawfish.artedprvt.mi.JavaGroup.getJavaGroup();
+        }
+        throw new RuntimeException("未定义的组: "+groupName);
     }
 
     /**

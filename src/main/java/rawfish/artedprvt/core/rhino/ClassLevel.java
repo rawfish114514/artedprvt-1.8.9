@@ -12,11 +12,11 @@ public class ClassLevel {
      * @param clas 类
      * @return clas是混淆类
      */
-    public static boolean isConfuseClass(Class clas){
+    public static boolean isObfuscationClass(Class clas){
             //貌似所有net/minecraft下的类都是混淆类且混淆类都在net/minecraft下
-            return isObfuscation()&&concla(clas);
+            return isObfuscation()&& contain(clas);
     }
-    private static boolean concla(Class clas){
+    private static boolean contain(Class clas){
         if(clas==null){
             return false;
         }
@@ -27,9 +27,9 @@ public class ClassLevel {
             return true;
         }
         Class sup=clas.getSuperclass();
-        boolean issup=concla(sup);
+        boolean issup= contain(sup);
         for(Class inf:clas.getInterfaces()){
-            if(concla(inf)){
+            if(contain(inf)){
                 return true;
             }
         }

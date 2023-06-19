@@ -28,7 +28,7 @@ import static org.mozilla.javascript.ScriptRuntimeES6.requireObjectCoercible;
  * @author Norris Boyd
  * @author Ronald Brill
  */
-final class NativeString extends IdScriptableObject {
+public final class NativeString extends IdScriptableObject {
     private static final long serialVersionUID = 920268368584188687L;
 
     private static final Object STRING_TAG = "String";
@@ -38,7 +38,7 @@ final class NativeString extends IdScriptableObject {
         obj.exportAsJSClass(MAX_PROTOTYPE_ID, scope, sealed);
     }
 
-    NativeString(CharSequence s) {
+    public NativeString(CharSequence s) {
         string = s;
     }
 

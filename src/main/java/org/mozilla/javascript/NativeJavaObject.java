@@ -59,9 +59,10 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         this.javaObject = javaObject;
         this.staticType = staticType;
         this.isAdapter = isAdapter;
-        this.clas=javaObject.getClass();
-        if(javaObject instanceof Class){
+        if(javaObject==null||javaObject instanceof Class){
             this.clas=(Class)javaObject;
+        }else{
+            this.clas=javaObject.getClass();
         }
         isMapping = ClassRegisterer.isMapping(scope,clas);
         Thread t=Thread.currentThread();

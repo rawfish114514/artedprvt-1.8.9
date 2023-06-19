@@ -1,6 +1,7 @@
 package rawfish.artedprvt.mi;
 
 
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -16,58 +17,65 @@ public enum Events {
     /**
      * 服务端刻事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(TickEvent.ServerTickEvent.class)
     tick,
 
     /**
      * 点击事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(PlayerInteractEvent.class)
     click,
 
     /**
      * 使用物品事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(PlayerUseItemEvent.Finish.class)
     use,
 
     /**
      * 实体加入世界事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(EntityJoinWorldEvent.class)
     join,
 
     /**
      * 输入字符串事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(InputStringEvent.class)
     input,
 
-    //SideOnly Client
+    /**
+     * 工具提示事件
+     */
+    @ScriptUsable
+    @EventTarget(ItemTooltipEvent.class)
+    tooltip,
+
+    //side only Client
 
     /**
      * 客户端刻事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(TickEvent.ClientTickEvent.class)
     c_tick,
 
     /**
      * 渲染刻事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(TickEvent.RenderTickEvent.class)
     r_tick,
 
     /**
      * 客户端聊天事件
      */
-    @ScriptCallable
+    @ScriptUsable
     @EventTarget(ClientChatReceivedEvent.class)
     c_chat,
 }

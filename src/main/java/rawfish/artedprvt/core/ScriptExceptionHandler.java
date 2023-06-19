@@ -21,6 +21,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
         }
         e.printStackTrace(System.err);
         String message="§4"+e.getMessage();
+        String description="§4"+e.toString();
         List<Throwable> throwables=new ArrayList<>();
         while(e!=null){
             throwables.add(e);
@@ -40,7 +41,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
         }
 
         StringBuilder sb=new StringBuilder();
-        sb.append(message);
+        sb.append(description);
         for(ScriptStackElement[] stackElementArray:stackElements){
             for(ScriptStackElement stackElement:stackElementArray){
                 sb.append("\n");

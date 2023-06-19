@@ -1,4 +1,4 @@
-package rawfish.artedprvt.command.commands;
+package rawfish.artedprvt.command.item;
 
 import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.CommandMessages;
@@ -10,7 +10,7 @@ public class CommandStt extends Command {
     public CommandScript commandScript;
     public CommandStt(String commandName) {
         super(commandName);
-        commandScript=new CommandScript(null);
+        commandScript=new CommandScript(commandName);
     }
 
     @Override

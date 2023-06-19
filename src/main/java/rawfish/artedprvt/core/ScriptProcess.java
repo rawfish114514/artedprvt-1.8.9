@@ -178,7 +178,6 @@ public class ScriptProcess {
      */
     public void end(int exitCode){
         if(onEnd){
-            //防止有更多线程执行end
             return;
         }
         onEnd=true;
@@ -239,9 +238,9 @@ public class ScriptProcess {
 
     public void closeScriptObject(){
         ScriptObject scriptObject;
-        for(int i=0;i<scriptObjects.size();i++){
+        for(int i=0;i<scriptObjects.size();){
             scriptObject=scriptObjects.get(i);
-            scriptObject.onClose();
+            scriptObject.close();
             scriptObjects.remove(scriptObject);
         }
     }

@@ -65,7 +65,7 @@ public class ClassCollection {
 
 
         }
-
+        putExtend();
         /*
         for(ClassMember m:classMap.values()){
             for(String s:m.nameTable.values()){
@@ -78,7 +78,7 @@ public class ClassCollection {
         ClassRegisterer.classMap=classMap;
 
         //注册额匹配器
-        ClassRegisterer.matcher= (clas) -> ClassLevel.isConfuseClass(clas);
+        ClassRegisterer.matcher= (clas) -> ClassLevel.isObfuscationClass(clas);
     }
 
 

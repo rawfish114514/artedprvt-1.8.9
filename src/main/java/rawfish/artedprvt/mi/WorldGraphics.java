@@ -41,7 +41,7 @@ public class WorldGraphics {
      * 构造一个对世界管理的世界操作的世界画布
      * @param managerIn 世界管理
      */
-    @ScriptCallable
+    @ScriptUsable
     public WorldGraphics(WorldManager managerIn){
         manager=managerIn;
         world=manager.world;
@@ -54,7 +54,7 @@ public class WorldGraphics {
      * 设置方块状态
      * @param blockIn 方块状态
      */
-    @ScriptCallable
+    @ScriptUsable
     public void setBlock(IBlockState blockIn){
         block=blockIn;
     }
@@ -63,7 +63,7 @@ public class WorldGraphics {
      * 设置方块状态
      * @param blockIn 方块
      */
-    @ScriptCallable
+    @ScriptUsable
     public void setBlock(Block blockIn){
         block=blockIn.getDefaultState();
     }
@@ -72,7 +72,7 @@ public class WorldGraphics {
      * 获取方块状态
      * @return 当前的方块状态
      */
-    @ScriptCallable
+    @ScriptUsable
     public IBlockState getBlock(){
         return block;
     }
@@ -82,7 +82,7 @@ public class WorldGraphics {
      * @param pos 方块坐标
      * @return
      */
-    @ScriptCallable
+    @ScriptUsable
     public IBlockState getBlock(BlockPos pos){
         return world.getBlockState(pos);
     }
@@ -91,7 +91,7 @@ public class WorldGraphics {
      * 获取世界上的方块
      * @return
      */
-    @ScriptCallable
+    @ScriptUsable
     public IBlockState getBlock(double x,double y,double z){
         return world.getBlockState(new BlockPos(x,y,z));
     }
@@ -100,7 +100,7 @@ public class WorldGraphics {
      * 设置焦点
      * @param center
      */
-    @ScriptCallable
+    @ScriptUsable
     public void setCenter(BlockPos center){
         this.center=center;
     }
@@ -111,7 +111,7 @@ public class WorldGraphics {
      * @param y
      * @param z
      */
-    @ScriptCallable
+    @ScriptUsable
     public void setCenter(double x,double y,double z){
         setCenter(new BlockPos(x,y,z));
     }
@@ -120,7 +120,7 @@ public class WorldGraphics {
      * 获取焦点
      * @return
      */
-    @ScriptCallable
+    @ScriptUsable
     public BlockPos getCenter(){
         return center;
     }
@@ -132,7 +132,7 @@ public class WorldGraphics {
      * @param z
      * @return
      */
-    @ScriptCallable
+    @ScriptUsable
     public BlockPos wrapPos(double x,double y,double z){
         return new BlockPos(x,y,z);
     }
@@ -142,7 +142,7 @@ public class WorldGraphics {
      * 也就是设置的方块的总数
      * @return 画总数
      */
-    @ScriptCallable
+    @ScriptUsable
     public int getDrawCount(){
         return drawCount;
     }
@@ -151,7 +151,7 @@ public class WorldGraphics {
      * 通知更新
      * @param pos 坐标
      */
-    @ScriptCallable
+    @ScriptUsable
     public void updata(BlockPos pos){
         BlockPos thePos=pos.add(center);
         Chunk chunk = world.getChunkFromBlockCoords(thePos);
@@ -164,7 +164,7 @@ public class WorldGraphics {
      * @param y 坐标
      * @param z 坐标
      */
-    @ScriptCallable
+    @ScriptUsable
     public void updata(double x,double y,double z){
         updata(wrapPos(x,y,z));
     }
@@ -173,7 +173,7 @@ public class WorldGraphics {
      * 画一个方块
      * @param pos 方块坐标
      */
-    @ScriptCallable
+    @ScriptUsable
     public void drawBlock(BlockPos pos){
         BlockPos thePos=pos.add(center);
         Chunk chunk = world.getChunkFromBlockCoords(thePos);
@@ -187,7 +187,7 @@ public class WorldGraphics {
      * @param y 方块坐标y
      * @param z 方块坐标z
      */
-    @ScriptCallable
+    @ScriptUsable
     public void drawBlock(double x,double y,double z){
         drawBlock(new BlockPos(x,y,z));
     }
@@ -197,7 +197,7 @@ public class WorldGraphics {
      * @param pos1 顶点1
      * @param pos2 顶点2
      */
-    @ScriptCallable
+    @ScriptUsable
     public void drawCube(BlockPos pos1,BlockPos pos2){
         BlockPos startPos=new BlockPos(
                 Math.min(pos1.getX(),pos2.getX()),
@@ -248,7 +248,7 @@ public class WorldGraphics {
      * @param y2 顶点2
      * @param z2 顶点2
      */
-    @ScriptCallable
+    @ScriptUsable
     public void drawCube(double x1,double y1,double z1,double x2,double y2,double z2){
         drawCube(new BlockPos(x1,y1,z1),new BlockPos(x2,y2,z2));
     }
@@ -258,7 +258,7 @@ public class WorldGraphics {
      * @param pos 坐标
      * @param height 高度
      */
-    @ScriptCallable
+    @ScriptUsable
     public void drawColumn(BlockPos pos,int height){
         BlockPos startPos=new BlockPos(pos.getX(),Math.min(pos.getY(),pos.getY()+height),pos.getZ()).add(center);
         int end=Math.max(pos.getY(),pos.getY()+height)+center.getY();
@@ -276,7 +276,7 @@ public class WorldGraphics {
      * @param z 坐标
      * @param h 高度
      */
-    @ScriptCallable
+    @ScriptUsable
     public void drawColumn(double x,double y,double z,int h){
         drawColumn(new BlockPos(x,y,z),h);
     }
