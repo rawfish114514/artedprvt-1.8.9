@@ -6,19 +6,18 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import rawfish.artedprvt.core.ProcedureUsable;
 
 /**
- * 世界画布
- * 在操作世界地形的设计上
- * 借用了画布的概念
- * 与画布的区别是二维和三维
- * 以及颜色和方块
+ * 地图图形
+ * 在地图上作画
  */
-public class WorldGraphics {
+@ProcedureUsable
+public class MapGraphics {
     /**
-     * 世界管理
+     * 地图操作
      */
-    public WorldManager manager;
+    public MapOperator operator;
 
     /**
      * 世界
@@ -38,13 +37,13 @@ public class WorldGraphics {
     public int drawCount;
 
     /**
-     * 构造一个对世界管理的世界操作的世界画布
-     * @param managerIn 世界管理
+     * 构造地图图形对象
+     * @param operator
      */
-    @ScriptUsable
-    public WorldGraphics(WorldManager managerIn){
-        manager=managerIn;
-        world=manager.world;
+    @ProcedureUsable
+    public MapGraphics(MapOperator operator){
+        this.operator=operator;
+        world=operator.world;
         block=Blocks.wool.getDefaultState();
         drawCount=0;
     }
@@ -54,7 +53,7 @@ public class WorldGraphics {
      * 设置方块状态
      * @param blockIn 方块状态
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void setBlock(IBlockState blockIn){
         block=blockIn;
     }
@@ -63,7 +62,7 @@ public class WorldGraphics {
      * 设置方块状态
      * @param blockIn 方块
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void setBlock(Block blockIn){
         block=blockIn.getDefaultState();
     }
@@ -72,7 +71,7 @@ public class WorldGraphics {
      * 获取方块状态
      * @return 当前的方块状态
      */
-    @ScriptUsable
+    @ProcedureUsable
     public IBlockState getBlock(){
         return block;
     }
@@ -82,7 +81,7 @@ public class WorldGraphics {
      * @param pos 方块坐标
      * @return
      */
-    @ScriptUsable
+    @ProcedureUsable
     public IBlockState getBlock(BlockPos pos){
         return world.getBlockState(pos);
     }
@@ -91,7 +90,7 @@ public class WorldGraphics {
      * 获取世界上的方块
      * @return
      */
-    @ScriptUsable
+    @ProcedureUsable
     public IBlockState getBlock(double x,double y,double z){
         return world.getBlockState(new BlockPos(x,y,z));
     }
@@ -100,7 +99,7 @@ public class WorldGraphics {
      * 设置焦点
      * @param center
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void setCenter(BlockPos center){
         this.center=center;
     }
@@ -111,7 +110,7 @@ public class WorldGraphics {
      * @param y
      * @param z
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void setCenter(double x,double y,double z){
         setCenter(new BlockPos(x,y,z));
     }
@@ -120,7 +119,7 @@ public class WorldGraphics {
      * 获取焦点
      * @return
      */
-    @ScriptUsable
+    @ProcedureUsable
     public BlockPos getCenter(){
         return center;
     }
@@ -132,8 +131,8 @@ public class WorldGraphics {
      * @param z
      * @return
      */
-    @ScriptUsable
-    public BlockPos wrapPos(double x,double y,double z){
+    @ProcedureUsable
+    public BlockPos pos(double x, double y, double z){
         return new BlockPos(x,y,z);
     }
 
@@ -142,7 +141,7 @@ public class WorldGraphics {
      * 也就是设置的方块的总数
      * @return 画总数
      */
-    @ScriptUsable
+    @ProcedureUsable
     public int getDrawCount(){
         return drawCount;
     }
@@ -151,8 +150,8 @@ public class WorldGraphics {
      * 通知更新
      * @param pos 坐标
      */
-    @ScriptUsable
-    public void updata(BlockPos pos){
+    @ProcedureUsable
+    public void update(BlockPos pos){
         BlockPos thePos=pos.add(center);
         Chunk chunk = world.getChunkFromBlockCoords(thePos);
         world.markAndNotifyBlock(thePos, chunk, null,null,2);
@@ -164,16 +163,16 @@ public class WorldGraphics {
      * @param y 坐标
      * @param z 坐标
      */
-    @ScriptUsable
-    public void updata(double x,double y,double z){
-        updata(wrapPos(x,y,z));
+    @ProcedureUsable
+    public void update(double x, double y, double z){
+        update(pos(x,y,z));
     }
 
     /**
      * 画一个方块
      * @param pos 方块坐标
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void drawBlock(BlockPos pos){
         BlockPos thePos=pos.add(center);
         Chunk chunk = world.getChunkFromBlockCoords(thePos);
@@ -187,9 +186,9 @@ public class WorldGraphics {
      * @param y 方块坐标y
      * @param z 方块坐标z
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void drawBlock(double x,double y,double z){
-        drawBlock(new BlockPos(x,y,z));
+        drawBlock(pos(x,y,z));
     }
 
     /**
@@ -197,7 +196,7 @@ public class WorldGraphics {
      * @param pos1 顶点1
      * @param pos2 顶点2
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void drawCube(BlockPos pos1,BlockPos pos2){
         BlockPos startPos=new BlockPos(
                 Math.min(pos1.getX(),pos2.getX()),
@@ -248,9 +247,9 @@ public class WorldGraphics {
      * @param y2 顶点2
      * @param z2 顶点2
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void drawCube(double x1,double y1,double z1,double x2,double y2,double z2){
-        drawCube(new BlockPos(x1,y1,z1),new BlockPos(x2,y2,z2));
+        drawCube(pos(x1,y1,z1),pos(x2,y2,z2));
     }
 
     /**
@@ -258,7 +257,7 @@ public class WorldGraphics {
      * @param pos 坐标
      * @param height 高度
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void drawColumn(BlockPos pos,int height){
         BlockPos startPos=new BlockPos(pos.getX(),Math.min(pos.getY(),pos.getY()+height),pos.getZ()).add(center);
         int end=Math.max(pos.getY(),pos.getY()+height)+center.getY();
@@ -276,9 +275,9 @@ public class WorldGraphics {
      * @param z 坐标
      * @param h 高度
      */
-    @ScriptUsable
+    @ProcedureUsable
     public void drawColumn(double x,double y,double z,int h){
-        drawColumn(new BlockPos(x,y,z),h);
+        drawColumn(pos(x,y,z),h);
     }
 
 }

@@ -19,17 +19,16 @@ public class SystemMethodImport extends SystemMethod{
         if(args.length==1){
             if(args[0] instanceof String) {
                 String name=(String) args[0];
-                Object object=scriptSystem.importModule(name);
                 if(name.length()>0) {
                     if(name.charAt(0)=='-'){
                         Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
-                        Class clazz=(Class)object;
+                        Class clazz=scriptSystem.importJava(name.substring(1));
                         scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
                         return null;
                     }
                     if(name.charAt(0)=='*'){
                         Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
-                        List<Class> classList=(List<Class>)object;
+                        List<Class> classList=scriptSystem.importClassGroup(name.substring(1));
                         Class clazz;
                         for(int i=0;i<classList.size();i++){
                             clazz=classList.get(i);
@@ -38,7 +37,7 @@ public class SystemMethodImport extends SystemMethod{
                         return null;
                     }
                 }
-                return object;
+                return scriptSystem.importModule(name);
             }else{
                 ScriptExceptions.exceptionSystemMethodInvoke(this);
             }

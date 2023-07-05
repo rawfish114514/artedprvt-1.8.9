@@ -16,15 +16,15 @@ public class ClientProxy extends CommonProxy
     public void preInit(FMLPreInitializationEvent event)
     {
         super.preInit(event);
-
-        new CommandLoader(ClientCommandHandler.instance);
-        ClassCollection.load(McpToSrgString.getMcpToSrgString());
     }
 
     @Override
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
+
+        new CommandLoader(ClientCommandHandler.instance);
+        ClassCollection.load(McpToSrgString.getMcpToSrgString());
     }
 
     @Override

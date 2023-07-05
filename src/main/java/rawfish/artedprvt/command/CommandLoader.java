@@ -1,6 +1,7 @@
 package rawfish.artedprvt.command;
 
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import rawfish.artedprvt.command.item.CommandApf;
 
 public class CommandLoader {
@@ -12,6 +13,14 @@ public class CommandLoader {
         handler.registerCommand(artedprvt);
         for(Command command:apf.commandList){
             handler.registerCommand(command);
+        }
+    }
+
+    public CommandLoader(FMLServerStartingEvent event){
+        event.registerServerCommand(apf);
+        event.registerServerCommand(artedprvt);
+        for(Command command:apf.commandList){
+            event.registerServerCommand(command);
         }
     }
 }

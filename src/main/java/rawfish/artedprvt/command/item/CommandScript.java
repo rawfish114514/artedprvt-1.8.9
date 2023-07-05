@@ -9,6 +9,7 @@ import rawfish.artedprvt.core.FrameProperties;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -60,6 +61,7 @@ public class CommandScript extends Command {
             List<String> packs=pack(script,"");
             opt.addAll(match(packs,lastArgs));
         }
+        opt.sort(Comparator.comparingInt(String::length));
         return opt;
     }
 

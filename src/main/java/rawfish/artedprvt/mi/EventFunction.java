@@ -1,11 +1,14 @@
 package rawfish.artedprvt.mi;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
+import rawfish.artedprvt.core.ProcedureUsable;
 
 /**
  * 事件回调函数
  * 运行时动态代理实现
  */
+@FunctionalInterface
+@ProcedureUsable
 public interface EventFunction {
     /**
      * 函数接口方法

@@ -1,7 +1,9 @@
 package rawfish.artedprvt;
 
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.Logger;
 import rawfish.artedprvt.common.CommonProxy;
 
 import net.minecraftforge.fml.common.Mod;
@@ -11,8 +13,6 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
-import java.lang.reflect.Field;
 
 
 @Mod(
@@ -31,21 +31,27 @@ public class Artedprvt
     @Instance(Artedprvt.MODID)
     public static Artedprvt instance;
 
+    public static Logger logger;
+
     public Artedprvt(){
         init();
     }
+
+    public ModMetadata modMetadata;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.preInit(event);
-        event.getModMetadata().description=getDescription();
+        modMetadata=event.getModMetadata();
+        logger=event.getModLog();
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
         proxy.init(event);
+        modMetadata.description=getDescription();
     }
 
     @EventHandler
@@ -62,14 +68,14 @@ public class Artedprvt
 
 
     public String getDescription(){
-        return "Artedprvt Frame 是专为 Minecraft 设计的脚本运行框架，它在游戏中随时运行单个脚本文件或apkg文件(脚本和资源的集合，本质是zip压缩包)。目前支持的脚本语言只有 JavaScript。" +
+        return "Artedprvt Frame 是专为 Minecraft 设计的脚本运行框架，它在游戏中随时运行单个脚本文件或apkg文件。" +
                 "\n\n作者 ↓\nhttps://space.bilibili.com/455906194";
     }
 
     public boolean isNotDevelopment;
     public void init() {
         try {
-            Field field=Minecraft.class.getDeclaredField("theMinecraft");
+            Minecraft.class.getDeclaredField("theMinecraft");
             isNotDevelopment=false;
         } catch (NoSuchFieldException e) {
             isNotDevelopment=true;

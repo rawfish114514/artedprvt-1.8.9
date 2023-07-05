@@ -9,7 +9,13 @@ import rawfish.artedprvt.core.struct.FileLoader;
 import rawfish.artedprvt.core.struct.ScriptLoader;
 import rawfish.artedprvt.core.struct.SourceFileLoader;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +30,7 @@ public class ScriptProcess {
     private ScriptLoader scriptLoader;//脚本加载器
     private List<String> scriptArgument;//脚本参数
     private ScriptInfo scriptInfo;//脚本配置
+    private ScriptLogger scriptLogger;//脚本日志记录器
     private List<ScriptEngine> engines;//引擎列表
     private MainThread mainThread;//主线程
     private List<ScriptThread> threads;//脚本线程列表
@@ -46,7 +53,9 @@ public class ScriptProcess {
      * 创建进程
      * 包具有以下概念
      * 可作为完整模块名 "js:a.b.c" -> a/b/c.js
+     * 每个块都保证由字母数字下划线组成，开头不是数字
      * 可作为apkg包的路径 "a.b.c" -> a/b/c.apkg
+     * 对块没有特别规则
      * 具体使用由文件加载器决定
      * @param command 命令类型
      * @param pack 包
@@ -82,6 +91,19 @@ public class ScriptProcess {
             scriptInfo.setName(pack);
         }
 
+        name= scriptInfo.getName();
+
+        synchronized (ScriptProcess.class) {
+            LocalDate localDate = LocalDate.now();
+            File logDir = new File(props.get("frame.dir") + "/.artedprvt/logs/" + localDate.getYear() + "-"
+                    + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth());
+            logDir.mkdirs();
+            int logFileNumber = logDir.list().length;
+            File logFile = new File(logDir.getPath() + "/" + logFileNumber + "." + name.substring(name.indexOf(':')+1) + ".txt");
+            scriptLogger = new ScriptLogger(localDate,Files.newOutputStream(logFile.toPath()));
+        }
+
+
         engines=new ArrayList<>();
         engines.add(new RhinoEngine(this));
 
@@ -94,7 +116,6 @@ public class ScriptProcess {
         }
         pid=spid++;
         proList.add(this);
-        name= scriptInfo.getName();
         time=0;
 
         scriptObjects=new ArrayList<>();
@@ -188,28 +209,28 @@ public class ScriptProcess {
     }
 
     private void printStart(){
-        scriptSystem.print(ScriptSystem.HIGH,"§3run:§r "+name);
+        scriptSystem.print(ScriptSystem.DISPLAY,"§3run:§r "+name);
     }
 
     private void printEnd(int status,long runtime){
         rtime=runtime;
         String s= getStatistics();
         if(status==EXIT){
-            scriptSystem.print(ScriptSystem.HIGH,"§2end:§r "+name+"§7("+runtime+"ms)",s);
+            scriptSystem.print(ScriptSystem.DISPLAY,"§2end:§r "+name+"§7("+runtime+"ms)",s);
             return;
         }
         if(status==ERROR){
-            scriptSystem.print(ScriptSystem.HIGH,"§4break:§r "+name+"§7("+runtime+"ms)",s);
+            scriptSystem.print(ScriptSystem.DISPLAY,"§4break:§r "+name+"§7("+runtime+"ms)",s);
             return;
         }
         if(status==STOPS){
-            scriptSystem.print(ScriptSystem.HIGH,"§4stop:§r "+name+"§7("+runtime+"ms)",s);
+            scriptSystem.print(ScriptSystem.DISPLAY,"§4stop:§r "+name+"§7("+runtime+"ms)",s);
             return;
         }
         if(status>=0){
-            scriptSystem.print(ScriptSystem.HIGH,"§2exit:§r "+name+"§7("+runtime+"ms) "+status,s);
+            scriptSystem.print(ScriptSystem.DISPLAY,"§2exit:§r "+name+"§7("+runtime+"ms) "+status,s);
         }else{
-            scriptSystem.print(ScriptSystem.HIGH,"§4exit:§r "+name+"§7("+runtime+"ms) "+status,s);
+            scriptSystem.print(ScriptSystem.DISPLAY,"§4exit:§r "+name+"§7("+runtime+"ms) "+status,s);
         }
     }
 
@@ -341,6 +362,10 @@ public class ScriptProcess {
 
     public ScriptInfo getScriptInfo() {
         return scriptInfo;
+    }
+
+    public ScriptLogger getScriptLogger() {
+        return scriptLogger;
     }
 
     public List<ScriptEngine> getEngines() {

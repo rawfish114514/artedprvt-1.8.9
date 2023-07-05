@@ -1,9 +1,11 @@
 package rawfish.artedprvt.common;
 
+import net.minecraft.command.ServerCommandManager;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import rawfish.artedprvt.command.CommandLoader;
 import rawfish.artedprvt.core.rhino.ClassCollection;
 import rawfish.artedprvt.core.rhino.McpToSrgString;
 
@@ -27,6 +29,7 @@ public class CommonProxy
 
     public void serverStarting(FMLServerStartingEvent event)
     {
+        new CommandLoader(event);
         ClassCollection.load(McpToSrgString.getMcpToSrgString());
     }
 }

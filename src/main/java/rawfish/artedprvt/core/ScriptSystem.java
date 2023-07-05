@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.mi.ChatProvider;
 import rawfish.artedprvt.mi.PrintChat;
 import rawfish.artedprvt.core.engine.ScriptEngine;
@@ -14,9 +15,11 @@ import java.util.Map;
  */
 public class ScriptSystem {
     private ScriptProcess process;
+    private ScriptLogger logger;
     private PrintChat printChat;
     public ScriptSystem(ScriptProcess process){
         this.process=process;
+        logger=process.getScriptLogger();
         printChat=new PrintChat();
     }
 
@@ -25,8 +28,9 @@ public class ScriptSystem {
      */
     public static final int
     CHAT=0,
-    DEBUG =1,
-    HIGH=2;
+    DEBUG=1,
+    HIGH=2,
+    DISPLAY=3;
 
     /**
      * 打印开关
@@ -41,20 +45,32 @@ public class ScriptSystem {
      * @param chat 聊天信息
      */
     public void print(int type,String chat){
+        if(type==DEBUG){
+            logger.warn(removeFormatCode(chat));
+        }else{
+            logger.info(removeFormatCode(chat));
+        }
         if(type==CHAT){
             if(B_CHAT){
                 printChat.print(chat);
                 return;
             }
         }
-        if(type== DEBUG){
+        if(type==DEBUG){
+            chat=getDebugHead()+chat;
             if(B_DEBUG){
-                printChat.print(getDebugHead()+chat);
+                printChat.print(chat);
                 return;
             }
         }
         if(type==HIGH){
             printChat.print(chat);
+            return;
+        }
+        if(type==DISPLAY){
+            if(B_CHAT||B_DEBUG){
+                printChat.print(chat);
+            }
         }
     }
 
@@ -65,20 +81,32 @@ public class ScriptSystem {
      * @param hover 悬浮聊天消息
      */
     public void print(int type,String chat,String hover){
+        if(type==DEBUG){
+            logger.warn(removeFormatCode(chat));
+        }else{
+            logger.info(removeFormatCode(chat));
+        }
         if(type==CHAT){
             if(B_CHAT){
                 printChat.print(chat,hover);
                 return;
             }
         }
-        if(type== DEBUG){
+        if(type==DEBUG){
+            chat=getDebugHead()+chat;
             if(B_DEBUG){
-                printChat.print(getDebugHead()+chat,hover);
+                printChat.print(chat,hover);
                 return;
             }
         }
         if(type==HIGH){
             printChat.print(chat,hover);
+            return;
+        }
+        if(type==DISPLAY){
+            if(B_CHAT||B_DEBUG){
+                printChat.print(chat,hover);
+            }
         }
     }
 
@@ -89,20 +117,32 @@ public class ScriptSystem {
      * @param hover 悬浮聊天消息供应商
      */
     public void print(int type,String chat, ChatProvider hover){
+        if(type==DEBUG){
+            logger.warn(removeFormatCode(chat));
+        }else{
+            logger.info(removeFormatCode(chat));
+        }
         if(type==CHAT){
             if(B_CHAT){
                 printChat.print(chat,hover);
                 return;
             }
         }
-        if(type== DEBUG){
+        if(type==DEBUG){
+            chat=getDebugHead()+chat;
             if(B_DEBUG){
-                printChat.print(getDebugHead()+chat,hover);
+                printChat.print(chat,hover);
                 return;
             }
         }
         if(type==HIGH){
             printChat.print(chat,hover);
+            return;
+        }
+        if(type==DISPLAY){
+            if(B_CHAT||B_DEBUG){
+                printChat.print(chat,hover);
+            }
         }
     }
 
@@ -119,25 +159,24 @@ public class ScriptSystem {
         return str;
     }
 
+    private String chatAddHover(String chat,String hover){
+        return chat+" -> \n"+hover;
+    }
+
+    private String chatAddHover(String chat,ChatProvider hover){
+        return chat+" -> \n"+hover.getChat();
+    }
+
+    private String removeFormatCode(String s){
+        return s.replaceAll("\u00a7[0-9a-fk-or]","");
+    }
+
     /**
      * 导入模块
-     * 它还负责转义特殊格式的模块名
-     * "-"前缀的模块名表示java类名
-     * "*"前缀的模块名表示java类组名
      * @param moduleName 模块名
      * @return
      */
     public Object importModule(String moduleName){
-        if (moduleName.length()>0) {
-            if (moduleName.charAt(0)=='-') {
-                //将导入java类
-                return importJava(moduleName.substring(1));
-            }
-            if (moduleName.charAt(0)=='*') {
-                //将导入java类组
-                return importJavaGroup(moduleName.substring(1));
-            }
-        }
         return importModule(process.getScriptLoader().loadModule(moduleName));
     }
 
@@ -186,9 +225,10 @@ public class ScriptSystem {
      * @param groupName 组名
      * @return
      */
-    public List<Class> importJavaGroup(String groupName) {
-        if(groupName.equals("mi")){
-            return rawfish.artedprvt.mi.JavaGroup.getJavaGroup();
+    public List<Class> importClassGroup(String groupName) {
+        List<Class> classes= ClassGroupSystem.get(groupName);
+        if(classes!=null){
+            return classes;
         }
         throw new RuntimeException("未定义的组: "+groupName);
     }

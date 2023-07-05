@@ -37,10 +37,7 @@ public class ClassLevel {
     }
     private static boolean isNetMinecraft(Class clas){
         String name=clas.getName();
-        if(name.length()<14){
-            return false;
-        }
-        return name.startsWith("net.minecraft.");
+        return name.startsWith("net.minecraft.")||name.startsWith("com.mojang.");
     }
     private static boolean isObfuscation(){
         return Artedprvt.instance.isNotDevelopment;

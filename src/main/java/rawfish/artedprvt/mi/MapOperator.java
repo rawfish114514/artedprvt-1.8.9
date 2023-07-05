@@ -4,25 +4,30 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import rawfish.artedprvt.core.ScriptObject;
+import rawfish.artedprvt.core.ProcedureUsable;
+import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.ScriptSystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 世界管理
+ * 地图操作
  */
-public class WorldManager implements ScriptObject {
+@ProcedureUsable
+public class MapOperator implements ScriptObject {
+    private ScriptProcess process;
 
     /**
      * 世界
      */
     public World world;
 
-    public List<WorldGraphics> graphicsList;
+    public List<MapGraphics> graphicsList;
 
-    @ScriptUsable
-    public WorldManager(String side){
-        up();
+    @ProcedureUsable
+    public MapOperator(String side){
+        process=up();
         if(side.equals("server")) {
             world = MinecraftServer.getServer().getEntityWorld();
         }else{
@@ -31,20 +36,20 @@ public class WorldManager implements ScriptObject {
         graphicsList=new ArrayList<>();
     }
 
-    @ScriptUsable
-    public WorldManager(World world){
+    @ProcedureUsable
+    public MapOperator(World world){
         up();
         this.world=world;
         graphicsList=new ArrayList<>();
     }
 
     /**
-     * 创建并返回WorldGraphics对象
-     * @return 操作这个世界的WorldGraphics对象
+     * 创建并返回{@link MapGraphics}对象
+     * @return
      */
-    @ScriptUsable
-    public WorldGraphics getGraphics(){
-        WorldGraphics graphics=new WorldGraphics(this);
+    @ProcedureUsable
+    public MapGraphics getGraphics(){
+        MapGraphics graphics=new MapGraphics(this);
         graphicsList.add(graphics);
         return graphics;
     }
@@ -53,10 +58,10 @@ public class WorldManager implements ScriptObject {
      * 计算操作方块数
      * @return
      */
-    @ScriptUsable
+    @ProcedureUsable
     public int getBlockOper(){
         int blockOper=0;
-        for(WorldGraphics graphics:graphicsList){
+        for(MapGraphics graphics:graphicsList){
             blockOper+=graphics.getDrawCount();
         }
         return blockOper;
@@ -66,8 +71,9 @@ public class WorldManager implements ScriptObject {
     public void onClose() {
         int blockOper=getBlockOper();
         if(blockOper>0){
-            PrintChat printChat=new PrintChat();
-            printChat.print("§d任务结束 操作方块: "+blockOper);
+            if(process!=null){
+                process.getScriptSystem().print(ScriptSystem.CHAT,"§d任务结束 操作方块: "+blockOper);
+            }
         }
         world=null;
     }

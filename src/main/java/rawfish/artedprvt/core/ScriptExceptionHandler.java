@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.core.engine.ScriptStackParser;
 
 import java.util.ArrayList;
