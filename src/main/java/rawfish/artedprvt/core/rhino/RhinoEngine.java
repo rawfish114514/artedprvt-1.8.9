@@ -49,15 +49,17 @@ public class RhinoEngine implements ScriptEngine {
 
     public static List<SystemMethod> buildSystemMethodList(ScriptSystem scriptSystem,ScriptModule scriptModule,Context context){
         List<SystemMethod> list=new ArrayList<>();
-        list.add(new SystemMethodPrint(scriptSystem));
-        list.add(new SystemMethodImport(scriptSystem));
-        list.add(new SystemMethodExport(scriptSystem,scriptModule));
-        list.add(new SystemMethodThread(scriptSystem));
-        list.add(new SystemMethodSleep(scriptSystem));
-        list.add(new SystemMethodExit(scriptSystem));
         list.add(new SystemMethodArgs(scriptSystem));
+        list.add(new SystemMethodAssets(scriptSystem));
+        list.add(new SystemMethodAssetsis(scriptSystem));
+        list.add(new SystemMethodExit(scriptSystem));
+        list.add(new SystemMethodExport(scriptSystem,scriptModule));
+        list.add(new SystemMethodImport(scriptSystem));
         list.add(new SystemMethodInfo(scriptSystem));
+        list.add(new SystemMethodPrint(scriptSystem));
         list.add(new SystemMethodProps(scriptSystem));
+        list.add(new SystemMethodSleep(scriptSystem));
+        list.add(new SystemMethodThread(scriptSystem));
         return list;
     }
 }

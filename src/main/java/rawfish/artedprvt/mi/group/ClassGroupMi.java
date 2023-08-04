@@ -1,6 +1,7 @@
-package rawfish.artedprvt.mi;
+package rawfish.artedprvt.mi.group;
 
 import rawfish.artedprvt.core.ClassGroup;
+import rawfish.artedprvt.mi.*;
 
 import java.util.ArrayList;
 import java.util.List;

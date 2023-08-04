@@ -15,8 +15,8 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class CommandWorkspace extends Command {
-    public CommandWorkspace(String commandName) {
+public class CommandWs extends Command {
+    public CommandWs(String commandName) {
         super(commandName);
     }
 
@@ -41,7 +41,7 @@ public class CommandWorkspace extends Command {
         InputStream input=Artedprvt.class.getResourceAsStream("/workspace.zip");
         ZipInputStream zip = new ZipInputStream(
                 input,
-                Charset.forName("GBK"));
+                Charset.forName("cp437"));
         Reader reader=new InputStreamReader(zip, StandardCharsets.UTF_8);
         ZipEntry entry;
         try {
@@ -91,7 +91,7 @@ public class CommandWorkspace extends Command {
     }
 
     @Override
-    public List<String> tab(List<String> args) {
+    public List<String> complete(List<String> args) {
         return nullTab;
     }
 }

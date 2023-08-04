@@ -14,13 +14,16 @@ public class CommandApf extends Command {
 
         commandList.add(new CommandAc("ac"));
         commandList.add(new CommandAd("ad"));
+        commandList.add(new CommandBuild("build"));
+        commandList.add(new CommandExtract("extract"));
         commandList.add(new CommandApkg("apkg"));
         commandList.add(new CommandIn("in"));
         commandList.add(new CommandPros("pros"));
         commandList.add(new CommandScript("script"));
         commandList.add(new CommandStops("stops"));
         commandList.add(new CommandStt("stt"));
-        commandList.add(new CommandWorkspace("workspace"));
+        commandList.add(new CommandTm("tm"));
+        commandList.add(new CommandWs("ws"));
     }
 
     @Override
@@ -39,7 +42,7 @@ public class CommandApf extends Command {
     }
 
     @Override
-    public List<String> tab(List<String> args) {
+    public List<String> complete(List<String> args) {
         if(args.size()==1){
             List<String> cl=new ArrayList<>();
             String name;
@@ -61,6 +64,6 @@ public class CommandApf extends Command {
         if(c==null){
             return nullTab;
         }
-        return c.tab(args.subList(1,args.size()));
+        return c.complete(args.subList(1,args.size()));
     }
 }

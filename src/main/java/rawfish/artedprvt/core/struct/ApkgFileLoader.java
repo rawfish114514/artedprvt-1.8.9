@@ -1,8 +1,8 @@
 package rawfish.artedprvt.core.struct;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
+import org.apache.http.util.ByteArrayBuffer;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -15,31 +15,46 @@ import java.util.zip.ZipInputStream;
  */
 public class ApkgFileLoader implements FileLoader {
     public String apkg;
-    public Map<String,String> pkgs;
+    public Map<String,byte[]> pkgs;
     public ApkgFileLoader(String apkg) throws Exception{
         this.apkg=apkg;
         pkgs=new HashMap<>();
         ZipInputStream zip = new ZipInputStream(
                 new FileInputStream(apkg),
-                Charset.forName("GBK"));
+                Charset.forName("cp437"));
 
-        Reader reader=new InputStreamReader(zip, StandardCharsets.UTF_8);
         ZipEntry entry = null;
         while ((entry = zip.getNextEntry()) != null) {
-            String name = entry.getName();
             if (!entry.isDirectory()) {
                 int n;
-                int i=0;
-                StringBuilder sb=new StringBuilder(0);
-                while ((n = reader.read()) != -1) {
-                    sb.append((char)n);
+                ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+                while ((n = zip.read()) != -1) {
+                    outputStream.write(n);
                 }
-                pkgs.put(entry.getName(),sb.toString());
+                pkgs.put(dediff(entry.getName()),outputStream.toByteArray());
             }
         }
+        zip.close();
     }
     @Override
-    public String readFile(String appendable) {
-        return pkgs.get(appendable);
+    public String getString(String appendable) {
+        byte[] bs=pkgs.get(appendable);
+        if(bs==null){
+            return null;
+        }
+        return new String(bs,StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public InputStream getInputStream(String appendable) {
+        byte[] bs=pkgs.get(appendable);
+        if(bs==null){
+            return null;
+        }
+        return new ByteArrayInputStream(bs);
+    }
+
+    public String dediff(String s){
+        return s.replace("\\","/");
     }
 }

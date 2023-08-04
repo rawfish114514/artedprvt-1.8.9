@@ -5,8 +5,14 @@ import rawfish.artedprvt.command.CommandMessages;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.engine.ServiceEngine;
+import rawfish.artedprvt.core.engine.ServiceEngines;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -45,24 +51,24 @@ public class CommandScript extends Command {
     }
 
     @Override
-    public List<String> tab(List<String> args) {
-        List<String> opt=new ArrayList<>();
-        String lastArgs;
-        if(args.size()==0){
-            lastArgs="";
-        }else if(args.size()==1){
-            lastArgs=args.get(args.size()-1);
-        }else{
+    public List<String> complete(List<String> args) {
+        if(args.size()==1) {
+            /*补全包名*/
+            List<String> opt = new ArrayList<>();
+            String lastArgs=args.get(0);
+            //包名
+            File script = new File(FrameProperties.props.get("frame.dir") + "/src/script");
+            if (script.isDirectory()) {
+                List<String> packs = pack(script, "");
+                opt.addAll(match(packs, lastArgs));
+            }
+            opt.sort(Comparator.comparingInt(String::length));
             return opt;
+        }else if(args.size()>1) {
+            /*补全脚本参数*/
+            return scriptComplete(args.subList(1,args.size()));
         }
-        //包名
-        File script=new File(FrameProperties.props.get("frame.dir")+"/src/script");
-        if(script.isDirectory()){
-            List<String> packs=pack(script,"");
-            opt.addAll(match(packs,lastArgs));
-        }
-        opt.sort(Comparator.comparingInt(String::length));
-        return opt;
+        return nullTab;
     }
 
     public List<String> pack(File dir,String p){
@@ -105,5 +111,60 @@ public class CommandScript extends Command {
             }
         }
         return npacks;
+    }
+
+    public List<String> scriptComplete(List<String> args){
+        //获取补全脚本代码
+        String code=null;
+        String abbr=null;
+        try {
+            for (ScriptLanguage language : ScriptLanguage.values()) {
+                String a=language.getAbbr();
+                String f=readCompleteFile(a);
+                if(f!=null){
+                    code=f;
+                    abbr=a;
+                    break;
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace(System.err);
+        }
+        if(code!=null){
+            ServiceEngine engine= ServiceEngines.getService(abbr);
+            if(engine!=null){
+                try {
+                    Object result=engine.call(code, "complete", args);
+                    List rl=(List)result;
+                    List<String> stringList=new ArrayList<>();
+                    for(int i=0;i<rl.size();i++){
+                        stringList.add(rl.get(i).toString());
+                    }
+                    return stringList;
+                }catch (Exception e){
+                    e.printStackTrace(System.err);
+                }
+            }
+        }
+        return nullTab;
+    }
+
+    public String readCompleteFile(String abbr) throws Exception{
+        File file=new File(FrameProperties.props.get("frame.dir")+"/src/complete."+abbr);
+        if(file.isFile()){
+            Reader reader=new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
+            StringBuilder sb=new StringBuilder();
+            int n;
+            while(true){
+                n=reader.read();
+                if(n==-1){
+                    break;
+                }
+                sb.append((char)n);
+            }
+            return sb.toString();
+        }else{
+            return null;
+        }
     }
 }

@@ -40,6 +40,6 @@ public class ClassLevel {
         return name.startsWith("net.minecraft.")||name.startsWith("com.mojang.");
     }
     private static boolean isObfuscation(){
-        return Artedprvt.instance.isNotDevelopment;
+        return Artedprvt.instance.isNotDevelopment();
     }
 }

@@ -1,11 +1,12 @@
 package rawfish.artedprvt.core;
 
-import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.core.struct.FileLoader;
 import rawfish.artedprvt.mi.ChatProvider;
 import rawfish.artedprvt.mi.PrintChat;
 import rawfish.artedprvt.core.engine.ScriptEngine;
 import rawfish.artedprvt.core.struct.ScriptModule;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -16,11 +17,15 @@ import java.util.Map;
 public class ScriptSystem {
     private ScriptProcess process;
     private ScriptLogger logger;
+    private FileLoader fileLoader;
     private PrintChat printChat;
     public ScriptSystem(ScriptProcess process){
         this.process=process;
         logger=process.getScriptLogger();
+        fileLoader=process.getFileLoader();
         printChat=new PrintChat();
+        printChat.isLog=false;
+        printChat.longtime=true;
     }
 
     /**
@@ -45,12 +50,8 @@ public class ScriptSystem {
      * @param chat 聊天信息
      */
     public void print(int type,String chat){
-        if(type==DEBUG){
-            logger.warn(removeFormatCode(chat));
-        }else{
-            logger.info(removeFormatCode(chat));
-        }
         if(type==CHAT){
+            logger.info(chat);
             if(B_CHAT){
                 printChat.print(chat);
                 return;
@@ -81,12 +82,8 @@ public class ScriptSystem {
      * @param hover 悬浮聊天消息
      */
     public void print(int type,String chat,String hover){
-        if(type==DEBUG){
-            logger.warn(removeFormatCode(chat));
-        }else{
-            logger.info(removeFormatCode(chat));
-        }
         if(type==CHAT){
+            logger.info(chat);
             if(B_CHAT){
                 printChat.print(chat,hover);
                 return;
@@ -117,12 +114,8 @@ public class ScriptSystem {
      * @param hover 悬浮聊天消息供应商
      */
     public void print(int type,String chat, ChatProvider hover){
-        if(type==DEBUG){
-            logger.warn(removeFormatCode(chat));
-        }else{
-            logger.info(removeFormatCode(chat));
-        }
         if(type==CHAT){
+            logger.info(chat);
             if(B_CHAT){
                 printChat.print(chat,hover);
                 return;
@@ -165,10 +158,6 @@ public class ScriptSystem {
 
     private String chatAddHover(String chat,ChatProvider hover){
         return chat+" -> \n"+hover.getChat();
-    }
-
-    private String removeFormatCode(String s){
-        return s.replaceAll("\u00a7[0-9a-fk-or]","");
     }
 
     /**
@@ -278,6 +267,25 @@ public class ScriptSystem {
      */
     public void exit(int exitCode){
         process.stop(exitCode);
+    }
+
+    /**
+     * 获取文件内容
+     * 只能获取src目录下的或apkg包内的文件
+     * @param path
+     * @return
+     */
+    public String getFile(String path){
+        return fileLoader.getString(path);
+    }
+
+    /**
+     * 获取文件的输入流
+     * @param path
+     * @return
+     */
+    public InputStream getFileInputStream(String path){
+        return fileLoader.getInputStream(path);
     }
 
     /**

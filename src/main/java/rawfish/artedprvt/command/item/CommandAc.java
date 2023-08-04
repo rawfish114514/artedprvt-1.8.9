@@ -22,7 +22,7 @@ public class CommandAc extends Command {
     }
 
     @Override
-    public List<String> tab(List<String> args) {
+    public List<String> complete(List<String> args) {
         return nullTab;
     }
 }

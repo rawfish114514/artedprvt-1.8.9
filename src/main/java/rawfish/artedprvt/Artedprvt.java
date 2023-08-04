@@ -1,6 +1,10 @@
 package rawfish.artedprvt;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +17,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import rawfish.artedprvt.core.rhino.ClassLevel;
 
 
 @Mod(
@@ -72,15 +77,33 @@ public class Artedprvt
                 "\n\n作者 ↓\nhttps://space.bilibili.com/455906194";
     }
 
-    public boolean isNotDevelopment;
+    public boolean isNotDevelopment() {
+        return isNotDevelopment;
+    }
+
+    private boolean isNotDevelopment;
+
+    public boolean isHasClientSide() {
+        return hasClientSide;
+    }
+
+    private boolean hasClientSide;
+
     public void init() {
         try {
-            Minecraft.class.getDeclaredField("theMinecraft");
+            MinecraftServer.class.getDeclaredField("mcServer");
             isNotDevelopment=false;
         } catch (NoSuchFieldException e) {
             isNotDevelopment=true;
         }
+
+        try {
+            Class.forName("net.minecraft.client.Minecraft");
+            hasClientSide=true;
+        } catch (ClassNotFoundException e) {
+            hasClientSide=false;
+        }
         System.out.println("Artedprvt.init.ind");
-        System.out.println("开发环境: "+!isNotDevelopment);
+        System.out.println("开发环境: d:"+!isNotDevelopment+" c:"+hasClientSide);
     }
 }

@@ -10,12 +10,12 @@ import rawfish.artedprvt.core.struct.ScriptLoader;
 import rawfish.artedprvt.core.struct.SourceFileLoader;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryMXBean;
+import java.lang.management.ThreadMXBean;
 import java.nio.file.Files;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +54,7 @@ public class ScriptProcess {
      * 包具有以下概念
      * 可作为完整模块名 "js:a.b.c" -> a/b/c.js
      * 每个块都保证由字母数字下划线组成，开头不是数字
-     * 可作为apkg包的路径 "a.b.c" -> a/b/c.apkg
+     * 可作为apkg包的路径 "a/b/c" -> a/b/c.apkg
      * 对块没有特别规则
      * 具体使用由文件加载器决定
      * @param command 命令类型
@@ -74,7 +74,7 @@ public class ScriptProcess {
             fileLoader=new SourceFileLoader(props.get("frame.dir")+"/src");
         }
         if(command.equals("apkg")){
-            fileLoader=new ApkgFileLoader(props.get("frame.dir")+"/lib/"+pack.replace(".","/")+".apkg");
+            fileLoader=new ApkgFileLoader(props.get("frame.dir")+"/lib/"+pack+".apkg");
         }
         if(fileLoader==null){
             throw new RuntimeException("文件加载器初始化失败");
@@ -82,7 +82,7 @@ public class ScriptProcess {
         scriptLoader=new ScriptLoader(fileLoader);
         this.scriptArgument=scriptArgument;
 
-        String apkginfo=fileLoader.readFile("apkg.info");
+        String apkginfo=fileLoader.getString("apkg.info");
         scriptInfo=ScriptInfo.parse(apkginfo);
         ScriptInfo.inspect(scriptInfo);
 
@@ -100,7 +100,7 @@ public class ScriptProcess {
             logDir.mkdirs();
             int logFileNumber = logDir.list().length;
             File logFile = new File(logDir.getPath() + "/" + logFileNumber + "." + name.substring(name.indexOf(':')+1) + ".txt");
-            scriptLogger = new ScriptLogger(localDate,Files.newOutputStream(logFile.toPath()));
+            scriptLogger = new ScriptLogger(this,localDate,Files.newOutputStream(logFile.toPath()));
         }
 
 
@@ -120,7 +120,6 @@ public class ScriptProcess {
 
         scriptObjects=new ArrayList<>();
         scriptObjectNumber=0;
-        scriptSystem=new ScriptSystem(this);
     }
 
     /**
@@ -206,32 +205,40 @@ public class ScriptProcess {
         ret=END;
         printEnd(exitCode,System.currentTimeMillis()-time);
         proList.remove(this);
+        scriptLogger.closeAll();
     }
 
     private void printStart(){
+        String s="§3run:§r "+name;
+        scriptLogger.natives(s);
         scriptSystem.print(ScriptSystem.DISPLAY,"§3run:§r "+name);
     }
 
     private void printEnd(int status,long runtime){
         rtime=runtime;
-        String s= getStatistics();
-        if(status==EXIT){
-            scriptSystem.print(ScriptSystem.DISPLAY,"§2end:§r "+name+"§7("+runtime+"ms)",s);
-            return;
+        String stat= getStatistics();
+        String s;
+        sw:{
+            if (status == EXIT) {
+                s="§2end:§r " + name + "§7(" + runtime + "ms)";
+                break sw;
+            }
+            if (status == ERROR) {
+                s="§4break:§r " + name + "§7(" + runtime + "ms)";
+                break sw;
+            }
+            if (status == STOPS) {
+                s="§4stop:§r " + name + "§7(" + runtime + "ms)";
+                break sw;
+            }
+            if (status >= 0) {
+                s="§2exit:§r " + name + "§7(" + runtime + "ms) " + status;
+            } else {
+                s="§4exit:§r " + name + "§7(" + runtime + "ms) " + status;
+            }
         }
-        if(status==ERROR){
-            scriptSystem.print(ScriptSystem.DISPLAY,"§4break:§r "+name+"§7("+runtime+"ms)",s);
-            return;
-        }
-        if(status==STOPS){
-            scriptSystem.print(ScriptSystem.DISPLAY,"§4stop:§r "+name+"§7("+runtime+"ms)",s);
-            return;
-        }
-        if(status>=0){
-            scriptSystem.print(ScriptSystem.DISPLAY,"§2exit:§r "+name+"§7("+runtime+"ms) "+status,s);
-        }else{
-            scriptSystem.print(ScriptSystem.DISPLAY,"§4exit:§r "+name+"§7("+runtime+"ms) "+status,s);
-        }
+        scriptLogger.natives(s);
+        scriptSystem.print(ScriptSystem.DISPLAY,s,stat);
     }
 
     /**
@@ -288,10 +295,10 @@ public class ScriptProcess {
         String line1="[";
         for(String arg:scriptArgument){
             line1+=arg;
-            line1+=", ";
+            line1+="§7, §r";
         }
         if(line1.length()>1) {
-            line1=line1.substring(0, line1.length() - 2);
+            line1=line1.substring(0, line1.length() - 6);
         }
         line1+="]";
         String line2="ret: "+ret;
@@ -334,6 +341,55 @@ public class ScriptProcess {
             }
         }
         return false;
+    }
+
+    private long gclastCpuTime =-1;
+    private long gclastTime =-1;
+    private double oldCPU=0;
+    public double getCPU(){
+        if(ret==END){
+            return 0;
+        }
+        if(gclastCpuTime ==0){
+            gclastCpuTime =0;
+            gclastTime =System.currentTimeMillis();
+            List<Thread> threadList=new ArrayList<>();
+            threadList.add(mainThread);
+            threadList.addAll(threads);
+            ThreadMXBean threadMXBean= ManagementFactory.getThreadMXBean();
+            for(Thread t:threadList){
+                long cpu=threadMXBean.getThreadCpuTime(t.getId());
+                gclastCpuTime +=cpu;
+            }
+            return 0;
+        }
+        long cpuTime=0;
+        long time=System.currentTimeMillis();
+        List<Thread> threadList=new ArrayList<>();
+        threadList.add(mainThread);
+        threadList.addAll(threads);
+        ThreadMXBean threadMXBean= ManagementFactory.getThreadMXBean();
+        for(Thread t:threadList){
+            long cpu=threadMXBean.getThreadCpuTime(t.getId());
+            cpuTime+=cpu;
+        }
+
+        long cpuIncrement=cpuTime- gclastCpuTime;
+        long timeIncrement=time- gclastTime;
+        if(timeIncrement<200){
+            return oldCPU;
+        }
+        gclastCpuTime =cpuTime;
+        gclastTime =time;
+        if(timeIncrement>10000){
+            return 0;
+        }
+        oldCPU=cpuIncrement/1.0e6/Runtime.getRuntime().availableProcessors()/timeIncrement;
+        return oldCPU;
+    }
+
+    public long getMemory(){
+        return -1;
     }
 
     public static List<ScriptProcess> getProList() {
@@ -414,5 +470,9 @@ public class ScriptProcess {
 
     public ScriptSystem getScriptSystem() {
         return scriptSystem;
+    }
+
+    public void setScriptSystem(ScriptSystem scriptSystem) {
+        this.scriptSystem=scriptSystem;
     }
 }

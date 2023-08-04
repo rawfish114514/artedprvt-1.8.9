@@ -1,4 +1,4 @@
-//commands
+#commands
 commands.ac.usage=/ac
 commands.ad.usage=/ad
 commands.apf.usage=/artedprvt|apf <command> [args ...]
@@ -8,4 +8,5 @@ commands.pros.usage=/pros [name|pid|id]
 commands.script.usage=/script <pack> [args ...]
 commands.stops.usage=/stops [name|pid|id]
 commands.stt.usage=/stt
-commands.workspace.usage=/workspace
+commands.tm.usage=/tm
+commands.ws.usage=/ws

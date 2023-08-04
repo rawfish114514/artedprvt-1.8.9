@@ -1,6 +1,6 @@
 package rawfish.artedprvt.core;
 
-import rawfish.artedprvt.mi.ClassGroupMi;
+import rawfish.artedprvt.mi.group.ClassGroupMi;
 
 import java.util.*;
 

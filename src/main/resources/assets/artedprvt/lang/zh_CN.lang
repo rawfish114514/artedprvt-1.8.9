@@ -1,11 +1,12 @@
-//commands
-commands.ac.usage=/ac
-commands.ad.usage=/ad
-commands.apf.usage=/artedprvt|apf <command> [args ...]
-commands.apkg.usage=/apkg <pack> [args ...]
-commands.in.usage=/in [string ...]
-commands.pros.usage=/pros [name|pid|id]
-commands.script.usage=/script <pack> [args ...]
-commands.stops.usage=/stops [name|pid|id]
-commands.stt.usage=/stt
-commands.workspace.usage=/workspace
+#commands
+commands.ac.usage=/ac 切换CHAT状态
+commands.ad.usage=/ad 切换DEBUG状态
+commands.apf.usage=/artedprvt|apf <command> [args ...] 执行APF定义的其他命令
+commands.apkg.usage=/apkg <pack> [args ...] 运行apkg
+commands.in.usage=/in [string ...] 输入一个字符串并被所有进程处理
+commands.pros.usage=/pros [name|pid|id] 查看所有进程
+commands.script.usage=/script <pack> [args ...] 运行脚本
+commands.stops.usage=/stops [name|pid|id] 终止进程
+commands.stt.usage=/stt 运行脚本main模块
+commands.tm.usage=/tm 打开任务管理器
+commands.ws.usage=/ws 创建工作空间

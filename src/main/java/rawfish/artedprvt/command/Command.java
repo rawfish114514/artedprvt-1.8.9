@@ -1,16 +1,23 @@
 package rawfish.artedprvt.command;
 
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public abstract class Command extends CommandBase {
+    public abstract void process(List<String> args);
+    public abstract List<String> complete(List<String> args);
+
+
     public String commandName;
 
     public Command(String commandName){
@@ -25,10 +32,6 @@ public abstract class Command extends CommandBase {
     public String getCommandUsage(ICommandSender sender) {
         return "commands."+commandName+".usage";
     }
-
-    public abstract void process(List<String> args);
-
-    public abstract List<String> tab(List<String> args);
 
     public static final List<String> nullTab=new ArrayList<>();
 
@@ -45,7 +48,10 @@ public abstract class Command extends CommandBase {
     }
 
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos){
-        return tab(Arrays.asList(args));
+        if(!(sender.getEntityWorld() instanceof WorldServer)){
+            return complete(Arrays.asList(args));
+        }
+        return nullTab;
     }
 
     @Override

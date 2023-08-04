@@ -4,7 +4,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 源文件文件加载器
+ * 源文件加载器
  */
 public class SourceFileLoader implements FileLoader {
     public String dir;
@@ -12,7 +12,7 @@ public class SourceFileLoader implements FileLoader {
         this.dir=dir;
     }
     @Override
-    public String readFile(String appendable) {
+    public String getString(String appendable) {
         File file=new File(dir+"/"+appendable);
         if(!file.isFile()){
             return null;
@@ -35,5 +35,18 @@ public class SourceFileLoader implements FileLoader {
             return null;
         }
         return sb.toString();
+    }
+
+    @Override
+    public InputStream getInputStream(String appendable) {
+        File file=new File(dir+"/"+appendable);
+        if(!file.isFile()){
+            return null;
+        }
+        try {
+            return new FileInputStream(file);
+        }catch (IOException e){
+            return null;
+        }
     }
 }

@@ -35,9 +35,9 @@ public class ScriptLoader {
      * 其中冒号前的js是脚本语言缩写 一般是脚本文件后缀
      * 如果省略模块类型 则自动匹配
      * 冒号后的最后一个点之前的部分是包名 这里是"a.b"
-     * 最后一个点后的部分是模块名 这里是"c"
+     * 最后一个点后的部分是短模块名 这里是"c"
      *
-     * 这个方法自动注册包和模块 在返回模块的唯一实例
+     * 这个方法自动注册包和模块 并返回模块的唯一实例
      * @param moduleFullName 模块完整名
      * @return
      */
@@ -82,7 +82,7 @@ public class ScriptLoader {
                         }else{
                             path="script/"+packagee.replace('.','/')+"/"+module+"."+abbr;
                         }
-                        String source=fileLoader.readFile(path);
+                        String source=fileLoader.getString(path);
                         if(source!=null){
                             scriptModule=new ScriptModule(scriptPackage,module,source,scriptLanguage);
                             moduleMap.put(newModuleFullName,scriptModule);
@@ -105,7 +105,7 @@ public class ScriptLoader {
                         }else{
                             path="script/"+packagee.replace('.','/')+"/"+module+"."+abbr;
                         }
-                        String source=fileLoader.readFile(path);
+                        String source=fileLoader.getString(path);
                         if(source==null){
                             ScriptExceptions.exceptionNoFoundModule(path);
                         }

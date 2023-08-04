@@ -14,6 +14,7 @@ public class MainThread extends Thread{
 
     @Override
     public void run(){
+        process.setScriptSystem(new ScriptSystem(process));
         List<ScriptEngine> engines=process.getEngines();
         //初始化脚本引擎
         for(int i=0;i<engines.size();i++){

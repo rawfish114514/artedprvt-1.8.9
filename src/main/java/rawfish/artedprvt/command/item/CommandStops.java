@@ -51,7 +51,7 @@ public class CommandStops extends Command {
     }
 
     @Override
-    public List<String> tab(List<String> args) {
+    public List<String> complete(List<String> args) {
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.trim().isEmpty()){

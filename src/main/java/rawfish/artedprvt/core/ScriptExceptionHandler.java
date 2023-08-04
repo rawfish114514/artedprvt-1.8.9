@@ -1,15 +1,16 @@
 package rawfish.artedprvt.core;
 
-import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.core.engine.ScriptStackParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private ScriptProcess scriptProcess;
+    private ScriptProcess process;
+    private ScriptLogger logger;
     public ScriptExceptionHandler(ScriptProcess scriptProcess){
-        this.scriptProcess=scriptProcess;
+        this.process =scriptProcess;
+        logger=process.getScriptLogger();
     }
 
     public void uncaughtException(Throwable e){
@@ -20,7 +21,6 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
         if(e instanceof ThreadDeath){
             return;
         }
-        e.printStackTrace(System.err);
         String message="§4"+e.getMessage();
         String description="§4"+e.toString();
         List<Throwable> throwables=new ArrayList<>();
@@ -29,7 +29,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
             e=e.getCause();
         }
         List<ScriptStackElement[]> stackElements=new ArrayList<>();
-        List<ScriptStackParser> stackParsers=scriptProcess.getStackParsers();
+        List<ScriptStackParser> stackParsers= process.getStackParsers();
         ScriptStackParser parser;
         for(Throwable throwable:throwables) {
             for (int i = 0; i < stackParsers.size(); i++) {
@@ -50,20 +50,21 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
             }
         }
 
+        logger.error(sb.toString());
         if(sb.length()>0) {
             print(message, sb.toString());
         }else{
             print(message);
         }
-        scriptProcess.hasError();
-        scriptProcess.getScriptSystem().exit(ScriptProcess.ERROR);
+        process.hasError();
+        process.getScriptSystem().exit(ScriptProcess.ERROR);
     }
 
     public void print(String chat){
-        scriptProcess.getScriptSystem().print(ScriptSystem.DEBUG,chat);
+        process.getScriptSystem().print(ScriptSystem.DEBUG,chat);
     }
 
     public void print(String chat,String hover){
-        scriptProcess.getScriptSystem().print(ScriptSystem.DEBUG,chat,hover);
+        process.getScriptSystem().print(ScriptSystem.DEBUG,chat,hover);
     }
 }

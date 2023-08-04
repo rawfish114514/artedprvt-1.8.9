@@ -17,30 +17,26 @@ public class SystemMethodImport extends SystemMethod{
     @Override
     public Object invoke(Object[] args) {
         if(args.length==1){
-            if(args[0] instanceof String) {
-                String name=(String) args[0];
-                if(name.length()>0) {
-                    if(name.charAt(0)=='-'){
-                        Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
-                        Class clazz=scriptSystem.importJava(name.substring(1));
-                        scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
-                        return null;
-                    }
-                    if(name.charAt(0)=='*'){
-                        Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
-                        List<Class> classList=scriptSystem.importClassGroup(name.substring(1));
-                        Class clazz;
-                        for(int i=0;i<classList.size();i++){
-                            clazz=classList.get(i);
-                            scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
-                        }
-                        return null;
-                    }
+            String name=String.valueOf(args[0]);
+            if(name.length()>0) {
+                if(name.charAt(0)=='-'){
+                    Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
+                    Class clazz=scriptSystem.importJava(name.substring(1));
+                    scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
+                    return null;
                 }
-                return scriptSystem.importModule(name);
-            }else{
-                ScriptExceptions.exceptionSystemMethodInvoke(this);
+                if(name.charAt(0)=='*'){
+                    Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
+                    List<Class> classList=scriptSystem.importClassGroup(name.substring(1));
+                    Class clazz;
+                    for(int i=0;i<classList.size();i++){
+                        clazz=classList.get(i);
+                        scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
+                    }
+                    return null;
+                }
             }
+            return scriptSystem.importModule(name);
         }
         ScriptExceptions.exceptionSystemMethodInvoke(this);
         return null;

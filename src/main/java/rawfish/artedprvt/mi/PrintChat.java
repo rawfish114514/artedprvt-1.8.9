@@ -6,8 +6,11 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
+import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.core.ScriptLogger;
 import rawfish.artedprvt.core.ScriptObject;
 import rawfish.artedprvt.core.ProcedureUsable;
+import rawfish.artedprvt.core.ScriptProcess;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -16,12 +19,83 @@ import java.awt.datatransfer.StringSelection;
  * 聊天消息打印
  */
 @ProcedureUsable
-public class PrintChat{
+public class PrintChat implements ScriptObject{
+    private ScriptProcess process;
+    private ScriptLogger logger=null;
     public GuiNewChat guiNewChat;
+    public boolean isLog=true;
+    public boolean longtime=false;
 
     @ProcedureUsable
     public PrintChat(){
-        guiNewChat=Minecraft.getMinecraft().ingameGUI.getChatGUI();
+        process=up();
+        if(process!=null){
+            logger=process.getScriptLogger();
+        }
+        if(Artedprvt.instance.isHasClientSide()) {
+            guiNewChat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
+        }else {
+            guiNewChat=null;
+        }
+    }
+
+    /**
+     * 设置消息行
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     * @param id
+     */
+    @ProcedureUsable
+    public void line(String chat,int id){
+        if(server(chat)){
+            return;
+        }
+        info(chat);
+        guiNewChat.printChatMessageWithOptionalDeletion(new ChatComponentText(chat),id);
+    }
+
+    /**
+     * 设置消息行
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     * @param hover 悬浮信息字符串
+     * @param id
+     */
+    @ProcedureUsable
+    public void line(String chat,String hover,int id){
+        if(server(chat)){
+            return;
+        }
+        info(chat);
+        ChatComponentText chatComponentText=new ChatComponentText(chat);
+        ChatComponentText hoverComponent=new ChatComponentText(hover);
+        chatComponentText.setChatStyle(new ChatStyle()
+                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hoverComponent))
+                .setChatClickEvent(new CopyEvent(hoverComponent))
+        );
+        guiNewChat.printChatMessageWithOptionalDeletion(chatComponentText,id);
+    }
+
+    /**
+     * 设置消息行
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     * @param hover 悬浮信息供应商
+     * @param id
+     */
+    @ProcedureUsable
+    public void line(String chat,ChatProvider hover,int id){
+        if(server(chat)){
+            return;
+        }
+        info(chat);
+        ChatComponentText chatComponentText=new ChatComponentText(chat);
+        ChatComponentText hoverComponent=new ChatProviderComponent(hover);
+        chatComponentText.setChatStyle(new ChatStyle()
+                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hoverComponent))
+                .setChatClickEvent(new CopyEvent(hoverComponent))
+        );
+        guiNewChat.printChatMessageWithOptionalDeletion(chatComponentText,id);
     }
 
     /**
@@ -31,24 +105,10 @@ public class PrintChat{
      */
     @ProcedureUsable
     public void print(String chat){
-        guiNewChat.printChatMessage(new ChatComponentText(chat));
-    }
-
-    /**
-     * 打印到聊天栏
-     * 但他们只对自己是可见的
-     * @param chat 聊天信息字符串
-     * @param hover 悬浮信息字符串
-     */
-    @ProcedureUsable
-    public void print(String chat,String hover){
-        ChatComponentText chatComponentText=new ChatComponentText(chat);
-        ChatComponentText hoverComponent=new ChatComponentText(hover);
-        chatComponentText.setChatStyle(new ChatStyle()
-                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hoverComponent))
-                .setChatClickEvent(new CopyEvent(hoverComponent))
-        );
-        guiNewChat.printChatMessage(chatComponentText);
+        if(server(chat)){
+            return;
+        }
+        line(chat,0);
     }
 
     /**
@@ -58,14 +118,59 @@ public class PrintChat{
      * @param hover 悬浮信息供应商
      */
     @ProcedureUsable
-    public void print(String chat, ChatProvider hover){
-        ChatComponentText chatComponentText=new ChatComponentText(chat);
-        ChatComponentText hoverComponent=new ChatProviderComponent(hover);
-        chatComponentText.setChatStyle(new ChatStyle()
-                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,hoverComponent))
-                .setChatClickEvent(new CopyEvent(hoverComponent))
-        );
-        guiNewChat.printChatMessage(chatComponentText);
+    public void print(String chat,String hover){
+        if(server(chat+": "+hover)){
+            return;
+        }
+        line(chat,hover,0);
+    }
+
+    /**
+     * 打印到聊天栏
+     * 但他们只对自己是可见的
+     * @param chat 聊天信息字符串
+     * @param hover 悬浮信息供应商
+     */
+    @ProcedureUsable
+    public void print(String chat,ChatProvider hover){
+        if(server(chat+": "+hover.getChat())){
+            return;
+        }
+        line(chat,hover,0);
+    }
+
+    /**
+     * 删除指定id的聊天消息
+     * @param id
+     */
+    @ProcedureUsable
+    public void remove(int id){
+        if(server("remove "+id)){
+            return;
+        }
+        guiNewChat.deleteChatLine(id);
+    }
+
+    private void info(String message){
+        if(isLog&&logger!=null){
+            logger.info(message);
+        }
+    }
+
+    @Override
+    public void onClose() {
+        if(!longtime) {
+            guiNewChat = null;
+        }
+    }
+
+
+    private boolean server(String message){
+        if(guiNewChat==null){
+            System.out.println(message);
+            return true;
+        }
+        return false;
     }
 
     public static class ChatProviderComponent extends ChatComponentText implements ScriptObject {
