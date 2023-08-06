@@ -14,11 +14,11 @@ public class CommandAd extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getCommandName(),"不能有参数");
+            CommandMessages.exception(getCommandName(),"cms0");
             return;
         }
         ScriptSystem.B_DEBUG =!ScriptSystem.B_DEBUG;
-        CommandMessages.key(getCommandName(),"切换debug状态到: "+ScriptSystem.B_DEBUG);
+        CommandMessages.key(getCommandName(),"cms13",ScriptSystem.B_DEBUG);
     }
 
     @Override

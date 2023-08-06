@@ -6,13 +6,16 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import rawfish.artedprvt.core.ProcedureUsable;
+import rawfish.artedprvt.core.ProgramUsable;
+import rawfish.artedprvt.core.SideUsable;
+import rawfish.artedprvt.core.Sides;
 
 /**
  * 地图图形
  * 在地图上作画
  */
-@ProcedureUsable
+@SideUsable(Sides.ALL)
+@ProgramUsable
 public class MapGraphics {
     /**
      * 地图操作
@@ -40,7 +43,7 @@ public class MapGraphics {
      * 构造地图图形对象
      * @param operator
      */
-    @ProcedureUsable
+    @ProgramUsable
     public MapGraphics(MapOperator operator){
         this.operator=operator;
         world=operator.world;
@@ -53,7 +56,7 @@ public class MapGraphics {
      * 设置方块状态
      * @param blockIn 方块状态
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void setBlock(IBlockState blockIn){
         block=blockIn;
     }
@@ -62,7 +65,7 @@ public class MapGraphics {
      * 设置方块状态
      * @param blockIn 方块
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void setBlock(Block blockIn){
         block=blockIn.getDefaultState();
     }
@@ -71,7 +74,7 @@ public class MapGraphics {
      * 获取方块状态
      * @return 当前的方块状态
      */
-    @ProcedureUsable
+    @ProgramUsable
     public IBlockState getBlock(){
         return block;
     }
@@ -81,7 +84,7 @@ public class MapGraphics {
      * @param pos 方块坐标
      * @return
      */
-    @ProcedureUsable
+    @ProgramUsable
     public IBlockState getBlock(BlockPos pos){
         return world.getBlockState(pos);
     }
@@ -90,7 +93,7 @@ public class MapGraphics {
      * 获取世界上的方块
      * @return
      */
-    @ProcedureUsable
+    @ProgramUsable
     public IBlockState getBlock(double x,double y,double z){
         return world.getBlockState(new BlockPos(x,y,z));
     }
@@ -99,7 +102,7 @@ public class MapGraphics {
      * 设置焦点
      * @param center
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void setCenter(BlockPos center){
         this.center=center;
     }
@@ -110,7 +113,7 @@ public class MapGraphics {
      * @param y
      * @param z
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void setCenter(double x,double y,double z){
         setCenter(new BlockPos(x,y,z));
     }
@@ -119,7 +122,7 @@ public class MapGraphics {
      * 获取焦点
      * @return
      */
-    @ProcedureUsable
+    @ProgramUsable
     public BlockPos getCenter(){
         return center;
     }
@@ -131,7 +134,7 @@ public class MapGraphics {
      * @param z
      * @return
      */
-    @ProcedureUsable
+    @ProgramUsable
     public BlockPos pos(double x, double y, double z){
         return new BlockPos(x,y,z);
     }
@@ -141,7 +144,7 @@ public class MapGraphics {
      * 也就是设置的方块的总数
      * @return 画总数
      */
-    @ProcedureUsable
+    @ProgramUsable
     public int getDrawCount(){
         return drawCount;
     }
@@ -150,7 +153,7 @@ public class MapGraphics {
      * 通知更新
      * @param pos 坐标
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void update(BlockPos pos){
         BlockPos thePos=pos.add(center);
         Chunk chunk = world.getChunkFromBlockCoords(thePos);
@@ -163,7 +166,7 @@ public class MapGraphics {
      * @param y 坐标
      * @param z 坐标
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void update(double x, double y, double z){
         update(pos(x,y,z));
     }
@@ -172,7 +175,7 @@ public class MapGraphics {
      * 画一个方块
      * @param pos 方块坐标
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void drawBlock(BlockPos pos){
         BlockPos thePos=pos.add(center);
         Chunk chunk = world.getChunkFromBlockCoords(thePos);
@@ -186,7 +189,7 @@ public class MapGraphics {
      * @param y 方块坐标y
      * @param z 方块坐标z
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void drawBlock(double x,double y,double z){
         drawBlock(pos(x,y,z));
     }
@@ -196,7 +199,7 @@ public class MapGraphics {
      * @param pos1 顶点1
      * @param pos2 顶点2
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void drawCube(BlockPos pos1,BlockPos pos2){
         BlockPos startPos=new BlockPos(
                 Math.min(pos1.getX(),pos2.getX()),
@@ -247,7 +250,7 @@ public class MapGraphics {
      * @param y2 顶点2
      * @param z2 顶点2
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void drawCube(double x1,double y1,double z1,double x2,double y2,double z2){
         drawCube(pos(x1,y1,z1),pos(x2,y2,z2));
     }
@@ -257,7 +260,7 @@ public class MapGraphics {
      * @param pos 坐标
      * @param height 高度
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void drawColumn(BlockPos pos,int height){
         BlockPos startPos=new BlockPos(pos.getX(),Math.min(pos.getY(),pos.getY()+height),pos.getZ()).add(center);
         int end=Math.max(pos.getY(),pos.getY()+height)+center.getY();
@@ -275,7 +278,7 @@ public class MapGraphics {
      * @param z 坐标
      * @param h 高度
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void drawColumn(double x,double y,double z,int h){
         drawColumn(pos(x,y,z),h);
     }

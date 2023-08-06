@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.core.engine.ScriptEngine;
 import rawfish.artedprvt.core.engine.ScriptStackParser;
 import rawfish.artedprvt.core.rhino.RhinoEngine;
@@ -9,9 +10,12 @@ import rawfish.artedprvt.core.struct.FileLoader;
 import rawfish.artedprvt.core.struct.ScriptLoader;
 import rawfish.artedprvt.core.struct.SourceFileLoader;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.lang.management.ThreadMXBean;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -24,7 +28,6 @@ import java.util.Map;
  */
 public class ScriptProcess {
     private static List<ScriptProcess> proList=new ArrayList<>();//运行的进程
-    private static int spid=0;//进程起始id
     private Map<String,String> props;//属性
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
@@ -38,6 +41,7 @@ public class ScriptProcess {
     private ScriptExceptionHandler exceptionHandler;//异常处理程序
     private int pid;//进程id
     private String name;//进程名
+    private BufferedImage icon;//图标
 
     private long time;//开始时间
     private int ret;//进程状态
@@ -92,6 +96,7 @@ public class ScriptProcess {
         }
 
         name= scriptInfo.getName();
+        icon= loadIcon(fileLoader.getInputStream("icon.png"));
 
         synchronized (ScriptProcess.class) {
             LocalDate localDate = LocalDate.now();
@@ -111,15 +116,40 @@ public class ScriptProcess {
         stackParsers.add(new RhinoScriptStackParser());
 
         exceptionHandler=new ScriptExceptionHandler(this);
-        if(proList.size()==0){
-            spid=0;
+        pid=ProcessController.registerProcess(this);
+        if(pid==-1){
+            throw new RuntimeException("注册进程失败");
         }
-        pid=spid++;
         proList.add(this);
         time=0;
 
         scriptObjects=new ArrayList<>();
         scriptObjectNumber=0;
+    }
+
+    private BufferedImage loadIcon(InputStream stream){
+        if(stream==null){
+            return loadDefaultIcon();
+        }
+        a:try {
+            BufferedImage image= ImageIO.read(stream);
+            if(image==null||image.getHeight()!=16||image.getWidth()!=16){
+                break a;
+            }
+            return image;
+        } catch (IOException ignored) {
+        }
+        return loadDefaultIcon();
+    }
+
+    private BufferedImage loadDefaultIcon(){
+        InputStream stream= Artedprvt.class.getResourceAsStream("/icon_default.png");
+        try {
+            BufferedImage image= ImageIO.read(stream);
+            return image;
+        } catch (IOException ignore) {
+        }
+        throw new RuntimeException("图标加载失败");
     }
 
     /**
@@ -396,10 +426,6 @@ public class ScriptProcess {
         return proList;
     }
 
-    public static int getSpid() {
-        return spid;
-    }
-
     public Map<String, String> getProps() {
         return props;
     }
@@ -450,6 +476,10 @@ public class ScriptProcess {
 
     public String getName() {
         return name;
+    }
+
+    public BufferedImage getIcon(){
+        return icon;
     }
 
     public long getTime() {

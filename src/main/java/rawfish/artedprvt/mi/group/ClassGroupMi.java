@@ -6,6 +6,9 @@ import rawfish.artedprvt.mi.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 所有的类
+ */
 public class ClassGroupMi implements ClassGroup {
     private List<Class> classes;
     public List<Class> getClasses(){

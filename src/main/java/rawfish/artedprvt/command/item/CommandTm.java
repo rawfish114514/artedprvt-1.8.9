@@ -2,7 +2,9 @@ package rawfish.artedprvt.command.item;
 
 import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.CommandMessages;
+import rawfish.artedprvt.core.ProcessController;
 import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.id.Local;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +25,7 @@ public class CommandTm extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getCommandName(),"不能有参数");
+            CommandMessages.exception(getCommandName(),"cms0");
             return;
         }
         openWindow();
@@ -91,6 +93,12 @@ public class CommandTm extends Command {
     }
 }
 
+class Translate{
+    public static String get(String key,Object... args){
+        return Local.getTranslate(key,args);
+    }
+}
+
 class TaskManagerFrame extends JFrame {
     public MainPanel mainPanel=new MainPanel();
     public Bar mainMenuBar=new Bar(this);
@@ -99,7 +107,7 @@ class TaskManagerFrame extends JFrame {
         setMinimumSize(new Dimension(400,300));
         setSize(600,400);
         setLocationRelativeTo(null);
-        setTitle("任务管理器");
+        setTitle(Translate.get("tms0"));
         setName("task manager");
         setLayout(null);
         add(mainPanel);
@@ -112,6 +120,8 @@ class TaskManagerFrame extends JFrame {
                 updateSize();
             }
         });
+
+
     }
 
     public void updateSize(){
@@ -134,21 +144,21 @@ abstract class BufferPanel extends JPanel{
 
     protected BufferedImage getBufferedImage(){
         if(bufferedImage==null){
-            paintBufferImage();
+            paintBufferedImage();
         }
         return bufferedImage;
     }
 
-    protected void paintBufferImage() {
+    protected void paintBufferedImage() {
         if(getWidth()==0||getHeight()==0){
             return;
         }
         BufferedImage image=new BufferedImage(getWidth(),getHeight(),BufferedImage.TYPE_INT_ARGB);
-        paintBufferImage(image.getGraphics());
+        paintBufferedImage(image.getGraphics());
         bufferedImage=image;
     }
 
-    abstract void paintBufferImage(Graphics g);
+    abstract void paintBufferedImage(Graphics g);
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -183,7 +193,7 @@ class MainPanel extends BufferPanel{
     }
 
     @Override
-    void paintBufferImage(Graphics g) {
+    void paintBufferedImage(Graphics g) {
 
     }
 
@@ -204,11 +214,11 @@ class StatePanel extends BufferPanel{
     public void updateData(){
     }
 
-    public String name="名称";
-    public String memory="内存";
-    public String cpu="CPU";
-    public String pid="PID";
-    void paintBufferImage(Graphics g){
+    public String name=Translate.get("tms1");
+    public String memory=Translate.get("tms2");
+    public String cpu=Translate.get("tms3");
+    public String pid=Translate.get("tms4");
+    void paintBufferedImage(Graphics g){
         g.setFont(getFont());
         g.setColor(Color.lightGray);
         g.drawLine(0,0,4095,1);
@@ -231,7 +241,7 @@ class StatePanel extends BufferPanel{
 
 
     public void updateBuffer(){
-        paintBufferImage();
+        paintBufferedImage();
     }
 }
 
@@ -326,11 +336,11 @@ class EntryPanel extends BufferPanel{
 
         List<Entry> classifyEntryList=new ArrayList<>();
         if(scriptProcessEntryList.size()>0){
-            classifyEntryList.add(new ClassifyEntry("脚本进程"));
+            classifyEntryList.add(new ClassifyEntry(Translate.get("tms5")));
             scriptProcessEntryList.forEach((p)->classifyEntryList.add(p));
         }
         if(otherProcessEntryList.size()>0){
-            classifyEntryList.add(new ClassifyEntry("其他进程"));
+            classifyEntryList.add(new ClassifyEntry(Translate.get("tms6")));
             otherProcessEntryList.forEach((p)->classifyEntryList.add(p));
         }
 
@@ -345,12 +355,19 @@ class EntryPanel extends BufferPanel{
             processList.add(new ScriptsProcess(scriptProcessList.get(i)));
         }
 
+        //任务管理器
         Container c;
         if((c=getTopLevelAncestor())!=null){
             if(c instanceof JFrame){
-                processList.add(new OtherProcess(((JFrame) c).getTitle()));
+                OtherProcess taskManager=new OtherProcess(((JFrame) c).getTitle());
+                processList.add(taskManager);
             }
         }
+
+        //进程控制器
+        OtherProcess processController=new OtherProcess(Translate.get("tms7"));
+        processController.thread=ProcessController.getThread();
+        processList.add(processController);
 
         List<ProcessEntry> processEntryList1=new ArrayList<>();
         ProcessEntry processEntry=null;
@@ -367,7 +384,7 @@ class EntryPanel extends BufferPanel{
     }
 
     @Override
-    void paintBufferImage(Graphics g) {
+    void paintBufferedImage(Graphics g) {
 
     }
 
@@ -386,22 +403,22 @@ class Bar extends MenuBar{
     public CommandDialog runScriptDialog;
     public Bar(JFrame frame){
         this.frame=frame;
-        Menu fileMenu=new Menu("文件");
-        MenuItem runApkgMenuItem=new MenuItem("运行Apkg");
+        Menu fileMenu=new Menu(Translate.get("tms8"));
+        MenuItem runApkgMenuItem=new MenuItem(Translate.get("tms9"));
         runApkgMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 runApkg();
             }
         });
-        MenuItem runScriptMenuItem=new MenuItem("运行脚本");
+        MenuItem runScriptMenuItem=new MenuItem(Translate.get("tms10"));
         runScriptMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 runScript();
             }
         });
-        MenuItem closeMenuItem=new MenuItem("关闭");
+        MenuItem closeMenuItem=new MenuItem(Translate.get("tms11"));
         closeMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -413,13 +430,24 @@ class Bar extends MenuBar{
         fileMenu.add(runScriptMenuItem);
         fileMenu.add(closeMenuItem);
 
+        Menu helpMenu=new Menu(Translate.get("tms12"));
+        MenuItem aboutMenuItem=new MenuItem(Translate.get("tms13"));
+        aboutMenuItem.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                about();
+            }
+        });
+
+        helpMenu.add(aboutMenuItem);
 
         add(fileMenu);
+        add(helpMenu);
 
-        runApkgDialog=new CommandDialog("运行Apkg",frame,new CommandApkg("tm-apkg"),
-                "<html>根据你键入的名称和参数创建apkg的脚本进程</html>");
-        runScriptDialog=new CommandDialog("运行脚本",frame,new CommandScript("tm-script"),
-                "<html>根据你键入的名称和参数创建脚本进程</html>");
+        runApkgDialog=new CommandDialog(Translate.get("tms14"),frame,new CommandApkg("tm-apkg"),
+                Translate.get("tms15"));
+        runScriptDialog=new CommandDialog(Translate.get("tms16"),frame,new CommandScript("tm-script"),
+                Translate.get("tms17"));
     }
 
     public void runApkg(){
@@ -432,6 +460,24 @@ class Bar extends MenuBar{
 
     public void close(){
         frame.setVisible(false);
+    }
+
+    public JDialog aboutDialog=null;
+    public void about(){
+        if(aboutDialog==null){
+            aboutDialog=new JDialog(frame,Translate.get("tms18"),true);
+            aboutDialog.setSize(320,120);
+            aboutDialog.setResizable(false);
+            aboutDialog.setLayout(null);
+            aboutDialog.setLocationRelativeTo(frame);
+            JLabel label=new JLabel(Translate.get("tms19"));
+            label.setFont(new Font("Small Fonts",Font.PLAIN,18));
+            label.setLayout(null);
+            label.setSize(260,80);
+            label.setLocation(30,5);
+            aboutDialog.add(label);
+        }
+        aboutDialog.setVisible(true);
     }
 }
 
@@ -648,7 +694,7 @@ class ProcessEntry extends Entry{
     }
 
     @Override
-    protected void paintBufferImage(Graphics g) {
+    protected void paintBufferedImage(Graphics g) {
         //w*30
 
         g.setFont(getFont());
@@ -684,11 +730,16 @@ class ProcessEntry extends Entry{
         g.drawString(c,getWidth()-178-stringWidth(c),20);
         g.drawString(m,getWidth()-78-stringWidth(m),20);
         g.drawString(p,getWidth()-18-stringWidth(p),20);
+
+        Image image=process.getIcon();
+        if(image!=null){
+            g.drawImage(image,30,6,null);
+        }
     }
 
 
     public void updateBuffer(){
-        paintBufferImage();
+        paintBufferedImage();
     }
 
     public int stringWidth(String s){
@@ -708,6 +759,13 @@ interface Process{
      * @return 返回这个任务的名称
      */
     String getName();
+
+    /**
+     * 获取图标
+     *
+     * @return 返回这个任务的图标 没有则返回null
+     */
+    Image getIcon();
 
     /**
      * 获取CPU利用率
@@ -770,6 +828,11 @@ class ProcessAdapter implements Process{
     }
 
     @Override
+    public Image getIcon() {
+        return null;
+    }
+
+    @Override
     public double getCPU() {
         return -1;
     }
@@ -820,7 +883,7 @@ class ProcessPopupMenu extends JPopupMenu{
     public ProcessPopupMenu(Process process){
         this.process=process;
 
-        JMenuItem stopMenuItem=new JMenuItem("停止");
+        JMenuItem stopMenuItem=new JMenuItem(Translate.get("tms20"));
         stopMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -828,7 +891,7 @@ class ProcessPopupMenu extends JPopupMenu{
             }
         });
         stopMenuItem.setEnabled(process.menuStop());
-        JMenuItem restartMenuItem=new JMenuItem("重启");
+        JMenuItem restartMenuItem=new JMenuItem(Translate.get("tms21"));
         restartMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -836,7 +899,7 @@ class ProcessPopupMenu extends JPopupMenu{
             }
         });
         restartMenuItem.setEnabled(process.menuRestart());
-        JMenuItem propertiesMenuItem=new JMenuItem("属性");
+        JMenuItem propertiesMenuItem=new JMenuItem(Translate.get("tms22"));
         propertiesMenuItem.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -864,6 +927,11 @@ class ScriptsProcess extends ProcessAdapter{
     @Override
     public String getName() {
         return scriptProcess.getName();
+    }
+
+    @Override
+    public Image getIcon() {
+        return scriptProcess.getIcon();
     }
 
     @Override
@@ -905,6 +973,7 @@ class ScriptsProcess extends ProcessAdapter{
 class OtherProcess extends ProcessAdapter{
     public String name;
     public Thread thread;
+    public Image image=null;
     public OtherProcess(String name){
         this.name=name;
         this.thread=Thread.currentThread();
@@ -913,6 +982,11 @@ class OtherProcess extends ProcessAdapter{
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public Image getIcon() {
+        return image;
     }
 
     @Override
@@ -929,6 +1003,9 @@ class OtherProcess extends ProcessAdapter{
     private long gclastTime =-1;
     private double oldCPU=0;
     public double getCPU(Thread t){
+        if(t==null||t.getState()==Thread.State.TERMINATED){
+            return 0;
+        }
         if(gclastCpuTime ==0){
             gclastCpuTime =0;
             gclastTime =System.currentTimeMillis();
@@ -986,13 +1063,13 @@ class ClassifyEntry extends Entry{
     }
 
     @Override
-    protected void paintBufferImage(Graphics g) {
+    protected void paintBufferedImage(Graphics g) {
         g.setFont(getFont());
         g.setColor(Color.blue);
         g.drawString(classify,0,28);
     }
 
     public void updateBuffer(){
-        paintBufferImage();
+        paintBufferedImage();
     }
 }

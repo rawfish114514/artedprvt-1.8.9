@@ -29,7 +29,7 @@ public class CommandApf extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getCommandName(),"参数不能为空");
+            CommandMessages.exception(getCommandName(),"cms1");
             return;
         }
         for(Command command:commandList){
@@ -38,7 +38,7 @@ public class CommandApf extends Command {
                 return;
             }
         }
-        CommandMessages.exception(getCommandName(),"找不到命令: "+args.get(0));
+        CommandMessages.exception(getCommandName(),"cms14",args.get(0));
     }
 
     @Override

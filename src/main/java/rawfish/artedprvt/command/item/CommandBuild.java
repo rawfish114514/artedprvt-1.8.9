@@ -24,12 +24,12 @@ public class CommandBuild extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getCommandName(),"不能有参数");
+            CommandMessages.exception(getCommandName(),"cms0");
             return;
         }
         File ff=new File(FrameProperties.props().get("frame.dir"));
         if(!ff.isDirectory()){
-            CommandMessages.exception(getCommandName(),"找不到artedprvt目录");
+            CommandMessages.exception(getCommandName(),"cms4");
             return;
         }
         ScriptInfo scriptInfo;
@@ -39,7 +39,7 @@ public class CommandBuild extends Command {
             scriptInfo = ScriptInfo.parse(apkginfo);
             ScriptInfo.inspect(scriptInfo);
         }catch (Exception e){
-            CommandMessages.exception(getCommandName(),"解析apkg.info时失败");
+            CommandMessages.exception(getCommandName(),"cms5");
             return;
         }
         String name=scriptInfo.getName()+"-"+scriptInfo.getVersion();
@@ -47,10 +47,10 @@ public class CommandBuild extends Command {
         int code=zip(fd+"/src",fd+"/lib/"+name+".apkg");
 
         if(code==0){
-            CommandMessages.key(getCommandName(),"构建成功");
+            CommandMessages.key(getCommandName(),"cms5");
         }
         if(code==-1){
-            CommandMessages.exception(getCommandName(),"构建失败");
+            CommandMessages.exception(getCommandName(),"cms6");
         }
     }
 

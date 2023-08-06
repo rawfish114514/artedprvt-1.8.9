@@ -6,30 +6,33 @@ import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
-import rawfish.artedprvt.core.ProcedureUsable;
+import rawfish.artedprvt.core.ProgramUsable;
 import rawfish.artedprvt.core.ScriptObject;
+import rawfish.artedprvt.core.SideUsable;
+import rawfish.artedprvt.core.Sides;
 
-@ProcedureUsable
+@SideUsable(Sides.SERVER)
+@ProgramUsable
 public class GameServer implements ScriptObject {
     public MinecraftServer minecraft;
 
-    @ProcedureUsable
+    @ProgramUsable
     public GameServer(){
         up();
         minecraft =MinecraftServer.getServer();
     }
 
-    @ProcedureUsable
+    @ProgramUsable
     public WorldServer getWorld(int i){
         return minecraft.worldServers[i];
     }
 
-    @ProcedureUsable
+    @ProgramUsable
     public EntityPlayerMP getPlayer(WorldServer world, String name){
         return (EntityPlayerMP)world.getPlayerEntityByName(name);
     }
 
-    @ProcedureUsable
+    @ProgramUsable
     public void sendChat(WorldServer world,String chat){
         S02PacketChat packetChat=new S02PacketChat(new ChatComponentText(chat));
         for(EntityPlayer player:world.playerEntities){

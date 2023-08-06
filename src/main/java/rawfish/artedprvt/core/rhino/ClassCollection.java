@@ -22,6 +22,7 @@ public class ClassCollection {
     public static synchronized void load(String srg){
         if(classMap==null){
             classMap=new HashMap<>();
+            present=null;
 
             Reader reader=new StringReader(srg);
             StringBuilder sb=new StringBuilder();
@@ -45,22 +46,20 @@ public class ClassCollection {
             }
             for(int i=0,l=items.size();i<l;i++){
                 String item=items.get(i);
+
+                if(item.length()==0){
+                    continue;
+                }
                 char c=item.charAt(0);
-                if(c=='C'){
-                    //加载类
-                    loadCL(item);
-                    continue;
+                if(c=='\t'){
+                    //字段或方法
+                    String[] d=item.trim().split(" ");
+                    loadFDorMD(d[0],d[1]);
+                }else{
+                    //类
+                    loadCL(item.substring(item.indexOf(' ')+1));
                 }
-                if(c=='F'){
-                    //加载字段
-                    loadFD(item);
-                    continue;
-                }
-                if(c=='M'){
-                    //加载方法
-                    loadMD(item);
-                    continue;
-                }
+
             }
 
 
@@ -77,45 +76,23 @@ public class ClassCollection {
         //注册到ClassRegisterer
         ClassRegisterer.classMap=classMap;
 
-        //注册额匹配器
+        //注册匹配器
         ClassRegisterer.matcher= (clas) -> ClassLevel.isObfuscationClass(clas);
     }
 
 
-    public static void loadCL(String item){
-        String[] values=item.split(" ");
-        String className=values[1].replace('/','.');
-
-        classMap.put(className,new MemberMapping());
+    public static MemberMapping present;
+    public static void loadCL(String className){
+        present=new MemberMapping();
+        classMap.put(className.replace('/','.'),present);
     }
 
-    public static void loadFD(String item){
-        String[] values=item.split(" ");
-        String fieldName=values[1];
-        String fieldSrg=values[2];
-        fieldSrg=fieldSrg.replace("\r","");
-        String className=fieldName.substring(0,fieldName.lastIndexOf("/")).replace('/','.');
-        MemberMapping member=classMap.get(className);
-        if(member==null){
+    public static void loadFDorMD(String name,String srg){
+        if(present==null){
             return;
         }
 
-        member.up(fieldName.substring(fieldName.lastIndexOf("/")+1),
-                fieldSrg.substring(fieldSrg.lastIndexOf("/")+1));
-    }
-
-    public static void loadMD(String item){
-        String[] values=item.split(" ");
-        String methodName=values[1];
-        String methodSrg=values[3];
-        String className=methodName.substring(0,methodName.lastIndexOf("/")).replace('/','.');
-        MemberMapping member=classMap.get(className);
-        if(member==null){
-            return;
-        }
-
-        member.up(methodName.substring(methodName.lastIndexOf("/")+1),
-                methodSrg.substring(methodSrg.lastIndexOf("/")+1));
+        present.up(name,srg);
     }
 
     public static boolean isE=false;
@@ -147,7 +124,7 @@ public class ClassCollection {
                 }
             }
 
-            System.out.println("添加扩展notClass: "+notClass);
+            //System.out.println("添加扩展notClass: "+notClass);
         }
     }
 

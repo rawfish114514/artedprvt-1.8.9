@@ -201,7 +201,7 @@ public class ScriptSystem {
      * @param className 类名
      * @return
      */
-    public Class importJava(String className){
+    public Class importClass(String className){
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {

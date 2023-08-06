@@ -7,10 +7,7 @@ import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import rawfish.artedprvt.Artedprvt;
-import rawfish.artedprvt.core.ScriptLogger;
-import rawfish.artedprvt.core.ScriptObject;
-import rawfish.artedprvt.core.ProcedureUsable;
-import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.*;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -18,7 +15,8 @@ import java.awt.datatransfer.StringSelection;
 /**
  * 聊天消息打印
  */
-@ProcedureUsable
+@SideUsable(Sides.ALL)
+@ProgramUsable
 public class PrintChat implements ScriptObject{
     private ScriptProcess process;
     private ScriptLogger logger=null;
@@ -26,7 +24,7 @@ public class PrintChat implements ScriptObject{
     public boolean isLog=true;
     public boolean longtime=false;
 
-    @ProcedureUsable
+    @ProgramUsable
     public PrintChat(){
         process=up();
         if(process!=null){
@@ -45,7 +43,7 @@ public class PrintChat implements ScriptObject{
      * @param chat 聊天信息字符串
      * @param id
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void line(String chat,int id){
         if(server(chat)){
             return;
@@ -61,7 +59,7 @@ public class PrintChat implements ScriptObject{
      * @param hover 悬浮信息字符串
      * @param id
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void line(String chat,String hover,int id){
         if(server(chat)){
             return;
@@ -83,7 +81,7 @@ public class PrintChat implements ScriptObject{
      * @param hover 悬浮信息供应商
      * @param id
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void line(String chat,ChatProvider hover,int id){
         if(server(chat)){
             return;
@@ -103,7 +101,7 @@ public class PrintChat implements ScriptObject{
      * 但他们只对自己是可见的
      * @param chat 聊天信息字符串
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void print(String chat){
         if(server(chat)){
             return;
@@ -117,7 +115,7 @@ public class PrintChat implements ScriptObject{
      * @param chat 聊天信息字符串
      * @param hover 悬浮信息供应商
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void print(String chat,String hover){
         if(server(chat+": "+hover)){
             return;
@@ -131,7 +129,7 @@ public class PrintChat implements ScriptObject{
      * @param chat 聊天信息字符串
      * @param hover 悬浮信息供应商
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void print(String chat,ChatProvider hover){
         if(server(chat+": "+hover.getChat())){
             return;
@@ -143,7 +141,7 @@ public class PrintChat implements ScriptObject{
      * 删除指定id的聊天消息
      * @param id
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void remove(int id){
         if(server("remove "+id)){
             return;

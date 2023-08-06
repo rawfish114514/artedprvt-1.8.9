@@ -12,16 +12,14 @@ import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import rawfish.artedprvt.common.EventLoader;
-import rawfish.artedprvt.core.ScriptExceptions;
-import rawfish.artedprvt.core.ScriptObject;
-import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.core.ProcedureUsable;
+import rawfish.artedprvt.core.*;
 import rawfish.artedprvt.event.InputStringEvent;
 
 /**
  * 事件监听器
  */
-@ProcedureUsable
+@SideUsable(Sides.ALL)
+@ProgramUsable
 public class EventListener implements ScriptObject {
     private ScriptProcess process;
 
@@ -72,7 +70,7 @@ public class EventListener implements ScriptObject {
      * @param type 事件类型
      * @param f 回调函数
      */
-    @ProcedureUsable
+    @ProgramUsable
     public EventListener(Events type,EventFunction f){
         if(type==Events.tick){
             listener=new TickEventListener(f);return;
@@ -130,7 +128,7 @@ public class EventListener implements ScriptObject {
     /**
      * 注册监听器
      */
-    @ProcedureUsable
+    @ProgramUsable
     public void register(){
         if(!listener.breakk){
             EVENT_BUS.register(listener);
@@ -147,7 +145,7 @@ public class EventListener implements ScriptObject {
 
 
     public static class TickEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public TickEventListener(EventFunction f) {
             super(f);
         }
@@ -158,7 +156,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClickEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public ClickEventListener(EventFunction f) {
             super(f);
         }
@@ -169,7 +167,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class UseEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public UseEventListener(EventFunction f) {
             super(f);
         }
@@ -180,7 +178,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class JoinEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public JoinEventListener(EventFunction f) {
             super(f);
         }
@@ -191,7 +189,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class InputStringEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public InputStringEventListener(EventFunction f){
             super(f);
         }
@@ -202,7 +200,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ItemTooltipEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public ItemTooltipEventListener(EventFunction f) {
             super(f);
         }
@@ -233,7 +231,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClientTickEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public ClientTickEventListener(EventFunction f){
             super(f);
         }
@@ -244,7 +242,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class RenderTickEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public RenderTickEventListener(EventFunction f){
             super(f);
         }
@@ -255,7 +253,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClientChatEventListener extends EventListener{
-        @ProcedureUsable
+        @ProgramUsable
         public ClientChatEventListener(EventFunction f) {
             super(f);
         }

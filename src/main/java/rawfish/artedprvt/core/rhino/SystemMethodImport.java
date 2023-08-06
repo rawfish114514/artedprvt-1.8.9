@@ -21,7 +21,7 @@ public class SystemMethodImport extends SystemMethod{
             if(name.length()>0) {
                 if(name.charAt(0)=='-'){
                     Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
-                    Class clazz=scriptSystem.importJava(name.substring(1));
+                    Class clazz=scriptSystem.importClass(name.substring(1));
                     scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
                     return null;
                 }

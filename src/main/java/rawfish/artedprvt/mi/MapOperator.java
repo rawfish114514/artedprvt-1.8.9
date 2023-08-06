@@ -3,10 +3,7 @@ package rawfish.artedprvt.mi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
-import rawfish.artedprvt.core.ScriptObject;
-import rawfish.artedprvt.core.ProcedureUsable;
-import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +11,8 @@ import java.util.List;
 /**
  * 地图操作
  */
-@ProcedureUsable
+@SideUsable(Sides.ALL)
+@ProgramUsable
 public class MapOperator implements ScriptObject {
     private ScriptProcess process;
 
@@ -25,7 +23,7 @@ public class MapOperator implements ScriptObject {
 
     public List<MapGraphics> graphicsList;
 
-    @ProcedureUsable
+    @ProgramUsable
     public MapOperator(String side){
         process=up();
         if(side.equals("server")) {
@@ -36,7 +34,7 @@ public class MapOperator implements ScriptObject {
         graphicsList=new ArrayList<>();
     }
 
-    @ProcedureUsable
+    @ProgramUsable
     public MapOperator(World world){
         up();
         this.world=world;
@@ -47,7 +45,7 @@ public class MapOperator implements ScriptObject {
      * 创建并返回{@link MapGraphics}对象
      * @return
      */
-    @ProcedureUsable
+    @ProgramUsable
     public MapGraphics getGraphics(){
         MapGraphics graphics=new MapGraphics(this);
         graphicsList.add(graphics);
@@ -58,7 +56,7 @@ public class MapOperator implements ScriptObject {
      * 计算操作方块数
      * @return
      */
-    @ProcedureUsable
+    @ProgramUsable
     public int getBlockOper(){
         int blockOper=0;
         for(MapGraphics graphics:graphicsList){

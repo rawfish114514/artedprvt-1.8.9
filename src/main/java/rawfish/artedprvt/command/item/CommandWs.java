@@ -23,17 +23,17 @@ public class CommandWs extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getCommandName(),"不能有参数");
+            CommandMessages.exception(getCommandName(),"cms0");
             return;
         }
         String dir= FrameProperties.props.get("frame.dir");
         File artedprvt=new File(dir);
         if(artedprvt.isDirectory()){
-            CommandMessages.exception(getCommandName(),"/artedprvt目录已经存在");
+            CommandMessages.exception(getCommandName(),"cms19");
             return;
         }
         if(!artedprvt.mkdir()){
-            CommandMessages.exception(getCommandName(),"/artedprvt目录创建失败");
+            CommandMessages.exception(getCommandName(),"cms20");
             return;
         }
         //将资源解压到工作目录
@@ -61,7 +61,7 @@ public class CommandWs extends Command {
             reader.close();
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getCommandName(),"资源解压失败");
+            CommandMessages.exception(getCommandName(),"cms21");
             return;
         }
         Set<String> fileNames=files.keySet();
@@ -85,9 +85,9 @@ public class CommandWs extends Command {
             }
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getCommandName(),"资源写入异常");
+            CommandMessages.exception(getCommandName(),"cms22");
         }
-        CommandMessages.key(getCommandName(),"工作空间构建成功");
+        CommandMessages.key(getCommandName(),"cms23");
     }
 
     @Override

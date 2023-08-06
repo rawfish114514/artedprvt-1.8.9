@@ -16,7 +16,6 @@ public class McpToSrgString {
                     str="";
                     return str;
                 }
-                //InputStream input = new FileInputStream(new File("C:\\Users\\Administrator\\.gradle\\caches\\minecraft\\de\\oceanlabs\\mcp\\mcp_stable\\22\\srgs/mcp-srg.srg"));
                 Reader reader = new InputStreamReader(input, StandardCharsets.UTF_8);
                 while (true) {
                     int c = reader.read();
@@ -35,7 +34,7 @@ public class McpToSrgString {
     }
 
     public static String getResourceName(){
-        return "/mapping/mcp_stable22.txt";
+        return "/mapping/mapping_1.8.9.txt";
     }
     public static InputStream getInputStream(){
         return Artedprvt.class.getResourceAsStream(getResourceName());

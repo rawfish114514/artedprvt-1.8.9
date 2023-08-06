@@ -25,7 +25,7 @@ public class CommandPros extends Command {
                 printPro(pro);
             }
             if(n==0){
-                CommandMessages.exception(getCommandName(),"没有进程");
+                CommandMessages.exception(getCommandName(),"cms11");
             }
         }else if(args.size()==1){
             //选择
@@ -42,10 +42,10 @@ public class CommandPros extends Command {
                 }
             }
             if(n==0){
-                CommandMessages.exception(getCommandName(),"找不到和 "+arg+" 相关的进程");
+                CommandMessages.exception(getCommandName(),"cms15",arg);
             }
         }else{
-            CommandMessages.exception(getCommandName(),"只能有最多一个参数");
+            CommandMessages.exception(getCommandName(),"cms16");
         }
     }
 

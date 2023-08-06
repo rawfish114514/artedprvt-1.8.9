@@ -14,25 +14,26 @@ public class MemberMapping {
 
     /**
      * 数据加载期间调用方法
-     * @param mcpName MCP名
-     * @param srgName Srg名
+     *
+     * @param name        名
+     * @param mappingName 映射名
      */
-    public void up(String mcpName,String srgName){
-        String oldValue=nameTable.get(mcpName);
+    public void up(String name, String mappingName){
+        String oldValue=nameTable.get(name);
         if(oldValue==null){
-            nameTable.put(mcpName,srgName);
+            nameTable.put(name, mappingName);
         }else{
             //串联
-            Set<String> srgs=new HashSet<>();
-            String[] srgList=oldValue.split("/");
-            for(int i=0;i<srgList.length;i++){
-                srgs.add(srgList[i]);
+            Set<String> mappingSet=new HashSet<>();
+            String[] mappings=oldValue.split("/");
+            for(int i=0;i<mappings.length;i++){
+                mappingSet.add(mappings[i]);
             }
-            String[] srgList2=srgName.split("/");
-            for(int i=0;i<srgList2.length;i++){
-                srgs.add(srgList2[i]);
+            String[] mappings2= mappingName.split("/");
+            for(int i=0;i<mappings2.length;i++){
+                mappingSet.add(mappings2[i]);
             }
-            nameTable.put(mcpName,String.join("/",srgs));
+            nameTable.put(name,String.join("/",mappingSet));
         }
     }
 
@@ -41,18 +42,19 @@ public class MemberMapping {
      * @param member
      */
     public void up(MemberMapping member){
-        for(String mcpName:member.nameTable.keySet()){
-            up(mcpName,member.get(mcpName));
+        for(String name:member.nameTable.keySet()){
+            up(name,member.get(name));
         }
     }
 
     /**
-     * 获取MCP名对应的Srg名 如果没有则返回"0"
-     * @param mcpName MCP名
-     * @return Srg名|"0"
+     * 获取映射名 如果没有则返回"0"
+     *
+     * @param name 名
+     * @return 映射名|"0"
      */
-    public String get(String mcpName){
-        String srgName=nameTable.get(mcpName);
-        return srgName==null?"0":srgName;
+    public String get(String name){
+        String mappingName=nameTable.get(name);
+        return mappingName==null?"0":mappingName;
     }
 }

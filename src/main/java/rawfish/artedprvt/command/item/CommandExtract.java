@@ -25,35 +25,35 @@ public class CommandExtract extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getCommandName(),"参数不能为空");
+            CommandMessages.exception(getCommandName(),"cms1");
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getCommandName(),"包名格式异常");
+            CommandMessages.exception(getCommandName(),"cms2");
             return;
         }
         File ff=new File(FrameProperties.props().get("frame.dir"));
         if(!ff.isDirectory()){
-            CommandMessages.exception(getCommandName(),"找不到artedprvt目录");
+            CommandMessages.exception(getCommandName(),"cms4");
             return;
         }
         File srcf=new File(FrameProperties.props().get("frame.dir")+"/src");
         srcf.mkdirs();
         List<File> fs=getAllFile(srcf);
         if(fs.size()>0){
-            CommandMessages.exception(getCommandName(),"src目录已有文件");
+            CommandMessages.exception(getCommandName(),"cms8");
             return;
         }
         String fd=FrameProperties.props.get("frame.dir");
         int code=unzip(fd+"/lib/"+pack+".apkg",fd+"/src");
 
         if(code==0){
-            CommandMessages.key(getCommandName(),"提取成功");
+            CommandMessages.key(getCommandName(),"cms9");
         }
         if(code==-1){
-            CommandMessages.exception(getCommandName(),"提取失败");
+            CommandMessages.exception(getCommandName(),"cms10");
         }
     }
 

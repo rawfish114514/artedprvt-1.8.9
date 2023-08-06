@@ -14,11 +14,11 @@ public class CommandAc extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getCommandName(),"不能有参数");
+            CommandMessages.exception(getCommandName(),"cms0");
             return;
         }
         ScriptSystem.B_CHAT=!ScriptSystem.B_CHAT;
-        CommandMessages.key(getCommandName(),"切换chat状态到: "+ScriptSystem.B_CHAT);
+        CommandMessages.key(getCommandName(),"cms12",ScriptSystem.B_CHAT);
     }
 
     @Override
