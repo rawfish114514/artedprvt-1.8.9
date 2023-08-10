@@ -25,7 +25,7 @@ public class CommandPros extends Command {
                 printPro(pro);
             }
             if(n==0){
-                CommandMessages.exception(getCommandName(),"cms11");
+                CommandMessages.exception(getName(),"cms11");
             }
         }else if(args.size()==1){
             //选择
@@ -42,10 +42,10 @@ public class CommandPros extends Command {
                 }
             }
             if(n==0){
-                CommandMessages.exception(getCommandName(),"cms15",arg);
+                CommandMessages.exception(getName(),"cms15",arg);
             }
         }else{
-            CommandMessages.exception(getCommandName(),"cms16");
+            CommandMessages.exception(getName(),"cms16");
         }
     }
 
@@ -64,6 +64,15 @@ public class CommandPros extends Command {
                     s+="pid: "+p.getPid();
                     s+="\n";
                     s+=p.getStatistics();
+                    String c =null;
+                    double cpu=p.getCPU();
+                    if (cpu >= 0) {
+                        c = new DecimalFormat("0.0").format(cpu * 100) + "%";
+                    }
+                    if(c!=null) {
+                        s += "\n";
+                        s += "§fcpu: "+c;
+                    }
                     return s;
                 }
                 if(p.getRet()==ScriptProcess.END){

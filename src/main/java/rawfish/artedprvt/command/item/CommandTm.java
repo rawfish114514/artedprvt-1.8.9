@@ -25,7 +25,7 @@ public class CommandTm extends Command {
     @Override
     public void process(List<String> args) {
         if (args.size() > 0) {
-            CommandMessages.exception(getCommandName(), "cms0");
+            CommandMessages.exception(getName(), "cms0");
             return;
         }
         openWindow();

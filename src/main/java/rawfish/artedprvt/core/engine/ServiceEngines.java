@@ -1,6 +1,5 @@
 package rawfish.artedprvt.core.engine;
 
-import org.checkerframework.framework.qual.DefaultQualifier;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.rhino.ServiceRhinoEngine;
 

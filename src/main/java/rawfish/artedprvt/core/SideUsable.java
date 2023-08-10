@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 这个注解表示这个类可以在客户端或服务端中使用
+ * 杩欎釜娉ㄨВ琛ㄧず杩欎釜绫诲彲浠ュ湪瀹㈡埛绔垨鏈嶅姟绔腑浣跨敤
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

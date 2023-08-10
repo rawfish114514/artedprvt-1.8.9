@@ -33,9 +33,9 @@ public class ProcessController {
     private static ScriptProcess[] processes=new ScriptProcess[256];
 
     /**
-     * 注册进程并获取PID
+     * 娉ㄥ唽杩涚▼骞惰幏鍙朠ID
      * @param process
-     * @return [0,255]注册成功 -1注册失败
+     * @return [0,255]娉ㄥ唽鎴愬姛 -1娉ㄥ唽澶辫触
      */
     public static synchronized int registerProcess(ScriptProcess process){
         for (int i = 0; i < processes.length; i++) {

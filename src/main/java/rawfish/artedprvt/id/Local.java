@@ -1,6 +1,6 @@
 package rawfish.artedprvt.id;
 
-import org.tomlj.Toml;
+import com.moandjiezana.toml.Toml;
 import rawfish.artedprvt.Artedprvt;
 
 import java.io.InputStream;
@@ -57,7 +57,7 @@ public class Local {
     }
 
     private static Map<String,String> parse(String str){
-        Map<String,Object> result= Toml.parse(str).toMap();
+        Map<String,Object> result= new Toml().read(str).toMap();
         Map<String,String> result0 = new HashMap<>();
         for (Map.Entry<String, Object> entry : result.entrySet()) {
             String key = entry.getKey();

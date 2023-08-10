@@ -23,17 +23,17 @@ public class CommandWs extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getCommandName(),"cms0");
+            CommandMessages.exception(getName(),"cms0");
             return;
         }
         String dir= FrameProperties.props.get("frame.dir");
         File artedprvt=new File(dir);
         if(artedprvt.isDirectory()){
-            CommandMessages.exception(getCommandName(),"cms19");
+            CommandMessages.exception(getName(),"cms19");
             return;
         }
         if(!artedprvt.mkdir()){
-            CommandMessages.exception(getCommandName(),"cms20");
+            CommandMessages.exception(getName(),"cms20");
             return;
         }
         //将资源解压到工作目录
@@ -61,7 +61,7 @@ public class CommandWs extends Command {
             reader.close();
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getCommandName(),"cms21");
+            CommandMessages.exception(getName(),"cms21");
             return;
         }
         Set<String> fileNames=files.keySet();
@@ -85,9 +85,9 @@ public class CommandWs extends Command {
             }
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getCommandName(),"cms22");
+            CommandMessages.exception(getName(),"cms22");
         }
-        CommandMessages.key(getCommandName(),"cms23");
+        CommandMessages.key(getName(),"cms23");
     }
 
     @Override

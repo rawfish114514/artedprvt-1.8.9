@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ËùÓĞµÄÀà
+ * æ‰€æœ‰çš„ç±»
  */
 public class ClassGroupMi implements ClassGroup {
     private List<Class> classes;

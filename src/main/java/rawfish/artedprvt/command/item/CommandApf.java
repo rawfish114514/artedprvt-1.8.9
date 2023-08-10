@@ -29,16 +29,16 @@ public class CommandApf extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getCommandName(),"cms1");
+            CommandMessages.exception(getName(),"cms1");
             return;
         }
         for(Command command:commandList){
-            if (command.getCommandName().equals(args.get(0))){
+            if (command.getName().equals(args.get(0))){
                 command.process(args.subList(1,args.size()));
                 return;
             }
         }
-        CommandMessages.exception(getCommandName(),"cms14",args.get(0));
+        CommandMessages.exception(getName(),"cms14",args.get(0));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CommandApf extends Command {
             List<String> cl=new ArrayList<>();
             String name;
             for(Command command:commandList){
-                name=command.getCommandName();
+                name=command.getName();
                 if(name.startsWith(args.get(0))){
                     cl.add(name);
                 }
@@ -57,7 +57,7 @@ public class CommandApf extends Command {
         //补全子命令参数
         Command c=null;
         for(Command command:commandList){
-            if(command.getCommandName().equals(args.get(0))){
+            if(command.getName().equals(args.get(0))){
                 c=command;
             }
         }

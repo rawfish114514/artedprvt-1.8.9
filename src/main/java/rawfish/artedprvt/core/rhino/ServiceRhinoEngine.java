@@ -5,7 +5,6 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.engine.ServiceEngine;
-import scala.util.control.TailCalls;
 
 /**
  * 服务引擎

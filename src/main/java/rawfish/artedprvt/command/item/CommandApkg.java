@@ -33,13 +33,13 @@ public class CommandApkg extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getCommandName(),"cms1");
+            CommandMessages.exception(getName(),"cms1");
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getCommandName(),"cms2");
+            CommandMessages.exception(getName(),"cms2");
             return;
         }
         List<String> scriptArgs=args.subList(1,args.size());
@@ -49,7 +49,7 @@ public class CommandApkg extends Command {
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            CommandMessages.exception(getCommandName(),"cms3",e.getMessage());
+            CommandMessages.exception(getName(),"cms3",e.getMessage());
         }
     }
 

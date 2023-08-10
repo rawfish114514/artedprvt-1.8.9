@@ -3,8 +3,6 @@ package rawfish.artedprvt.command;
 import rawfish.artedprvt.id.Local;
 import rawfish.artedprvt.mi.PrintChat;
 
-import java.util.Arrays;
-
 public class CommandMessages {
     public static PrintChat printChat=new PrintChat();
     public static void exception(String source,String str,Object... args){

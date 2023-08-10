@@ -24,7 +24,7 @@ public class CommandStops extends Command {
                 pro.stop(ScriptProcess.STOPS);
             }
             if(n==0){
-                CommandMessages.exception(getCommandName(),"cms18");
+                CommandMessages.exception(getName(),"cms18");
             }
         }else if(args.size()==1){
             //选择
@@ -43,10 +43,10 @@ public class CommandStops extends Command {
                 }
             }
             if(n==0){
-                CommandMessages.exception(getCommandName(),"cms15",arg);
+                CommandMessages.exception(getName(),"cms15",arg);
             }
         }else{
-            CommandMessages.exception(getCommandName(),"cms16");
+            CommandMessages.exception(getName(),"cms16");
         }
     }
 

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * ¿ÉÔÚ¿Í»§¶ËµÄÀà
+ * å¯åœ¨å®¢æˆ·ç«¯çš„ç±»
  */
 public class ClassGroupMiClient implements ClassGroup  {
     private List<Class> classes;
