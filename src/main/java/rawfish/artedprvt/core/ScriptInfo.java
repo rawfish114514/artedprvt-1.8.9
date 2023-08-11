@@ -1,7 +1,7 @@
 package rawfish.artedprvt.core;
 
 
-import com.moandjiezana.toml.Toml;
+import com.electronwill.toml.Toml;
 
 import java.util.Map;
 
@@ -82,7 +82,7 @@ public class ScriptInfo {
      */
     public static ScriptInfo parse(String str){
         ScriptInfo scriptInfo=null;
-        Map<String,Object> result=new Toml().read(str).toMap();
+        Map<String,Object> result=Toml.read(str);
         Object infoVersion=result.get("info");
         if(infoVersion==null){
             infoVersion="1";
