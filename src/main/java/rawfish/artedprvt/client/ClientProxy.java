@@ -27,8 +27,6 @@ public class ClientProxy extends CommonProxy
         super.init(event);
 
         new CommandLoader(ClientCommandHandler.instance);
-        ClassCollection.load(McpToSrgString.getMcpToSrgString());
-        Local.load();
     }
 
     @Override

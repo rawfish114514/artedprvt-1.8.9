@@ -25,6 +25,8 @@ public class CommonProxy
         ServiceEngines.init();
         ProcessController.init();
         ClassGroupLoader.reg();
+        ClassCollection.load(McpToSrgString.getMcpToSrgString());
+        Local.load();
     }
 
     public void postInit(FMLPostInitializationEvent event)
@@ -35,7 +37,5 @@ public class CommonProxy
     public void serverStarting(FMLServerStartingEvent event)
     {
         new CommandLoader(event);
-        ClassCollection.load(McpToSrgString.getMcpToSrgString());
-        Local.load();
     }
 }
