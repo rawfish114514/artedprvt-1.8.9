@@ -3,6 +3,9 @@ package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.mapping.ClassRegisterer;
 import org.mozilla.javascript.mapping.MemberMapping;
+import rawfish.artedprvt.core.ClassGroup;
+import rawfish.artedprvt.mi.group.ClassGroupLoader;
+import rawfish.artedprvt.mi.group.ClassGroupMi;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -64,6 +67,8 @@ public class ClassCollection {
 
 
         }
+
+        addClassGroup(new ClassGroupMi());
         putExtend();
         /*
         for(ClassMember m:classMap.values()){
@@ -150,5 +155,11 @@ public class ClassCollection {
             }
         }
         return cl;
+    }
+
+    public static void addClassGroup(ClassGroup group){
+        for(Class clas:group.getClasses()){
+            classMap.put(clas.getName(),new MemberMapping());
+        }
     }
 }
