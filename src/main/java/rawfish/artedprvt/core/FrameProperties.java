@@ -9,11 +9,8 @@ public class FrameProperties {
     }
 
     public static Map<String,String> props;
-    static {
-        upData();
-    }
 
-    public static void upData(){
+    public static void init(){
         Map<String,String> props=new HashMap<String,String>();
         props.put("frame.modid","artedprvt");
         props.put("frame.name","Artedprvt Frame");

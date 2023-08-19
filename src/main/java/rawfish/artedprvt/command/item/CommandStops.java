@@ -7,6 +7,9 @@ import rawfish.artedprvt.core.ScriptProcess;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 停止脚本进程
+ */
 public class CommandStops extends Command {
     public CommandStops(String commandName) {
         super(commandName);
@@ -84,6 +87,6 @@ public class CommandStops extends Command {
             }
             return l;
         }
-        return nullTab;
+        return getNullTab();
     }
 }

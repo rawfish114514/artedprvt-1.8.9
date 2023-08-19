@@ -86,7 +86,7 @@ public class ScriptProcess {
         scriptLoader=new ScriptLoader(fileLoader);
         this.scriptArgument=scriptArgument;
 
-        String apkginfo=fileLoader.getString("apkg.info");
+        String apkginfo=fileLoader.getContent("apkg.info");
         scriptInfo=ScriptInfo.parse(apkginfo);
         ScriptInfo.inspect(scriptInfo);
 

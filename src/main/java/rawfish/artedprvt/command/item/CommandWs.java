@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * 构建工作空间
+ */
 public class CommandWs extends Command {
     public CommandWs(String commandName) {
         super(commandName);
@@ -92,6 +95,6 @@ public class CommandWs extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return nullTab;
+        return getNullTab();
     }
 }

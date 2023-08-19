@@ -6,6 +6,9 @@ import rawfish.artedprvt.core.ScriptSystem;
 
 import java.util.List;
 
+/**
+ * 切换CHAT状态 true/false
+ */
 public class CommandAc extends Command {
     public CommandAc(String commandName) {
         super(commandName);
@@ -23,6 +26,6 @@ public class CommandAc extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return nullTab;
+        return getNullTab();
     }
 }

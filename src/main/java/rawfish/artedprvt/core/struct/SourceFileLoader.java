@@ -2,6 +2,9 @@ package rawfish.artedprvt.core.struct;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 源文件加载器
@@ -12,8 +15,8 @@ public class SourceFileLoader implements FileLoader {
         this.dir=dir;
     }
     @Override
-    public String getString(String appendable) {
-        File file=new File(dir+"/"+appendable);
+    public String getContent(String path) {
+        File file=new File(dir+"/"+ path);
         if(!file.isFile()){
             return null;
         }
@@ -38,8 +41,8 @@ public class SourceFileLoader implements FileLoader {
     }
 
     @Override
-    public InputStream getInputStream(String appendable) {
-        File file=new File(dir+"/"+appendable);
+    public InputStream getInputStream(String path) {
+        File file=new File(dir+"/"+ path);
         if(!file.isFile()){
             return null;
         }
@@ -48,5 +51,39 @@ public class SourceFileLoader implements FileLoader {
         }catch (IOException e){
             return null;
         }
+    }
+
+    @Override
+    public boolean isExists(String path) {
+        File file=new File(dir+"/"+ path);
+        return file.exists();
+    }
+
+    @Override
+    public List<String> getPaths() {
+        File directory=new File(dir+"/");
+        List<File> fileList=getAllFile(directory);
+        List<String> stringList=new ArrayList<>();
+        for(File file:fileList){
+            stringList.add(dediff(file.getPath()));
+        }
+        return stringList;
+    }
+
+    public List<File> getAllFile(File file){
+        List<File> fileList=new ArrayList<>();
+        File[] files=file.listFiles();
+        for(File f:files){
+            if(f.isDirectory()){
+                fileList.addAll(getAllFile(f));
+            }else{
+                fileList.add(f);
+            }
+        }
+        return fileList;
+    }
+
+    public String dediff(String s){
+        return s.replace("\\","/");
     }
 }

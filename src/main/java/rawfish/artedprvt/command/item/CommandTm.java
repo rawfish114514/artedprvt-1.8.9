@@ -4,7 +4,7 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.CommandMessages;
 import rawfish.artedprvt.core.ProcessController;
 import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.id.Local;
+import rawfish.artedprvt.core.Localization;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 打开任务管理器
+ */
 public class CommandTm extends Command {
     public CommandTm(String commandName) {
         super(commandName);
@@ -90,12 +93,12 @@ public class CommandTm extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return nullTab;
+        return getNullTab();
     }
 
     static class Translate {
         public static String get(String key, Object... args) {
-            return Local.getTranslate(key, args);
+            return Localization.getTranslate(key, args);
         }
     }
 

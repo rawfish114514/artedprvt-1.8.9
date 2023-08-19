@@ -3,6 +3,7 @@ package rawfish.artedprvt.core.rhino;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Wrapper;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.engine.ServiceEngine;
 
@@ -27,5 +28,13 @@ public class ServiceRhinoEngine implements ServiceEngine {
         rhino.evaluateString(scope,code,"service",1,null);
         Object f=scope.get(func);
         return ((Function) f).call(rhino,scope,scope,args);
+    }
+
+    @Override
+    public Object unwrap(Object obj) {
+        if(obj instanceof Wrapper){
+            obj=((Wrapper)obj).unwrap();
+        }
+        return obj;
     }
 }

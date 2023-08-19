@@ -26,6 +26,9 @@ public class ClassGroupMi implements ClassGroup {
         add(TagBuilder.class);
         add(TagBuilder.ListTagBuilder.class);
         add(TagBuilder.CompoundTagBuilder.class);
+
+        add(Particle.class);
+        add(EffectSpawn.class);
         return classes();
     }
     

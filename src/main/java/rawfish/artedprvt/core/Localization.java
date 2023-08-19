@@ -1,4 +1,4 @@
-package rawfish.artedprvt.id;
+package rawfish.artedprvt.core;
 
 import com.electronwill.toml.Toml;
 import rawfish.artedprvt.Artedprvt;
@@ -11,8 +11,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Local {
-    private static String language="zh_cn";
+public class Localization {
+    private static String language;
     private static String lastLanguage="";
 
     public static String getLanguage(){
@@ -24,6 +24,7 @@ public class Local {
     }
 
     public static synchronized void load(){
+        language=String.valueOf(FrameConfig.config.get("language"));
         if(isChange()){
             translation=new HashMap<>();
             try {
@@ -51,6 +52,7 @@ public class Local {
                 }
             }catch (Exception e){
                 e.printStackTrace(System.err);
+
             }
         }
         lastLanguage=language;

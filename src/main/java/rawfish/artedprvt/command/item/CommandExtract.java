@@ -16,6 +16,9 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * 将apkg文件内容提取到src目录
+ */
 public class CommandExtract extends Command {
     public Pattern packPattern=Pattern.compile("(([^\\/]+\\/)*)([^\\/]+)");
     public CommandExtract(String commandName) {
@@ -72,7 +75,7 @@ public class CommandExtract extends Command {
             opt.sort(Comparator.comparingInt(String::length));
             return opt;
         }
-        return nullTab;
+        return getNullTab();
     }
 
     public List<String> pack(File dir,String p){

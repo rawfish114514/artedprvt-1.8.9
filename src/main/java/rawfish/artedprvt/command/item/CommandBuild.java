@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 将src目录的文件构建为apkg
+ */
 public class CommandBuild extends Command {
     public CommandBuild(String commandName) {
         super(commandName);
@@ -35,7 +38,7 @@ public class CommandBuild extends Command {
         ScriptInfo scriptInfo;
         try {
             FileLoader fileLoader = new SourceFileLoader(FrameProperties.props().get("frame.dir") + "/src");
-            String apkginfo = fileLoader.getString("apkg.info");
+            String apkginfo = fileLoader.getContent("apkg.info");
             scriptInfo = ScriptInfo.parse(apkginfo);
             ScriptInfo.inspect(scriptInfo);
         }catch (Exception e){
@@ -47,16 +50,16 @@ public class CommandBuild extends Command {
         int code=zip(fd+"/src",fd+"/lib/"+name+".apkg");
 
         if(code==0){
-            CommandMessages.key(getName(),"cms5");
+            CommandMessages.key(getName(),"cms6");
         }
         if(code==-1){
-            CommandMessages.exception(getName(),"cms6");
+            CommandMessages.exception(getName(),"cms7");
         }
     }
 
     @Override
     public List<String> complete(List<String> args) {
-        return nullTab;
+        return getNullTab();
     }
 
     public int zip(String target,String out){

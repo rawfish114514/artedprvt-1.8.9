@@ -13,13 +13,13 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 从src目录创建脚本进程
+ */
 public class CommandScript extends Command {
     public Pattern packPattern=Pattern.compile("([a-z]+:|)(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
 
@@ -68,7 +68,7 @@ public class CommandScript extends Command {
             /*补全脚本参数*/
             return scriptComplete(args.subList(1,args.size()));
         }
-        return nullTab;
+        return getNullTab();
     }
 
     public List<String> pack(File dir,String p){
@@ -134,19 +134,22 @@ public class CommandScript extends Command {
             ServiceEngine engine= ServiceEngines.getService(abbr);
             if(engine!=null){
                 try {
-                    Object result=engine.call(code, "complete", args);
-                    List rl=(List)result;
-                    List<String> stringList=new ArrayList<>();
-                    for(int i=0;i<rl.size();i++){
-                        stringList.add(rl.get(i).toString());
+                    Object result=engine.unwrap(engine.call(code, "complete", args));
+                    if(result instanceof Collection){
+                        List<String> stringList=new ArrayList<>();
+                        for(Object obj:(Collection)result){
+                            stringList.add(String.valueOf(obj));
+                        }
+                        return stringList;
+                    }else{
+                        return getNullTab();
                     }
-                    return stringList;
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return nullTab;
+        return getNullTab();
     }
 
     public String readCompleteFile(String abbr) throws Exception{

@@ -1,6 +1,6 @@
 package rawfish.artedprvt.command;
 
-import rawfish.artedprvt.id.Local;
+import rawfish.artedprvt.core.Localization;
 import rawfish.artedprvt.mi.PrintChat;
 
 public class CommandMessages {
@@ -14,6 +14,6 @@ public class CommandMessages {
     }
 
     private static String translate(String str,Object... args){
-        return Local.getTranslate(str, args);
+        return Localization.getTranslate(str, args);
     }
 }

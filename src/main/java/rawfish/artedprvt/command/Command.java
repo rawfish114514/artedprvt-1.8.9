@@ -10,14 +10,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 命令
+ * 对实现类来说应该只有process,complete,getName,getNullTab方法是可见的
+ * 否则会影响跨版本性
+ */
 public abstract class Command extends CommandBase {
+
     public abstract void process(List<String> args);
+
     public abstract List<String> complete(List<String> args);
+
+    public String commandName;
+
     public String getName(){
         return commandName;
     }
-    public String commandName;
 
+    private static final List<String> nullTab=new ArrayList<>();
+
+    public static List<String> getNullTab() {
+        return nullTab;
+    }
 
     public Command(String commandName){
         this.commandName=commandName;
@@ -33,7 +47,6 @@ public abstract class Command extends CommandBase {
         return "commands."+commandName+".usage";
     }
 
-    public static final List<String> nullTab=new ArrayList<>();
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
@@ -51,7 +64,7 @@ public abstract class Command extends CommandBase {
         if(!(sender.getEntityWorld() instanceof WorldServer)){
             return complete(Arrays.asList(args));
         }
-        return nullTab;
+        return getNullTab();
     }
 
     @Override

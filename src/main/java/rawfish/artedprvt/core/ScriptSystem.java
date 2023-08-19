@@ -276,7 +276,7 @@ public class ScriptSystem {
      * @return
      */
     public String getFile(String path){
-        return fileLoader.getString(path);
+        return fileLoader.getContent(path);
     }
 
     /**

@@ -82,7 +82,7 @@ public class ScriptLoader {
                         }else{
                             path="script/"+packagee.replace('.','/')+"/"+module+"."+abbr;
                         }
-                        String source=fileLoader.getString(path);
+                        String source=fileLoader.getContent(path);
                         if(source!=null){
                             scriptModule=new ScriptModule(scriptPackage,module,source,scriptLanguage);
                             moduleMap.put(newModuleFullName,scriptModule);
@@ -105,7 +105,7 @@ public class ScriptLoader {
                         }else{
                             path="script/"+packagee.replace('.','/')+"/"+module+"."+abbr;
                         }
-                        String source=fileLoader.getString(path);
+                        String source=fileLoader.getContent(path);
                         if(source==null){
                             ScriptExceptions.exceptionNoFoundModule(path);
                         }

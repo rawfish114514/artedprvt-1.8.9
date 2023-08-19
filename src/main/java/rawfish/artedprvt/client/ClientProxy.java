@@ -7,11 +7,6 @@ import rawfish.artedprvt.common.CommonProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import rawfish.artedprvt.core.ClassGroupSystem;
-import rawfish.artedprvt.core.rhino.ClassCollection;
-import rawfish.artedprvt.core.rhino.McpToSrgString;
-import rawfish.artedprvt.id.Local;
-import rawfish.artedprvt.mi.group.ClassGroupMi;
 
 public class ClientProxy extends CommonProxy
 {

@@ -6,6 +6,9 @@ import rawfish.artedprvt.command.CommandMessages;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 从src目录创建脚本进程并指定main模块
+ */
 public class CommandStt extends Command {
     public CommandScript commandScript;
     public CommandStt(String commandName) {
@@ -24,6 +27,6 @@ public class CommandStt extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return nullTab;
+        return getNullTab();
     }
 }

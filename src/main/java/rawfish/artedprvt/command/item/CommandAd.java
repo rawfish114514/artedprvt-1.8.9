@@ -6,6 +6,9 @@ import rawfish.artedprvt.core.ScriptSystem;
 
 import java.util.List;
 
+/**
+ * 切换DEBUG状态 true/false
+ */
 public class CommandAd extends Command {
     public CommandAd(String commandName) {
         super(commandName);
@@ -23,6 +26,6 @@ public class CommandAd extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return nullTab;
+        return getNullTab();
     }
 }

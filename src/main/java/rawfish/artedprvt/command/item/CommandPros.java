@@ -9,6 +9,9 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 展示脚本进程信息
+ */
 public class CommandPros extends Command {
     public CommandPros(String commandName) {
         super(commandName);
@@ -117,6 +120,6 @@ public class CommandPros extends Command {
             }
             return l;
         }
-        return nullTab;
+        return getNullTab();
     }
 }

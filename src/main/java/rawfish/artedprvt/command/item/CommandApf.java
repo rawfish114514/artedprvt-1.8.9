@@ -6,6 +6,9 @@ import rawfish.artedprvt.command.CommandMessages;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 可执行所有这个模组定义的命令 防止命名冲突
+ */
 public class CommandApf extends Command {
     public List<Command> commandList;
     public CommandApf(String commandName) {
@@ -14,10 +17,12 @@ public class CommandApf extends Command {
 
         commandList.add(new CommandAc("ac"));
         commandList.add(new CommandAd("ad"));
-        commandList.add(new CommandBuild("build"));
-        commandList.add(new CommandExtract("extract"));
         commandList.add(new CommandApkg("apkg"));
+        commandList.add(new CommandBuild("build"));
+        commandList.add(new CommandConfig("config"));
+        commandList.add(new CommandExtract("extract"));
         commandList.add(new CommandIn("in"));
+        commandList.add(new CommandInstall("install"));
         commandList.add(new CommandPros("pros"));
         commandList.add(new CommandScript("script"));
         commandList.add(new CommandStops("stops"));
@@ -62,7 +67,7 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return nullTab;
+            return getNullTab();
         }
         return c.complete(args.subList(1,args.size()));
     }

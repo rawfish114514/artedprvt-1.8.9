@@ -1,11 +1,11 @@
 package rawfish.artedprvt.core.struct;
 
-import org.apache.http.util.ByteArrayBuffer;
-
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -15,10 +15,10 @@ import java.util.zip.ZipInputStream;
  */
 public class ApkgFileLoader implements FileLoader {
     public String apkg;
-    public Map<String,byte[]> pkgs;
+    public Map<String,byte[]> map;
     public ApkgFileLoader(String apkg) throws Exception{
         this.apkg=apkg;
-        pkgs=new HashMap<>();
+        map =new HashMap<>();
         ZipInputStream zip = new ZipInputStream(
                 new FileInputStream(apkg),
                 Charset.forName("cp437"));
@@ -31,14 +31,14 @@ public class ApkgFileLoader implements FileLoader {
                 while ((n = zip.read()) != -1) {
                     outputStream.write(n);
                 }
-                pkgs.put(dediff(entry.getName()),outputStream.toByteArray());
+                map.put(dediff(entry.getName()),outputStream.toByteArray());
             }
         }
         zip.close();
     }
     @Override
-    public String getString(String appendable) {
-        byte[] bs=pkgs.get(appendable);
+    public String getContent(String path) {
+        byte[] bs= map.get(path);
         if(bs==null){
             return null;
         }
@@ -46,12 +46,22 @@ public class ApkgFileLoader implements FileLoader {
     }
 
     @Override
-    public InputStream getInputStream(String appendable) {
-        byte[] bs=pkgs.get(appendable);
+    public InputStream getInputStream(String path) {
+        byte[] bs= map.get(path);
         if(bs==null){
             return null;
         }
         return new ByteArrayInputStream(bs);
+    }
+
+    @Override
+    public boolean isExists(String path) {
+        return map.containsKey(path);
+    }
+
+    @Override
+    public List<String> getPaths() {
+        return new ArrayList<>(map.keySet());
     }
 
     public String dediff(String s){

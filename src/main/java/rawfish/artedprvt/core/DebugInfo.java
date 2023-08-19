@@ -8,12 +8,13 @@ import java.util.List;
  * 显示到游戏调试界面
  */
 public class DebugInfo {
+    public static String version=FrameProperties.props().get("frame.version");
     public static List<String> call(boolean isf3){
         if(isf3) {
             List<String> list = new ArrayList<>();
 
             list.add("");
-            list.add("§cArted§bprvt §f1.2");
+            list.add("§cArted§bprvt §f"+version);
             list.add("A: " + ScriptSystem.B_CHAT + "  D: " + ScriptSystem.B_DEBUG);
             List<ScriptProcess> proList = ScriptProcess.getProList();
             ScriptProcess pro;

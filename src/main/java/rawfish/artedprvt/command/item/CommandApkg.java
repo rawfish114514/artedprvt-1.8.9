@@ -14,15 +14,15 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * 从apkg文件创建脚本进程
+ */
 public class CommandApkg extends Command {
     public Pattern packPattern=Pattern.compile("(([^\\/]+\\/)*)([^\\/]+)");
 
@@ -71,7 +71,7 @@ public class CommandApkg extends Command {
             /*补全脚本参数*/
             return scriptComplete(args.get(0),args.subList(1,args.size()));
         }
-        return nullTab;
+        return getNullTab();
     }
 
     public List<String> pack(File dir,String p){
@@ -130,19 +130,22 @@ public class CommandApkg extends Command {
             ServiceEngine engine= ServiceEngines.getService(abbr);
             if(engine!=null){
                 try {
-                    Object result=engine.call(code, "complete", args);
-                    List rl=(List)result;
-                    List<String> stringList=new ArrayList<>();
-                    for(int i=0;i<rl.size();i++){
-                        stringList.add(rl.get(i).toString());
+                    Object result=engine.unwrap(engine.call(code, "complete", args));
+                    if(result instanceof Collection){
+                        List<String> stringList=new ArrayList<>();
+                        for(Object obj:(Collection)result){
+                            stringList.add(String.valueOf(obj));
+                        }
+                        return stringList;
+                    }else{
+                        return getNullTab();
                     }
-                    return stringList;
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return nullTab;
+        return getNullTab();
     }
 
     public String readCompleteFile(String pack,String abbr) throws Exception{
