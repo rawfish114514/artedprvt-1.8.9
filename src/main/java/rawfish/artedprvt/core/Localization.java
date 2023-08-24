@@ -24,7 +24,7 @@ public class Localization {
     }
 
     public static synchronized void load(){
-        language=String.valueOf(FrameConfig.config.get("language"));
+        language=String.valueOf(FrameOptions.options.get("language"));
         if(isChange()){
             translation=new HashMap<>();
             try {

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FrameConfig {
-    public static Map<String, Object> config;
+public class FrameOptions {
+    public static Map<String, Object> options;
 
     public static List<String> keyList=new ArrayList<String>(){{
         add("language");
@@ -38,15 +38,15 @@ public class FrameConfig {
     }
 
     public static void setValue(String key,Object value){
-        config.put(key,value);
+        options.put(key,value);
     }
 
     public static Object getValue(String key){
-        return config.get(key);
+        return options.get(key);
     }
     public static synchronized void load(){
         try {
-            if(new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/config.toml").isFile()){
+            if(new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml").isFile()){
                 //从文件加载配置
                 loadFromFile();
             }else{
@@ -62,14 +62,14 @@ public class FrameConfig {
         }catch (Exception e){
             e.printStackTrace(System.out);
         }
-        config.forEach((k,v)->{if(!keyList.contains(k))config.remove(k);});
+        options.forEach((k, v)->{if(!keyList.contains(k)) options.remove(k);});
         Localization.load();
     }
 
     public static void updateFile() throws Exception{
-        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/config.toml");
+        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml");
         if(file.isFile()){
-            String string=Toml.writeToString(config);
+            String string=Toml.writeToString(options);
             Writer writer=new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
             writer.write(string);
             writer.flush();
@@ -78,29 +78,29 @@ public class FrameConfig {
     }
 
     public static void loadDefault(){
-        config=new HashMap<>();
-        config.put("language","zh_cn");
-        config.put("repository","gitee");
+        options =new HashMap<>();
+        options.put("language","zh_cn");
+        options.put("repository","gitee");
     }
 
     public static void loadFromFile() throws Exception{
-        config=new HashMap<>();
-        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/config.toml");
+        options =new HashMap<>();
+        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml");
         Reader reader=new InputStreamReader(new FileInputStream(file));
         StringBuilder sb=new StringBuilder();
         int n;
         while((n=reader.read())!=-1){
             sb.append((char)n);
         }
-        config.putAll(Toml.read(sb.toString()));
+        options.putAll(Toml.read(sb.toString()));
     }
 
     public static void writeToFile() throws Exception{
-        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/config.toml");
+        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml");
         if(!file.isFile()){
             file.createNewFile();
         }
-        String string=Toml.writeToString(config);
+        String string=Toml.writeToString(options);
         Writer writer=new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
         writer.write(string);
         writer.flush();
