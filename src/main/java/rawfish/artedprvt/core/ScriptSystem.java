@@ -162,11 +162,11 @@ public class ScriptSystem {
 
     /**
      * 导入模块
-     * @param moduleName 模块名
+     * @param moduleFullName 模块完整名 abbr?:package.module
      * @return
      */
-    public Object importModule(String moduleName){
-        return importModule(process.getScriptLoader().loadModule(moduleName));
+    public Object importModule(String moduleFullName){
+        return importModule(process.getScriptLoader().getModule(moduleFullName));
     }
 
     /**
@@ -175,6 +175,15 @@ public class ScriptSystem {
      * @return
      */
     public Object importModule(ScriptModule scriptModule){
+        executeModule(scriptModule);
+        return scriptModule.getExport();
+    }
+
+    /**
+     *
+     * @param scriptModule 模块
+     */
+    private void executeModule(ScriptModule scriptModule){
         List<ScriptEngine> engines=process.getEngines();
         int s=0;
         ScriptEngine scriptEngine;
@@ -190,10 +199,9 @@ public class ScriptSystem {
                 }
             }
             if (s == 0) {
-                throw new RuntimeException("找不到合适的引擎: " + scriptModule.getModuleFullName());
+                ScriptExceptions.exception("ses9",scriptModule.getModuleName());
             }
         }
-        return scriptModule.getExport();
     }
 
     /**
@@ -219,7 +227,8 @@ public class ScriptSystem {
         if(classes!=null){
             return classes;
         }
-        throw new RuntimeException("未定义的组: "+groupName);
+        ScriptExceptions.exception("ses10",groupName);
+        return null;
     }
 
     /**
@@ -228,7 +237,7 @@ public class ScriptSystem {
      * @param export 导出对象
      */
     public void exportModule(String moduleName,Object export){
-        exportModule(process.getScriptLoader().loadModule(moduleName),export);
+        exportModule(process.getScriptLoader().getModule(moduleName),export);
     }
 
     /**

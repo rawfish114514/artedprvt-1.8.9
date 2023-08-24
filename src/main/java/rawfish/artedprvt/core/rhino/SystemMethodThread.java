@@ -19,7 +19,7 @@ public class SystemMethodThread extends SystemMethod{
                 return scriptSystem.createThread(new RunnableFunction(function));
             }
         }
-        ScriptExceptions.exceptionSystemMethodInvoke(this);
+        ScriptExceptions.exception("ses0",this.getName());
         return null;
     }
 

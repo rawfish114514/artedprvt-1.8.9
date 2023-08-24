@@ -2,7 +2,7 @@ package rawfish.artedprvt.core.struct;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,10 +62,11 @@ public class SourceFileLoader implements FileLoader {
     @Override
     public List<String> getPaths() {
         File directory=new File(dir+"/");
+        Path path=directory.toPath();
         List<File> fileList=getAllFile(directory);
         List<String> stringList=new ArrayList<>();
         for(File file:fileList){
-            stringList.add(dediff(file.getPath()));
+            stringList.add(dediff(path.relativize(file.toPath()).toString()));
         }
         return stringList;
     }

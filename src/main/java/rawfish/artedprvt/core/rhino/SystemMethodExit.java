@@ -16,10 +16,10 @@ public class SystemMethodExit extends SystemMethod{
                 scriptSystem.exit(((Number) args[0]).intValue());
                 return null;
             }else{
-                ScriptExceptions.exceptionSystemMethodInvoke(this);
+                ScriptExceptions.exception("ses0",this.getName());
             }
         }
-        ScriptExceptions.exceptionSystemMethodInvoke(this);
+        ScriptExceptions.exception("ses0",this.getName());
         return null;
     }
 }

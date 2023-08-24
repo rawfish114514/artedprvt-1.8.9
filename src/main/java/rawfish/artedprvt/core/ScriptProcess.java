@@ -173,8 +173,15 @@ public class ScriptProcess {
      */
     public void begin(){
         ret=BEGIN;//进程准备 正常退出
-        time=System.currentTimeMillis();
+        setCurrentTime();
         printStart();
+    }
+
+    /**
+     * 设置开始时间
+     */
+    public void setCurrentTime(){
+        time=System.currentTimeMillis();
     }
 
     /**

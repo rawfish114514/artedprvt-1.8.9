@@ -15,120 +15,153 @@ import java.util.regex.Pattern;
  */
 public class ScriptLoader {
     private static Pattern moduleFullNamePattern=Pattern.compile("([a-z]+:|)(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
+    private static Pattern packageNamePattern=Pattern.compile("([a-zA-Z_][0-9a-zA-Z_]*\\.)*([a-zA-Z_][0-9a-zA-Z_]*)");
+    private static Pattern moduleNamePattern=Pattern.compile("[a-zA-Z_][0-9a-zA-Z_]*");
+
     private static List<String> packageIgnore=new ArrayList<String>(){{
         add("default");
     }};
     private FileLoader fileLoader;
     private Map<String, ScriptPackage> packageMap;
-    private Map<String,ScriptModule> moduleMap;
     public ScriptLoader(FileLoader fileLoader){
         this.fileLoader=fileLoader;
         packageMap=new HashMap<>();
-        moduleMap=new HashMap<>();
+    }
+
+    public synchronized void loadAll(){
+        List<String> paths=fileLoader.getPaths();
+        for(String path:paths){
+            if(path.startsWith("script/")){
+                String sp=path.substring(7).replace('/','.');
+                int lastIndexOf=sp.lastIndexOf('.');
+                String abbr=sp.substring(lastIndexOf+1);
+                if(lastIndexOf==-1){
+                    abbr="?";
+                }
+                ScriptLanguage scriptLanguage=existScriptLanguage(abbr,sp);
+
+                String packageAndModule=sp.substring(0,lastIndexOf);
+                lastIndexOf=packageAndModule.lastIndexOf('.');
+                String pack;
+                String module;
+                if(lastIndexOf==-1){
+                    pack="default";
+                    module=packageAndModule;
+                }else{
+                    pack=packageAndModule.substring(0,lastIndexOf);
+                    module=packageAndModule.substring(lastIndexOf+1);
+                    matcherPackageName(pack);
+                    inspectPackageIgnore(pack);
+                }
+                matcherModuleName(module);
+
+                ScriptPackage scriptPackage=packageMap.get(pack);
+                if(scriptPackage==null){
+                    scriptPackage=new ScriptPackage(pack);
+                    packageMap.put(pack,scriptPackage);
+                }
+
+                ScriptModule scriptModule=new ScriptModule(
+                        scriptPackage,
+                        module,
+                        fileLoader.getContent(path),
+                        scriptLanguage);
+
+                scriptPackage.add(scriptModule);
+            }
+        }
     }
 
     /**
-     * 加载模块
-     * a/b/c.js文件的模块名可以用以下格式
-     * "js:a.b.c"
-     * "a.b.c"
-     * 其中冒号前的js是脚本语言缩写 一般是脚本文件后缀
-     * 如果省略模块类型 则自动匹配
-     * 冒号后的最后一个点之前的部分是包名 这里是"a.b"
-     * 最后一个点后的部分是短模块名 这里是"c"
-     *
-     * 这个方法自动注册包和模块 并返回模块的唯一实例
-     * @param moduleFullName 模块完整名
+     * 获取模块
+     * @param moduleFullName 模块完整名 abbr?:package.module
      * @return
      */
-    public ScriptModule loadModule(String moduleFullName){
-        Matcher matcher= moduleFullNamePattern.matcher(moduleFullName);
-        if(matcher.matches()){
-            String abbr=matcher.group(1);
-            String packagee=matcher.group(2);
-            String module=matcher.group(4);
-            if(!packagee.equals("")){
-                packagee=packagee.substring(0,packagee.length()-1);
-            }
-            ScriptPackage scriptPackage=packageMap.get(packagee);
-            if(scriptPackage==null){
-                String item0;
-                int ind=packagee.indexOf(".");
-                if(ind==-1){
-                    item0=packagee;
-                }else{
-                    item0=packagee.substring(0,ind);
-                }
-                if(packageIgnore.contains(item0)){
-                    ScriptExceptions.exceptionUseIgnorePackageName(packagee);
-                }
-                scriptPackage=new ScriptPackage(packagee);
-                packageMap.put(packagee,scriptPackage);
-            }
-            ScriptModule scriptModule;
-            if(abbr.equals("")){
-                //自动加载
-                ScriptLanguage scriptLanguage;
-                ScriptLanguage[] values=ScriptLanguage.values();
-                for(int i=0;i<values.length;i++){
-                    scriptLanguage=values[i];
-                    abbr=scriptLanguage.getAbbr();
-                    String newModuleFullName=abbr+":"+moduleFullName;
-                    scriptModule=moduleMap.get(newModuleFullName);
-                    if(scriptModule==null){
-                        String path;
-                        if(packagee.equals("")){
-                            path="script/"+module+"."+abbr;
-                        }else{
-                            path="script/"+packagee.replace('.','/')+"/"+module+"."+abbr;
-                        }
-                        String source=fileLoader.getContent(path);
-                        if(source!=null){
-                            scriptModule=new ScriptModule(scriptPackage,module,source,scriptLanguage);
-                            moduleMap.put(newModuleFullName,scriptModule);
-                            return scriptModule;
-                        }
-                    }else{
-                        return scriptModule;
-                    }
-                }
-            }else{
-                //指定加载
-                abbr=abbr.substring(0,abbr.length()-1);
-                ScriptLanguage scriptLanguage=ScriptLanguage.abbrOf(abbr);
-                if(scriptLanguage!=null){
-                    scriptModule=moduleMap.get(moduleFullName);
-                    if(scriptModule==null){
-                        String path;
-                        if(packagee.equals("")){
-                            path="script/"+module+"."+abbr;
-                        }else{
-                            path="script/"+packagee.replace('.','/')+"/"+module+"."+abbr;
-                        }
-                        String source=fileLoader.getContent(path);
-                        if(source==null){
-                            ScriptExceptions.exceptionNoFoundModule(path);
-                        }
-                        scriptModule=new ScriptModule(scriptPackage,module,source,scriptLanguage);
-                        moduleMap.put(moduleFullName,scriptModule);
-                    }
+    public synchronized ScriptModule getModule(String moduleFullName){
+        Matcher matcher=matcherModuleFullName(moduleFullName);
+        String abbr=matcher.group(1);
+        String pack=matcher.group(2);
+        String module=matcher.group(4);
+        if(!pack.equals("")){
+            pack=pack.substring(0,pack.length()-1);
+            inspectPackageIgnore(pack);
+        }else{
+            pack="default";
+        }
+        ScriptPackage scriptPackage=existScriptPackage(pack);
+        ScriptModule scriptModule;
+        if(abbr.equals("")){
+            //自动加载
+            for(ScriptLanguage scriptLanguage:ScriptLanguage.values()){
+                abbr=scriptLanguage.getAbbr();
+                scriptModule=scriptPackage.get(module,scriptLanguage);
+                if(scriptModule!=null){
                     return scriptModule;
-                }else{
-                    ScriptExceptions.exceptionNoDefindLanguageAbbr(abbr);
                 }
             }
         }else{
-            ScriptExceptions.exceptionModuleFullNameFormat(moduleFullName);
+            //指定加载
+            abbr=abbr.substring(0,abbr.length()-1);
+            ScriptLanguage scriptLanguage=existScriptLanguage(abbr,moduleFullName);
+            scriptModule=scriptPackage.get(module,scriptLanguage);
+            if(scriptModule!=null){
+                return scriptModule;
+            }
         }
-        ScriptExceptions.exceptionNoFoundModule(moduleFullName);
+        ScriptExceptions.exception("ses1",moduleFullName);
         return null;
     }
 
-    public Map<String, ScriptPackage> getPackageMap() {
-        return packageMap;
+    public ScriptLanguage existScriptLanguage(String abbr,String source){
+        ScriptLanguage scriptLanguage=ScriptLanguage.abbrOf(abbr);
+        if(scriptLanguage==null){
+            ScriptExceptions.exception("ses2",abbr,source);
+        }
+        return scriptLanguage;
     }
 
-    public Map<String, ScriptModule> getModuleMap() {
-        return moduleMap;
+    public ScriptPackage existScriptPackage(String pack){
+        ScriptPackage scriptPackage=packageMap.get(pack);
+        if(scriptPackage==null){
+            ScriptExceptions.exception("ses3",pack);
+        }
+        return scriptPackage;
+    }
+
+    public Matcher matcherPackageName(String pack){
+        Matcher packageMatcher=packageNamePattern.matcher(pack);
+        if(!packageMatcher.matches()){
+            ScriptExceptions.exception("ses4",pack);
+        }
+        return packageMatcher;
+    }
+
+    public Matcher matcherModuleName(String module){
+        Matcher moduleMatcher=moduleNamePattern.matcher(module);
+        if(!moduleMatcher.matches()){
+            ScriptExceptions.exception("ses5",module);
+        }
+        return moduleMatcher;
+    }
+
+    public Matcher matcherModuleFullName(String moduleFullName){
+        Matcher matcher= moduleFullNamePattern.matcher(moduleFullName);
+        if(!matcher.matches()){
+            ScriptExceptions.exception("ses6",moduleFullName);
+        }
+        return matcher;
+    }
+
+    public synchronized void inspectPackageIgnore(String pack){
+        for(String ignore:packageIgnore){
+            if(pack.startsWith(ignore)){
+                ScriptExceptions.exception("ses7",ignore,pack);
+            }
+        }
+    }
+
+
+    public Map<String, ScriptPackage> getPackageMap() {
+        return packageMap;
     }
 }

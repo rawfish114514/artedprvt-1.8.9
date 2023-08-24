@@ -12,7 +12,7 @@ public class SystemMethodAssetsis extends SystemMethod{
     @Override
     public Object invoke(Object[] args) {
         if(args.length>1){
-            ScriptExceptions.exceptionSystemMethodInvoke(this);
+            ScriptExceptions.exception("ses0",this.getName());
         }
         return scriptSystem.getFileInputStream("assets/"+String.valueOf(args[0]));
     }

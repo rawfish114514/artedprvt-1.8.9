@@ -101,7 +101,7 @@ public class ScriptInfo {
     public static void inspect(ScriptInfo scriptInfo) throws Exception{
         String name=scriptInfo.getName();
         if(name.length()>24){
-            ScriptExceptions.exceptionInfoFieldFormat("name",name);
+            ScriptExceptions.exception("ses8", "name");
         }
     }
 

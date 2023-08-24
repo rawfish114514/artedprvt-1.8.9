@@ -30,6 +30,7 @@ public interface FileLoader {
 
     /**
      * 获取所有文件的路径
+     * 不包括目录
      * @return
      */
     List<String> getPaths();

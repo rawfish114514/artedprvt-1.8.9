@@ -16,10 +16,10 @@ public class SystemMethodSleep extends SystemMethod{
                 scriptSystem.sleep(((Number) args[0]).longValue());
                 return null;
             }else{
-                ScriptExceptions.exceptionSystemMethodInvoke(this);
+                ScriptExceptions.exception("ses0",this.getName());
             }
         }
-        ScriptExceptions.exceptionSystemMethodInvoke(this);
+        ScriptExceptions.exception("ses0",this.getName());
         return null;
     }
 }

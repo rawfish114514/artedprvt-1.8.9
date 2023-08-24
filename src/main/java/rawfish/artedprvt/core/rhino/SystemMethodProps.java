@@ -12,7 +12,7 @@ public class SystemMethodProps extends SystemMethod {
     @Override
     public Object invoke(Object[] args) {
         if(args.length>0){
-            ScriptExceptions.exceptionSystemMethodInvoke(this);
+            ScriptExceptions.exception("ses0",this.getName());
         }
         return scriptSystem.getProps();
     }

@@ -29,7 +29,7 @@ public class SystemMethodPrint extends SystemMethod{
                 return null;
             }
         }
-        ScriptExceptions.exceptionSystemMethodInvoke(this);
+        ScriptExceptions.exception("ses0",this.getName());
         return null;
     }
 }

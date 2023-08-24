@@ -18,7 +18,7 @@ public class SystemMethodExport extends SystemMethod{
             scriptSystem.exportModule(scriptModule,args[0]);
             return null;
         }
-        ScriptExceptions.exceptionSystemMethodInvoke(this);
+        ScriptExceptions.exception("ses0",this.getName());
         return null;
     }
 }

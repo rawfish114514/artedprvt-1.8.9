@@ -14,12 +14,16 @@ public class MainThread extends Thread{
 
     @Override
     public void run(){
+        //先设置开始时间 begin有可能无法被执行
+        process.setCurrentTime();
         process.setScriptSystem(new ScriptSystem(process));
         List<ScriptEngine> engines=process.getEngines();
         //初始化脚本引擎
         for(int i=0;i<engines.size();i++){
             engines.get(i).init();
         }
+        //加载模块
+        process.getScriptLoader().loadAll();
         //准备完成
         process.begin();
         //执行主模块

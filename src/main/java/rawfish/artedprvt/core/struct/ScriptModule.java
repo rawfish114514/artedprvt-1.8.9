@@ -20,7 +20,7 @@ public class ScriptModule {
     /**
      * 创建模块
      * @param scriptPackage 包
-     * @param moduleName 模块名
+     * @param moduleName 模块名 module
      * @param source 源码
      * @param scriptLanguage 语言
      */
@@ -43,10 +43,18 @@ public class ScriptModule {
         return scriptPackage;
     }
 
+    /**
+     *
+     * @return 模块名 module
+     */
     public String getModuleName(){
         return moduleName;
     }
 
+    /**
+     *
+     * @return 模块完整名 abbr:package.module
+     */
     public String getModuleFullName(){
         return moduleFullName;
     }

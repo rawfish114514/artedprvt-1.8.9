@@ -38,7 +38,7 @@ public class SystemMethodImport extends SystemMethod{
             }
             return scriptSystem.importModule(name);
         }
-        ScriptExceptions.exceptionSystemMethodInvoke(this);
+        ScriptExceptions.exception("ses0",this.getName());
         return null;
     }
 }
