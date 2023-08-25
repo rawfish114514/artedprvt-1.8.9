@@ -5,6 +5,7 @@ import rawfish.artedprvt.command.CommandMessages;
 import rawfish.artedprvt.core.FrameOptions;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 修改和更新选项
@@ -75,14 +76,22 @@ public class CommandOptions extends Command {
         if(args.size()==1) {
             List<String> list= new ArrayList<>(FrameOptions.options.keySet());
             list.add("load");
-            return list;
+            return startWith(args,list);
         }else if(args.size()>1) {
             List<String> vs= FrameOptions.getValues(args.get(0));
             if(vs==null){
                 return getNullTab();
             }
-            return new ArrayList<>(vs);
+            return startWith(args,new ArrayList<>(vs));
         }
         return getNullTab();
+    }
+
+    public List<String> startWith(List<String> args,List<String> cs){
+        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
+        if(ns.size()>0){
+            return ns;
+        }
+        return cs;
     }
 }

@@ -116,15 +116,66 @@ public class ScriptProcess {
         stackParsers.add(new RhinoScriptStackParser());
 
         exceptionHandler=new ScriptExceptionHandler(this);
+        time=0;
+
+        scriptObjects=new ArrayList<>();
+        scriptObjectNumber=0;
+    }
+
+    /**
+     * 从输入流创建进程
+     * 以apkg的方式加载文件
+     * @param inputStream
+     * @param scriptArgument
+     * @throws Exception
+     */
+    public ScriptProcess(
+            InputStream inputStream,
+            List<String> scriptArgument) throws Exception {
+        ret=CREATE;
+        hasError=false;
+        props= FrameProperties.props();
+        fileLoader=new ApkgFileLoader(inputStream);
+        scriptLoader=new ScriptLoader(fileLoader);
+        this.scriptArgument=scriptArgument;
+
+        String apkginfo=fileLoader.getContent("apkg.info");
+        scriptInfo=ScriptInfo.parse(apkginfo);
+        ScriptInfo.inspect(scriptInfo);
+
+        name= scriptInfo.getName();
+        icon= loadIcon(fileLoader.getInputStream("icon.png"));
+
+        synchronized (ScriptProcess.class) {
+            LocalDate localDate = LocalDate.now();
+            File logDir = new File(props.get("frame.dir") + "/.artedprvt/logs/" + localDate.getYear() + "-"
+                    + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth());
+            logDir.mkdirs();
+            int logFileNumber = logDir.list().length;
+            File logFile = new File(logDir.getPath() + "/" + logFileNumber + "." + name.substring(name.indexOf(':')+1) + ".txt");
+            scriptLogger = new ScriptLogger(this,localDate,Files.newOutputStream(logFile.toPath()));
+        }
+
+
+        engines=new ArrayList<>();
+        engines.add(new RhinoEngine(this));
+
+        stackParsers=new ArrayList<>();
+        stackParsers.add(new RhinoScriptStackParser());
+
+        exceptionHandler=new ScriptExceptionHandler(this);
+        time=0;
+
+        scriptObjects=new ArrayList<>();
+        scriptObjectNumber=0;
+    }
+
+    public void register(){
         pid=ProcessController.registerProcess(this);
         if(pid==-1){
             throw new RuntimeException("注册进程失败");
         }
         proList.add(this);
-        time=0;
-
-        scriptObjects=new ArrayList<>();
-        scriptObjectNumber=0;
     }
 
     private BufferedImage loadIcon(InputStream stream){
@@ -157,6 +208,7 @@ public class ScriptProcess {
      * 由外部调用
      */
     public synchronized void start(){
+        register();
         if(ret!=CREATE){
             ScriptExceptions.exception("进程状态异常");
         }

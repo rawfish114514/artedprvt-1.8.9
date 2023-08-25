@@ -14,13 +14,20 @@ import java.util.zip.ZipInputStream;
  * apkg文件加载器
  */
 public class ApkgFileLoader implements FileLoader {
-    public String apkg;
     public Map<String,byte[]> map;
     public ApkgFileLoader(String apkg) throws Exception{
-        this.apkg=apkg;
         map =new HashMap<>();
+        readEntry(new FileInputStream(apkg),map);
+    }
+
+    public ApkgFileLoader(InputStream inputStream) throws Exception{
+        map =new HashMap<>();
+        readEntry(inputStream,map);
+    }
+
+    public void readEntry(InputStream inputStream,Map<String,byte[]> map) throws Exception {
         ZipInputStream zip = new ZipInputStream(
-                new FileInputStream(apkg),
+                inputStream,
                 Charset.forName("cp437"));
 
         ZipEntry entry = null;
