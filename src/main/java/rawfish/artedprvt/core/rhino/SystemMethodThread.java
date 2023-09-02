@@ -5,6 +5,8 @@ import org.mozilla.javascript.Function;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
+import java.util.Locale;
+
 public class SystemMethodThread extends SystemMethod{
     public SystemMethodThread(ScriptSystem scriptSystem) {
         super(scriptSystem);
@@ -30,8 +32,12 @@ public class SystemMethodThread extends SystemMethod{
         }
         @Override
         public void run() {
+            Context rhino=Context.enter();
+            rhino.unseal();
+            rhino.setOptimizationLevel(-1);
+            rhino.setLocale(Locale.ENGLISH);
             function.call(
-                    Context.enter(),
+                    rhino,
                     function.getParentScope(),
                     function.getParentScope(),
                     new Object[]{});

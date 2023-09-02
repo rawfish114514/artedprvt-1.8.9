@@ -4,7 +4,7 @@ import org.mozilla.javascript.RhinoException;
 import rawfish.artedprvt.core.ScriptStackElement;
 import rawfish.artedprvt.core.engine.ScriptStackParser;
 
-public class RhinoScriptStackParser implements ScriptStackParser {
+public class RhinoStackParser implements ScriptStackParser {
     @Override
     public boolean parseable(Throwable e) {
         return e instanceof RhinoException;

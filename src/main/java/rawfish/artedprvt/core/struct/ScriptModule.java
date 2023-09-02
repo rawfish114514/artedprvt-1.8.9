@@ -12,6 +12,7 @@ public class ScriptModule {
     private ScriptPackage scriptPackage;
     private String moduleName;
     private String moduleFullName;
+    private String moduleFullNameLiteral;
     private String source;
     private ScriptLanguage scriptLanguage;
     private Object export=null;
@@ -37,6 +38,20 @@ public class ScriptModule {
         moduleFullName=scriptLanguage.getAbbr()+":"+
                 (scriptPackage.getPackageName().equals("")?"":scriptPackage.getPackageName()+".")+
                 moduleName;
+
+        String p;
+        if(scriptPackage.getPackageName().startsWith("default")){
+            p=scriptPackage.getPackageName().substring(7);
+        }else {
+            p = scriptPackage.getPackageName();
+        }
+        if(p.length()>0&&p.charAt(0)=='.'){
+            p=p.substring(1);
+        }
+
+        moduleFullNameLiteral=scriptLanguage.getAbbr()+":"+
+                (p.equals("")?"":p+".")+
+                moduleName;
     }
 
     public ScriptPackage getScriptPackage() {
@@ -57,6 +72,14 @@ public class ScriptModule {
      */
     public String getModuleFullName(){
         return moduleFullName;
+    }
+
+    /**
+     * 模块完整名字面 abbr:package.module (package ignore default)
+     * @return
+     */
+    public String getModuleFullNameLiteral(){
+        return moduleFullNameLiteral;
     }
 
     public String getSource() {

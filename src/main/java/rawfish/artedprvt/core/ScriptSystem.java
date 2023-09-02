@@ -199,7 +199,7 @@ public class ScriptSystem {
                 }
             }
             if (s == 0) {
-                ScriptExceptions.exception("ses9",scriptModule.getModuleName());
+                ScriptExceptions.exception("ses9",scriptModule.getScriptLanguage().abbr);
             }
         }
     }

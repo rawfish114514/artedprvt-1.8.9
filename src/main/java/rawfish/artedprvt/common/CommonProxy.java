@@ -8,8 +8,10 @@ import rawfish.artedprvt.command.CommandLoader;
 import rawfish.artedprvt.core.FrameOptions;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ProcessController;
+import rawfish.artedprvt.core.engine.ScriptEngineInit;
 import rawfish.artedprvt.core.engine.ServiceEngines;
 import rawfish.artedprvt.core.rhino.ClassCollection;
+import rawfish.artedprvt.core.rhino.Rhino;
 import rawfish.artedprvt.core.rhino.McpToSrgString;
 import rawfish.artedprvt.mi.group.ClassGroupLoader;
 
@@ -23,12 +25,12 @@ public class CommonProxy
     public void init(FMLInitializationEvent event)
     {
         new EventLoader();
+        Rhino.init();
         FrameProperties.init();
-        ServiceEngines.init();
         ProcessController.init();
-        ClassGroupLoader.reg();
-        ClassCollection.load(McpToSrgString.getMcpToSrgString());
         FrameOptions.load();
+
+        ScriptEngineInit.init();
     }
 
     public void postInit(FMLPostInitializationEvent event)

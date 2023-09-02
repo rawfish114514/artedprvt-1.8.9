@@ -25,6 +25,7 @@ public class MainThread extends Thread{
         //加载模块
         process.getScriptLoader().loadAll();
         //准备完成
+        process.repName();
         process.begin();
         //执行主模块
         process.getScriptSystem().importModule(process.getScriptInfo().getModule());

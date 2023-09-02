@@ -2,7 +2,6 @@ package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptableObject;
-import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.ScriptSystem;
 import rawfish.artedprvt.core.engine.ScriptEngine;
@@ -32,7 +31,7 @@ public class RhinoEngine implements ScriptEngine {
     }
     @Override
     public boolean isExecutable(ScriptModule scriptModule) {
-        return scriptModule.getScriptLanguage()== ScriptLanguage.JAVASCRIPT;
+        return scriptModule.getScriptLanguage()== Rhino.JAVASCRIPT;
     }
 
     @Override

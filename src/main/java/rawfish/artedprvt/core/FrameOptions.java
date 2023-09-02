@@ -16,9 +16,14 @@ public class FrameOptions {
         add("language");
         add("repository");
     }};
+
+    public static Map<String,String> defaultMap=new HashMap<String,String>(){{
+        put("language","zh_cn");
+        put("repository","gitee");
+    }};
     public static Map<String,List<String>> valuesMap=new HashMap<String,List<String>>(){{
         put("language",s("zh_cn"));
-        put("repository",s("gitee"));
+        put("repository",s("gitee","github"));
     }};
 
     public static List<String> s(String... strs){
@@ -78,9 +83,7 @@ public class FrameOptions {
     }
 
     public static void loadDefault(){
-        options =new HashMap<>();
-        options.put("language","zh_cn");
-        options.put("repository","gitee");
+        options =new HashMap<>(defaultMap);
     }
 
     public static void loadFromFile() throws Exception{

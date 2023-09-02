@@ -12,13 +12,13 @@ import rawfish.artedprvt.core.engine.ServiceEngine;
  * 允许非脚本进程内的脚本运行
  * 主要由系统调用
  */
-public class ServiceRhinoEngine implements ServiceEngine {
-    public static ServiceRhinoEngine service=null;
-    public ServiceRhinoEngine(){
+public class RhinoServiceEngine implements ServiceEngine {
+    public static RhinoServiceEngine service=null;
+    public RhinoServiceEngine(){
     }
 
     public boolean isExecutable(ScriptLanguage language){
-        return language==ScriptLanguage.JAVASCRIPT;
+        return language== Rhino.JAVASCRIPT;
     }
 
     @Override

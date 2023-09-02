@@ -93,7 +93,6 @@ public class ScriptLoader {
         if(abbr.equals("")){
             //自动加载
             for(ScriptLanguage scriptLanguage:ScriptLanguage.values()){
-                abbr=scriptLanguage.getAbbr();
                 scriptModule=scriptPackage.get(module,scriptLanguage);
                 if(scriptModule!=null){
                     return scriptModule;

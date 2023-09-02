@@ -7,12 +7,18 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class Particle extends EntityFX {
-    public int tick=0;
+    public int tick=0;//计数器
     public int d0=0;//额外4字节数据
 
     public double accelerationX=0;
     public double accelerationY=0;
     public double accelerationZ=0;
+
+    public ParticleUpdate particleUpdate=null;
+
+    public int[] ints;//额外可选数量的整数数据
+    public double[] doubles;//额外可选数量的小数数据
+
     public Particle(World worldIn, double posXIn, double posYIn, double posZIn) {
         super(worldIn, posXIn, posYIn, posZIn);
     }
@@ -90,6 +96,10 @@ public class Particle extends EntityFX {
         prevPosZ=z;
     }
 
+    public void setParticleUpdate(ParticleUpdate particleUpdate){
+        this.particleUpdate=particleUpdate;
+    }
+
     public int tick(){
         return tick++;
     }
@@ -144,8 +154,43 @@ public class Particle extends EntityFX {
     }
 
     public void motionUpdate(){
+        if(particleUpdate!=null){
+            particleUpdate.update(this);
+        }
         setPos(posX+motionX,posY+motionY,posZ+motionZ);
         setSpeed(motionX+accelerationX,motionY+accelerationY,motionZ+accelerationZ);
+    }
+
+    public void initInts(int length){
+        ints=new int[length];
+    }
+
+    public void initDoubles(int length){
+        doubles=new double[length];
+    }
+
+    public int getIntsLength(){
+        return ints.length;
+    }
+
+    public int getDoublesLength(){
+        return doubles.length;
+    }
+
+    public void setInt(int index,int value){
+        ints[index]=value;
+    }
+
+    public void setDouble(int index,double value){
+        doubles[index]=value;
+    }
+
+    public int getInt(int index){
+        return ints[index];
+    }
+
+    public double getDouble(int index){
+        return doubles[index];
     }
 
 }

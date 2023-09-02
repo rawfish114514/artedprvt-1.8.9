@@ -1,20 +1,15 @@
 package rawfish.artedprvt.core.engine;
 
 import rawfish.artedprvt.core.ScriptLanguage;
-import rawfish.artedprvt.core.rhino.ServiceRhinoEngine;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServiceEngines {
-    private static List<ServiceEngine> serviceEngineList;
-    public static synchronized void init(){
-        if(serviceEngineList!=null){
-            return;
-        }
-        serviceEngineList=new ArrayList<>();
+    private static List<ServiceEngine> serviceEngineList=new ArrayList<>();
 
-        serviceEngineList.add(new ServiceRhinoEngine());
+    public static void reg(ServiceEngine serviceEngine){
+        serviceEngineList.add(serviceEngine);
     }
 
     public static ServiceEngine getService(String abbr){

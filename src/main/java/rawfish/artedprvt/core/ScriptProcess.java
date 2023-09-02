@@ -1,14 +1,10 @@
 package rawfish.artedprvt.core;
 
 import rawfish.artedprvt.Artedprvt;
-import rawfish.artedprvt.core.engine.ScriptEngine;
-import rawfish.artedprvt.core.engine.ScriptStackParser;
+import rawfish.artedprvt.core.engine.*;
 import rawfish.artedprvt.core.rhino.RhinoEngine;
-import rawfish.artedprvt.core.rhino.RhinoScriptStackParser;
-import rawfish.artedprvt.core.struct.ApkgFileLoader;
-import rawfish.artedprvt.core.struct.FileLoader;
-import rawfish.artedprvt.core.struct.ScriptLoader;
-import rawfish.artedprvt.core.struct.SourceFileLoader;
+import rawfish.artedprvt.core.rhino.RhinoStackParser;
+import rawfish.artedprvt.core.struct.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -110,10 +106,16 @@ public class ScriptProcess {
 
 
         engines=new ArrayList<>();
-        engines.add(new RhinoEngine(this));
+        List<ScriptEngineFactory<? extends ScriptEngine>> scriptEngineFactories=ScriptEngineFactorys.factories();
+        for(ScriptEngineFactory<? extends ScriptEngine> factory:scriptEngineFactories){
+            engines.add(factory.create(this));
+        }
 
         stackParsers=new ArrayList<>();
-        stackParsers.add(new RhinoScriptStackParser());
+        List<ScriptStackParserFactory<? extends ScriptStackParser>> scriptStackParserFactories=ScriptStackParserFactorys.factories();
+        for(ScriptStackParserFactory<? extends ScriptStackParser> factory:scriptStackParserFactories){
+            stackParsers.add(factory.create(this));
+        }
 
         exceptionHandler=new ScriptExceptionHandler(this);
         time=0;
@@ -161,7 +163,7 @@ public class ScriptProcess {
         engines.add(new RhinoEngine(this));
 
         stackParsers=new ArrayList<>();
-        stackParsers.add(new RhinoScriptStackParser());
+        stackParsers.add(new RhinoStackParser());
 
         exceptionHandler=new ScriptExceptionHandler(this);
         time=0;
@@ -563,5 +565,10 @@ public class ScriptProcess {
 
     public void setScriptSystem(ScriptSystem scriptSystem) {
         this.scriptSystem=scriptSystem;
+    }
+
+    public void repName(){
+        name=scriptLoader.getModule(name).getModuleFullNameLiteral();
+        scriptInfo.setName(name);
     }
 }
