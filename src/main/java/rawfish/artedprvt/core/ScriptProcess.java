@@ -24,6 +24,7 @@ import java.util.Map;
  */
 public class ScriptProcess {
     private static List<ScriptProcess> proList=new ArrayList<>();//运行的进程
+    private String command;//命令
     private Map<String,String> props;//属性
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
@@ -66,6 +67,7 @@ public class ScriptProcess {
             String command,
             String pack,
             List<String> scriptArgument) throws Exception {
+        this.command=command;
         ret=CREATE;
         hasError=false;
         props= FrameProperties.props();
@@ -134,6 +136,7 @@ public class ScriptProcess {
     public ScriptProcess(
             InputStream inputStream,
             List<String> scriptArgument) throws Exception {
+        command=null;
         ret=CREATE;
         hasError=false;
         props= FrameProperties.props();
@@ -568,7 +571,9 @@ public class ScriptProcess {
     }
 
     public void repName(){
-        name=scriptLoader.getModule(name).getModuleFullNameLiteral();
-        scriptInfo.setName(name);
+        if(command!=null&&command.equals("script")) {
+            name = scriptLoader.getModule(name).getModuleFullNameLiteral();
+            scriptInfo.setName(name);
+        }
     }
 }
