@@ -9,8 +9,8 @@ import rawfish.artedprvt.core.ScriptSystem;
 import java.util.List;
 
 public class SystemMethodImport extends SystemMethod{
-    public SystemMethodImport(ScriptSystem scriptSystem) {
-        super(scriptSystem);
+    public SystemMethodImport(Scriptable scope,ScriptSystem scriptSystem) {
+        super(scope,scriptSystem);
         name="import";
     }
 
@@ -20,13 +20,13 @@ public class SystemMethodImport extends SystemMethod{
             String name=String.valueOf(args[0]);
             if(name.length()>0) {
                 if(name.charAt(0)=='-'){
-                    Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
+                    Scriptable scope=getScope();
                     Class clazz=scriptSystem.importClass(name.substring(1));
                     scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
                     return null;
                 }
                 if(name.charAt(0)=='*'){
-                    Scriptable scope=ScriptableObject.getTopLevelScope(getScope());
+                    Scriptable scope=getScope();
                     List<Class> classList=scriptSystem.importClassGroup(name.substring(1));
                     Class clazz;
                     for(int i=0;i<classList.size();i++){

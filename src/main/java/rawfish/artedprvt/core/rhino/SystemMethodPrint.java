@@ -1,12 +1,13 @@
 package rawfish.artedprvt.core.rhino;
 
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.mi.ChatProvider;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
 public class SystemMethodPrint extends SystemMethod{
-    public SystemMethodPrint(ScriptSystem scriptSystem) {
-        super(scriptSystem);
+    public SystemMethodPrint(Scriptable scope, ScriptSystem scriptSystem) {
+        super(scope,scriptSystem);
         name="print";
     }
 

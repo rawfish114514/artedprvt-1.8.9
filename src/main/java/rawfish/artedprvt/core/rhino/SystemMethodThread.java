@@ -2,14 +2,15 @@ package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
 import java.util.Locale;
 
 public class SystemMethodThread extends SystemMethod{
-    public SystemMethodThread(ScriptSystem scriptSystem) {
-        super(scriptSystem);
+    public SystemMethodThread(Scriptable scope, ScriptSystem scriptSystem) {
+        super(scope,scriptSystem);
         name="thread";
     }
 

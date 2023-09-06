@@ -1,13 +1,14 @@
 package rawfish.artedprvt.core.rhino;
 
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 import rawfish.artedprvt.core.struct.ScriptModule;
 
 public class SystemMethodExport extends SystemMethod{
     private ScriptModule scriptModule;
-    public SystemMethodExport(ScriptSystem scriptSystem, ScriptModule scriptModule) {
-        super(scriptSystem);
+    public SystemMethodExport(Scriptable scope, ScriptSystem scriptSystem, ScriptModule scriptModule) {
+        super(scope,scriptSystem);
         this.scriptModule=scriptModule;
         name="export";
     }

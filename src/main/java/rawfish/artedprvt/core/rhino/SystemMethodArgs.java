@@ -1,11 +1,12 @@
 package rawfish.artedprvt.core.rhino;
 
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
 public class SystemMethodArgs extends SystemMethod{
-    public SystemMethodArgs(ScriptSystem scriptSystem) {
-        super(scriptSystem);
+    public SystemMethodArgs(Scriptable scope, ScriptSystem scriptSystem) {
+        super(scope,scriptSystem);
         name="args";
     }
 

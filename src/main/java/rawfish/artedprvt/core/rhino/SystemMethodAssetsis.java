@@ -1,11 +1,12 @@
 package rawfish.artedprvt.core.rhino;
 
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
 public class SystemMethodAssetsis extends SystemMethod{
-    public SystemMethodAssetsis(ScriptSystem scriptSystem) {
-        super(scriptSystem);
+    public SystemMethodAssetsis(Scriptable scope, ScriptSystem scriptSystem) {
+        super(scope,scriptSystem);
         name="assetsis";
     }
 

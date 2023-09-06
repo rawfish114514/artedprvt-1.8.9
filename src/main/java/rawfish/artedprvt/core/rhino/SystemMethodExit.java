@@ -1,11 +1,12 @@
 package rawfish.artedprvt.core.rhino;
 
+import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
 public class SystemMethodExit extends SystemMethod{
-    public SystemMethodExit(ScriptSystem scriptSystem) {
-        super(scriptSystem);
+    public SystemMethodExit(Scriptable scope, ScriptSystem scriptSystem) {
+        super(scope,scriptSystem);
         name="exit";
     }
 

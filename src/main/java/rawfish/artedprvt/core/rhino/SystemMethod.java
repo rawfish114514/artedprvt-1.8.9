@@ -8,8 +8,9 @@ public abstract class SystemMethod extends BaseFunction {
     protected ScriptSystem scriptSystem;
     private Scriptable scope;
     protected String name="null";
-    public SystemMethod(ScriptSystem scriptSystem){
+    public SystemMethod(Scriptable scope,ScriptSystem scriptSystem){
         this.scriptSystem=scriptSystem;
+        setScope(scope);
     }
 
     public String getName(){
@@ -28,7 +29,6 @@ public abstract class SystemMethod extends BaseFunction {
 
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
-        setScope(scope);
         return invoke(unwrap(args));
     }
 
