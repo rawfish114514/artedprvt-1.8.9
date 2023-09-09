@@ -21,6 +21,7 @@ public class CommandApf extends Command {
         commandList.add(new CommandBuild("build"));
         commandList.add(new CommandExtract("extract"));
         commandList.add(new CommandIn("in"));
+        commandList.add(new CommandInfo("info"));
         commandList.add(new CommandInstall("install"));
         commandList.add(new CommandOptions("options"));
         commandList.add(new CommandPros("pros"));

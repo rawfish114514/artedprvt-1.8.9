@@ -45,7 +45,7 @@ public class CommandBuild extends Command {
             CommandMessages.exception(getName(),"cms5");
             return;
         }
-        String name=scriptInfo.getName()+"-"+scriptInfo.getVersion();
+        String name=scriptInfo.getId();
         String fd=FrameProperties.props.get("frame.dir");
         int code=zip(fd+"/src",fd+"/lib/"+name+".apkg");
 

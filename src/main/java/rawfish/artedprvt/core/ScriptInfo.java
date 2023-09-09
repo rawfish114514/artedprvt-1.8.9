@@ -118,7 +118,7 @@ public class ScriptInfo {
         scriptInfo.mcversion=String.valueOf(map.get("mcversion"));
         scriptInfo.module=String.valueOf(map.get("module"));
         scriptInfo.author=String.valueOf(map.get("author"));
-        scriptInfo.description=String.valueOf(map.get("description"));
+        scriptInfo.description=String.valueOf(map.get("description")).replace("\r","").trim();
         return scriptInfo;
     }
 }
