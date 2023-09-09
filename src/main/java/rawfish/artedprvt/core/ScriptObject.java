@@ -2,12 +2,12 @@ package rawfish.artedprvt.core;
 
 /**
  * 脚本对象
- * 为了正确的管理脚本运行时产生的java对象
- * 通常是游戏接口相关的对象
- * 它们可能在进程结束后保持活动
- * 这样的类应该实现ScriptObject接口
- * 注册到游戏的
- * 以其他方式被游戏引用的
+ * 避免在进程结束时继续使用对象资源，如脚本函数实现的接口
+ * 尽早调用up()方法使当前脚本进程得到自己的引用
+ * 脚本进程在结束时会调用close()方法进而调用onClose()抽象方法
+ * up()还返回当前的脚本进程，由于可能返回null（当前线程不是脚本线程）
+ * 所以还需要应对获取不到脚本进程的情况
+ * 这也意味着close()方法不会被调用
  */
 public interface ScriptObject {
     default ScriptProcess up(){

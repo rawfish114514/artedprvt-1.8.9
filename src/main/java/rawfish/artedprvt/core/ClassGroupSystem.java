@@ -1,7 +1,5 @@
 package rawfish.artedprvt.core;
 
-import rawfish.artedprvt.mi.group.ClassGroupMi;
-
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

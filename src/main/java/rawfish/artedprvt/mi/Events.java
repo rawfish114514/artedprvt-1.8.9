@@ -9,70 +9,67 @@ import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import rawfish.artedprvt.core.ProgramUsable;
-import rawfish.artedprvt.core.SideUsable;
-import rawfish.artedprvt.core.Sides;
+import rawfish.artedprvt.api.Solvable;
 import rawfish.artedprvt.event.InputStringEvent;
 
 /**
  * 常用的事件
  */
-@SideUsable(Sides.ALL)
-@ProgramUsable
+@Solvable
 public enum Events {
     /**
      * 服务端刻事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(TickEvent.ServerTickEvent.class)
     tick,
 
     /**
      * 点击事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(PlayerInteractEvent.class)
     click,
 
     /**
      * 使用物品事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(PlayerUseItemEvent.Finish.class)
     use,
 
     /**
      * 实体加入世界事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(EntityJoinWorldEvent.class)
     join,
 
     /**
      * 输入字符串事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(InputStringEvent.class)
     input,
 
     /**
      * 工具提示事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(ItemTooltipEvent.class)
     tooltip,
 
     /**
      * 方块放置事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(BlockEvent.PlaceEvent.class)
     bl_place,
 
     /**
      * 方块破坏事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(BlockEvent.BreakEvent.class)
     bl_break,
 
@@ -81,21 +78,21 @@ public enum Events {
     /**
      * 客户端刻事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(TickEvent.ClientTickEvent.class)
     c_tick,
 
     /**
      * 渲染刻事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(TickEvent.RenderTickEvent.class)
     r_tick,
 
     /**
      * 客户端聊天事件
      */
-    @ProgramUsable
+    @Solvable
     @EventTarget(ClientChatReceivedEvent.class)
     c_chat,
 }

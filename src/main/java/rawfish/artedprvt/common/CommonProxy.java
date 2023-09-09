@@ -25,6 +25,7 @@ public class CommonProxy
     public void init(FMLInitializationEvent event)
     {
         new EventLoader();
+        ClassGroupLoader.reg();
         Rhino.init();
         FrameProperties.init();
         ProcessController.init();

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventBus;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import rawfish.artedprvt.api.Solvable;
 import rawfish.artedprvt.common.EventLoader;
 import rawfish.artedprvt.core.*;
 import rawfish.artedprvt.event.InputStringEvent;
@@ -18,8 +19,7 @@ import rawfish.artedprvt.event.InputStringEvent;
 /**
  * 事件监听器
  */
-@SideUsable(Sides.ALL)
-@ProgramUsable
+@Solvable
 public class EventListener implements ScriptObject {
     private ScriptProcess process;
 
@@ -70,7 +70,7 @@ public class EventListener implements ScriptObject {
      * @param type 事件类型
      * @param f 回调函数
      */
-    @ProgramUsable
+    @Solvable
     public EventListener(Events type,EventFunction f){
         if(type==Events.tick){
             listener=new TickEventListener(f);return;
@@ -128,7 +128,7 @@ public class EventListener implements ScriptObject {
     /**
      * 注册监听器
      */
-    @ProgramUsable
+    @Solvable
     public void register(){
         if(!listener.breakk){
             EVENT_BUS.register(listener);
@@ -145,7 +145,7 @@ public class EventListener implements ScriptObject {
 
 
     public static class TickEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public TickEventListener(EventFunction f) {
             super(f);
         }
@@ -156,7 +156,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClickEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public ClickEventListener(EventFunction f) {
             super(f);
         }
@@ -167,7 +167,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class UseEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public UseEventListener(EventFunction f) {
             super(f);
         }
@@ -178,7 +178,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class JoinEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public JoinEventListener(EventFunction f) {
             super(f);
         }
@@ -189,7 +189,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class InputStringEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public InputStringEventListener(EventFunction f){
             super(f);
         }
@@ -200,7 +200,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ItemTooltipEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public ItemTooltipEventListener(EventFunction f) {
             super(f);
         }
@@ -231,7 +231,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClientTickEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public ClientTickEventListener(EventFunction f){
             super(f);
         }
@@ -242,7 +242,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class RenderTickEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public RenderTickEventListener(EventFunction f){
             super(f);
         }
@@ -253,7 +253,7 @@ public class EventListener implements ScriptObject {
     }
 
     public static class ClientChatEventListener extends EventListener{
-        @ProgramUsable
+        @Solvable
         public ClientChatEventListener(EventFunction f) {
             super(f);
         }

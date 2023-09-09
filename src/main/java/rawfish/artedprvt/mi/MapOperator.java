@@ -3,6 +3,7 @@ package rawfish.artedprvt.mi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import rawfish.artedprvt.api.Solvable;
 import rawfish.artedprvt.core.*;
 
 import java.util.ArrayList;
@@ -11,8 +12,7 @@ import java.util.List;
 /**
  * 地图操作
  */
-@SideUsable(Sides.ALL)
-@ProgramUsable
+@Solvable
 public class MapOperator implements ScriptObject {
     private ScriptProcess process;
 
@@ -23,7 +23,7 @@ public class MapOperator implements ScriptObject {
 
     public List<MapGraphics> graphicsList;
 
-    @ProgramUsable
+    @Solvable
     public MapOperator(String side){
         process=up();
         if(side.equals("server")) {
@@ -34,7 +34,7 @@ public class MapOperator implements ScriptObject {
         graphicsList=new ArrayList<>();
     }
 
-    @ProgramUsable
+    @Solvable
     public MapOperator(World world){
         up();
         this.world=world;
@@ -45,7 +45,7 @@ public class MapOperator implements ScriptObject {
      * 创建并返回{@link MapGraphics}对象
      * @return
      */
-    @ProgramUsable
+    @Solvable
     public MapGraphics getGraphics(){
         MapGraphics graphics=new MapGraphics(this);
         graphicsList.add(graphics);
@@ -56,7 +56,7 @@ public class MapOperator implements ScriptObject {
      * 计算操作方块数
      * @return
      */
-    @ProgramUsable
+    @Solvable
     public int getBlockOper(){
         int blockOper=0;
         for(MapGraphics graphics:graphicsList){

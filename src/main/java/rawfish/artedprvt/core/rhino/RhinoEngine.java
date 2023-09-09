@@ -1,6 +1,7 @@
 package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.ScriptSystem;
@@ -31,7 +32,7 @@ public class RhinoEngine implements ScriptEngine {
     }
     @Override
     public boolean isExecutable(ScriptModule scriptModule) {
-        return scriptModule.getScriptLanguage()== Rhino.JAVASCRIPT;
+        return Rhino.JAVASCRIPT.equals(scriptModule.getScriptLanguage());
     }
 
     @Override
@@ -39,26 +40,26 @@ public class RhinoEngine implements ScriptEngine {
         ScriptSystem scriptSystem=process.getScriptSystem();
         ScriptableObject scope=rhino.initStandardObjects();
         scope.put("_name",scope,scriptModule.getModuleFullName());
-        List<SystemMethod> systemMethodList=buildSystemMethodList(scriptSystem,scriptModule,rhino);
+        List<SystemMethod> systemMethodList=buildSystemMethodList(scriptSystem,scriptModule,rhino,scope);
         for(SystemMethod systemMethod:systemMethodList){
             scope.put(systemMethod.getName(),scope,systemMethod);
         }
         rhino.evaluateString(scope,scriptModule.getSource(),scriptModule.getModuleFullName(),1,null);
     }
 
-    public static List<SystemMethod> buildSystemMethodList(ScriptSystem scriptSystem,ScriptModule scriptModule,Context context){
+    public static List<SystemMethod> buildSystemMethodList(ScriptSystem scriptSystem, ScriptModule scriptModule, Context context, Scriptable scope){
         List<SystemMethod> list=new ArrayList<>();
-        list.add(new SystemMethodArgs(scriptSystem));
-        list.add(new SystemMethodAssets(scriptSystem));
-        list.add(new SystemMethodAssetsis(scriptSystem));
-        list.add(new SystemMethodExit(scriptSystem));
-        list.add(new SystemMethodExport(scriptSystem,scriptModule));
-        list.add(new SystemMethodImport(scriptSystem));
-        list.add(new SystemMethodInfo(scriptSystem));
-        list.add(new SystemMethodPrint(scriptSystem));
-        list.add(new SystemMethodProps(scriptSystem));
-        list.add(new SystemMethodSleep(scriptSystem));
-        list.add(new SystemMethodThread(scriptSystem));
+        list.add(new SystemMethodArgs(scope,scriptSystem));
+        list.add(new SystemMethodAssets(scope,scriptSystem));
+        list.add(new SystemMethodAssetsis(scope,scriptSystem));
+        list.add(new SystemMethodExit(scope,scriptSystem));
+        list.add(new SystemMethodExport(scope,scriptSystem,scriptModule));
+        list.add(new SystemMethodImport(scope,scriptSystem));
+        list.add(new SystemMethodInfo(scope,scriptSystem));
+        list.add(new SystemMethodPrint(scope,scriptSystem));
+        list.add(new SystemMethodProps(scope,scriptSystem));
+        list.add(new SystemMethodSleep(scope,scriptSystem));
+        list.add(new SystemMethodThread(scope,scriptSystem));
         return list;
     }
 }

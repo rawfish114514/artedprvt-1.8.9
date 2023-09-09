@@ -18,6 +18,7 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
     }
     @Override
     public void uncaughtException(Thread t, Throwable e) {
+        e.printStackTrace(System.err);
         if(e instanceof ThreadDeath){
             return;
         }

@@ -1,7 +1,6 @@
 package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.*;
-import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 
 public abstract class SystemMethod extends BaseFunction {

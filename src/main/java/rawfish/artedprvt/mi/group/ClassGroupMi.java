@@ -1,5 +1,9 @@
 package rawfish.artedprvt.mi.group;
 
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.api.ServerSideOnly;
 import rawfish.artedprvt.core.ClassGroup;
 import rawfish.artedprvt.mi.*;
 
@@ -13,12 +17,18 @@ public class ClassGroupMi implements ClassGroup {
     private List<Class> classes;
     public List<Class> getClasses(){
         init();
+        return classes();
+    }
+    
+    private void init(){
+        if(classes!=null){
+            return;
+        }
+        classes=new ArrayList<Class>();
         add(ChatProvider.class);
-        add(EffectSpawn.class);
         add(EventFunction.class);
         add(EventListener.class);
         add(Events.class);
-        add(GameClient.class);
         add(GameServer.class);
         add(MapGraphics.class);
         add(MapOperator.class);
@@ -27,14 +37,15 @@ public class ClassGroupMi implements ClassGroup {
         add(TagBuilder.ListTagBuilder.class);
         add(TagBuilder.CompoundTagBuilder.class);
 
-        add(Particle.class);
-        add(ParticleUpdate.class);
-        add(EffectSpawn.class);
-        return classes();
-    }
-    
-    private void init(){
-        classes=new ArrayList<Class>();
+        if(Artedprvt.instance.isHasClientSide()) {
+            add(GameClient.class);
+            add(EffectSpawn.class);
+            add(Particle.class);
+            add(ParticleUpdate.class);
+            add(EffectSpawn.class);
+            add(ParticleService.class);
+            add(ParticleServiceHandler.class);
+        }
     }
     
     private void add(Class clas){

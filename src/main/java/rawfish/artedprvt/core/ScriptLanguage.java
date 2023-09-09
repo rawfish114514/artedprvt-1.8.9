@@ -25,6 +25,11 @@ public class ScriptLanguage {
         return abbr;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        return obj instanceof ScriptLanguage&&((ScriptLanguage) obj).abbr.equals(abbr);
+    }
+
     public static ScriptLanguage abbrOf(String abbr){
         ScriptLanguage scriptLanguage;
         for(int i=0;i<languages.size();i++){
