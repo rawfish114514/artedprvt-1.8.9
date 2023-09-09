@@ -193,4 +193,12 @@ public class Particle extends EntityFX {
         return doubles[index];
     }
 
+    public double transInt(int index0,int index1,double value){
+        return ints[index0]+(ints[index1]-ints[index0])*value;
+    }
+
+    public double transDouble(int index0,int index1,double value){
+        return doubles[index0]+(doubles[index1]-doubles[index0])*value;
+    }
+
 }
