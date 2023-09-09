@@ -44,7 +44,7 @@ public class CommandInstall extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return getNullTab();
+        return getEmptyList();
     }
 
     public void install(File file,String id){

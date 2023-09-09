@@ -120,6 +120,6 @@ public class CommandPros extends Command {
             }
             return l;
         }
-        return getNullTab();
+        return getEmptyList();
     }
 }

@@ -93,7 +93,7 @@ public class CommandTm extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return getNullTab();
+        return getEmptyList();
     }
 
     static class Translate {

@@ -75,7 +75,7 @@ public class CommandExtract extends Command {
             opt.sort(Comparator.comparingInt(String::length));
             return opt;
         }
-        return getNullTab();
+        return getEmptyList();
     }
 
     public List<String> pack(File dir,String p){

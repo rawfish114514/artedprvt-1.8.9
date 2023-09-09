@@ -68,7 +68,7 @@ public class CommandScript extends Command {
             /*补全脚本参数*/
             return scriptComplete(args.subList(1,args.size()));
         }
-        return getNullTab();
+        return getEmptyList();
     }
 
     public List<String> pack(File dir,String p){
@@ -142,14 +142,14 @@ public class CommandScript extends Command {
                         }
                         return stringList;
                     }else{
-                        return getNullTab();
+                        return getEmptyList();
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return getNullTab();
+        return getEmptyList();
     }
 
     public String readCompleteFile(String abbr) throws Exception{

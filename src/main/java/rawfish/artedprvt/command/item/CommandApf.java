@@ -68,7 +68,7 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return getNullTab();
+            return getEmptyList();
         }
         return c.complete(args.subList(1,args.size()));
     }

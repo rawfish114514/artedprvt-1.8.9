@@ -95,6 +95,6 @@ public class CommandWs extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return getNullTab();
+        return getEmptyList();
     }
 }

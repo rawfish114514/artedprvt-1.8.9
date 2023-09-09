@@ -59,7 +59,7 @@ public class CommandBuild extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return getNullTab();
+        return getEmptyList();
     }
 
     public int zip(String target,String out){

@@ -26,6 +26,7 @@ public class CommandAc extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
-        return getNullTab();
+        System.out.println(args);
+        return getEmptyList();
     }
 }

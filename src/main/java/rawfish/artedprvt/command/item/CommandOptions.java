@@ -80,11 +80,11 @@ public class CommandOptions extends Command {
         }else if(args.size()>1) {
             List<String> vs= FrameOptions.getValues(args.get(0));
             if(vs==null){
-                return getNullTab();
+                return getEmptyList();
             }
             return startWith(args,new ArrayList<>(vs));
         }
-        return getNullTab();
+        return getEmptyList();
     }
 
     public List<String> startWith(List<String> args,List<String> cs){

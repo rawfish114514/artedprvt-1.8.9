@@ -15,6 +15,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * 查看src或apkg的信息
+ */
 public class CommandInfo extends Command {
     public CommandInfo(String commandName) {
         super(commandName);
@@ -112,7 +115,7 @@ public class CommandInfo extends Command {
             opt.add("<src>");
             return opt;
         }
-        return getNullTab();
+        return getEmptyList();
     }
 
     public List<String> pack(File dir,String p){

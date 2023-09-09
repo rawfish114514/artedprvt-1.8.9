@@ -87,6 +87,6 @@ public class CommandStops extends Command {
             }
             return l;
         }
-        return getNullTab();
+        return getEmptyList();
     }
 }
