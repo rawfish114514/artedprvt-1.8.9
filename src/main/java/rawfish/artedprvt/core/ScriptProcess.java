@@ -108,14 +108,12 @@ public class ScriptProcess {
 
 
         engines=new ArrayList<>();
-        List<ScriptEngineFactory<? extends ScriptEngine>> scriptEngineFactories=ScriptEngineFactorys.factories();
-        for(ScriptEngineFactory<? extends ScriptEngine> factory:scriptEngineFactories){
+        for(ScriptEngineFactory factory:Engines.getEngineFactorys()){
             engines.add(factory.create(this));
         }
 
         stackParsers=new ArrayList<>();
-        List<ScriptStackParserFactory<? extends ScriptStackParser>> scriptStackParserFactories=ScriptStackParserFactorys.factories();
-        for(ScriptStackParserFactory<? extends ScriptStackParser> factory:scriptStackParserFactories){
+        for(ScriptStackParserFactory factory:Engines.getStackParserFactorys()){
             stackParsers.add(factory.create(this));
         }
 

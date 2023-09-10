@@ -2,6 +2,7 @@ package rawfish.artedprvt.core.struct;
 
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptLanguage;
+import rawfish.artedprvt.core.engine.Engines;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,7 +93,7 @@ public class ScriptLoader {
         ScriptModule scriptModule;
         if(abbr.equals("")){
             //自动加载
-            for(ScriptLanguage scriptLanguage:ScriptLanguage.values()){
+            for(ScriptLanguage scriptLanguage:Engines.getLanguages()){
                 scriptModule=scriptPackage.get(module,scriptLanguage);
                 if(scriptModule!=null){
                     return scriptModule;
@@ -112,7 +113,7 @@ public class ScriptLoader {
     }
 
     public ScriptLanguage existScriptLanguage(String abbr,String source){
-        ScriptLanguage scriptLanguage=ScriptLanguage.abbrOf(abbr);
+        ScriptLanguage scriptLanguage= Engines.getLanguageOfAbbr(abbr);
         if(scriptLanguage==null){
             ScriptExceptions.exception("ses2",abbr,source);
         }

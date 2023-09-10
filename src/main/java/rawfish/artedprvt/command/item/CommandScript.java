@@ -5,8 +5,8 @@ import rawfish.artedprvt.command.CommandMessages;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.engine.Engines;
 import rawfish.artedprvt.core.engine.ServiceEngine;
-import rawfish.artedprvt.core.engine.ServiceEngines;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -83,7 +83,7 @@ public class CommandScript extends Command {
                 String name=file.getName();
                 int ind=name.lastIndexOf('.');
                 String abbr=name.substring(ind+1);
-                if(ind>0&&(ScriptLanguage.abbrOf(abbr)!=null)){
+                if(ind>0&&(Engines.getLanguageOfAbbr(abbr)!=null)){
                     packs.add(abbr+":"+p+name.substring(0,ind));
                 }
             }else{
@@ -118,7 +118,7 @@ public class CommandScript extends Command {
         String code=null;
         String abbr=null;
         try {
-            for (ScriptLanguage language : ScriptLanguage.values()) {
+            for (ScriptLanguage language : Engines.getLanguages()) {
                 String a=language.getAbbr();
                 String f=readCompleteFile(a);
                 if(f!=null){
@@ -131,7 +131,7 @@ public class CommandScript extends Command {
             e.printStackTrace(System.err);
         }
         if(code!=null){
-            ServiceEngine engine= ServiceEngines.getService(abbr);
+            ServiceEngine engine= Engines.getService(abbr);
             if(engine!=null){
                 try {
                     Object result=engine.unwrap(engine.call(code, "complete", args));

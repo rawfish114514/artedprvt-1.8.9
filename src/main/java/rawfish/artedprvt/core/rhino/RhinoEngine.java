@@ -32,7 +32,7 @@ public class RhinoEngine implements ScriptEngine {
     }
     @Override
     public boolean isExecutable(ScriptModule scriptModule) {
-        return Rhino.JAVASCRIPT.equals(scriptModule.getScriptLanguage());
+        return Rhino.LANGUAGE.equals(scriptModule.getScriptLanguage());
     }
 
     @Override

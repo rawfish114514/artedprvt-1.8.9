@@ -18,7 +18,7 @@ public class RhinoServiceEngine implements ServiceEngine {
     }
 
     public boolean isExecutable(ScriptLanguage language){
-        return Rhino.JAVASCRIPT.equals(language);
+        return Rhino.LANGUAGE.equals(language);
     }
 
     @Override

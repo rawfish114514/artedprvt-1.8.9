@@ -5,8 +5,8 @@ import rawfish.artedprvt.command.CommandMessages;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.engine.Engines;
 import rawfish.artedprvt.core.engine.ServiceEngine;
-import rawfish.artedprvt.core.engine.ServiceEngines;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -114,7 +114,7 @@ public class CommandApkg extends Command {
         String code=null;
         String abbr=null;
         try {
-            for (ScriptLanguage language : ScriptLanguage.values()) {
+            for (ScriptLanguage language : Engines.getLanguages()) {
                 String a=language.getAbbr();
                 String f=readCompleteFile(pack,a);
                 if(f!=null){
@@ -127,7 +127,7 @@ public class CommandApkg extends Command {
             e.printStackTrace(System.err);
         }
         if(code!=null){
-            ServiceEngine engine= ServiceEngines.getService(abbr);
+            ServiceEngine engine= Engines.getService(abbr);
             if(engine!=null){
                 try {
                     Object result=engine.unwrap(engine.call(code, "complete", args));

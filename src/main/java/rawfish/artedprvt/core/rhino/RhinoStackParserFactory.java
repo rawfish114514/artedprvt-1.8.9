@@ -3,7 +3,7 @@ package rawfish.artedprvt.core.rhino;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.engine.ScriptStackParserFactory;
 
-public class RhinoStackParserFactory implements ScriptStackParserFactory<RhinoStackParser> {
+public class RhinoStackParserFactory implements ScriptStackParserFactory {
     @Override
     public RhinoStackParser create(ScriptProcess process) {
         return new RhinoStackParser();
