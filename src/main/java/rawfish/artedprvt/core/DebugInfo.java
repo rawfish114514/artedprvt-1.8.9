@@ -9,37 +9,44 @@ import java.util.List;
  */
 public class DebugInfo {
     public static String version=FrameProperties.props().get("frame.version");
-    public static List<String> call(boolean isf3){
+    public static String call(boolean isf3){
         if(isf3) {
-            List<String> list = new ArrayList<>();
+            StringBuilder sb = new StringBuilder();
 
-            list.add("");
-            list.add("§cArted§bprvt §f"+version);
-            list.add("A: " + ScriptSystem.B_CHAT + "  D: " + ScriptSystem.B_DEBUG);
             List<ScriptProcess> proList = ScriptProcess.getProList();
             ScriptProcess pro;
-            int n = 0;
-            for (int i = 0; i < proList.size(); i++) {
+
+            int p=proList.size();
+            int t = 0;
+            for (int i = 0; i < p; i++) {
                 pro = proList.get(i);
-                n += pro.getOnRunThreadNumber();
-            }
-            list.add("P: " + proList.size() + "  T: " + n);
-
-            return list;
-        }else{
-            List<String> list = new ArrayList<>();
-
-            if(ScriptSystem.B_DEBUG) {
-                List<ScriptProcess> processList = ScriptProcess.getProList();
-                ScriptProcess process;
-                for (int i = 0; i < processList.size(); i++) {
-                    process = processList.get(i);
-                    String str=process.getName()+"("+process.getScriptInfo().getId()+") "+process.getPid();
-                    list.add(str);
-                }
+                t += pro.getOnRunThreadNumber();
             }
 
-            return list;
+            sb.append("  ");
+            sb.append("§cArted§bprvt§r");
+            sb.append(" ");
+            sb.append(version);
+            sb.append(" ");
+
+            if(ScriptSystem.B_CHAT){
+                sb.append("§aC§r");
+            }else{
+                sb.append("C");
+            }
+            if(ScriptSystem.B_DEBUG){
+                sb.append("§aD§r");
+            }else{
+                sb.append("D");
+            }
+            sb.append(" ");
+
+            sb.append(p);
+            sb.append(" ");
+            sb.append(t);
+
+            return sb.toString();
         }
+        return "";
     }
 }
