@@ -1,3 +1,4 @@
+commandinfo.toml
 commandmessage.toml
 scriptexception.toml
 taskmanager.toml

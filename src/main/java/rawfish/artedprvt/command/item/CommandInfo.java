@@ -118,6 +118,38 @@ public class CommandInfo extends Command {
         return getEmptyList();
     }
 
+    @Override
+    public List<String> format(List<String> args) {
+        if(args.get(0).equals("<src>")){
+            return stringList("6");
+        }
+        File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+        List<String> fl=new ArrayList<>();
+        if(apkg.isFile()){
+            return stringList("6");
+        }else{
+            return stringList("c");
+        }
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()==1){
+            if(args.get(0).isEmpty()){
+                return CommandMessages.translate("cis5");
+            }
+            if(args.get(0).equals("<src>")){
+                return getEmptyString();
+            }
+            File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+            if(apkg.isFile()){
+                return getEmptyString();
+            }
+            return CommandMessages.translate("cis1");
+        }
+        return getEmptyString();
+    }
+
     public List<String> pack(File dir,String p){
         List<String> packs=new ArrayList<>();
         File[] files=dir.listFiles();

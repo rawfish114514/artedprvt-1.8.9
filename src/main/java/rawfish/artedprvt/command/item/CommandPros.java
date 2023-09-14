@@ -122,4 +122,20 @@ public class CommandPros extends Command {
         }
         return getEmptyList();
     }
+
+    @Override
+    public List<String> format(List<String> args) {
+        return stringList("a");
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()>1){
+            return CommandMessages.translate("cis3");
+        }
+        if(args.get(0).isEmpty()){
+            return CommandMessages.translate("cis7");
+        }
+        return getEmptyString();
+    }
 }

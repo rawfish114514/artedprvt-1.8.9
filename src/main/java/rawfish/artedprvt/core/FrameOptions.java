@@ -19,11 +19,11 @@ public class FrameOptions {
 
     public static Map<String,String> defaultMap=new HashMap<String,String>(){{
         put("language","zh_cn");
-        put("repository","gitee");
+        put("repository","https://gitee.com/rawfishc/apse/raw/master/");
     }};
     public static Map<String,List<String>> valuesMap=new HashMap<String,List<String>>(){{
         put("language",s("zh_cn"));
-        put("repository",s("gitee","github"));
+        put("repository",s("https://gitee.com/rawfishc/apse/raw/master/"));
     }};
 
     public static List<String> s(String... strs){

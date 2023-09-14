@@ -55,11 +55,6 @@ public class CommandOptions extends Command {
             if(v==null){
                 CommandMessages.exception(getName(),"cms25",key);
             }else{
-                List<String> values= FrameOptions.getValues(key);
-                if(values==null||!values.contains(value)){
-                    CommandMessages.exception(getName(),"cms29",value);
-                    return;
-                }
                 FrameOptions.setValue(key,value);
                 try {
                     FrameOptions.updateFile();
@@ -77,7 +72,7 @@ public class CommandOptions extends Command {
             List<String> list= new ArrayList<>(FrameOptions.options.keySet());
             list.add("load");
             return startWith(args,list);
-        }else if(args.size()>1) {
+        }else if(args.size()==2) {
             List<String> vs= FrameOptions.getValues(args.get(0));
             if(vs==null){
                 return getEmptyList();
@@ -85,6 +80,51 @@ public class CommandOptions extends Command {
             return startWith(args,new ArrayList<>(vs));
         }
         return getEmptyList();
+    }
+
+    @Override
+    public List<String> format(List<String> args) {
+        if(args.size()==0){
+            return getEmptyList();
+        }
+        if(args.get(0).equals("load")){
+            return stringList("6");
+        }
+        if(args.size()==1){
+            return stringList("d");
+        }
+        return stringList("d","a");
+    }
+
+    public String info(List<String> args){
+        if(args.size()==1){
+            String key=args.get(0);
+            if(key.isEmpty()){
+                return CommandMessages.translate("cis8");
+            }
+            Object value= FrameOptions.getValue(key);
+            if(value==null){
+                return CommandMessages.translate("cis9");
+            }else{
+                /*key info*/
+                if(key.equals("load")){
+                    return CommandMessages.translate("cis11");
+                }
+                if(key.equals("language")){
+                    return "语言";
+                }
+                if(key.equals("repository")){
+                    return "存储库路径";
+                }
+            }
+        }
+        if(args.size()==2){
+
+        }
+        if(args.size()>2){
+            return CommandMessages.translate("cis3");
+        }
+        return getEmptyString();
     }
 
     public List<String> startWith(List<String> args,List<String> cs){

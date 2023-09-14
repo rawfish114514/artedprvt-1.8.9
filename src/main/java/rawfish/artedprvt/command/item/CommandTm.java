@@ -96,6 +96,19 @@ public class CommandTm extends Command {
         return getEmptyList();
     }
 
+    @Override
+    public List<String> format(List<String> args) {
+        return getEmptyList();
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()>0&&(!args.get(0).isEmpty())){
+            return CommandMessages.translate("cis3");
+        }
+        return getEmptyString();
+    }
+
     static class Translate {
         public static String get(String key, Object... args) {
             return Localization.getTranslate(key, args);

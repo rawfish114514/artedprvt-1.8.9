@@ -78,6 +78,34 @@ public class CommandExtract extends Command {
         return getEmptyList();
     }
 
+    @Override
+    public List<String> format(List<String> args) {
+        File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+        List<String> fl=new ArrayList<>();
+        if(apkg.isFile()){
+            fl.add("6");
+        }else{
+            fl.add("c");
+            return fl;
+        }
+        return fl;
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()==1){
+            if(args.get(0).isEmpty()){
+                return CommandMessages.translate("cis5");
+            }
+            File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+            if(apkg.isFile()){
+                return getEmptyString();
+            }
+            return CommandMessages.translate("csi1");
+        }
+        return getEmptyString();
+    }
+
     public List<String> pack(File dir,String p){
         List<String> packs=new ArrayList<>();
         File[] files=dir.listFiles();

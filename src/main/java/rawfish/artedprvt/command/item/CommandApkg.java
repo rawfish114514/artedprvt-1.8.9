@@ -69,9 +69,92 @@ public class CommandApkg extends Command {
             return opt;
         }else if(args.size()>1) {
             /*补全脚本参数*/
-            return scriptComplete(args.get(0),args.subList(1,args.size()));
+            literal(args.get(0),true);
+            if(code!=null){
+                ServiceEngine engine= Engines.getService(abbr);
+                if(engine!=null){
+                    try {
+                        Object result=engine.unwrap(engine.call(code, "complete", args.subList(1,args.size())));
+                        if(result instanceof Collection){
+                            List<String> stringList=new ArrayList<>();
+                            for(Object obj:(Collection)result){
+                                stringList.add(String.valueOf(obj));
+                            }
+                            return stringList;
+                        }else{
+                            return getEmptyList();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
         }
         return getEmptyList();
+    }
+
+    @Override
+    public List<String> format(List<String> args) {
+        File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+        List<String> fl=new ArrayList<>();
+        if(apkg.isFile()){
+            fl.add("6");
+        }else{
+            fl.add("c");
+            return fl;
+        }
+        if(args.size()>1) {
+            /*格式脚本参数*/
+            literal(args.get(0), false);
+            if (code != null) {
+                ServiceEngine engine = Engines.getService(abbr);
+                if (engine != null) {
+                    try {
+                        Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
+                        if (result instanceof Collection) {
+                            List<String> stringList = new ArrayList<>();
+                            for (Object obj : (Collection) result) {
+                                stringList.add(String.valueOf(obj));
+                            }
+                            fl.addAll(stringList);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
+        }
+        return fl;
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()==1){
+            if(args.get(0).isEmpty()){
+                return CommandMessages.translate("cis5");
+            }
+            File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+            if(apkg.isFile()){
+                return getEmptyString();
+            }
+            return CommandMessages.translate("cis1");
+        }
+        /*信息脚本参数*/
+        literal(args.get(0),false);
+        if(code!=null){
+            ServiceEngine engine= Engines.getService(abbr);
+            if(engine!=null){
+                try {
+                    Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
+                    if(result!=null){
+                        return String.valueOf(result);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace(System.err);
+                }
+            }
+        }
+        return getEmptyString();
     }
 
     public List<String> pack(File dir,String p){
@@ -109,48 +192,38 @@ public class CommandApkg extends Command {
         return npacks;
     }
 
-    public List<String> scriptComplete(String pack,List<String> args){
-        //获取补全脚本代码
-        String code=null;
-        String abbr=null;
-        try {
-            for (ScriptLanguage language : Engines.getLanguages()) {
-                String a=language.getAbbr();
-                String f=readCompleteFile(pack,a);
-                if(f!=null){
-                    code=f;
-                    abbr=a;
-                    break;
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace(System.err);
-        }
-        if(code!=null){
-            ServiceEngine engine= Engines.getService(abbr);
-            if(engine!=null){
-                try {
-                    Object result=engine.unwrap(engine.call(code, "complete", args));
-                    if(result instanceof Collection){
-                        List<String> stringList=new ArrayList<>();
-                        for(Object obj:(Collection)result){
-                            stringList.add(String.valueOf(obj));
-                        }
-                        return stringList;
-                    }else{
-                        return getEmptyList();
+
+    public String pack=null;
+    public String code=null;
+    public String abbr=null;
+
+    /**
+     *
+     * @param pack
+     * @param flag 强制更新
+     */
+    public void literal(String pack,boolean flag){
+        if(flag|| !Objects.equals(this.pack, pack)){
+            this.pack=pack;
+            try {
+                for (ScriptLanguage language : Engines.getLanguages()) {
+                    String a=language.getAbbr();
+                    String f= readLiteralFile(pack,a);
+                    if(f!=null){
+                        code=f;
+                        abbr=a;
+                        break;
                     }
-                }catch (Exception e){
-                    e.printStackTrace(System.err);
                 }
+            }catch (Exception e){
+                e.printStackTrace(System.err);
             }
         }
-        return getEmptyList();
     }
 
-    public String readCompleteFile(String pack,String abbr) throws Exception{
+    public String readLiteralFile(String pack, String abbr) throws Exception{
         File file=new File(FrameProperties.props.get("frame.dir")+"/lib/"+pack+".apkg");
-        String target="complete."+abbr;
+        String target="literal."+abbr;
         if(file.isFile()){
             boolean t=false;
             StringBuilder sb=new StringBuilder();

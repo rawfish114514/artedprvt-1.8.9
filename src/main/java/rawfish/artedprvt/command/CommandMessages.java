@@ -13,7 +13,7 @@ public class CommandMessages {
         printChat.print("§6"+source+"§7: "+translate(str,args));
     }
 
-    private static String translate(String str,Object... args){
+    public static String translate(String str,Object... args){
         return Localization.getTranslate(str, args);
     }
 }

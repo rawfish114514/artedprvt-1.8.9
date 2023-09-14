@@ -27,6 +27,9 @@ public class RhinoServiceEngine implements ServiceEngine {
         ScriptableObject scope=rhino.initStandardObjects();
         rhino.evaluateString(scope,code,"service",1,null);
         Object f=scope.get(func);
+        if(f==null){
+            return null;
+        }
         return ((Function) f).call(rhino,scope,scope,args);
     }
 

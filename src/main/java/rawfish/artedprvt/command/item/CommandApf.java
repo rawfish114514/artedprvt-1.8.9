@@ -72,4 +72,45 @@ public class CommandApf extends Command {
         }
         return c.complete(args.subList(1,args.size()));
     }
+
+    @Override
+    public List<String> format(List<String> args) {
+        Command c=null;
+        for(Command command:commandList){
+            if(command.getName().equals(args.get(0))){
+                c=command;
+            }
+        }
+        if(c==null){
+            return stringList("c");
+        }
+        List<String> fl=new ArrayList<>();
+        fl.add("bo");
+        List<String> sargs=args.subList(1,args.size());
+        if(sargs.size()>0) {
+            fl.addAll(c.format(sargs));
+        }
+        return fl;
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()==1&&args.get(0).isEmpty()){
+            return CommandMessages.translate("cis4");
+        }
+        Command c=null;
+        for(Command command:commandList){
+            if(command.getName().equals(args.get(0))){
+                c=command;
+            }
+        }
+        if(c==null){
+            return CommandMessages.translate("cis0");
+        }
+        List<String> sargs=args.subList(1,args.size());
+        if(sargs.size()>0) {
+            return c.info(args.subList(1,args.size()));
+        }
+        return getEmptyString();
+    }
 }

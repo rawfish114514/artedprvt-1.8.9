@@ -66,9 +66,102 @@ public class CommandScript extends Command {
             return opt;
         }else if(args.size()>1) {
             /*补全脚本参数*/
-            return scriptComplete(args.subList(1,args.size()));
+            literal(true);
+            if(code!=null){
+                ServiceEngine engine= Engines.getService(abbr);
+                if(engine!=null){
+                    try {
+                        Object result=engine.unwrap(engine.call(code, "complete", args.subList(1,args.size())));
+                        if(result instanceof Collection){
+                            List<String> stringList=new ArrayList<>();
+                            for(Object obj:(Collection)result){
+                                stringList.add(String.valueOf(obj));
+                            }
+                            return stringList;
+                        }else{
+                            return getEmptyList();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
         }
         return getEmptyList();
+    }
+
+    @Override
+    public List<String> format(List<String> args) {
+        List<String> fl=new ArrayList<>();
+        String a0=args.get(0);
+        List<String> all=complete(stringList(""));
+        String c;
+        for(int i=0;i<all.size();i++){
+            c=all.get(i);
+            if(c.equals(a0)||c.substring(c.indexOf(':')+1).equals(a0)){
+                fl.add("6");
+            }
+        }
+        if(fl.size()==0){
+            fl.add("c");
+        }
+        if(args.size()>1) {
+            /*格式脚本参数*/
+            literal(false);
+            if (code != null) {
+                ServiceEngine engine = Engines.getService(abbr);
+                if (engine != null) {
+                    try {
+                        Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
+                        if (result instanceof Collection) {
+                            List<String> stringList = new ArrayList<>();
+                            for (Object obj : (Collection) result) {
+                                stringList.add(String.valueOf(obj));
+                            }
+                            fl.addAll(stringList);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                    }
+                }
+            }
+        }
+        return fl;
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()==1) {
+            if(args.get(0).isEmpty()){
+                return CommandMessages.translate("cis6");
+            }
+            String a0 = args.get(0);
+            List<String> all = complete(stringList(""));
+            String c;
+            for (int i = 0; i < all.size(); i++) {
+                c = all.get(i);
+                if (c.equals(a0) || c.substring(c.indexOf(':')+1).equals(a0)) {
+                    return getEmptyString();
+                }
+            }
+            return CommandMessages.translate("cis2");
+        }
+        /*信息脚本参数*/
+        literal(false);
+        if(code!=null){
+            ServiceEngine engine= Engines.getService(abbr);
+            if(engine!=null){
+                try {
+                    Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
+                    if(result!=null){
+                        return String.valueOf(result);
+                    }
+                }catch (Exception e){
+                    e.printStackTrace(System.err);
+                }
+            }
+        }
+        return getEmptyString();
     }
 
     public List<String> pack(File dir,String p){
@@ -113,47 +206,34 @@ public class CommandScript extends Command {
         return npacks;
     }
 
-    public List<String> scriptComplete(List<String> args){
-        //获取补全脚本代码
-        String code=null;
-        String abbr=null;
-        try {
-            for (ScriptLanguage language : Engines.getLanguages()) {
-                String a=language.getAbbr();
-                String f=readCompleteFile(a);
-                if(f!=null){
-                    code=f;
-                    abbr=a;
-                    break;
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace(System.err);
-        }
-        if(code!=null){
-            ServiceEngine engine= Engines.getService(abbr);
-            if(engine!=null){
-                try {
-                    Object result=engine.unwrap(engine.call(code, "complete", args));
-                    if(result instanceof Collection){
-                        List<String> stringList=new ArrayList<>();
-                        for(Object obj:(Collection)result){
-                            stringList.add(String.valueOf(obj));
-                        }
-                        return stringList;
-                    }else{
-                        return getEmptyList();
+
+    public String code=null;
+    public String abbr=null;
+
+    /**
+     *
+     * @param flag 强制更新
+     */
+    public void literal(boolean flag){
+        if(flag){
+            try {
+                for (ScriptLanguage language : Engines.getLanguages()) {
+                    String a=language.getAbbr();
+                    String f= readLiteralFile(a);
+                    if(f!=null){
+                        code=f;
+                        abbr=a;
+                        break;
                     }
-                }catch (Exception e){
-                    e.printStackTrace(System.err);
                 }
+            }catch (Exception e){
+                e.printStackTrace(System.err);
             }
         }
-        return getEmptyList();
     }
 
-    public String readCompleteFile(String abbr) throws Exception{
-        File file=new File(FrameProperties.props.get("frame.dir")+"/src/complete."+abbr);
+    public String readLiteralFile(String abbr) throws Exception{
+        File file=new File(FrameProperties.props.get("frame.dir")+"/src/literal."+abbr);
         if(file.isFile()){
             Reader reader=new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             StringBuilder sb=new StringBuilder();

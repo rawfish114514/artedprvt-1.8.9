@@ -1,5 +1,6 @@
 package rawfish.artedprvt.command;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,9 +22,28 @@ public abstract class Command{
     /**
      * 补全参数
      * @param args 光标之前的参数列表
-     * @return 最后一个参数的补全参数列表
+     * @return 最后一个参数的补全参数列表 不能为null
      */
     public abstract List<String> complete(List<String> args);
+
+    /**
+     * 参数格式
+     * 在参数前添加格式代码
+     * 只能包含格式代码 0-f kmnor
+     * 否则被解释为无格式
+     * 不写 小节
+     * @param args 完整的参数列表
+     * @return 返回参数的格式列表 不能为null
+     */
+    public abstract List<String> format(List<String> args);
+
+    /**
+     * 参数信息
+     * @param args 光标之前的参数列表
+     * @return 对参数的解释或提示 不能为null
+     */
+    public abstract String info(List<String> args);
+
 
     private final String commandName;
 
@@ -39,5 +59,22 @@ public abstract class Command{
      */
     public static List<String> getEmptyList() {
         return emptyList;
+    }
+
+    /**
+     * 返回空字符串
+     * @return
+     */
+    public static String getEmptyString(){
+        return "";
+    }
+
+    /**
+     * 返回字符串列表
+     * @param strings
+     * @return
+     */
+    public static List<String> stringList(String... strings){
+        return Arrays.asList(strings);
     }
 }

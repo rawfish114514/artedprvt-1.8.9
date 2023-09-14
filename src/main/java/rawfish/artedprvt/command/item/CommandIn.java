@@ -1,6 +1,7 @@
 package rawfish.artedprvt.command.item;
 
 import rawfish.artedprvt.command.Command;
+import rawfish.artedprvt.command.CommandMessages;
 import rawfish.artedprvt.common.EventLoader;
 import rawfish.artedprvt.event.InputStringEvent;
 
@@ -23,5 +24,15 @@ public class CommandIn extends Command {
     @Override
     public List<String> complete(List<String> args) {
         return getEmptyList();
+    }
+
+    @Override
+    public List<String> format(List<String> args) {
+        return getEmptyList();
+    }
+
+    @Override
+    public String info(List<String> args) {
+        return CommandMessages.translate("cis10");
     }
 }

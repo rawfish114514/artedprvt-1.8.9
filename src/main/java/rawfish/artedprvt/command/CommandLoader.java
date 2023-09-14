@@ -2,7 +2,11 @@ package rawfish.artedprvt.command;
 
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import rawfish.artedprvt.client.CommandInfoChatGui;
 import rawfish.artedprvt.command.item.CommandApf;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CommandLoader {
     public CommandApf apf=new CommandApf("apf");
@@ -13,6 +17,12 @@ public class CommandLoader {
         handler.registerCommand(adapter(artedprvt));
         for(Command command:apf.commandList){
             handler.registerCommand(adapter(command));
+        }
+
+        CommandInfoChatGui.put(apf);
+        CommandInfoChatGui.put(artedprvt);
+        for(Command command:apf.commandList){
+            CommandInfoChatGui.put(command);
         }
     }
 

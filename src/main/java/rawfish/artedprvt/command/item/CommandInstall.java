@@ -47,6 +47,16 @@ public class CommandInstall extends Command {
         return getEmptyList();
     }
 
+    @Override
+    public List<String> format(List<String> args) {
+        return getEmptyList();
+    }
+
+    @Override
+    public String info(List<String> args) {
+        return "target";
+    }
+
     public void install(File file,String id){
         String server="https://gitee.com/rawfishc/apse/raw/master/";
         new Thread(){

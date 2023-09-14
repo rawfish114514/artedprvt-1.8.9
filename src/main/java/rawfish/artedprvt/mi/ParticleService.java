@@ -14,6 +14,7 @@ public class ParticleService implements ScriptObject {
     public List<Particle> particleList;
     public List<ParticleServiceHandler> handlerList;
     public int exit=-1;
+    public int tn=10;//每刻毫秒数
     public ParticleService(){
         scriptProcess=up();
         if(scriptProcess==null){
@@ -33,8 +34,28 @@ public class ParticleService implements ScriptObject {
         handlerList.add(process);
     }
 
-    public void exit(int n){
+    public void setExit(int n){
         exit=n;
+    }
+
+    public int getExit(){
+        return exit;
+    }
+
+    public void setTn(int tn){
+        this.tn=tn;
+    }
+
+    public int getTn(){
+        return tn;
+    }
+
+    public void setTime(int time){
+        setExit(time/tn);
+    }
+
+    public int getTime(){
+        return getExit()*tn;
     }
 
     public void run() {
@@ -42,7 +63,6 @@ public class ParticleService implements ScriptObject {
             long t = time();
             long at = t;
             int n = 0;
-            int tn = 10;//每刻毫秒数
             Particle particle;
             while (true) {
                 if(n>=exit&&exit!=-1){
@@ -61,12 +81,9 @@ public class ParticleService implements ScriptObject {
                 }
                 long t0 = time();
                 at += tn;
-                long td = t0 - at;
-                t = t0;
-                if (td > tn) {
+                long td = at-t0;
+                if (td < 0) {
                     td = 0;
-                } else {
-                    td = tn - td;
                 }
                 sleep(td);
                 n++;

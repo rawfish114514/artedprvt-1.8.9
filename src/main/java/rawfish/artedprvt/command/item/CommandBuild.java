@@ -62,6 +62,19 @@ public class CommandBuild extends Command {
         return getEmptyList();
     }
 
+    @Override
+    public List<String> format(List<String> args) {
+        return getEmptyList();
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()>0&&(!args.get(0).isEmpty())){
+            return CommandMessages.translate("cis3");
+        }
+        return getEmptyString();
+    }
+
     public int zip(String target,String out){
         try {
             File tf = new File(target);

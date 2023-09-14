@@ -29,4 +29,17 @@ public class CommandAc extends Command {
         System.out.println(args);
         return getEmptyList();
     }
+
+    @Override
+    public List<String> format(List<String> args) {
+        return getEmptyList();
+    }
+
+    @Override
+    public String info(List<String> args) {
+        if(args.size()>0&&(!args.get(0).isEmpty())){
+            return CommandMessages.translate("cis3");
+        }
+        return getEmptyString();
+    }
 }

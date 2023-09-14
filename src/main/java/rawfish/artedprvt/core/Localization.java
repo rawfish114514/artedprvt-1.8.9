@@ -75,6 +75,7 @@ public class Localization {
     public static String getTranslate(String key,Object... args){
         String value=translation.get(key);
         if(value==null){
+            Artedprvt.logger.info("调用不存在的翻译键: "+key);
             return "";
         }
         return MessageFormat.format(value,args);
