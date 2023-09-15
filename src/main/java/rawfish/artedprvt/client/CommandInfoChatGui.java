@@ -2,6 +2,7 @@ package rawfish.artedprvt.client;
 
 import net.minecraft.client.gui.*;
 import net.minecraft.util.IChatComponent;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import rawfish.artedprvt.command.Command;
 
@@ -147,6 +148,13 @@ public class CommandInfoChatGui extends GuiChat {
             commandInfo.drawTextBox();
 
         }
+    }
+
+    @Override
+    public void onGuiClosed()
+    {
+        super.onGuiClosed();
+        commandMap.values().forEach(Command::reset);
     }
 
     public String text="";

@@ -164,6 +164,12 @@ public class CommandScript extends Command {
         return getEmptyString();
     }
 
+    @Override
+    public void reset(){
+        code=null;
+        abbr=null;
+    }
+
     public List<String> pack(File dir,String p){
         List<String> packs=new ArrayList<>();
         File[] files=dir.listFiles();
@@ -215,7 +221,7 @@ public class CommandScript extends Command {
      * @param flag 强制更新
      */
     public void literal(boolean flag){
-        if(flag){
+        if(flag||code==null||abbr==null){
             try {
                 for (ScriptLanguage language : Engines.getLanguages()) {
                     String a=language.getAbbr();

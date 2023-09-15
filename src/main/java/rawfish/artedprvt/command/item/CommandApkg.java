@@ -157,6 +157,13 @@ public class CommandApkg extends Command {
         return getEmptyString();
     }
 
+    @Override
+    public void reset(){
+        pack=null;
+        code=null;
+        abbr=null;
+    }
+
     public List<String> pack(File dir,String p){
         List<String> packs=new ArrayList<>();
         File[] files=dir.listFiles();
@@ -203,7 +210,7 @@ public class CommandApkg extends Command {
      * @param flag 强制更新
      */
     public void literal(String pack,boolean flag){
-        if(flag|| !Objects.equals(this.pack, pack)){
+        if(flag||(!Objects.equals(this.pack, pack))||code==null||abbr==null){
             this.pack=pack;
             try {
                 for (ScriptLanguage language : Engines.getLanguages()) {

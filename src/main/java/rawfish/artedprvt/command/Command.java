@@ -44,6 +44,12 @@ public abstract class Command{
      */
     public abstract String info(List<String> args);
 
+    /**
+     * 重置
+     * 在聊天栏关闭时调用
+     */
+    public void reset(){}
+
 
     private final String commandName;
 
