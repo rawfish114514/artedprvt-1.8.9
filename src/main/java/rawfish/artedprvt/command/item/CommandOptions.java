@@ -102,14 +102,14 @@ public class CommandOptions extends Command {
             if(key.isEmpty()){
                 return CommandMessages.translate("cis8");
             }
+            if(key.equals("load")){
+                return CommandMessages.translate("cis11");
+            }
             Object value= FrameOptions.getValue(key);
             if(value==null){
                 return CommandMessages.translate("cis9");
             }else{
                 /*key info*/
-                if(key.equals("load")){
-                    return CommandMessages.translate("cis11");
-                }
                 if(key.equals("language")){
                     return "语言";
                 }

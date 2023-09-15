@@ -69,7 +69,16 @@ public class Artedprvt
 
     public String getDescription(){
         return "Artedprvt Frame 是专为 Minecraft 设计的脚本运行框架，它在游戏中随时运行单个脚本文件或apkg文件。" +
+                otherDescription()+
                 "\n\n作者 ↓\nhttps://space.bilibili.com/455906194";
+    }
+
+    public String tempVersion="temp(particle) 2023/9/15";
+    public String otherDescription(){
+        if(tempVersion.isEmpty()){
+            return tempVersion;
+        }
+        return "\n\n§c这是临时版本: '"+tempVersion+"'";
     }
 
     public boolean isNotDevelopment() {
