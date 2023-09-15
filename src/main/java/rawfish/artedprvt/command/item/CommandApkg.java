@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -80,7 +81,7 @@ public class CommandApkg extends Command {
                             for(Object obj:(Collection)result){
                                 stringList.add(String.valueOf(obj));
                             }
-                            return stringList;
+                            return startWith(args,new ArrayList<>(stringList));
                         }else{
                             return getEmptyList();
                         }
@@ -258,5 +259,13 @@ public class CommandApkg extends Command {
         }else{
             return null;
         }
+    }
+
+    public List<String> startWith(List<String> args,List<String> cs){
+        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
+        if(ns.size()>0){
+            return ns;
+        }
+        return cs;
     }
 }

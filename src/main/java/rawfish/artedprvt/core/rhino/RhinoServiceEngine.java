@@ -1,9 +1,8 @@
 package rawfish.artedprvt.core.rhino;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Wrapper;
+import org.mozilla.javascript.*;
+import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.Localization;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.engine.ServiceEngine;
 
@@ -25,6 +24,10 @@ public class RhinoServiceEngine implements ServiceEngine {
     public Object call(String code,String func,Object... args) throws Exception{
         Context rhino=Context.enter();
         ScriptableObject scope=rhino.initStandardObjects();
+        NativeObject object=new NativeObject();
+        object.put("properties", object, FrameProperties.props());
+        object.put("language", object, Localization.getLanguage());
+        scope.put("core",scope,object);
         rhino.evaluateString(scope,code,"service",1,null);
         Object f=scope.get(func);
         if(f==null){
