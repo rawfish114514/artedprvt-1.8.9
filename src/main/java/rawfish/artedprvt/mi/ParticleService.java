@@ -77,7 +77,9 @@ public class ParticleService implements ScriptObject {
                     }
                 }
                 for (int i = 0; i < handlerList.size(); i++) {
-                    handlerList.get(i).handle(n, this);
+                    if(handlerList.get(i).handle(n, this)){
+                        handlerList.remove(i--);
+                    }
                 }
                 long t0 = time();
                 at += tn;
