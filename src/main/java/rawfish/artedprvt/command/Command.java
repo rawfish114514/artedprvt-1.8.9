@@ -1,8 +1,11 @@
 package rawfish.artedprvt.command;
 
+import rawfish.artedprvt.command.formatterimpls.FormatterAppend;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 命令
@@ -32,10 +35,11 @@ public abstract class Command{
      * 只能包含格式代码 0-f kmnor
      * 否则被解释为无格式
      * 不写 小节
+     *
      * @param args 完整的参数列表
      * @return 返回参数的格式列表 不能为null
      */
-    public abstract List<String> format(List<String> args);
+    public abstract List<? extends Formatter> format(List<String> args);
 
     /**
      * 参数信息
@@ -51,14 +55,20 @@ public abstract class Command{
         return commandName;
     }
 
-    private static final List<String> emptyList=Collections.emptyList();
+    private static final List<String> emptyStringList=Collections.emptyList();
+
+    private static final List<Formatter> emptyFormaterList=Collections.emptyList();
 
     /**
      * 返回空列表
      * @return
      */
-    public static List<String> getEmptyList() {
-        return emptyList;
+    public static List<String> getEmptyStringList() {
+        return emptyStringList;
+    }
+
+    public static List<Formatter> getEmptyFormatterList(){
+        return emptyFormaterList;
     }
 
     /**
@@ -76,5 +86,9 @@ public abstract class Command{
      */
     public static List<String> stringList(String... strings){
         return Arrays.asList(strings);
+    }
+
+    public static List<FormatterAppend> formatterAppendList(String... strings){
+        return Arrays.stream(strings).map((s)->new FormatterAppend(s)).collect(Collectors.toList());
     }
 }

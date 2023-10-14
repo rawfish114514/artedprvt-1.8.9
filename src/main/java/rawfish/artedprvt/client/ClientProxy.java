@@ -1,7 +1,7 @@
 package rawfish.artedprvt.client;
 
 import net.minecraftforge.client.ClientCommandHandler;
-import rawfish.artedprvt.command.CommandLoader;
+import rawfish.artedprvt.command.minecraft.CommandLoader;
 import rawfish.artedprvt.common.CommonProxy;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
