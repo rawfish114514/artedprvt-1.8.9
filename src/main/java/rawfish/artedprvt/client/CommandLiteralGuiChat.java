@@ -5,6 +5,7 @@ import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Mouse;
 import rawfish.artedprvt.command.CommandInputHandler;
+import rawfish.artedprvt.command.Formatter;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -193,26 +194,26 @@ public class CommandLiteralGuiChat extends GuiChat {
             int i = isEnabled ? enabledColor : disabledColor;
             int j = guiTextField.getCursorPosition() - lineScrollOffset;
             int k = guiTextField.getSelectionEnd() - lineScrollOffset;
-            String s = fontRendererObj.trimStringToWidth(substring(guiTextField.getText(),lineScrollOffset), guiTextField.getWidth());
+            String s = fontRendererObj.trimStringToWidth(Formatter.substring(guiTextField.getText(),lineScrollOffset), guiTextField.getWidth());
 
-            boolean flag = j >= 0 && j <= length(s);
+            boolean flag = j >= 0 && j <= Formatter.length(s);
             boolean flag1 = guiTextField.isFocused() && cursorCounter / 6 % 2 == 0 && flag;
             int l = enableBackgroundDrawing ? guiTextField.xPosition + 4 : guiTextField.xPosition;
             int i1 = enableBackgroundDrawing ? guiTextField.yPosition + (guiTextField.height - 8) / 2 : guiTextField.yPosition;
             int j1 = l;
 
-            if (k > length(s))
+            if (k > Formatter.length(s))
             {
-                k = length(s);
+                k = Formatter.length(s);
             }
 
-            if (length(s) > 0)
+            if (Formatter.length(s) > 0)
             {
-                String s1 = flag ? substring(s,0, j) : s;
+                String s1 = flag ? Formatter.substring(s,0, j) : s;
                 j1 = fontRendererObj.drawStringWithShadow(s1, (float)l, i1+offset, i);
             }
 
-            boolean flag2 = guiTextField.getCursorPosition() < length(guiTextField.getText()) || length(guiTextField.getText()) >= guiTextField.getMaxStringLength();
+            boolean flag2 = guiTextField.getCursorPosition() < Formatter.length(guiTextField.getText()) || Formatter.length(guiTextField.getText()) >= guiTextField.getMaxStringLength();
             int k1 = j1;
 
             if (!flag)
@@ -225,9 +226,9 @@ public class CommandLiteralGuiChat extends GuiChat {
                 --j1;
             }
 
-            if (length(s) > 0 && flag && j < length(s))
+            if (Formatter.length(s) > 0 && flag && j < Formatter.length(s))
             {
-                j1 = fontRendererObj.drawStringWithShadow(substring(s,j), (float)j1, i1+offset, i);
+                j1 = fontRendererObj.drawStringWithShadow(Formatter.substring(s,j), (float)j1, i1+offset, i);
             }
 
             if (flag1)
@@ -244,7 +245,7 @@ public class CommandLiteralGuiChat extends GuiChat {
 
             if (k != j)
             {
-                int l1 = l + fontRendererObj.getStringWidth(substring(s,0, k));
+                int l1 = l + fontRendererObj.getStringWidth(Formatter.substring(s,0, k));
 
                 /*reflect*/
                 if(v) {
@@ -255,100 +256,4 @@ public class CommandLiteralGuiChat extends GuiChat {
         }
     }
 
-    public String substring(String s,int begin,int end){
-        String formats="123456789abcdeflmnor";
-        int index=0;
-        char[] chars=s.toCharArray();
-        StringBuilder sb=new StringBuilder();
-        int format=0;
-        int lastFormat=0;
-        for(int i=0;i<chars.length;i++){
-            if(i+1<chars.length&&chars[i]=='§'&&formats.indexOf(chars[i+1])>=0){
-                //format
-                tf:{
-                    char f=chars[i+1];
-                    if(f>48&&f<58){
-                        format=f-48;
-                        break tf;
-                    }
-                    if(f>96&&f<103){
-                        format=f-87;
-                        break tf;
-                    }
-                    if(f=='l'){
-                        format|=0b10000;
-                        break tf;
-                    }
-                    if(f=='m'){
-                        format|=0b100000;
-                        break tf;
-                    }
-                    if(f=='n'){
-                        format|=0b1000000;
-                        break tf;
-                    }
-                    if(f=='o'){
-                        format|=0b10000000;
-                        break tf;
-                    }
-                    if(f=='r'){
-                        format|=0;
-                    }
-                }
-
-                i++;
-            }else{
-                if(index>=begin&&index<end) {
-                    if(format!=lastFormat){
-                        lastFormat=format;
-                        int a;
-                        if((a=format&0b1111)>0){
-                            if(a<10){
-                                sb.append('§');
-                                sb.append((char)(a+48));
-                            }else {
-                                sb.append('§');
-                                sb.append((char)(a+87));
-                            }
-                        }
-                        if((format>>4&1)==1){
-                            sb.append('§');
-                            sb.append('l');
-                        }
-                        if((format>>5&1)==1){
-                            sb.append('§');
-                            sb.append('m');
-                        }
-                        if((format>>6&1)==1){
-                            sb.append('§');
-                            sb.append('n');
-                        }
-                        if((format>>7&1)==1){
-                            sb.append('§');
-                            sb.append('o');
-                        }
-                        if(format==0){
-                            sb.append('§');
-                            sb.append('r');
-                        }
-                    }
-                    sb.append(chars[i]);
-                }
-                index++;
-            }
-        }
-        return sb.toString();
-    }
-
-    public String substring(String s,int begin){
-        return substring(s,begin,length(s));
-    }
-
-    public int length(String s){
-        return unformat(s).length();
-    }
-
-    public String unformat(String s){
-        return s.replaceAll("§[1-9a-flmnor]","");
-    }
 }

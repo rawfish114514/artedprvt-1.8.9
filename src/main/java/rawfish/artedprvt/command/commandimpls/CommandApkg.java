@@ -209,6 +209,7 @@ public class CommandApkg extends Command {
         if(flag|| !Objects.equals(this.pack, pack)){
             this.pack=pack;
             try {
+                code=null;
                 for (ScriptLanguage language : Engines.getLanguages()) {
                     String a=language.getAbbr();
                     String f= readLiteralFile(pack,a);
