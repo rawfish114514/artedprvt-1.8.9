@@ -3,11 +3,11 @@ package rawfish.artedprvt.command.commands;
 import com.electronwill.toml.Toml;
 import org.apache.http.util.ByteArrayBuffer;
 import rawfish.artedprvt.command.Command;
+import rawfish.artedprvt.command.infos.InfoHandlerNumberInspect;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.formats.FormatHandlerNumber;
-import rawfish.artedprvt.command.formats.FormatHandlerNumber2;
 import rawfish.artedprvt.core.FrameProperties;
 
 import java.io.*;
@@ -57,13 +57,13 @@ public class CommandInstall extends Command {
         //return getEmptyFormatterList();
         List<FormatHandler> list=new ArrayList<>();
         list.add(new FormatHandlerNumber());
-        list.add(new FormatHandlerNumber2());
         return list;
     }
 
     @Override
     public InfoHandler info(List<String> args) {
-        return infoString("target");
+        return new InfoHandlerNumberInspect();
+        //return infoString("target");
     }
 
     public void install(File file,String id){

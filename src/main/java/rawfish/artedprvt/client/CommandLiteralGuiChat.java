@@ -130,7 +130,7 @@ public class CommandLiteralGuiChat extends GuiChat {
         }
 
 
-        if(!infoText.equals("")){
+        if(!infoText.isEmpty()){
             int tfw= 0;
             try {
                 if((int)lineScrollOffsetField.get(inputField)<sp0){

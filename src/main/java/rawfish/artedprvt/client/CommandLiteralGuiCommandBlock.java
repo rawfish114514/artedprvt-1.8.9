@@ -158,7 +158,7 @@ public class CommandLiteralGuiCommandBlock extends GuiCommandBlock {
             ((GuiLabel)this.labelList.get(j)).drawLabel(this.mc, mouseX, mouseY);
         }
 
-        if(!infoText.equals("")){
+        if(!infoText.isEmpty()){
             int tfw= 0;
             try {
                 if((int)lineScrollOffsetField.get(inputField)<sp0){

@@ -1,8 +1,8 @@
 package rawfish.artedprvt.command.formats;
 
 import rawfish.artedprvt.command.FormatHandler;
-import rawfish.artedprvt.command.util.ArgumentsParser;
 import rawfish.artedprvt.command.util.ParseResult;
+import rawfish.artedprvt.command.util.parsers.ArgumentsParseRegex;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class FormatHandlerRegex implements FormatHandler {
 
     @Override
     public synchronized String handleFormat(String source) {
-        ParseResult result= ArgumentsParser.parseRegex(pattern,groupHandlerMap.keySet(),source);
+        ParseResult result= ArgumentsParseRegex.parse(pattern,groupHandlerMap.keySet(),source);
         if(result.isCorrect()){
             String s=template;
             Set<String> groups= groupHandlerMap.keySet();

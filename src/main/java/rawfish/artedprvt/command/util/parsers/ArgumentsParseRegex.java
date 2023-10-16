@@ -1,11 +1,16 @@
-package rawfish.artedprvt.command.util;
+package rawfish.artedprvt.command.util.parsers;
 
+import rawfish.artedprvt.command.util.ArgumentsParserInterface;
+import rawfish.artedprvt.command.util.ParseResult;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ArgumentsParser {
-    public static ParseResult parseRegex(
+@ArgumentsParserInterface
+public class ArgumentsParseRegex {
+    public static ParseResult parse(
             Pattern pattern,
             Set<String> groups,
             String source){
@@ -25,4 +30,14 @@ public class ArgumentsParser {
         }
         return new ParseResult(false);
     }
+
+
+    public static final Pattern patternNumber= Pattern.compile(
+            "(?<symbol>[+-]|)(?<number>[0-9]+((\\.[0-9]+)|))(?<invalid>.*)");
+
+    public static final Set<String> groupsNumber=new HashSet<String>(){{
+        add("symbol");
+        add("number");
+        add("invalid");
+    }};
 }
