@@ -1,8 +1,9 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.FormatHandler;
+import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.core.FrameOptions;
 
 import java.util.*;
@@ -84,38 +85,38 @@ public class CommandOptions extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
+    public List<? extends FormatHandler> format(List<String> args) {
         if(args.size()==0){
             return getEmptyFormatterList();
         }
         if(args.get(0).equals("load")){
-            return formatterAppendList("6");
+            return formatAppendList("6");
         }
         if(args.size()==1){
-            return formatterAppendList("d");
+            return formatAppendList("d");
         }
-        return formatterAppendList("d","a");
+        return formatAppendList("d","a");
     }
 
-    public String info(List<String> args){
+    public InfoHandler info(List<String> args){
         if(args.size()==1){
             String key=args.get(0);
             if(key.isEmpty()){
-                return CommandMessages.translate("cis8");
+                return infoString(CommandMessages.translate("cis8"));
             }
             Object value= FrameOptions.getValue(key);
             if(value==null){
-                return CommandMessages.translate("cis9");
+                return infoString(CommandMessages.translate("cis9"));
             }else{
                 /*key info*/
                 if(key.equals("load")){
-                    return CommandMessages.translate("cis11");
+                    return infoString(CommandMessages.translate("cis11"));
                 }
                 if(key.equals("language")){
-                    return "语言";
+                    return infoString("语言");
                 }
                 if(key.equals("repository")){
-                    return "存储库路径";
+                    return infoString("存储库路径");
                 }
             }
         }
@@ -123,9 +124,9 @@ public class CommandOptions extends Command {
 
         }
         if(args.size()>2){
-            return CommandMessages.translate("cis3");
+            return infoString(CommandMessages.translate("cis3"));
         }
-        return getEmptyString();
+        return getEmptyInfo();
     }
 
     public List<String> startWith(List<String> args,List<String> cs){

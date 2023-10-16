@@ -1,9 +1,8 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
-import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
-import rawfish.artedprvt.command.FormatterList;
+import rawfish.artedprvt.command.*;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.util.FormatHandlerList;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
@@ -93,8 +92,8 @@ public class CommandScript extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
-        FormatterList fl=new FormatterList();
+    public List<? extends FormatHandler> format(List<String> args) {
+        FormatHandlerList fl=new FormatHandlerList();
         String a0=args.get(0);
         List<String> all=complete(stringList(""));
         String c;
@@ -116,7 +115,7 @@ public class CommandScript extends Command {
                     try {
                         Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
                         if (result instanceof Collection) {
-                            FormatterList stringList = new FormatterList();
+                            FormatHandlerList stringList = new FormatHandlerList();
                             for (Object obj : (Collection) result) {
                                 stringList.add(String.valueOf(obj));
                             }
@@ -132,10 +131,10 @@ public class CommandScript extends Command {
     }
 
     @Override
-    public String info(List<String> args) {
+    public InfoHandler info(List<String> args) {
         if(args.size()==1) {
             if(args.get(0).isEmpty()){
-                return CommandMessages.translate("cis6");
+                return infoString(CommandMessages.translate("cis6"));
             }
             String a0 = args.get(0);
             List<String> all = complete(stringList(""));
@@ -143,10 +142,10 @@ public class CommandScript extends Command {
             for (int i = 0; i < all.size(); i++) {
                 c = all.get(i);
                 if (c.equals(a0) || c.substring(c.indexOf(':')+1).equals(a0)) {
-                    return getEmptyString();
+                    return getEmptyInfo();
                 }
             }
-            return CommandMessages.translate("cis2");
+            return infoString(CommandMessages.translate("cis2"));
         }
         /*信息脚本参数*/
         literal(false);
@@ -156,14 +155,14 @@ public class CommandScript extends Command {
                 try {
                     Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
                     if(result!=null){
-                        return String.valueOf(result);
+                        return infoString(String.valueOf(result));
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return getEmptyString();
+        return getEmptyInfo();
     }
 
     public List<String> pack(File dir,String p){

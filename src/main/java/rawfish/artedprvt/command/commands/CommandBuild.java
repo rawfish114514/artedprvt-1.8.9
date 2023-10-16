@@ -1,8 +1,9 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.FormatHandler;
+import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ScriptInfo;
 import rawfish.artedprvt.core.struct.FileLoader;
@@ -64,16 +65,16 @@ public class CommandBuild extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
+    public List<? extends FormatHandler> format(List<String> args) {
         return getEmptyFormatterList();
     }
 
     @Override
-    public String info(List<String> args) {
+    public InfoHandler info(List<String> args) {
         if(args.size()>0&&(!args.get(0).isEmpty())){
-            return CommandMessages.translate("cis3");
+            return infoString(CommandMessages.translate("cis3"));
         }
-        return getEmptyString();
+        return getEmptyInfo();
     }
 
     public int zip(String target,String out){

@@ -1,10 +1,8 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
-import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
-import rawfish.artedprvt.command.FormatterList;
-import rawfish.artedprvt.command.formatterimpls.FormatterAppend;
+import rawfish.artedprvt.command.*;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.util.FormatHandlerList;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
@@ -97,9 +95,9 @@ public class CommandApkg extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
+    public List<? extends FormatHandler> format(List<String> args) {
         File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
-        FormatterList fl=new FormatterList();
+        FormatHandlerList fl=new FormatHandlerList();
         if(apkg.isFile()){
             fl.add("6");
         }else{
@@ -115,7 +113,7 @@ public class CommandApkg extends Command {
                     try {
                         Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
                         if (result instanceof Collection) {
-                            FormatterList stringList = new FormatterList();
+                            FormatHandlerList stringList = new FormatHandlerList();
                             for (Object obj : (Collection) result) {
                                 stringList.add(String.valueOf(obj));
                             }
@@ -131,16 +129,16 @@ public class CommandApkg extends Command {
     }
 
     @Override
-    public String info(List<String> args) {
+    public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return CommandMessages.translate("cis5");
+                return infoString(CommandMessages.translate("cis5"));
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
-                return getEmptyString();
+                return getEmptyInfo();
             }
-            return CommandMessages.translate("cis1");
+            return infoString(CommandMessages.translate("cis1"));
         }
         /*信息脚本参数*/
         literal(args.get(0),false);
@@ -150,14 +148,14 @@ public class CommandApkg extends Command {
                 try {
                     Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
                     if(result!=null){
-                        return String.valueOf(result);
+                        return infoString(String.valueOf(result));
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return getEmptyString();
+        return getEmptyInfo();
     }
 
     public List<String> pack(File dir,String p){

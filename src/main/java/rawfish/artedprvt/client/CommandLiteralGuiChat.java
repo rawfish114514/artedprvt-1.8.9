@@ -4,8 +4,9 @@ import net.minecraft.client.gui.*;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Mouse;
-import rawfish.artedprvt.command.CommandInputHandler;
-import rawfish.artedprvt.command.Formatter;
+import rawfish.artedprvt.command.util.CommandInputHandler;
+import rawfish.artedprvt.command.FormatHandler;
+import rawfish.artedprvt.command.util.HandleResult;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -74,7 +75,7 @@ public class CommandLiteralGuiChat extends GuiChat {
         pos=inputField.getCursorPosition();
         if(!text.equals(oldText)){
             oldText=text;
-            CommandInputHandler.HandleResult result=CommandInputHandler.handleFormat(text,pos);
+            HandleResult result=CommandInputHandler.handleFormat(text,pos);
             if(result.isHandle()) {
                 handledText=result.getResult();
                 formatField.setText(handledText);
@@ -84,7 +85,7 @@ public class CommandLiteralGuiChat extends GuiChat {
         }
         if(pos!=oldPos) {
             oldPos = pos;
-            CommandInputHandler.HandleResult result=CommandInputHandler.handleInfo(text,pos);
+            HandleResult result=CommandInputHandler.handleInfo(text,pos);
             if (!result.isHandle()) {
                 infoText="";
             }else{
@@ -194,26 +195,26 @@ public class CommandLiteralGuiChat extends GuiChat {
             int i = isEnabled ? enabledColor : disabledColor;
             int j = guiTextField.getCursorPosition() - lineScrollOffset;
             int k = guiTextField.getSelectionEnd() - lineScrollOffset;
-            String s = fontRendererObj.trimStringToWidth(Formatter.substring(guiTextField.getText(),lineScrollOffset), guiTextField.getWidth());
+            String s = fontRendererObj.trimStringToWidth(FormatHandler.substring(guiTextField.getText(),lineScrollOffset), guiTextField.getWidth());
 
-            boolean flag = j >= 0 && j <= Formatter.length(s);
+            boolean flag = j >= 0 && j <= FormatHandler.length(s);
             boolean flag1 = guiTextField.isFocused() && cursorCounter / 6 % 2 == 0 && flag;
             int l = enableBackgroundDrawing ? guiTextField.xPosition + 4 : guiTextField.xPosition;
             int i1 = enableBackgroundDrawing ? guiTextField.yPosition + (guiTextField.height - 8) / 2 : guiTextField.yPosition;
             int j1 = l;
 
-            if (k > Formatter.length(s))
+            if (k > FormatHandler.length(s))
             {
-                k = Formatter.length(s);
+                k = FormatHandler.length(s);
             }
 
-            if (Formatter.length(s) > 0)
+            if (FormatHandler.length(s) > 0)
             {
-                String s1 = flag ? Formatter.substring(s,0, j) : s;
+                String s1 = flag ? FormatHandler.substring(s,0, j) : s;
                 j1 = fontRendererObj.drawStringWithShadow(s1, (float)l, i1+offset, i);
             }
 
-            boolean flag2 = guiTextField.getCursorPosition() < Formatter.length(guiTextField.getText()) || Formatter.length(guiTextField.getText()) >= guiTextField.getMaxStringLength();
+            boolean flag2 = guiTextField.getCursorPosition() < FormatHandler.length(guiTextField.getText()) || FormatHandler.length(guiTextField.getText()) >= guiTextField.getMaxStringLength();
             int k1 = j1;
 
             if (!flag)
@@ -226,9 +227,9 @@ public class CommandLiteralGuiChat extends GuiChat {
                 --j1;
             }
 
-            if (Formatter.length(s) > 0 && flag && j < Formatter.length(s))
+            if (FormatHandler.length(s) > 0 && flag && j < FormatHandler.length(s))
             {
-                j1 = fontRendererObj.drawStringWithShadow(Formatter.substring(s,j), (float)j1, i1+offset, i);
+                j1 = fontRendererObj.drawStringWithShadow(FormatHandler.substring(s,j), (float)j1, i1+offset, i);
             }
 
             if (flag1)
@@ -245,7 +246,7 @@ public class CommandLiteralGuiChat extends GuiChat {
 
             if (k != j)
             {
-                int l1 = l + fontRendererObj.getStringWidth(Formatter.substring(s,0, k));
+                int l1 = l + fontRendererObj.getStringWidth(FormatHandler.substring(s,0, k));
 
                 /*reflect*/
                 if(v) {

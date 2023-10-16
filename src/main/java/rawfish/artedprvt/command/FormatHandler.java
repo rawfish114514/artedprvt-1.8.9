@@ -1,12 +1,10 @@
 package rawfish.artedprvt.command;
 
-import rawfish.artedprvt.client.CommandLiteralGuiChat;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface Formatter {
-    String formatting(String source);
+public interface FormatHandler {
+    String handleFormat(String source);
 
     Pattern format= Pattern.compile("[0-9a-fkm-or]*");
     static String toFormatCode(String value){

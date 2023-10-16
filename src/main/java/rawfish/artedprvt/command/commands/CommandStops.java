@@ -1,8 +1,9 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.FormatHandler;
+import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.core.ScriptProcess;
 
 import java.util.ArrayList;
@@ -92,18 +93,18 @@ public class CommandStops extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
-        return formatterAppendList("d");
+    public List<? extends FormatHandler> format(List<String> args) {
+        return formatAppendList("d");
     }
 
     @Override
-    public String info(List<String> args) {
+    public InfoHandler info(List<String> args) {
         if(args.size()>1){
-            return CommandMessages.translate("cis3");
+            return infoString(CommandMessages.translate("cis3"));
         }
         if(args.get(0).isEmpty()){
-            return CommandMessages.translate("cis7");
+            return infoString(CommandMessages.translate("cis7"));
         }
-        return getEmptyString();
+        return getEmptyInfo();
     }
 }

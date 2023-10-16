@@ -1,9 +1,8 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
-import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
-import rawfish.artedprvt.command.FormatterList;
+import rawfish.artedprvt.command.*;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.util.FormatHandlerList;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.mi.PrintChat;
 
@@ -81,9 +80,9 @@ public class CommandExtract extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
+    public List<? extends FormatHandler> format(List<String> args) {
         File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
-        FormatterList fl=new FormatterList();
+        FormatHandlerList fl=new FormatHandlerList();
         if(apkg.isFile()){
             fl.add("6");
         }else{
@@ -94,18 +93,18 @@ public class CommandExtract extends Command {
     }
 
     @Override
-    public String info(List<String> args) {
+    public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return CommandMessages.translate("cis5");
+                return infoString(CommandMessages.translate("cis5"));
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
-                return getEmptyString();
+                return getEmptyInfo();
             }
-            return CommandMessages.translate("csi1");
+            return infoString(CommandMessages.translate("csi1"));
         }
-        return getEmptyString();
+        return getEmptyInfo();
     }
 
     public List<String> pack(File dir,String p){

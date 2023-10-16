@@ -1,4 +1,7 @@
-package rawfish.artedprvt.command;
+package rawfish.artedprvt.command.util;
+
+import rawfish.artedprvt.command.Command;
+import rawfish.artedprvt.command.FormatHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,14 +9,14 @@ import java.util.List;
 import java.util.Map;
 
 public class CommandInputHandler {
-    private static Map<String,Command> commandMap= new HashMap<String,Command>();
+    private static Map<String, Command> commandMap= new HashMap<String,Command>();
 
     public static void register(Command command){
         commandMap.put(command.getName(),command);
     }
 
 
-    public static HandleResult handleFormat(String input,int pos){
+    public static HandleResult handleFormat(String input, int pos){
         List<String> spaces=new ArrayList<>();
         List<String> items=new ArrayList<>();
         char[] chars=input.toCharArray();
@@ -73,9 +76,9 @@ public class CommandInputHandler {
             return new HandleResult(handledText);
         }
 
-        List<? extends Formatter> formats=command.format(fargs);
+        List<? extends FormatHandler> formats=command.format(fargs);
         for(int i=0;i<formats.size()&&i<args.size();i++){
-            fargs.set(i,formats.get(i).formatting(args.get(i))+"§r");
+            fargs.set(i,formats.get(i).handleFormat(args.get(i))+"§r");
         }
 
         fargs.add(0,s0);
@@ -90,7 +93,7 @@ public class CommandInputHandler {
         return new HandleResult(handledText);
     }
 
-    public static HandleResult handleInfo(String input,int pos){
+    public static HandleResult handleInfo(String input, int pos){
         List<String> spaces=new ArrayList<>();
         List<String> items=new ArrayList<>();
         String t1=input.substring(0,pos);
@@ -151,45 +154,10 @@ public class CommandInputHandler {
             return new HandleResult();
         }
 
-        String infoText=command.info(args);
+        String infoText=command.info(args).handleInfo(args.get(args.size()-1));
 
 
         return new HandleResult(infoText,sp0);
     }
 
-    public static class HandleResult{
-        private boolean handle;
-        private String result;
-        private int pos;
-
-        public HandleResult(boolean handle,String result,int pos){
-            this.handle=handle;
-            this.result=result;
-            this.pos=pos;
-        }
-
-        public HandleResult(){
-            this(false,null,0);
-        }
-
-        public HandleResult(String result){
-            this(true,result,0);
-        }
-
-        public HandleResult(String result,int pos){
-            this(true,result,pos);
-        }
-
-        public boolean isHandle(){
-            return handle;
-        }
-
-        public String getResult(){
-            return result;
-        }
-
-        public int getPos(){
-            return pos;
-        }
-    }
 }

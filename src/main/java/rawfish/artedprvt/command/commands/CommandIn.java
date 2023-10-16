@@ -1,8 +1,9 @@
-package rawfish.artedprvt.command.commandimpls;
+package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandMessages;
-import rawfish.artedprvt.command.Formatter;
+import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.FormatHandler;
+import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.common.EventLoader;
 import rawfish.artedprvt.event.InputStringEvent;
 
@@ -28,12 +29,12 @@ public class CommandIn extends Command {
     }
 
     @Override
-    public List<? extends Formatter> format(List<String> args) {
+    public List<? extends FormatHandler> format(List<String> args) {
         return getEmptyFormatterList();
     }
 
     @Override
-    public String info(List<String> args) {
-        return CommandMessages.translate("cis10");
+    public InfoHandler info(List<String> args) {
+        return infoString(CommandMessages.translate("cis10"));
     }
 }

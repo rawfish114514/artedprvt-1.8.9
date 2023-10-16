@@ -3,7 +3,8 @@ package rawfish.artedprvt.id;
 
 import java.awt.*;
 
-public class ChatFormat {
+public class TextFormat {
+    public static final char _xj='§';
     public static final Color _0=new Color(0,0,0);
     public static final Color _1=new Color(0,0,170);
     public static final Color _2=new Color(0,170,0);

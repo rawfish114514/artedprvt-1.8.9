@@ -1,6 +1,7 @@
 package rawfish.artedprvt.command;
 
-import rawfish.artedprvt.command.formatterimpls.FormatterAppend;
+import rawfish.artedprvt.command.formats.*;
+import rawfish.artedprvt.command.infos.*;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,14 +40,15 @@ public abstract class Command{
      * @param args 完整的参数列表
      * @return 返回参数的格式列表 不能为null
      */
-    public abstract List<? extends Formatter> format(List<String> args);
+    public abstract List<? extends FormatHandler> format(List<String> args);
 
     /**
      * 参数信息
+     *
      * @param args 光标之前的参数列表
      * @return 对参数的解释或提示 不能为null
      */
-    public abstract String info(List<String> args);
+    public abstract InfoHandler info(List<String> args);
 
 
     private final String commandName;
@@ -57,7 +59,7 @@ public abstract class Command{
 
     private static final List<String> emptyStringList=Collections.emptyList();
 
-    private static final List<Formatter> emptyFormaterList=Collections.emptyList();
+    private static final List<FormatHandler> emptyFormaterList=Collections.emptyList();
 
     /**
      * 返回空列表
@@ -67,7 +69,7 @@ public abstract class Command{
         return emptyStringList;
     }
 
-    public static List<Formatter> getEmptyFormatterList(){
+    public static List<FormatHandler> getEmptyFormatterList(){
         return emptyFormaterList;
     }
 
@@ -88,7 +90,16 @@ public abstract class Command{
         return Arrays.asList(strings);
     }
 
-    public static List<FormatterAppend> formatterAppendList(String... strings){
-        return Arrays.stream(strings).map((s)->new FormatterAppend(s)).collect(Collectors.toList());
+    public static List<FormatHandlerAppend> formatAppendList(String... strings){
+        return Arrays.stream(strings).map((s)->new FormatHandlerAppend(s)).collect(Collectors.toList());
+    }
+
+    public static InfoHandler infoString(String string){
+        return new InfoHandlerString(string);
+    }
+
+    public static InfoHandler emptyInfo=new InfoHandlerEmpty();
+    public static InfoHandler getEmptyInfo(){
+        return emptyInfo;
     }
 }

@@ -3,8 +3,8 @@ package rawfish.artedprvt.command.minecraft;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.CommandInputHandler;
-import rawfish.artedprvt.command.commandimpls.CommandApf;
+import rawfish.artedprvt.command.util.CommandInputHandler;
+import rawfish.artedprvt.command.commands.CommandApf;
 
 public class CommandLoader {
     public CommandApf apf=new CommandApf("apf");

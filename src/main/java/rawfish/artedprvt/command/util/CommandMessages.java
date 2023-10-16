@@ -1,4 +1,4 @@
-package rawfish.artedprvt.command;
+package rawfish.artedprvt.command.util;
 
 import rawfish.artedprvt.core.Localization;
 import rawfish.artedprvt.mi.PrintChat;
