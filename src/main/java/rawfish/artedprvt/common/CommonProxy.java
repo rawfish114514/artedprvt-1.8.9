@@ -4,7 +4,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import rawfish.artedprvt.command.CommandLoader;
+import rawfish.artedprvt.command.minecraft.CommandLoader;
 import rawfish.artedprvt.core.FrameOptions;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ProcessController;

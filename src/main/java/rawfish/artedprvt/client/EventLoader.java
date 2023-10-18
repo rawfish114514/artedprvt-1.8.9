@@ -2,6 +2,7 @@ package rawfish.artedprvt.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.GuiCommandBlock;
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.GuiOpenEvent;
@@ -33,7 +34,10 @@ public class EventLoader {
         if(event==null)return;
         if(event.gui==null)return;
         if(event.gui instanceof GuiChat &&!(event.gui instanceof GuiSleepMP)){
-            event.gui=new CommandInfoChatGui((GuiChat)event.gui);
+            event.gui=new CommandLiteralGuiChat((GuiChat)event.gui);
+        }
+        if(event.gui instanceof GuiCommandBlock){
+            event.gui=new CommandLiteralGuiCommandBlock((GuiCommandBlock)event.gui);
         }
     }
 }
