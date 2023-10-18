@@ -25,6 +25,7 @@ public class CommandStops extends Command {
             while(proList.size()>0){
                 pro=proList.get(0);
                 pro.stop(ScriptProcess.STOPS);
+                proList.remove(pro);
             }
             if(n==0){
                 CommandMessages.exception(getName(),"cms18");

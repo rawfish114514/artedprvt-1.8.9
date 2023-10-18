@@ -13,8 +13,8 @@ public class ParticleService implements ScriptObject {
 
     public List<Particle> particleList;
     public List<ParticleServiceHandler> handlerList;
-    public int exit=-1;
-    public int tn=10;//每刻毫秒数
+    public double exit=-1;
+    public double tn=10;//每刻毫秒数
     public ParticleService(){
         scriptProcess=up();
         if(scriptProcess==null){
@@ -34,56 +34,53 @@ public class ParticleService implements ScriptObject {
         handlerList.add(process);
     }
 
-    public void setExit(int n){
+    public void setExit(double n){
         exit=n;
     }
 
-    public int getExit(){
+    public double getExit(){
         return exit;
     }
 
-    public void setTn(int tn){
+    public void setTn(double tn){
         this.tn=tn;
     }
 
-    public int getTn(){
+    public double getTn(){
         return tn;
     }
 
-    public void setTime(int time){
+    public void setTime(double time){
         setExit(time/tn);
     }
 
-    public int getTime(){
+    public double getTime(){
         return getExit()*tn;
     }
 
     public void run() {
         try {
-            long t = time();
-            long at = t;
+            long at = time();
             int n = 0;
             Particle particle;
-            while (true) {
-                if(n>=exit&&exit!=-1){
-                    break;
-                }
+            while (!(n >= exit) || exit <0) {
                 for (int i = 0; i < particleList.size(); i++) {
                     particle = particleList.get(i);
                     if (particle != null && !particle.isDead) {
                         particle.motionUpdate();
                     } else {
                         particleList.remove(i);
+                        i--;
                     }
                 }
                 for (int i = 0; i < handlerList.size(); i++) {
-                    if(handlerList.get(i).handle(n, this)){
+                    if (handlerList.get(i).handle(n, this)) {
                         handlerList.remove(i--);
                     }
                 }
                 long t0 = time();
                 at += tn;
-                long td = at-t0;
+                long td = at - t0;
                 if (td < 0) {
                     td = 0;
                 }

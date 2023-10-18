@@ -367,13 +367,13 @@ public class ScriptProcess {
 
     public int getOnRunThreadNumber(){
         int n=0;
-        if(mainThread.getState()!=Thread.State.TERMINATED){
+        if(mainThread!=null&&mainThread.getState()!=Thread.State.TERMINATED){
             n++;
         }
         ScriptThread thread;
         for(int i=0;i<threads.size();i++){
             thread=threads.get(i);
-            if(thread.getState()!=Thread.State.TERMINATED){
+            if(thread!=null&&thread.getState()!=Thread.State.TERMINATED){
                 n++;
             }
         }
@@ -485,7 +485,7 @@ public class ScriptProcess {
     }
 
     public static List<ScriptProcess> getProList() {
-        return proList;
+        return new ArrayList<>(proList);
     }
 
     public Map<String, String> getProps() {

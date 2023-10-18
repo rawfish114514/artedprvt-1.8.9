@@ -3,12 +3,13 @@ package rawfish.artedprvt.mi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
-import scala.annotation.meta.field;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EffectSpawn {
@@ -39,6 +40,14 @@ public class EffectSpawn {
             throw new RuntimeException(e);
         }
         fxLayers=(List<EntityFX>[][])object;
+        for(int i=0;i<fxLayers.length;i++){
+            for(int j=0;j<fxLayers[i].length;j++){
+                if(fxLayers[i][j].getClass()!=NullableList.class) {
+                    NullableList nullableList = new NullableList(world);
+                    fxLayers[i][j]=nullableList;
+                }
+            }
+        }
     }
 
     public EffectSpawn(){
@@ -53,5 +62,33 @@ public class EffectSpawn {
             fxLayers[0][1].add(particle);
             return particle;
         }
+    }
+
+    public static class NullableList extends ArrayList<EntityFX>{
+        public World world;
+        public NullableList(World world,Collection<? extends EntityFX> c){
+            super(c);
+            this.world=world;
+        }
+
+        public NullableList(World world){
+            this.world=world;
+        }
+
+        public EntityFX get(int index){
+            EntityFX entityFX=super.get(index);
+            if(entityFX==null){
+                return new NullParticle(world,0,0,0);
+            }
+            return entityFX;
+        }
+    }
+
+    public static class NullParticle extends Particle{
+        public NullParticle(World worldIn, double posXIn, double posYIn, double posZIn) {
+            super(worldIn, posXIn, posYIn, posZIn);
+        }
+        public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
+        {}
     }
 }

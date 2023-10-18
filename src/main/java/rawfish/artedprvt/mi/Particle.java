@@ -61,10 +61,7 @@ public class Particle extends EntityFX {
      */
     public void renderParticle(WorldRenderer worldRendererIn, Entity entityIn, float partialTicks, float rotationX, float rotationZ, float rotationYZ, float rotationXY, float rotationXZ)
     {
-            //float f = ((float) this.particleAge + partialTicks) / (float) this.particleMaxAge;
-            //this.particleScale = this.aparticleScale * (1.0F - f * f);
-            super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
-
+        super.renderParticle(worldRendererIn, entityIn, partialTicks, rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
     }
 
     public void onUpdate() {
