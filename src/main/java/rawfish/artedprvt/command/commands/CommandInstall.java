@@ -3,7 +3,11 @@ package rawfish.artedprvt.command.commands;
 import com.electronwill.toml.Toml;
 import org.apache.http.util.ByteArrayBuffer;
 import rawfish.artedprvt.command.Command;
+import rawfish.artedprvt.command.formats.FormatHandlerAppend;
+import rawfish.artedprvt.command.formats.FormatHandlerSet;
+import rawfish.artedprvt.command.infos.InfoHandlerMap;
 import rawfish.artedprvt.command.infos.InfoHandlerNumberInspect;
+import rawfish.artedprvt.command.infos.InfoHandlerString;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
@@ -16,6 +20,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,12 +62,19 @@ public class CommandInstall extends Command {
         //return getEmptyFormatterList();
         List<FormatHandler> list=new ArrayList<>();
         list.add(new FormatHandlerNumber());
+        list.add(new FormatHandlerSet(stringList("get","set","put","add","sort"),new FormatHandlerAppend("a"),new FormatHandlerAppend("c")));
         return list;
     }
 
     @Override
     public InfoHandler info(List<String> args) {
-        return new InfoHandlerNumberInspect();
+        return new InfoHandlerMap(new HashMap<String,InfoHandler>(){{
+            put("get",new InfoHandlerString("获取"));
+            put("set",new InfoHandlerString("设置"));
+            put("put",new InfoHandlerString("推进"));
+            put("add",new InfoHandlerString("添加"));
+            put("sort",new InfoHandlerString("排序"));
+        }},new InfoHandlerString("错误的"));
         //return infoString("target");
     }
 

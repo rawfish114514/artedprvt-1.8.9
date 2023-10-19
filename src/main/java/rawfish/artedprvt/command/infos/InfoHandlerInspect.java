@@ -1,7 +1,7 @@
 package rawfish.artedprvt.command.infos;
 
-import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
+import rawfish.artedprvt.command.util.Literals;
 
 public abstract class InfoHandlerInspect implements InfoHandler {
     public String type;
@@ -11,11 +11,11 @@ public abstract class InfoHandlerInspect implements InfoHandler {
 
     public String inspect(String source,boolean inspect){
         if(inspect){
-            return FormatHandler.toFormatCode("a")+ "<"+type+">";
+            return Literals.Formats.toFormatCode("a")+ "<"+type+">";
         }
         if(source.isEmpty()){
             return "<"+type+">";
         }
-        return FormatHandler.toFormatCode("c")+ "<"+type+"> -> "+source;
+        return Literals.Formats.toFormatCode("c")+ "<"+type+"> -> "+source;
     }
 }

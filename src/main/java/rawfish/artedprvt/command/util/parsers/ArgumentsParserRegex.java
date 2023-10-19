@@ -3,16 +3,17 @@ package rawfish.artedprvt.command.util.parsers;
 import rawfish.artedprvt.command.util.ArgumentsParserInterface;
 import rawfish.artedprvt.command.util.ParseResult;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @ArgumentsParserInterface
-public class ArgumentsParseRegex {
+public class ArgumentsParserRegex {
     public static ParseResult parse(
             Pattern pattern,
-            Set<String> groups,
+            Collection<String> groups,
             String source){
         Matcher matcher=pattern.matcher(source);
         if(matcher.matches()){

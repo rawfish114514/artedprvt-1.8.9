@@ -1,7 +1,7 @@
 package rawfish.artedprvt.command.infos;
 
 import rawfish.artedprvt.command.util.ParseResult;
-import rawfish.artedprvt.command.util.parsers.ArgumentsParseRegex;
+import rawfish.artedprvt.command.util.parsers.ArgumentsParserRegex;
 
 public class InfoHandlerNumberInspect extends InfoHandlerInspect{
     public InfoHandlerNumberInspect() {
@@ -10,9 +10,9 @@ public class InfoHandlerNumberInspect extends InfoHandlerInspect{
 
     @Override
     public String handleInfo(String source) {
-        ParseResult result= ArgumentsParseRegex.parse(
-                ArgumentsParseRegex.patternNumber,
-                ArgumentsParseRegex.groupsNumber,
+        ParseResult result= ArgumentsParserRegex.parse(
+                ArgumentsParserRegex.patternNumber,
+                ArgumentsParserRegex.groupsNumber,
                 source);
         if(result.isCorrect()) {
             if (!result.get("invalid").isEmpty()) {
