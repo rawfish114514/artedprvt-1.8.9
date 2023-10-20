@@ -4,10 +4,11 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
-import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ScriptInfo;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.struct.ApkgFileLoader;
 import rawfish.artedprvt.core.struct.FileLoader;
 import rawfish.artedprvt.core.struct.SourceFileLoader;
@@ -45,9 +46,9 @@ public class CommandInfo extends Command {
                 processPack(pack);
                 return;
             }
-            CommandMessages.exception(getName(), "cms16");
+            CommandMessages.exception(getName(), CMS.cms16);
         }catch (Exception e){
-            CommandMessages.exception(getName(),"cms30",pack);
+            CommandMessages.exception(getName(),CMS.cms30,pack);
         }
     }
 
@@ -139,7 +140,7 @@ public class CommandInfo extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis5"));
+                return Literals.infoBuilder().string(CIS.cis5);
             }
             if(args.get(0).equals("<src>")){
                 return Literals.emptyInfo();
@@ -148,7 +149,7 @@ public class CommandInfo extends Command {
             if(apkg.isFile()){
                 return Literals.emptyInfo();
             }
-            return Literals.infoBuilder().string(CommandMessages.translate("cis1"));
+            return Literals.infoBuilder().string(CIS.cis1);
         }
         return Literals.emptyInfo();
     }

@@ -1,5 +1,9 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.core.localization.Localization;
+
+import java.text.MessageFormat;
+
 /**
  * 脚本异常
  * 一般只出现在脚本的线程
@@ -12,6 +16,6 @@ public class ScriptExceptions {
     }
 
     public static void exception(String key,Object... args){
-        exception(Localization.getTranslate(key, args));
+        exception(MessageFormat.format(key, args));
     }
 }

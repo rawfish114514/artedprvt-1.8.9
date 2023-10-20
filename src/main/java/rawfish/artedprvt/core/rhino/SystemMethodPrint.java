@@ -1,6 +1,7 @@
 package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.Scriptable;
+import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.mi.ChatProvider;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
@@ -30,7 +31,7 @@ public class SystemMethodPrint extends SystemMethod{
                 return null;
             }
         }
-        ScriptExceptions.exception("ses0",this.getName());
+        ScriptExceptions.exception(SES.ses0,this.getName());
         return null;
     }
 }

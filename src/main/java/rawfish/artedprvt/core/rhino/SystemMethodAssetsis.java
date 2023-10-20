@@ -3,6 +3,7 @@ package rawfish.artedprvt.core.rhino;
 import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.localization.types.SES;
 
 public class SystemMethodAssetsis extends SystemMethod{
     public SystemMethodAssetsis(Scriptable scope, ScriptSystem scriptSystem) {
@@ -13,7 +14,7 @@ public class SystemMethodAssetsis extends SystemMethod{
     @Override
     public Object invoke(Object[] args) {
         if(args.length>1){
-            ScriptExceptions.exception("ses0",this.getName());
+            ScriptExceptions.exception(SES.ses0,this.getName());
         }
         return scriptSystem.getFileInputStream("assets/"+String.valueOf(args[0]));
     }

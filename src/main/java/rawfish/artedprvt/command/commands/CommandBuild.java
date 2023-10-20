@@ -7,6 +7,8 @@ import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ScriptInfo;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.struct.FileLoader;
 import rawfish.artedprvt.core.struct.SourceFileLoader;
 
@@ -30,12 +32,12 @@ public class CommandBuild extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getName(),"cms0");
+            CommandMessages.exception(getName(),CMS.cms0);
             return;
         }
         File ff=new File(FrameProperties.props().get("frame.dir"));
         if(!ff.isDirectory()){
-            CommandMessages.exception(getName(),"cms4");
+            CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         ScriptInfo scriptInfo;
@@ -45,7 +47,7 @@ public class CommandBuild extends Command {
             scriptInfo = ScriptInfo.parse(apkginfo);
             ScriptInfo.inspect(scriptInfo);
         }catch (Exception e){
-            CommandMessages.exception(getName(),"cms5");
+            CommandMessages.exception(getName(),CMS.cms5);
             return;
         }
         String name=scriptInfo.getId();
@@ -53,10 +55,10 @@ public class CommandBuild extends Command {
         int code=zip(fd+"/src",fd+"/lib/"+name+".apkg");
 
         if(code==0){
-            CommandMessages.key(getName(),"cms6");
+            CommandMessages.key(getName(), CMS.cms6);
         }
         if(code==-1){
-            CommandMessages.exception(getName(),"cms7");
+            CommandMessages.exception(getName(),CMS.cms7);
         }
     }
 
@@ -73,7 +75,7 @@ public class CommandBuild extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>0&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

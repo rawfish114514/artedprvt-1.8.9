@@ -4,9 +4,10 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
-import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.mi.ChatProvider;
 
 import java.text.DecimalFormat;
@@ -32,7 +33,7 @@ public class CommandPros extends Command {
                 printPro(pro);
             }
             if(n==0){
-                CommandMessages.exception(getName(),"cms11");
+                CommandMessages.exception(getName(), CMS.cms11);
             }
         }else if(args.size()==1){
             //选择
@@ -49,10 +50,10 @@ public class CommandPros extends Command {
                 }
             }
             if(n==0){
-                CommandMessages.exception(getName(),"cms15",arg);
+                CommandMessages.exception(getName(),CMS.cms15,arg);
             }
         }else{
-            CommandMessages.exception(getName(),"cms16");
+            CommandMessages.exception(getName(),CMS.cms16);
         }
     }
 
@@ -135,10 +136,10 @@ public class CommandPros extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>1){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CIS.cis3);
         }
         if(args.get(0).isEmpty()){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis7"));
+            return Literals.infoBuilder().string(CIS.cis7);
         }
         return Literals.emptyInfo();
     }

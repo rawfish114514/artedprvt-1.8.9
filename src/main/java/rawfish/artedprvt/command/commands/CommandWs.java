@@ -7,6 +7,8 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -29,17 +31,17 @@ public class CommandWs extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getName(),"cms0");
+            CommandMessages.exception(getName(), CMS.cms0);
             return;
         }
         String dir= FrameProperties.props.get("frame.dir");
         File artedprvt=new File(dir);
         if(artedprvt.isDirectory()){
-            CommandMessages.exception(getName(),"cms19");
+            CommandMessages.exception(getName(),CMS.cms19);
             return;
         }
         if(!artedprvt.mkdir()){
-            CommandMessages.exception(getName(),"cms20");
+            CommandMessages.exception(getName(),CMS.cms20);
             return;
         }
         //将资源解压到工作目录
@@ -67,7 +69,7 @@ public class CommandWs extends Command {
             reader.close();
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getName(),"cms21");
+            CommandMessages.exception(getName(),CMS.cms21);
             return;
         }
         Set<String> fileNames=files.keySet();
@@ -91,9 +93,9 @@ public class CommandWs extends Command {
             }
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getName(),"cms22");
+            CommandMessages.exception(getName(),CMS.cms22);
         }
-        CommandMessages.key(getName(),"cms23");
+        CommandMessages.key(getName(),CMS.cms23);
     }
 
     @Override
@@ -109,7 +111,7 @@ public class CommandWs extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>0&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

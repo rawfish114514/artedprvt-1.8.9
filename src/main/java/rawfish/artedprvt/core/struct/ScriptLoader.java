@@ -3,6 +3,7 @@ package rawfish.artedprvt.core.struct;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.engine.Engines;
+import rawfish.artedprvt.core.localization.types.SES;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -108,14 +109,14 @@ public class ScriptLoader {
                 return scriptModule;
             }
         }
-        ScriptExceptions.exception("ses1",moduleFullName);
+        ScriptExceptions.exception(SES.ses1,moduleFullName);
         return null;
     }
 
     public ScriptLanguage existScriptLanguage(String abbr,String source){
         ScriptLanguage scriptLanguage= Engines.getLanguageOfAbbr(abbr);
         if(scriptLanguage==null){
-            ScriptExceptions.exception("ses2",abbr,source);
+            ScriptExceptions.exception(SES.ses2,abbr,source);
         }
         return scriptLanguage;
     }
@@ -123,7 +124,7 @@ public class ScriptLoader {
     public ScriptPackage existScriptPackage(String pack){
         ScriptPackage scriptPackage=packageMap.get(pack);
         if(scriptPackage==null){
-            ScriptExceptions.exception("ses3",pack);
+            ScriptExceptions.exception(SES.ses3,pack);
         }
         return scriptPackage;
     }
@@ -131,7 +132,7 @@ public class ScriptLoader {
     public Matcher matcherPackageName(String pack){
         Matcher packageMatcher=packageNamePattern.matcher(pack);
         if(!packageMatcher.matches()){
-            ScriptExceptions.exception("ses4",pack);
+            ScriptExceptions.exception(SES.ses4,pack);
         }
         return packageMatcher;
     }
@@ -139,7 +140,7 @@ public class ScriptLoader {
     public Matcher matcherModuleName(String module){
         Matcher moduleMatcher=moduleNamePattern.matcher(module);
         if(!moduleMatcher.matches()){
-            ScriptExceptions.exception("ses5",module);
+            ScriptExceptions.exception(SES.ses5,module);
         }
         return moduleMatcher;
     }
@@ -147,7 +148,7 @@ public class ScriptLoader {
     public Matcher matcherModuleFullName(String moduleFullName){
         Matcher matcher= moduleFullNamePattern.matcher(moduleFullName);
         if(!matcher.matches()){
-            ScriptExceptions.exception("ses6",moduleFullName);
+            ScriptExceptions.exception(SES.ses6,moduleFullName);
         }
         return matcher;
     }
@@ -155,7 +156,7 @@ public class ScriptLoader {
     public synchronized void inspectPackageIgnore(String pack){
         for(String ignore:packageIgnore){
             if(pack.startsWith(ignore)){
-                ScriptExceptions.exception("ses7",ignore,pack);
+                ScriptExceptions.exception(SES.ses7,ignore,pack);
             }
         }
     }

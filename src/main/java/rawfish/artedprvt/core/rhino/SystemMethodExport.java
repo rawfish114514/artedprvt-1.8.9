@@ -3,6 +3,7 @@ package rawfish.artedprvt.core.rhino;
 import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.core.struct.ScriptModule;
 
 public class SystemMethodExport extends SystemMethod{
@@ -19,7 +20,7 @@ public class SystemMethodExport extends SystemMethod{
             scriptSystem.exportModule(scriptModule,args[0]);
             return null;
         }
-        ScriptExceptions.exception("ses0",this.getName());
+        ScriptExceptions.exception(SES.ses0,this.getName());
         return null;
     }
 }

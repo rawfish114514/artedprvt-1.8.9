@@ -4,6 +4,7 @@ import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.localization.types.SES;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class SystemMethodImport extends SystemMethod{
             }
             return scriptSystem.importModule(name);
         }
-        ScriptExceptions.exception("ses0",this.getName());
+        ScriptExceptions.exception(SES.ses0,this.getName());
         return null;
     }
 }

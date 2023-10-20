@@ -4,9 +4,10 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameOptions;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class CommandOptions extends Command {
             StringBuilder sb=new StringBuilder();
             Map<String,Object> config=new HashMap<>(FrameOptions.options);
             config.forEach((k,v)-> sb.append("\n  ").append(k).append(" = ").append(String.valueOf(v)));
-            CommandMessages.key(getName(),"cms28",sb.toString());
+            CommandMessages.key(getName(), CMS.cms28,sb.toString());
             return;
         }
         if(args.size()==1){
@@ -35,7 +36,7 @@ public class CommandOptions extends Command {
             if(key.equals("load")){
                 //加载
                 FrameOptions.load();
-                CommandMessages.key(getName(),"cms27");
+                CommandMessages.key(getName(),CMS.cms27);
                 try {
                     FrameOptions.updateFile();
                 } catch (Exception e) {
@@ -45,9 +46,9 @@ public class CommandOptions extends Command {
             }
             Object value= FrameOptions.getValue(key);
             if(value==null){
-                CommandMessages.exception(getName(),"cms25",key);
+                CommandMessages.exception(getName(),CMS.cms25,key);
             }else{
-                CommandMessages.key(getName(),"cms26",key,value);
+                CommandMessages.key(getName(),CMS.cms26,key,value);
             }
             return;
         }
@@ -57,7 +58,7 @@ public class CommandOptions extends Command {
             String value=args.get(1);
             Object v= FrameOptions.getValue(key);
             if(v==null){
-                CommandMessages.exception(getName(),"cms25",key);
+                CommandMessages.exception(getName(),CMS.cms25,key);
             }else{
                 FrameOptions.setValue(key,value);
                 try {
@@ -65,7 +66,7 @@ public class CommandOptions extends Command {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-                CommandMessages.key(getName(),"cms26",key,value);
+                CommandMessages.key(getName(),CMS.cms26,key,value);
             }
         }
     }
@@ -104,14 +105,14 @@ public class CommandOptions extends Command {
         if(args.size()==1){
             String key=args.get(0);
             if(key.isEmpty()){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis8"));
+                return Literals.infoBuilder().string(CIS.cis8);
             }
             if(key.equals("load")){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis11"));
+                return Literals.infoBuilder().string(CIS.cis11);
             }
             Object value= FrameOptions.getValue(key);
             if(value==null){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis9"));
+                return Literals.infoBuilder().string(CIS.cis9);
             }else{
                 /*key info*/
                 if(key.equals("language")){
@@ -126,7 +127,7 @@ public class CommandOptions extends Command {
 
         }
         if(args.size()>2){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

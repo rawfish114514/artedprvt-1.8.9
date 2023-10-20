@@ -5,6 +5,7 @@ import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.localization.types.SES;
 
 import java.util.Locale;
 
@@ -22,7 +23,7 @@ public class SystemMethodThread extends SystemMethod{
                 return scriptSystem.createThread(new RunnableFunction(function));
             }
         }
-        ScriptExceptions.exception("ses0",this.getName());
+        ScriptExceptions.exception(SES.ses0,this.getName());
         return null;
     }
 

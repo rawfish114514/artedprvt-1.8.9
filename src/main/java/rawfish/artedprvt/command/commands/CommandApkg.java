@@ -9,6 +9,8 @@ import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.engine.Engines;
 import rawfish.artedprvt.core.engine.ServiceEngine;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,13 +38,13 @@ public class CommandApkg extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getName(),"cms1");
+            CommandMessages.exception(getName(), CMS.cms1);
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getName(),"cms2");
+            CommandMessages.exception(getName(),CMS.cms2);
             return;
         }
         List<String> scriptArgs=args.subList(1,args.size());
@@ -52,7 +54,7 @@ public class CommandApkg extends Command {
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
-            CommandMessages.exception(getName(),"cms3",e.getMessage());
+            CommandMessages.exception(getName(),CMS.cms3,e.getMessage());
         }
     }
 
@@ -134,13 +136,13 @@ public class CommandApkg extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis5"));
+                return Literals.infoBuilder().string(CIS.cis5);
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
                 return Literals.emptyInfo();
             }
-            return Literals.infoBuilder().string(CommandMessages.translate("cis1"));
+            return Literals.infoBuilder().string(CIS.cis1);
         }
         /*信息脚本参数*/
         literal(args.get(0),false);

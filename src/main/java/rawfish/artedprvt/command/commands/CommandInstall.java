@@ -13,6 +13,7 @@ import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.formats.FormatHandlerNumber;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -35,16 +36,16 @@ public class CommandInstall extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()==0){
-            CommandMessages.exception(getName(),"cms1");
+            CommandMessages.exception(getName(), CMS.cms1);
             return;
         }
         if(args.size()>1){
-            CommandMessages.exception(getName(),"cms16");
+            CommandMessages.exception(getName(),CMS.cms16);
             return;
         }
         File ff=new File(FrameProperties.props().get("frame.dir"));
         if(!ff.isDirectory()){
-            CommandMessages.exception(getName(),"cms4");
+            CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         String id=args.get(0);
@@ -173,7 +174,7 @@ public class CommandInstall extends Command {
                     throw new RuntimeException(e);
                 }
 
-                CommandMessages.key(CommandInstall.this.getName(),"cms24");
+                CommandMessages.key(CommandInstall.this.getName(),CMS.cms24);
             }
         }.start();
     }

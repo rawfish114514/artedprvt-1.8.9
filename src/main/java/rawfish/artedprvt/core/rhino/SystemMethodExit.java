@@ -3,6 +3,7 @@ package rawfish.artedprvt.core.rhino;
 import org.mozilla.javascript.Scriptable;
 import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.localization.types.SES;
 
 public class SystemMethodExit extends SystemMethod{
     public SystemMethodExit(Scriptable scope, ScriptSystem scriptSystem) {
@@ -17,10 +18,10 @@ public class SystemMethodExit extends SystemMethod{
                 scriptSystem.exit(((Number) args[0]).intValue());
                 return null;
             }else{
-                ScriptExceptions.exception("ses0",this.getName());
+                ScriptExceptions.exception(SES.ses0,this.getName());
             }
         }
-        ScriptExceptions.exception("ses0",this.getName());
+        ScriptExceptions.exception(SES.ses0,this.getName());
         return null;
     }
 }

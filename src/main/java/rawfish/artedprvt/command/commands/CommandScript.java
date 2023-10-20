@@ -9,6 +9,8 @@ import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.engine.Engines;
 import rawfish.artedprvt.core.engine.ServiceEngine;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,13 +35,13 @@ public class CommandScript extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getName(),"cms1");
+            CommandMessages.exception(getName(), CMS.cms1);
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getName(),"cms17");
+            CommandMessages.exception(getName(),CMS.cms17);
             return;
         }
         List<String> scriptArgs=args.subList(1,args.size());
@@ -49,7 +51,7 @@ public class CommandScript extends Command {
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace();
-            CommandMessages.exception(getName(),"cms3",e.getMessage());
+            CommandMessages.exception(getName(),CMS.cms3,e.getMessage());
         }
     }
 
@@ -136,7 +138,7 @@ public class CommandScript extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1) {
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis6"));
+                return Literals.infoBuilder().string(CIS.cis6);
             }
             String a0 = args.get(0);
             List<String> all = complete(Literals.stringListBuilder().adds(""));
@@ -147,7 +149,7 @@ public class CommandScript extends Command {
                     return Literals.emptyInfo();
                 }
             }
-            return Literals.infoBuilder().string(CommandMessages.translate("cis2"));
+            return Literals.infoBuilder().string(CIS.cis2);
         }
         /*信息脚本参数*/
         literal(false);

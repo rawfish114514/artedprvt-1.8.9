@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.core.struct.FileLoader;
 import rawfish.artedprvt.mi.ChatProvider;
 import rawfish.artedprvt.mi.PrintChat;
@@ -199,7 +200,7 @@ public class ScriptSystem {
                 }
             }
             if (s == 0) {
-                ScriptExceptions.exception("ses9",scriptModule.getScriptLanguage().abbr);
+                ScriptExceptions.exception(SES.ses9,scriptModule.getScriptLanguage().abbr);
             }
         }
     }
@@ -227,7 +228,7 @@ public class ScriptSystem {
         if(classes!=null){
             return classes;
         }
-        ScriptExceptions.exception("ses10",groupName);
+        ScriptExceptions.exception(SES.ses10,groupName);
         return null;
     }
 

@@ -2,6 +2,7 @@ package rawfish.artedprvt.core;
 
 
 import com.electronwill.toml.Toml;
+import rawfish.artedprvt.core.localization.types.SES;
 
 import java.util.Map;
 
@@ -101,7 +102,7 @@ public class ScriptInfo {
     public static void inspect(ScriptInfo scriptInfo) throws Exception{
         String name=scriptInfo.getName();
         if(name.length()>24){
-            ScriptExceptions.exception("ses8", "name");
+            ScriptExceptions.exception(SES.ses8, "name");
         }
     }
 

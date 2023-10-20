@@ -5,6 +5,8 @@ import rawfish.artedprvt.command.formats.FormatHandlerAppend;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +40,7 @@ public class CommandApf extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getName(),"cms1");
+            CommandMessages.exception(getName(), CMS.cms1);
             return;
         }
         for(Command command:commandList){
@@ -47,7 +49,7 @@ public class CommandApf extends Command {
                 return;
             }
         }
-        CommandMessages.exception(getName(),"cms14",args.get(0));
+        CommandMessages.exception(getName(),CMS.cms13,args.get(0));
     }
 
     @Override
@@ -99,7 +101,7 @@ public class CommandApf extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()==1&&args.get(0).isEmpty()){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis4"));
+            return Literals.infoBuilder().string(CIS.cis4);
         }
         Command c=null;
         for(Command command:commandList){
@@ -108,7 +110,7 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis0"));
+            return Literals.infoBuilder().string(CIS.cis0);
         }
         List<String> sargs=args.subList(1,args.size());
         if(sargs.size()>0) {

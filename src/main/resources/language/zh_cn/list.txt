@@ -1,4 +1,4 @@
-commandinfo.toml
-commandmessage.toml
-scriptexception.toml
-taskmanager.toml
+rawfish.artedprvt.core.localization.types.CIS$commandinfo.toml
+rawfish.artedprvt.core.localization.types.CMS$commandmessage.toml
+rawfish.artedprvt.core.localization.types.SES$scriptexception.toml
+rawfish.artedprvt.core.localization.types.TMS$taskmanager.toml

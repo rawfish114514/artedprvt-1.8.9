@@ -1,6 +1,7 @@
 package rawfish.artedprvt.core;
 
 import com.electronwill.toml.Toml;
+import rawfish.artedprvt.core.localization.Localization;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

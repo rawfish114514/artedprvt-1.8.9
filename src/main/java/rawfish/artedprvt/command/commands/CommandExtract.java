@@ -5,6 +5,8 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.mi.PrintChat;
 
 import java.io.*;
@@ -30,35 +32,35 @@ public class CommandExtract extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()<1){
-            CommandMessages.exception(getName(),"cms1");
+            CommandMessages.exception(getName(),CMS.cms1);
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getName(),"cms2");
+            CommandMessages.exception(getName(),CMS.cms2);
             return;
         }
         File ff=new File(FrameProperties.props().get("frame.dir"));
         if(!ff.isDirectory()){
-            CommandMessages.exception(getName(),"cms4");
+            CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         File srcf=new File(FrameProperties.props().get("frame.dir")+"/src");
         srcf.mkdirs();
         List<File> fs=getAllFile(srcf);
         if(fs.size()>0){
-            CommandMessages.exception(getName(),"cms8");
+            CommandMessages.exception(getName(),CMS.cms8);
             return;
         }
         String fd=FrameProperties.props.get("frame.dir");
         int code=unzip(fd+"/lib/"+pack+".apkg",fd+"/src");
 
         if(code==0){
-            CommandMessages.key(getName(),"cms9");
+            CommandMessages.key(getName(), CMS.cms9);
         }
         if(code==-1){
-            CommandMessages.exception(getName(),"cms10");
+            CommandMessages.exception(getName(),CMS.cms10);
         }
     }
 
@@ -97,7 +99,7 @@ public class CommandExtract extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CommandMessages.translate("cis5"));
+                return Literals.infoBuilder().string(CIS.cis5);
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){

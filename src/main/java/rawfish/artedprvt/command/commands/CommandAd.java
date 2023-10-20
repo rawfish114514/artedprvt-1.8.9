@@ -6,6 +6,8 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptSystem;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.util.List;
 
@@ -20,11 +22,11 @@ public class CommandAd extends Command {
     @Override
     public void process(List<String> args) {
         if(args.size()>0){
-            CommandMessages.exception(getName(),"cms0");
+            CommandMessages.exception(getName(), CMS.cms0);
             return;
         }
         ScriptSystem.B_DEBUG =!ScriptSystem.B_DEBUG;
-        CommandMessages.key(getName(),"cms13",ScriptSystem.B_DEBUG);
+        CommandMessages.key(getName(),CMS.cms13,ScriptSystem.B_DEBUG);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class CommandAd extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>0&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

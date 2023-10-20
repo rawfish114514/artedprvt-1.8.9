@@ -7,7 +7,10 @@ import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ProcessController;
 import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.core.Localization;
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.Localization;
+import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.core.localization.types.TMS;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.text.DecimalFormat;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +35,7 @@ public class CommandTm extends Command {
     @Override
     public void process(List<String> args) {
         if (args.size() > 0) {
-            CommandMessages.exception(getName(), "cms0");
+            CommandMessages.exception(getName(), CMS.cms0);
             return;
         }
         openWindow();
@@ -107,14 +111,14 @@ public class CommandTm extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>0&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }
 
     static class Translate {
         public static String get(String key, Object... args) {
-            return Localization.getTranslate(key, args);
+            return MessageFormat.format(key, args);
         }
     }
 
@@ -127,7 +131,7 @@ public class CommandTm extends Command {
             setMinimumSize(new Dimension(400, 300));
             setSize(600, 400);
             setLocationRelativeTo(null);
-            setTitle(Translate.get("tms0"));
+            setTitle(Translate.get(TMS.tms0));
             setName("task manager");
             setLayout(null);
             add(mainPanel);
@@ -236,10 +240,10 @@ public class CommandTm extends Command {
         public void updateData() {
         }
 
-        public String name = Translate.get("tms1");
-        public String memory = Translate.get("tms2");
-        public String cpu = Translate.get("tms3");
-        public String pid = Translate.get("tms4");
+        public String name = Translate.get(TMS.tms1);
+        public String memory = Translate.get(TMS.tms2);
+        public String cpu = Translate.get(TMS.tms3);
+        public String pid = Translate.get(TMS.tms4);
 
         void paintBufferedImage(Graphics g) {
             g.setFont(getFont());
@@ -361,11 +365,11 @@ public class CommandTm extends Command {
 
             List<Entry> classifyEntryList = new ArrayList<>();
             if (scriptProcessEntryList.size() > 0) {
-                classifyEntryList.add(new ClassifyEntry(Translate.get("tms5")));
+                classifyEntryList.add(new ClassifyEntry(Translate.get(TMS.tms5)));
                 scriptProcessEntryList.forEach((p) -> classifyEntryList.add(p));
             }
             if (otherProcessEntryList.size() > 0) {
-                classifyEntryList.add(new ClassifyEntry(Translate.get("tms6")));
+                classifyEntryList.add(new ClassifyEntry(Translate.get(TMS.tms6)));
                 otherProcessEntryList.forEach((p) -> classifyEntryList.add(p));
             }
 
@@ -390,7 +394,7 @@ public class CommandTm extends Command {
             }
 
             //进程控制器
-            OtherProcess processController = new OtherProcess(Translate.get("tms7"));
+            OtherProcess processController = new OtherProcess(Translate.get(TMS.tms7));
             processController.thread = ProcessController.getThread();
             processList.add(processController);
 
@@ -429,22 +433,22 @@ public class CommandTm extends Command {
 
         public Bar(JFrame frame) {
             this.frame = frame;
-            Menu fileMenu = new Menu(Translate.get("tms8"));
-            MenuItem runApkgMenuItem = new MenuItem(Translate.get("tms9"));
+            Menu fileMenu = new Menu(Translate.get(TMS.tms8));
+            MenuItem runApkgMenuItem = new MenuItem(Translate.get(TMS.tms9));
             runApkgMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     runApkg();
                 }
             });
-            MenuItem runScriptMenuItem = new MenuItem(Translate.get("tms10"));
+            MenuItem runScriptMenuItem = new MenuItem(Translate.get(TMS.tms10));
             runScriptMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     runScript();
                 }
             });
-            MenuItem closeMenuItem = new MenuItem(Translate.get("tms11"));
+            MenuItem closeMenuItem = new MenuItem(Translate.get(TMS.tms11));
             closeMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -456,8 +460,8 @@ public class CommandTm extends Command {
             fileMenu.add(runScriptMenuItem);
             fileMenu.add(closeMenuItem);
 
-            Menu helpMenu = new Menu(Translate.get("tms12"));
-            MenuItem aboutMenuItem = new MenuItem(Translate.get("tms13"));
+            Menu helpMenu = new Menu(Translate.get(TMS.tms12));
+            MenuItem aboutMenuItem = new MenuItem(Translate.get(TMS.tms13));
             aboutMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -470,10 +474,10 @@ public class CommandTm extends Command {
             add(fileMenu);
             add(helpMenu);
 
-            runApkgDialog = new CommandDialog(Translate.get("tms14"), frame, new CommandApkg("tm-apkg"),
-                    Translate.get("tms15"));
-            runScriptDialog = new CommandDialog(Translate.get("tms16"), frame, new CommandScript("tm-script"),
-                    Translate.get("tms17"));
+            runApkgDialog = new CommandDialog(Translate.get(TMS.tms14), frame, new CommandApkg("tm-apkg"),
+                    Translate.get(TMS.tms15));
+            runScriptDialog = new CommandDialog(Translate.get(TMS.tms16), frame, new CommandScript("tm-script"),
+                    Translate.get(TMS.tms17));
         }
 
         public void runApkg() {
@@ -492,12 +496,12 @@ public class CommandTm extends Command {
 
         public void about() {
             if (aboutDialog == null) {
-                aboutDialog = new JDialog(frame, Translate.get("tms18"), true);
+                aboutDialog = new JDialog(frame, Translate.get(TMS.tms18), true);
                 aboutDialog.setSize(320, 120);
                 aboutDialog.setResizable(false);
                 aboutDialog.setLayout(null);
                 aboutDialog.setLocationRelativeTo(frame);
-                JLabel label = new JLabel(Translate.get("tms19"));
+                JLabel label = new JLabel(Translate.get(TMS.tms19));
                 label.setFont(new Font("Small Fonts", Font.PLAIN, 18));
                 label.setLayout(null);
                 label.setSize(260, 80);
@@ -925,7 +929,7 @@ public class CommandTm extends Command {
         public ProcessPopupMenu(Process process) {
             this.process = process;
 
-            JMenuItem stopMenuItem = new JMenuItem(Translate.get("tms20"));
+            JMenuItem stopMenuItem = new JMenuItem(Translate.get(TMS.tms20));
             stopMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -933,7 +937,7 @@ public class CommandTm extends Command {
                 }
             });
             stopMenuItem.setEnabled(process.menuStop());
-            JMenuItem restartMenuItem = new JMenuItem(Translate.get("tms21"));
+            JMenuItem restartMenuItem = new JMenuItem(Translate.get(TMS.tms21));
             restartMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -941,7 +945,7 @@ public class CommandTm extends Command {
                 }
             });
             restartMenuItem.setEnabled(process.menuRestart());
-            JMenuItem propertiesMenuItem = new JMenuItem(Translate.get("tms22"));
+            JMenuItem propertiesMenuItem = new JMenuItem(Translate.get(TMS.tms22));
             propertiesMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

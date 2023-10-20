@@ -1,11 +1,11 @@
 package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.common.EventLoader;
+import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.event.InputStringEvent;
 
 import java.util.List;
@@ -36,6 +36,6 @@ public class CommandIn extends Command {
 
     @Override
     public InfoHandler info(List<String> args) {
-        return Literals.infoBuilder().string(CommandMessages.translate("cis10"));
+        return Literals.infoBuilder().string(CIS.cis10);
     }
 }

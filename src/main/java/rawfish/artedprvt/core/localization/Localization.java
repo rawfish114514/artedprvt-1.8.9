@@ -1,7 +1,8 @@
-package rawfish.artedprvt.core;
+package rawfish.artedprvt.core.localization;
 
 import com.electronwill.toml.Toml;
 import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.core.FrameOptions;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -38,17 +39,41 @@ public class Localization {
                 String list=sb.toString();
                 String[] array=list.split("\n");
                 for(String v:array){
-                    path="/language/" + language + "/"+v;
-                    path=path.replace("\r","");
-                    InputStream input0= Artedprvt.class.getResourceAsStream(path);
-                    Reader reader=new InputStreamReader(input0, StandardCharsets.UTF_8);
-                    sb=new StringBuilder();
-                    while ((n = reader.read()) !=-1) {
-                        sb.append((char)n);
+                    int cindex=v.indexOf('$');
+                    String type=v.substring(0,cindex);
+                    String value=v.substring(cindex+1);
+                    if(type.equals("put")) {
+                        //将翻译键都添加到 translation 中
+                        path = "/language/" + language + "/" + value;
+                        path = path.replace("\r", "");
+                        InputStream input0 = Artedprvt.class.getResourceAsStream(path);
+                        Reader reader = new InputStreamReader(input0, StandardCharsets.UTF_8);
+                        sb = new StringBuilder();
+                        while ((n = reader.read()) != -1) {
+                            sb.append((char) n);
+                        }
+                        String str = sb.toString();
+                        Map<String, String> table = parse(str);
+                        translation.putAll(table);
+                    }else{
+                        //将翻译键设置为 Translatable 静态成员
+                        path = "/language/" + language + "/" + value;
+                        path = path.replace("\r", "");
+                        InputStream input0 = Artedprvt.class.getResourceAsStream(path);
+                        Reader reader = new InputStreamReader(input0, StandardCharsets.UTF_8);
+                        sb = new StringBuilder();
+                        while ((n = reader.read()) != -1) {
+                            sb.append((char) n);
+                        }
+                        String str = sb.toString();
+                        Map<String, String> table = parse(str);
+
+                        Class<?> clas=Class.forName(type);
+                        for(String key:table.keySet()){
+                            String trans=table.get(key);
+                            clas.getField(key).set(clas,trans);
+                        }
                     }
-                    String str=sb.toString();
-                    Map<String,String> table=parse(str);
-                    translation.putAll(table);
                 }
             }catch (Exception e){
                 e.printStackTrace(System.err);

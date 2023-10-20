@@ -2,7 +2,7 @@ package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.*;
 import rawfish.artedprvt.core.FrameProperties;
-import rawfish.artedprvt.core.Localization;
+import rawfish.artedprvt.core.localization.Localization;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.engine.ServiceEngine;
 
