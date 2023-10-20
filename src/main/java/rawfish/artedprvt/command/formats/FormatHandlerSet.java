@@ -5,12 +5,14 @@ import rawfish.artedprvt.command.util.ParseResult;
 import rawfish.artedprvt.command.util.parsers.ArgumentsParserSet;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 集合
  */
 public class FormatHandlerSet implements FormatHandler {
-    private Collection<String> set;
+    private Set<String> set;
     private FormatHandler trueHandler;
     private FormatHandler falseHandler;
 
@@ -24,7 +26,7 @@ public class FormatHandlerSet implements FormatHandler {
             Collection<String> set,
             FormatHandler trueHandler,
             FormatHandler falseHandler){
-        this.set = set;
+        this.set = new HashSet<>(set);
         this.trueHandler=trueHandler;
         this.falseHandler=falseHandler;
     }

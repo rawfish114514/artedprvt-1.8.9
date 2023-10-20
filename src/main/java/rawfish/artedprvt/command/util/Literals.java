@@ -2,7 +2,10 @@ package rawfish.artedprvt.command.util;
 
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
+import rawfish.artedprvt.command.infos.*;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,6 +14,34 @@ import java.util.regex.Pattern;
  * 封装使用处理程序的方法
  */
 public class Literals {
+    private static List<String> emptyComplete=Collections.emptyList();
+    public static List<String> emptyComplete(){
+        return emptyComplete;
+    }
+
+    private static List<FormatHandler> emptyFormat=Collections.emptyList();
+    public static List<FormatHandler> emptyFormat(){
+        return emptyFormat;
+    }
+
+    private static InfoHandler emptyInfo=new InfoHandlerEmpty();
+    public static InfoHandler emptyInfo(){
+        return emptyInfo;
+    }
+
+    public static StringListBuilder stringListBuilder(){
+        return new StringListBuilder();
+    }
+
+    public static FormatHandlerListBuilder formatListBuilder(){
+        return new FormatHandlerListBuilder();
+    }
+
+    private static InfoHandlerBuilder infoHandlerBuilder=new InfoHandlerBuilder();
+    public static InfoHandlerBuilder infoBuilder(){
+        return infoHandlerBuilder;
+    }
+
     /**
      * 适配器
      */
@@ -25,8 +56,10 @@ public class Literals {
         }
     }
 
+    /**
+     * 格式代码字符串方法
+     */
     public static class Formats{
-
         public static final Pattern format= Pattern.compile("[0-9a-fkm-or]*");
 
         public static String toFormatCode(String value){
@@ -140,4 +173,6 @@ public class Literals {
             return s.replaceAll("§[1-9a-flmnor]","");
         }
     }
+
+
 }

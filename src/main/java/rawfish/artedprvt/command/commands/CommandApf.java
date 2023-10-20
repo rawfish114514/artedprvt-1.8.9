@@ -3,7 +3,8 @@ package rawfish.artedprvt.command.commands;
 import rawfish.artedprvt.command.*;
 import rawfish.artedprvt.command.formats.FormatHandlerAppend;
 import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.FormatHandlerList;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return getEmptyStringList();
+            return Literals.emptyComplete();
         }
         return c.complete(args.subList(1,args.size()));
     }
@@ -84,9 +85,9 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return formatAppendList("c");
+            return Literals.formatListBuilder().append("c");
         }
-        FormatHandlerList fl=new FormatHandlerList();
+        FormatHandlerListBuilder fl=Literals.formatListBuilder();
         fl.add(new FormatHandlerAppend("bo"));
         List<String> sargs=args.subList(1,args.size());
         if(sargs.size()>0) {
@@ -98,7 +99,7 @@ public class CommandApf extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()==1&&args.get(0).isEmpty()){
-            return infoString(CommandMessages.translate("cis4"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis4"));
         }
         Command c=null;
         for(Command command:commandList){
@@ -107,12 +108,12 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return infoString(CommandMessages.translate("cis0"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis0"));
         }
         List<String> sargs=args.subList(1,args.size());
         if(sargs.size()>0) {
             return c.info(args.subList(1,args.size()));
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 }

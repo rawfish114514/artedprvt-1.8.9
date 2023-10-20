@@ -4,6 +4,8 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.CommandMessages;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameOptions;
 
 import java.util.*;
@@ -77,46 +79,46 @@ public class CommandOptions extends Command {
         }else if(args.size()==2) {
             List<String> vs= FrameOptions.getValues(args.get(0));
             if(vs==null){
-                return getEmptyStringList();
+                return Literals.emptyComplete();
             }
             return startWith(args,new ArrayList<>(vs));
         }
-        return getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
         if(args.size()==0){
-            return getEmptyFormatterList();
+            return Literals.emptyFormat();
         }
         if(args.get(0).equals("load")){
-            return formatAppendList("6");
+            return Literals.formatListBuilder().append("6");
         }
         if(args.size()==1){
-            return formatAppendList("d");
+            return Literals.formatListBuilder().append("d");
         }
-        return formatAppendList("d","a");
+        return Literals.formatListBuilder().append("d").append("a");
     }
 
     public InfoHandler info(List<String> args){
         if(args.size()==1){
             String key=args.get(0);
             if(key.isEmpty()){
-                return infoString(CommandMessages.translate("cis8"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis8"));
             }
             if(key.equals("load")){
-                return infoString(CommandMessages.translate("cis11"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis11"));
             }
             Object value= FrameOptions.getValue(key);
             if(value==null){
-                return infoString(CommandMessages.translate("cis9"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis9"));
             }else{
                 /*key info*/
                 if(key.equals("language")){
-                    return infoString("语言");
+                    return Literals.infoBuilder().string("语言");
                 }
                 if(key.equals("repository")){
-                    return infoString("存储库路径");
+                    return Literals.infoBuilder().string("存储库路径");
                 }
             }
         }
@@ -124,9 +126,9 @@ public class CommandOptions extends Command {
 
         }
         if(args.size()>2){
-            return infoString(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 
     public List<String> startWith(List<String> args,List<String> cs){

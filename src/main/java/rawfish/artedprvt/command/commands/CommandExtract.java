@@ -2,7 +2,8 @@ package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.*;
 import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.FormatHandlerList;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.mi.PrintChat;
 
@@ -76,17 +77,17 @@ public class CommandExtract extends Command {
             opt.sort(Comparator.comparingInt(String::length));
             return opt;
         }
-        return getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
         File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
-        FormatHandlerList fl=new FormatHandlerList();
+        FormatHandlerListBuilder fl=Literals.formatListBuilder();
         if(apkg.isFile()){
-            fl.add("6");
+            fl.append("6");
         }else{
-            fl.add("c");
+            fl.append("c");
             return fl;
         }
         return fl;
@@ -96,15 +97,15 @@ public class CommandExtract extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return infoString(CommandMessages.translate("cis5"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis5"));
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
-                return getEmptyInfo();
+                return Literals.emptyInfo();
             }
-            return infoString(CommandMessages.translate("csi1"));
+            return Literals.infoBuilder().string(CommandMessages.translate("csi1"));
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 
     public List<String> pack(File dir,String p){

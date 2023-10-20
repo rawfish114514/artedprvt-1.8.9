@@ -1,12 +1,6 @@
 package rawfish.artedprvt.command;
 
-import rawfish.artedprvt.command.formats.*;
-import rawfish.artedprvt.command.infos.*;
-
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 命令
@@ -63,49 +57,4 @@ public abstract class Command{
         return commandName;
     }
 
-    private static final List<String> emptyStringList=Collections.emptyList();
-
-    private static final List<FormatHandler> emptyFormaterList=Collections.emptyList();
-
-    /**
-     * 返回空列表
-     * @return
-     */
-    public static List<String> getEmptyStringList() {
-        return emptyStringList;
-    }
-
-    public static List<FormatHandler> getEmptyFormatterList(){
-        return emptyFormaterList;
-    }
-
-    /**
-     * 返回空字符串
-     * @return
-     */
-    public static String getEmptyString(){
-        return "";
-    }
-
-    /**
-     * 返回字符串列表
-     * @param strings
-     * @return
-     */
-    public static List<String> stringList(String... strings){
-        return Arrays.asList(strings);
-    }
-
-    public static List<FormatHandlerAppend> formatAppendList(String... strings){
-        return Arrays.stream(strings).map((s)->new FormatHandlerAppend(s)).collect(Collectors.toList());
-    }
-
-    public static InfoHandler infoString(String string){
-        return new InfoHandlerString(string);
-    }
-
-    public static InfoHandler emptyInfo=new InfoHandlerEmpty();
-    public static InfoHandler getEmptyInfo(){
-        return emptyInfo;
-    }
 }

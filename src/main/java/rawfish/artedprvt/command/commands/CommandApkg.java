@@ -2,7 +2,8 @@ package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.*;
 import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.FormatHandlerList;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
@@ -84,7 +85,7 @@ public class CommandApkg extends Command {
                             }
                             return startWith(args,new ArrayList<>(stringList));
                         }else{
-                            return getEmptyStringList();
+                            return Literals.emptyComplete();
                         }
                     }catch (Exception e){
                         e.printStackTrace(System.err);
@@ -92,17 +93,17 @@ public class CommandApkg extends Command {
                 }
             }
         }
-        return getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
         File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
-        FormatHandlerList fl=new FormatHandlerList();
+        FormatHandlerListBuilder fl=Literals.formatListBuilder();
         if(apkg.isFile()){
-            fl.add("6");
+            fl.append("6");
         }else{
-            fl.add("c");
+            fl.append("c");
             return fl;
         }
         if(args.size()>1) {
@@ -114,11 +115,11 @@ public class CommandApkg extends Command {
                     try {
                         Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
                         if (result instanceof Collection) {
-                            FormatHandlerList stringList = new FormatHandlerList();
+                            FormatHandlerListBuilder scriptfl = Literals.formatListBuilder();
                             for (Object obj : (Collection) result) {
-                                stringList.add(String.valueOf(obj));
+                                scriptfl.append(String.valueOf(obj));
                             }
-                            fl.addAll(stringList);
+                            fl.addAll(scriptfl);
                         }
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
@@ -133,13 +134,13 @@ public class CommandApkg extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return infoString(CommandMessages.translate("cis5"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis5"));
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
-                return getEmptyInfo();
+                return Literals.emptyInfo();
             }
-            return infoString(CommandMessages.translate("cis1"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis1"));
         }
         /*信息脚本参数*/
         literal(args.get(0),false);
@@ -149,14 +150,14 @@ public class CommandApkg extends Command {
                 try {
                     Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
                     if(result!=null){
-                        return infoString(String.valueOf(result));
+                        return Literals.infoBuilder().string(String.valueOf(result));
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 
     @Override

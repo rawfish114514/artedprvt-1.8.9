@@ -4,6 +4,8 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ScriptInfo;
 import rawfish.artedprvt.core.struct.ApkgFileLoader;
@@ -117,20 +119,19 @@ public class CommandInfo extends Command {
             opt.add("<src>");
             return opt;
         }
-        return getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
         if(args.get(0).equals("<src>")){
-            return formatAppendList("6");
+            return Literals.formatListBuilder().append("6");
         }
         File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
-        List<String> fl=new ArrayList<>();
         if(apkg.isFile()){
-            return formatAppendList("6");
+            return Literals.formatListBuilder().append("6");
         }else{
-            return formatAppendList("c");
+            return Literals.formatListBuilder().append("c");
         }
     }
 
@@ -138,18 +139,18 @@ public class CommandInfo extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return infoString(CommandMessages.translate("cis5"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis5"));
             }
             if(args.get(0).equals("<src>")){
-                return getEmptyInfo();
+                return Literals.emptyInfo();
             }
             File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
-                return getEmptyInfo();
+                return Literals.emptyInfo();
             }
-            return infoString(CommandMessages.translate("cis1"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis1"));
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 
     public List<String> pack(File dir,String p){

@@ -4,6 +4,8 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.mi.ChatProvider;
 
@@ -122,22 +124,22 @@ public class CommandPros extends Command {
             }
             return l;
         }
-        return getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        return formatAppendList("a");
+        return Literals.formatListBuilder().append("a");
     }
 
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>1){
-            return infoString(CommandMessages.translate("cis3"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis3"));
         }
         if(args.get(0).isEmpty()){
-            return infoString(CommandMessages.translate("cis7"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis7"));
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 }

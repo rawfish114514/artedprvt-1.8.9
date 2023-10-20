@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldServer;
 import rawfish.artedprvt.command.Command;
+import rawfish.artedprvt.command.util.Literals;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class CommandAdapter extends CommandBase {
         if(!(sender.getEntityWorld() instanceof WorldServer)){
             return command.complete(Arrays.asList(args));
         }
-        return Command.getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override

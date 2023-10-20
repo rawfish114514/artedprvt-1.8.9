@@ -2,7 +2,8 @@ package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.*;
 import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.FormatHandlerList;
+import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.FrameProperties;
@@ -81,7 +82,7 @@ public class CommandScript extends Command {
                             }
                             return startWith(args,new ArrayList<>(stringList));
                         }else{
-                            return getEmptyStringList();
+                            return Literals.emptyComplete();
                         }
                     }catch (Exception e){
                         e.printStackTrace(System.err);
@@ -89,23 +90,23 @@ public class CommandScript extends Command {
                 }
             }
         }
-        return getEmptyStringList();
+        return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        FormatHandlerList fl=new FormatHandlerList();
+        FormatHandlerListBuilder fl=Literals.formatListBuilder();
         String a0=args.get(0);
-        List<String> all=complete(stringList(""));
+        List<String> all=complete(Literals.stringListBuilder().adds(""));
         String c;
         for(int i=0;i<all.size();i++){
             c=all.get(i);
             if(c.equals(a0)||c.substring(c.indexOf(':')+1).equals(a0)){
-                fl.add("6");
+                fl.append("6");
             }
         }
         if(fl.size()==0){
-            fl.add("c");
+            fl.append("c");
         }
         if(args.size()>1) {
             /*格式脚本参数*/
@@ -116,11 +117,11 @@ public class CommandScript extends Command {
                     try {
                         Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
                         if (result instanceof Collection) {
-                            FormatHandlerList stringList = new FormatHandlerList();
+                            FormatHandlerListBuilder scriptfl = Literals.formatListBuilder();
                             for (Object obj : (Collection) result) {
-                                stringList.add(String.valueOf(obj));
+                                scriptfl.append(String.valueOf(obj));
                             }
-                            fl.addAll(stringList);
+                            fl.addAll(scriptfl);
                         }
                     } catch (Exception e) {
                         e.printStackTrace(System.err);
@@ -135,18 +136,18 @@ public class CommandScript extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1) {
             if(args.get(0).isEmpty()){
-                return infoString(CommandMessages.translate("cis6"));
+                return Literals.infoBuilder().string(CommandMessages.translate("cis6"));
             }
             String a0 = args.get(0);
-            List<String> all = complete(stringList(""));
+            List<String> all = complete(Literals.stringListBuilder().adds(""));
             String c;
             for (int i = 0; i < all.size(); i++) {
                 c = all.get(i);
                 if (c.equals(a0) || c.substring(c.indexOf(':')+1).equals(a0)) {
-                    return getEmptyInfo();
+                    return Literals.emptyInfo();
                 }
             }
-            return infoString(CommandMessages.translate("cis2"));
+            return Literals.infoBuilder().string(CommandMessages.translate("cis2"));
         }
         /*信息脚本参数*/
         literal(false);
@@ -156,14 +157,14 @@ public class CommandScript extends Command {
                 try {
                     Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
                     if(result!=null){
-                        return infoString(String.valueOf(result));
+                        return Literals.infoBuilder().string(String.valueOf(result));
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
                 }
             }
         }
-        return getEmptyInfo();
+        return Literals.emptyInfo();
     }
 
     @Override
