@@ -1,9 +1,6 @@
 package rawfish.artedprvt.mi.group;
 
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import rawfish.artedprvt.Artedprvt;
-import rawfish.artedprvt.api.ServerSideOnly;
 import rawfish.artedprvt.core.ClassGroup;
 import rawfish.artedprvt.mi.*;
 

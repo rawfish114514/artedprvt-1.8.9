@@ -1,8 +1,6 @@
 package rawfish.artedprvt.core.engine;
 
-import org.mozilla.javascript.Wrapper;
 import rawfish.artedprvt.core.ScriptLanguage;
-import rawfish.artedprvt.core.struct.ScriptModule;
 
 public interface ServiceEngine {
     boolean isExecutable(ScriptLanguage language);

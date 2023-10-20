@@ -1,6 +1,5 @@
 package rawfish.artedprvt.command.infos;
 
-import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.ParseResult;
 import rawfish.artedprvt.command.util.parsers.ArgumentsParserSet;

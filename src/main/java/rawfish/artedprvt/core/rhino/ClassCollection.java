@@ -4,7 +4,6 @@ package rawfish.artedprvt.core.rhino;
 import org.mozilla.javascript.mapping.ClassRegisterer;
 import org.mozilla.javascript.mapping.MemberMapping;
 import rawfish.artedprvt.core.ClassGroup;
-import rawfish.artedprvt.mi.group.ClassGroupLoader;
 import rawfish.artedprvt.mi.group.ClassGroupMi;
 
 import java.io.*;

@@ -6,7 +6,6 @@ import rawfish.artedprvt.command.Command;
 import rawfish.artedprvt.command.formats.FormatHandlerAppend;
 import rawfish.artedprvt.command.formats.FormatHandlerSet;
 import rawfish.artedprvt.command.infos.InfoHandlerMap;
-import rawfish.artedprvt.command.infos.InfoHandlerNumberInspect;
 import rawfish.artedprvt.command.infos.InfoHandlerString;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
