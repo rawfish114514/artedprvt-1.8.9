@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FrameOptions {
+public class UserOptions {
+    private static String path=System.getProperties().get("user.dir")+"/.artedprvt/options.toml";
     public static Map<String, Object> options;
 
     public static List<String> keyList=new ArrayList<String>(){{
@@ -52,18 +53,13 @@ public class FrameOptions {
     }
     public static synchronized void load(){
         try {
-            if(new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml").isFile()){
+            if(new File(path).isFile()){
                 //从文件加载配置
                 loadFromFile();
             }else{
-                if (new File(FrameProperties.props().get("frame.dir")+"/.artedprvt").isDirectory()) {
-                    //加载默认配置并写入文件
-                    loadDefault();
-                    writeToFile();
-                } else {
-                    //加载默认配置
-                    loadDefault();
-                }
+                //加载默认配置并写入文件
+                loadDefault();
+                writeToFile();
             }
         }catch (Exception e){
             e.printStackTrace(System.out);
@@ -73,7 +69,7 @@ public class FrameOptions {
     }
 
     public static void updateFile() throws Exception{
-        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml");
+        File file=new File(path);
         if(file.isFile()){
             String string=Toml.writeToString(options);
             Writer writer=new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
@@ -89,7 +85,7 @@ public class FrameOptions {
 
     public static void loadFromFile() throws Exception{
         options =new HashMap<>();
-        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml");
+        File file=new File(path);
         Reader reader=new InputStreamReader(new FileInputStream(file));
         StringBuilder sb=new StringBuilder();
         int n;
@@ -100,8 +96,9 @@ public class FrameOptions {
     }
 
     public static void writeToFile() throws Exception{
-        File file=new File(FrameProperties.props().get("frame.dir")+"/.artedprvt/options.toml");
+        File file=new File(path);
         if(!file.isFile()){
+            file.getParentFile().mkdirs();
             file.createNewFile();
         }
         String string=Toml.writeToString(options);

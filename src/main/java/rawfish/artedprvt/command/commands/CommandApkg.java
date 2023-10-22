@@ -6,7 +6,7 @@ import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.engine.Engines;
 import rawfish.artedprvt.core.engine.ServiceEngine;
 import rawfish.artedprvt.core.localization.types.CIS;
@@ -65,7 +65,7 @@ public class CommandApkg extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(FrameProperties.props.get("frame.dir") + "/lib");
+            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/lib");
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -100,7 +100,7 @@ public class CommandApkg extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+        File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
         FormatHandlerListBuilder fl=Literals.formatListBuilder();
         if(apkg.isFile()){
             fl.append("6");
@@ -142,7 +142,7 @@ public class CommandApkg extends Command {
             if(args.get(0).isEmpty()){
                 return Literals.infoBuilder().string(CIS.cis5);
             }
-            File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+            File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
                 return Literals.emptyInfo();
             }
@@ -242,7 +242,7 @@ public class CommandApkg extends Command {
     }
 
     public String readLiteralFile(String pack, String abbr) throws Exception{
-        File file=new File(FrameProperties.props.get("frame.dir")+"/lib/"+pack+".apkg");
+        File file=new File(WorkSpace.currentWorkSpace().getDir()+"/lib/"+pack+".apkg");
         String target="literal."+abbr;
         if(file.isFile()){
             boolean t=false;

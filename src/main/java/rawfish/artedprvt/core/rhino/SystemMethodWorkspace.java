@@ -5,10 +5,10 @@ import rawfish.artedprvt.core.ScriptExceptions;
 import rawfish.artedprvt.core.ScriptSystem;
 import rawfish.artedprvt.core.localization.types.SES;
 
-public class SystemMethodProps extends SystemMethod {
-    public SystemMethodProps(Scriptable scope, ScriptSystem scriptSystem) {
+public class SystemMethodWorkspace extends SystemMethod {
+    public SystemMethodWorkspace(Scriptable scope, ScriptSystem scriptSystem) {
         super(scope,scriptSystem);
-        name="props";
+        name="workspace";
     }
 
     @Override
@@ -16,6 +16,6 @@ public class SystemMethodProps extends SystemMethod {
         if(args.length>0){
             ScriptExceptions.exception(SES.ses0,this.getName());
         }
-        return scriptSystem.getProps();
+        return scriptSystem.getWorkSpace();
     }
 }

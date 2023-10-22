@@ -1,5 +1,9 @@
 package rawfish.artedprvt.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ProcessController {
     private static Thread thread=null;
 
@@ -45,5 +49,15 @@ public class ProcessController {
             }
         }
         return -1;
+    }
+
+    public static List<ScriptProcess> getProcessList(){
+        List<ScriptProcess> processList=new ArrayList<>();
+        for (int i = 0; i < processes.length; i++) {
+            if(processes[i]!=null){
+                processList.add(processes[i]);
+            }
+        }
+        return processList;
     }
 }

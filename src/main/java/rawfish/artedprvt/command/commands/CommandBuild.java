@@ -5,8 +5,8 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ScriptInfo;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.struct.FileLoader;
@@ -35,14 +35,14 @@ public class CommandBuild extends Command {
             CommandMessages.exception(getName(),CMS.cms0);
             return;
         }
-        File ff=new File(FrameProperties.props().get("frame.dir"));
+        File ff=new File(WorkSpace.currentWorkSpace().getDir());
         if(!ff.isDirectory()){
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         ScriptInfo scriptInfo;
         try {
-            FileLoader fileLoader = new SourceFileLoader(FrameProperties.props().get("frame.dir") + "/src");
+            FileLoader fileLoader = new SourceFileLoader(WorkSpace.currentWorkSpace().getDir() + "/src");
             String apkginfo = fileLoader.getContent("apkg.info");
             scriptInfo = ScriptInfo.parse(apkginfo);
             ScriptInfo.inspect(scriptInfo);
@@ -51,7 +51,7 @@ public class CommandBuild extends Command {
             return;
         }
         String name=scriptInfo.getId();
-        String fd=FrameProperties.props.get("frame.dir");
+        String fd= WorkSpace.currentWorkSpace().getDir();
         int code=zip(fd+"/src",fd+"/lib/"+name+".apkg");
 
         if(code==0){

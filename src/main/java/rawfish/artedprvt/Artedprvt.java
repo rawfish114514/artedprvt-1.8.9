@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(
         modid=Artedprvt.MODID,
         name=Artedprvt.NAME,
-        acceptedMinecraftVersions="1.8.9",
+        acceptedMinecraftVersions=Artedprvt.MCVERSION,
         acceptableRemoteVersions="*"
 )
 public class Artedprvt
@@ -27,6 +27,8 @@ public class Artedprvt
     public static CommonProxy proxy;
     public static final String MODID="artedprvt";
     public static final String NAME="Artedprvt Frame";
+    public static final String VERSION="1.3";
+    public static final String MCVERSION="1.8.9";
 
     @Instance(Artedprvt.MODID)
     public static Artedprvt instance;

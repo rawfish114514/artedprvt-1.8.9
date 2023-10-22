@@ -12,7 +12,7 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.formats.FormatHandlerNumber;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CMS;
 
 import java.io.*;
@@ -43,13 +43,13 @@ public class CommandInstall extends Command {
             CommandMessages.exception(getName(),CMS.cms16);
             return;
         }
-        File ff=new File(FrameProperties.props().get("frame.dir"));
+        File ff=new File(WorkSpace.currentWorkSpace().getDir());
         if(!ff.isDirectory()){
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         String id=args.get(0);
-        File file=new File(FrameProperties.props().get("frame.dir")+"/lib/"+id+".apkg");
+        File file=new File(WorkSpace.currentWorkSpace().getDir()+"/lib/"+id+".apkg");
         install(file,id);
     }
 

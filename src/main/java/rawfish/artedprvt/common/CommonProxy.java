@@ -5,9 +5,9 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import rawfish.artedprvt.command.minecraft.CommandLoader;
-import rawfish.artedprvt.core.FrameOptions;
-import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.UserOptions;
 import rawfish.artedprvt.core.ProcessController;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.engine.ScriptEngineInit;
 import rawfish.artedprvt.core.rhino.Rhino;
 import rawfish.artedprvt.mi.group.ClassGroupLoader;
@@ -23,9 +23,9 @@ public class CommonProxy
     {
         new EventLoader();
         ClassGroupLoader.reg();
-        FrameProperties.init();
+        WorkSpace.init();
         ProcessController.init();
-        FrameOptions.load();
+        UserOptions.load();
 
         ScriptEngineInit.init();
     }

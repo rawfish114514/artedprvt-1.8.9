@@ -9,7 +9,6 @@ import rawfish.artedprvt.core.struct.ScriptModule;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 脚本系统
@@ -315,11 +314,11 @@ public class ScriptSystem {
     }
 
     /**
-     * 获取脚本属性
+     * 获取工作空间
      * @return
      */
-    public Map<String,String> getProps(){
-        return process.getProps();
+    public WorkSpace getWorkSpace(){
+        return process.getWorkSpace();
     }
 
 }

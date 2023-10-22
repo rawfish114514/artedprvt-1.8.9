@@ -2,7 +2,7 @@ package rawfish.artedprvt.core.localization;
 
 import com.electronwill.toml.Toml;
 import rawfish.artedprvt.Artedprvt;
-import rawfish.artedprvt.core.FrameOptions;
+import rawfish.artedprvt.core.UserOptions;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,7 +25,7 @@ public class Localization {
     }
 
     public static synchronized void load(){
-        language=String.valueOf(FrameOptions.options.get("language"));
+        language=String.valueOf(UserOptions.options.get("language"));
         if(isChange()){
             translation=new HashMap<>();
             try {
@@ -39,7 +39,7 @@ public class Localization {
                 String list=sb.toString();
                 String[] array=list.split("\n");
                 for(String v:array){
-                    int cindex=v.indexOf('$');
+                    int cindex=v.indexOf(';');
                     String type=v.substring(0,cindex);
                     String value=v.substring(cindex+1);
                     if(type.equals("put")) {

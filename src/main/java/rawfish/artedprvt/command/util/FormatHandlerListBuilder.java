@@ -2,6 +2,7 @@ package rawfish.artedprvt.command.util;
 
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.formats.*;
+import rawfish.artedprvt.core.engine.table;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,7 @@ public class FormatHandlerListBuilder extends ArrayList<FormatHandler> {
     public FormatHandlerListBuilder adds(FormatHandler formatHandler){
         add(formatHandler);
         return this;
+
     }
     public FormatHandlerListBuilder append(String string){
         add(new FormatHandlerAppend(string));

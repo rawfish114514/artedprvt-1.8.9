@@ -34,7 +34,7 @@ public class CommandApf extends Command {
         commandList.add(new CommandStops("stops"));
         commandList.add(new CommandStt("stt"));
         commandList.add(new CommandTm("tm"));
-        commandList.add(new CommandWs("ws"));
+        commandList.add(new CommandWorkspace("workspace"));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package rawfish.artedprvt.core.rhino;
 
 import org.mozilla.javascript.*;
-import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.localization.Localization;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.engine.ServiceEngine;
@@ -25,7 +24,6 @@ public class RhinoServiceEngine implements ServiceEngine {
         Context rhino=Context.enter();
         ScriptableObject scope=rhino.initStandardObjects();
         NativeObject object=new NativeObject();
-        object.put("properties", object, FrameProperties.props());
         object.put("language", object, Localization.getLanguage());
         scope.put("core",scope,object);
         rhino.evaluateString(scope,code,"service",1,null);

@@ -2,11 +2,11 @@ package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
+import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 
@@ -20,24 +20,49 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-/**
- * 构建工作空间
- */
-public class CommandWs extends Command {
-    public CommandWs(String commandName) {
+public class CommandWorkspace extends Command {
+    public CommandWorkspace(String commandName) {
         super(commandName);
     }
 
     @Override
     public void process(List<String> args) {
-        if(args.size()>0){
-            CommandMessages.exception(getName(), CMS.cms0);
+        if(args.size()==0) {
+            CommandMessages.exception(getName(), CMS.cms1);
             return;
         }
-        String dir= FrameProperties.props.get("frame.dir");
+        if(args.size()==1){
+            String arg=args.get(0);
+            if(arg.equals("current")){
+                //显示当前工作空间
+                CommandMessages.key(getName(),"当前工作空间: {0} = {1}",
+                        WorkSpace.currentWorkSpace().getName(),
+                        WorkSpace.currentWorkSpace().getDir());
+                return;
+            }
+
+            if(arg.equals("create")){
+                create();
+                return;
+            }
+        }
+        if(args.size()==2){
+            String arg0=args.get(0);
+            if(arg0.equals("set")){
+                //设置工作空间
+                String arg=args.get(1);
+
+                String dir=arg.replace("%user.dir%",System.getProperty("user.dir"));
+                WorkSpace.workSpace=new WorkSpace("new_workspace",dir);
+            }
+        }
+    }
+
+    public void create(){
+        String dir= WorkSpace.currentWorkSpace().getDir();
         File artedprvt=new File(dir);
         if(artedprvt.isDirectory()){
-            CommandMessages.exception(getName(),CMS.cms19);
+            CommandMessages.exception(getName(), CMS.cms19);
             return;
         }
         if(!artedprvt.mkdir()){
@@ -46,7 +71,7 @@ public class CommandWs extends Command {
         }
         //将资源解压到工作目录
         Map<String,String> files=new HashMap<>();
-        InputStream input=Artedprvt.class.getResourceAsStream("/workspace.zip");
+        InputStream input= Artedprvt.class.getResourceAsStream("/workspace.zip");
         ZipInputStream zip = new ZipInputStream(
                 input,
                 Charset.forName("cp437"));
@@ -100,17 +125,28 @@ public class CommandWs extends Command {
 
     @Override
     public List<String> complete(List<String> args) {
+        if(args.size()==1) {
+            return Literals.stringListBuilder().adds("current", "create", "set");
+        }
         return Literals.emptyComplete();
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        return Literals.emptyFormat();
+        return Literals.formatListBuilder().append("d").append("a");
     }
 
     @Override
     public InfoHandler info(List<String> args) {
-        if(args.size()>0&&(!args.get(0).isEmpty())){
+        if(args.size()==1){
+            return Literals.infoBuilder().map(
+                    Literals.infoMapBuilder()
+                            .puts("current",Literals.infoBuilder().string("当前"))
+                            .puts("create",Literals.infoBuilder().string("构建"))
+                            .puts("set",Literals.infoBuilder().string("设置")),
+                    Literals.infoBuilder().empty());
+        }
+        if(args.size()>2&&(!args.get(0).isEmpty())){
             return Literals.infoBuilder().string(CIS.cis3);
         }
         return Literals.emptyInfo();

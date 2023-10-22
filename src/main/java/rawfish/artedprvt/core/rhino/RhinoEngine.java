@@ -57,7 +57,7 @@ public class RhinoEngine implements ScriptEngine {
         list.add(new SystemMethodImport(scope,scriptSystem));
         list.add(new SystemMethodInfo(scope,scriptSystem));
         list.add(new SystemMethodPrint(scope,scriptSystem));
-        list.add(new SystemMethodProps(scope,scriptSystem));
+        list.add(new SystemMethodWorkspace(scope,scriptSystem));
         list.add(new SystemMethodSleep(scope,scriptSystem));
         list.add(new SystemMethodThread(scope,scriptSystem));
         return list;

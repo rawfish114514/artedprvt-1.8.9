@@ -5,6 +5,7 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.core.ProcessController;
 import rawfish.artedprvt.core.ScriptProcess;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
@@ -26,26 +27,23 @@ public class CommandPros extends Command {
     public void process(List<String> args) {
         if(args.size()==0){
             //全部
-            List<ScriptProcess> proList=ScriptProcess.getProList();
-            int n=proList.size();
-            for(int i=0;i<n;i++){
-                ScriptProcess pro=proList.get(i);
-                printPro(pro);
+            List<ScriptProcess> processList= ProcessController.getProcessList();
+            for(ScriptProcess process:processList){
+                printPro(process);
             }
-            if(n==0){
+            if(processList.size()==0){
                 CommandMessages.exception(getName(), CMS.cms11);
             }
         }else if(args.size()==1){
             //选择
-            int n=0;
             String arg=args.get(0);
-            List<ScriptProcess> proList=ScriptProcess.getProList();
-            for(int i=0;i<proList.size();i++){
-                ScriptProcess pro=proList.get(i);
-                if(String.valueOf(pro.getPid()).equals(arg)
-                        ||pro.getName().contains(arg)
-                        ||pro.getScriptInfo().getId().equals(arg)){
-                    printPro(pro);
+            int n=0;
+            List<ScriptProcess> processList= ProcessController.getProcessList();
+            for(ScriptProcess process:processList){
+                if(String.valueOf(process.getPid()).equals(arg)
+                        ||process.getName().contains(arg)
+                        ||process.getScriptInfo().getId().equals(arg)){
+                    printPro(process);
                     n++;
                 }
             }
@@ -96,20 +94,16 @@ public class CommandPros extends Command {
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.trim().isEmpty()){
-                List<ScriptProcess> proList=ScriptProcess.getProList();
+                List<ScriptProcess> processList= ProcessController.getProcessList();
                 List<String> l=new ArrayList<>();
-                ScriptProcess process;
-                for(int i=0;i<proList.size();i++){
-                    process=proList.get(i);
+                for(ScriptProcess process:processList){
                     l.add(String.valueOf(process.getPid()));
                 }
                 return l;
             }
-            List<ScriptProcess> proList=ScriptProcess.getProList();
+            List<ScriptProcess> processList= ProcessController.getProcessList();
             List<String> l=new ArrayList<>();
-            ScriptProcess process;
-            for(int i=0;i<proList.size();i++){
-                process=proList.get(i);
+            for(ScriptProcess process:processList){
                 String s=String.valueOf(process.getPid());
                 if(s.contains(arg)){
                     l.add(s);

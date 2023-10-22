@@ -23,9 +23,8 @@ import java.util.Map;
  * 进程
  */
 public class ScriptProcess {
-    private static List<ScriptProcess> proList=new ArrayList<>();//运行的进程
     private String command;//命令
-    private Map<String,String> props;//属性
+    private WorkSpace workSpace;//工作空间
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
     private List<String> scriptArgument;//脚本参数
@@ -70,13 +69,13 @@ public class ScriptProcess {
         this.command=command;
         ret=CREATE;
         hasError=false;
-        props= FrameProperties.props();
+        workSpace= WorkSpace.currentWorkSpace();
         fileLoader=null;
         if(command.equals("script")){
-            fileLoader=new SourceFileLoader(props.get("frame.dir")+"/src");
+            fileLoader=new SourceFileLoader(workSpace.getDir()+"/src");
         }
         if(command.equals("apkg")){
-            fileLoader=new ApkgFileLoader(props.get("frame.dir")+"/lib/"+pack+".apkg");
+            fileLoader=new ApkgFileLoader(workSpace.getDir()+"/lib/"+pack+".apkg");
         }
         if(fileLoader==null){
             throw new RuntimeException("文件加载器初始化失败");
@@ -98,7 +97,7 @@ public class ScriptProcess {
 
         synchronized (ScriptProcess.class) {
             LocalDate localDate = LocalDate.now();
-            File logDir = new File(props.get("frame.dir") + "/.artedprvt/logs/" + localDate.getYear() + "-"
+            File logDir = new File(workSpace.getDir() + "/.artedprvt/logs/" + localDate.getYear() + "-"
                     + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth());
             logDir.mkdirs();
             int logFileNumber = logDir.list().length;
@@ -137,7 +136,7 @@ public class ScriptProcess {
         command=null;
         ret=CREATE;
         hasError=false;
-        props= FrameProperties.props();
+        workSpace= WorkSpace.currentWorkSpace();
         fileLoader=new ApkgFileLoader(inputStream);
         scriptLoader=new ScriptLoader(fileLoader);
         this.scriptArgument=scriptArgument;
@@ -151,7 +150,7 @@ public class ScriptProcess {
 
         synchronized (ScriptProcess.class) {
             LocalDate localDate = LocalDate.now();
-            File logDir = new File(props.get("frame.dir") + "/.artedprvt/logs/" + localDate.getYear() + "-"
+            File logDir = new File(workSpace.getDir() + "/.artedprvt/logs/" + localDate.getYear() + "-"
                     + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth());
             logDir.mkdirs();
             int logFileNumber = logDir.list().length;
@@ -178,7 +177,6 @@ public class ScriptProcess {
         if(pid==-1){
             throw new RuntimeException("注册进程失败");
         }
-        proList.add(this);
     }
 
     private BufferedImage loadIcon(InputStream stream){
@@ -296,7 +294,6 @@ public class ScriptProcess {
         closeScriptObject();
         ret=END;
         printEnd(exitCode,System.currentTimeMillis()-time);
-        proList.remove(this);
         scriptLogger.closeAll();
     }
 
@@ -484,12 +481,8 @@ public class ScriptProcess {
         return -1;
     }
 
-    public static List<ScriptProcess> getProList() {
-        return new ArrayList<>(proList);
-    }
-
-    public Map<String, String> getProps() {
-        return props;
+    public WorkSpace getWorkSpace() {
+        return workSpace;
     }
 
     public FileLoader getFileLoader() {

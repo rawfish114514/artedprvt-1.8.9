@@ -1,5 +1,7 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.Artedprvt;
+
 import java.util.List;
 
 /**
@@ -7,12 +9,12 @@ import java.util.List;
  * 显示到游戏调试界面
  */
 public class DebugInfo {
-    public static String version=FrameProperties.props().get("frame.version");
+    public static String version= Artedprvt.VERSION;
     public static String call(boolean isf3){
         if(isf3) {
             StringBuilder sb = new StringBuilder();
 
-            List<ScriptProcess> proList = ScriptProcess.getProList();
+            List<ScriptProcess> proList = ProcessController.getProcessList();
             ScriptProcess pro;
 
             int p=proList.size();

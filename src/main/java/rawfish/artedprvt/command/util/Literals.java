@@ -42,6 +42,14 @@ public class Literals {
         return infoHandlerBuilder;
     }
 
+    public static FormatHandlerMapBuilder formatMapBuilder(){
+        return new FormatHandlerMapBuilder();
+    }
+
+    public static InfoHandlerMapBuilder infoMapBuilder(){
+        return new InfoHandlerMapBuilder();
+    }
+
 
 
     public static FormatHandler format(Function function){

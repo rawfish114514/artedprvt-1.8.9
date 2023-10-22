@@ -6,7 +6,7 @@ import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ScriptLanguage;
 import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.engine.Engines;
 import rawfish.artedprvt.core.engine.ServiceEngine;
 import rawfish.artedprvt.core.localization.types.CIS;
@@ -62,7 +62,7 @@ public class CommandScript extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(FrameProperties.props.get("frame.dir") + "/src/script");
+            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/src/script");
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -251,7 +251,7 @@ public class CommandScript extends Command {
     }
 
     public String readLiteralFile(String abbr) throws Exception{
-        File file=new File(FrameProperties.props.get("frame.dir")+"/src/literal."+abbr);
+        File file=new File(WorkSpace.currentWorkSpace().getDir()+"/src/literal."+abbr);
         if(file.isFile()){
             Reader reader=new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             StringBuilder sb=new StringBuilder();

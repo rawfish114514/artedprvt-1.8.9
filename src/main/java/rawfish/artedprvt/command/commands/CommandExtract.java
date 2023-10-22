@@ -4,7 +4,7 @@ import rawfish.artedprvt.command.*;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.FrameProperties;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.mi.PrintChat;
@@ -41,19 +41,19 @@ public class CommandExtract extends Command {
             CommandMessages.exception(getName(),CMS.cms2);
             return;
         }
-        File ff=new File(FrameProperties.props().get("frame.dir"));
+        File ff=new File(WorkSpace.currentWorkSpace().getDir());
         if(!ff.isDirectory()){
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
-        File srcf=new File(FrameProperties.props().get("frame.dir")+"/src");
+        File srcf=new File(WorkSpace.currentWorkSpace().getDir()+"/src");
         srcf.mkdirs();
         List<File> fs=getAllFile(srcf);
         if(fs.size()>0){
             CommandMessages.exception(getName(),CMS.cms8);
             return;
         }
-        String fd=FrameProperties.props.get("frame.dir");
+        String fd=WorkSpace.currentWorkSpace().getDir();
         int code=unzip(fd+"/lib/"+pack+".apkg",fd+"/src");
 
         if(code==0){
@@ -71,7 +71,7 @@ public class CommandExtract extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(FrameProperties.props.get("frame.dir") + "/lib");
+            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/lib");
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -84,7 +84,7 @@ public class CommandExtract extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+        File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
         FormatHandlerListBuilder fl=Literals.formatListBuilder();
         if(apkg.isFile()){
             fl.append("6");
@@ -101,7 +101,7 @@ public class CommandExtract extends Command {
             if(args.get(0).isEmpty()){
                 return Literals.infoBuilder().string(CIS.cis5);
             }
-            File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+            File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
                 return Literals.emptyInfo();
             }

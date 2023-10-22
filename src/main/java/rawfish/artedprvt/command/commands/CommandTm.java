@@ -377,7 +377,7 @@ public class CommandTm extends Command {
         }
 
         public List<ProcessEntry> pros() {
-            List<ScriptProcess> scriptProcessList = ScriptProcess.getProList();
+            List<ScriptProcess> scriptProcessList = ProcessController.getProcessList();
             List<Process> processList = new ArrayList<>();
 
             for (int i = 0; i < scriptProcessList.size(); i++) {

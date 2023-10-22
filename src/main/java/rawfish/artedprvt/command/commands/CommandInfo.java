@@ -5,8 +5,8 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.FrameProperties;
 import rawfish.artedprvt.core.ScriptInfo;
+import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.struct.ApkgFileLoader;
@@ -63,7 +63,7 @@ public class CommandInfo extends Command {
     }
 
     public ScriptInfo readApkgInfo(String pack) throws Exception {
-        FileLoader fileLoader=new ApkgFileLoader(FrameProperties.props().get("frame.dir")+"/lib/"+pack+".apkg");
+        FileLoader fileLoader=new ApkgFileLoader(WorkSpace.currentWorkSpace().getDir()+"/lib/"+pack+".apkg");
         String apkginfo=fileLoader.getContent("apkg.info");
         ScriptInfo scriptInfo=ScriptInfo.parse(apkginfo);
         ScriptInfo.inspect(scriptInfo);
@@ -71,7 +71,7 @@ public class CommandInfo extends Command {
     }
 
     public ScriptInfo readSrcInfo() throws Exception {
-        FileLoader fileLoader=new SourceFileLoader(FrameProperties.props().get("frame.dir")+"/src");
+        FileLoader fileLoader=new SourceFileLoader(WorkSpace.currentWorkSpace().getDir()+"/src");
         String apkginfo=fileLoader.getContent("apkg.info");
         ScriptInfo scriptInfo=ScriptInfo.parse(apkginfo);
         ScriptInfo.inspect(scriptInfo);
@@ -111,7 +111,7 @@ public class CommandInfo extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(FrameProperties.props.get("frame.dir") + "/lib");
+            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/lib");
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -128,7 +128,7 @@ public class CommandInfo extends Command {
         if(args.get(0).equals("<src>")){
             return Literals.formatListBuilder().append("6");
         }
-        File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+        File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
         if(apkg.isFile()){
             return Literals.formatListBuilder().append("6");
         }else{
@@ -145,7 +145,7 @@ public class CommandInfo extends Command {
             if(args.get(0).equals("<src>")){
                 return Literals.emptyInfo();
             }
-            File apkg = new File(FrameProperties.props.get("frame.dir") + "/lib/"+args.get(0)+".apkg");
+            File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
             if(apkg.isFile()){
                 return Literals.emptyInfo();
             }

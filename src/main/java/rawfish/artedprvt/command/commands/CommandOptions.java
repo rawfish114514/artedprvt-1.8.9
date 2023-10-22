@@ -5,7 +5,7 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.FrameOptions;
+import rawfish.artedprvt.core.UserOptions;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 
@@ -25,7 +25,7 @@ public class CommandOptions extends Command {
         if(args.size()==0){
             //展示所有选项
             StringBuilder sb=new StringBuilder();
-            Map<String,Object> config=new HashMap<>(FrameOptions.options);
+            Map<String,Object> config=new HashMap<>(UserOptions.options);
             config.forEach((k,v)-> sb.append("\n  ").append(k).append(" = ").append(String.valueOf(v)));
             CommandMessages.key(getName(), CMS.cms28,sb.toString());
             return;
@@ -35,16 +35,16 @@ public class CommandOptions extends Command {
             String key=args.get(0);
             if(key.equals("load")){
                 //加载
-                FrameOptions.load();
+                UserOptions.load();
                 CommandMessages.key(getName(),CMS.cms27);
                 try {
-                    FrameOptions.updateFile();
+                    UserOptions.updateFile();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
                 return;
             }
-            Object value= FrameOptions.getValue(key);
+            Object value= UserOptions.getValue(key);
             if(value==null){
                 CommandMessages.exception(getName(),CMS.cms25,key);
             }else{
@@ -56,13 +56,13 @@ public class CommandOptions extends Command {
             //修改选项
             String key=args.get(0);
             String value=args.get(1);
-            Object v= FrameOptions.getValue(key);
+            Object v= UserOptions.getValue(key);
             if(v==null){
                 CommandMessages.exception(getName(),CMS.cms25,key);
             }else{
-                FrameOptions.setValue(key,value);
+                UserOptions.setValue(key,value);
                 try {
-                    FrameOptions.updateFile();
+                    UserOptions.updateFile();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -74,11 +74,11 @@ public class CommandOptions extends Command {
     @Override
     public List<String> complete(List<String> args) {
         if(args.size()==1) {
-            List<String> list= new ArrayList<>(FrameOptions.options.keySet());
+            List<String> list= new ArrayList<>(UserOptions.options.keySet());
             list.add("load");
             return startWith(args,list);
         }else if(args.size()==2) {
-            List<String> vs= FrameOptions.getValues(args.get(0));
+            List<String> vs= UserOptions.getValues(args.get(0));
             if(vs==null){
                 return Literals.emptyComplete();
             }
@@ -110,7 +110,7 @@ public class CommandOptions extends Command {
             if(key.equals("load")){
                 return Literals.infoBuilder().string(CIS.cis11);
             }
-            Object value= FrameOptions.getValue(key);
+            Object value= UserOptions.getValue(key);
             if(value==null){
                 return Literals.infoBuilder().string(CIS.cis9);
             }else{
