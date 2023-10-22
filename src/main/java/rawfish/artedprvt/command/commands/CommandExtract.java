@@ -105,7 +105,7 @@ public class CommandExtract extends Command {
             if(apkg.isFile()){
                 return Literals.emptyInfo();
             }
-            return Literals.infoBuilder().string(CommandMessages.translate("csi1"));
+            return Literals.infoBuilder().string(CIS.cis1);
         }
         return Literals.emptyInfo();
     }

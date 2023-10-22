@@ -10,6 +10,10 @@ import java.util.regex.Pattern;
 
 
 public class FormatHandlerListBuilder extends ArrayList<FormatHandler> {
+    public FormatHandlerListBuilder adds(FormatHandler formatHandler){
+        add(formatHandler);
+        return this;
+    }
     public FormatHandlerListBuilder append(String string){
         add(new FormatHandlerAppend(string));
         return this;

@@ -79,7 +79,7 @@ public class CommandApkg extends Command {
                 ServiceEngine engine= Engines.getService(abbr);
                 if(engine!=null){
                     try {
-                        Object result=engine.unwrap(engine.call(code, "complete", args.subList(1,args.size())));
+                        Object result=engine.unwrap(engine.call(code, "complete", args.subList(1,args.size()), Literals.class));
                         if(result instanceof Collection){
                             List<String> stringList=new ArrayList<>();
                             for(Object obj:(Collection)result){
@@ -115,11 +115,15 @@ public class CommandApkg extends Command {
                 ServiceEngine engine = Engines.getService(abbr);
                 if (engine != null) {
                     try {
-                        Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size())));
+                        Object result = engine.unwrap(engine.call(code, "format", args.subList(1, args.size()), Literals.class));
                         if (result instanceof Collection) {
                             FormatHandlerListBuilder scriptfl = Literals.formatListBuilder();
                             for (Object obj : (Collection) result) {
-                                scriptfl.append(String.valueOf(obj));
+                                if(obj instanceof FormatHandler){
+                                    scriptfl.add((FormatHandler) obj);
+                                }else {
+                                    scriptfl.append(String.valueOf(obj));
+                                }
                             }
                             fl.addAll(scriptfl);
                         }
@@ -150,8 +154,11 @@ public class CommandApkg extends Command {
             ServiceEngine engine= Engines.getService(abbr);
             if(engine!=null){
                 try {
-                    Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size())));
+                    Object result=engine.unwrap(engine.call(code, "info", args.subList(1,args.size()), Literals.class));
                     if(result!=null){
+                        if(result instanceof InfoHandler){
+                            return (InfoHandler) result;
+                        }
                         return Literals.infoBuilder().string(String.valueOf(result));
                     }
                 }catch (Exception e){

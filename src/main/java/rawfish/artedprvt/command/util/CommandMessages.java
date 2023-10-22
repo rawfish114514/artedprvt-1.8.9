@@ -14,8 +14,4 @@ public class CommandMessages {
     public static void key(String source,String str,Object... args){
         printChat.print("§6"+source+"§7: "+ MessageFormat.format(str,args));
     }
-
-    public static String translate(String str,Object... args){
-        return Localization.getTranslate(str, args);
-    }
 }

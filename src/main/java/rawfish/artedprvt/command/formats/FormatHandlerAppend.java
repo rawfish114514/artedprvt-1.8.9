@@ -14,7 +14,7 @@ public class FormatHandlerAppend implements FormatHandler {
      * @param append 附加的格式代码
      */
     public FormatHandlerAppend(String append){
-        this.append= Literals.Formats.toFormatCode(append);
+        this.append= Literals.fcToString(append);
     }
     @Override
     public String handleFormat(String source) {

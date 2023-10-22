@@ -221,26 +221,26 @@ public class CommandLiteralGuiCommandBlock extends GuiCommandBlock {
             int i = isEnabled ? enabledColor : disabledColor;
             int j = guiTextField.getCursorPosition() - lineScrollOffset;
             int k = guiTextField.getSelectionEnd() - lineScrollOffset;
-            String s = fontRendererObj.trimStringToWidth(Literals.Formats.substring(guiTextField.getText(),lineScrollOffset), guiTextField.getWidth());
+            String s = fontRendererObj.trimStringToWidth(Literals.fcSubstring(guiTextField.getText(),lineScrollOffset), guiTextField.getWidth());
 
-            boolean flag = j >= 0 && j <= Literals.Formats.length(s);
+            boolean flag = j >= 0 && j <= Literals.fcLength(s);
             boolean flag1 = guiTextField.isFocused() && cursorCounter / 6 % 2 == 0 && flag;
             int l = enableBackgroundDrawing ? guiTextField.xPosition + 4 : guiTextField.xPosition;
             int i1 = enableBackgroundDrawing ? guiTextField.yPosition + (guiTextField.height - 8) / 2 : guiTextField.yPosition;
             int j1 = l;
 
-            if (k > Literals.Formats.length(s))
+            if (k > Literals.fcLength(s))
             {
-                k = Literals.Formats.length(s);
+                k = Literals.fcLength(s);
             }
 
-            if (Literals.Formats.length(s) > 0)
+            if (Literals.fcLength(s) > 0)
             {
-                String s1 = flag ? Literals.Formats.substring(s,0, j) : s;
+                String s1 = flag ? Literals.fcSubstring(s,0, j) : s;
                 j1 = fontRendererObj.drawStringWithShadow(s1, (float)l, i1+offset, i);
             }
 
-            boolean flag2 = guiTextField.getCursorPosition() < Literals.Formats.length(guiTextField.getText()) || Literals.Formats.length(guiTextField.getText()) >= guiTextField.getMaxStringLength();
+            boolean flag2 = guiTextField.getCursorPosition() < Literals.fcLength(guiTextField.getText()) || Literals.fcLength(guiTextField.getText()) >= guiTextField.getMaxStringLength();
             int k1 = j1;
 
             if (!flag)
@@ -253,9 +253,9 @@ public class CommandLiteralGuiCommandBlock extends GuiCommandBlock {
                 --j1;
             }
 
-            if (Literals.Formats.length(s) > 0 && flag && j < Literals.Formats.length(s))
+            if (Literals.fcLength(s) > 0 && flag && j < Literals.fcLength(s))
             {
-                j1 = fontRendererObj.drawStringWithShadow(Literals.Formats.substring(s,j), (float)j1, i1+offset, i);
+                j1 = fontRendererObj.drawStringWithShadow(Literals.fcSubstring(s,j), (float)j1, i1+offset, i);
             }
 
             if (flag1)
@@ -272,7 +272,7 @@ public class CommandLiteralGuiCommandBlock extends GuiCommandBlock {
 
             if (k != j)
             {
-                int l1 = l + fontRendererObj.getStringWidth(Literals.Formats.substring(s,0, k));
+                int l1 = l + fontRendererObj.getStringWidth(Literals.fcSubstring(s,0, k));
 
                 /*reflect*/
                 if(v) {

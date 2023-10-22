@@ -33,6 +33,11 @@ public class RhinoServiceEngine implements ServiceEngine {
         if(f==null){
             return null;
         }
+        for(int i=0;i<args.length;i++){
+            if(args[i] instanceof Class){
+                args[i]=new NativeJavaClass(scope, (Class<?>) args[i]);
+            }
+        }
         return ((Function) f).call(rhino,scope,scope,args);
     }
 
