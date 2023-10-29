@@ -6,9 +6,8 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ProcessController;
-import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.localization.types.CIS;
-import rawfish.artedprvt.core.localization.Localization;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.localization.types.TMS;
 
@@ -349,24 +348,24 @@ public class CommandTm extends Command {
         }
 
         public List<Entry> classify() {
-            List<ProcessEntry> scriptProcessEntryList = new ArrayList<>();
+            List<ProcessEntry> processEntryList = new ArrayList<>();
             List<ProcessEntry> otherProcessEntryList = new ArrayList<>();
             ProcessEntry entry;
             for (int i = 0; i < processEntryList.size(); i++) {
                 entry = processEntryList.get(i);
-                if (entry.process instanceof ScriptsProcess) {
-                    scriptProcessEntryList.add(entry);
+                if (entry.IProcess instanceof ScriptsIProcess) {
+                    processEntryList.add(entry);
                     continue;
                 }
-                if (entry.process instanceof OtherProcess) {
+                if (entry.IProcess instanceof OtherIProcess) {
                     otherProcessEntryList.add(entry);
                 }
             }
 
             List<Entry> classifyEntryList = new ArrayList<>();
-            if (scriptProcessEntryList.size() > 0) {
+            if (processEntryList.size() > 0) {
                 classifyEntryList.add(new ClassifyEntry(Translate.get(TMS.tms5)));
-                scriptProcessEntryList.forEach((p) -> classifyEntryList.add(p));
+                processEntryList.forEach((p) -> classifyEntryList.add(p));
             }
             if (otherProcessEntryList.size() > 0) {
                 classifyEntryList.add(new ClassifyEntry(Translate.get(TMS.tms6)));
@@ -377,31 +376,31 @@ public class CommandTm extends Command {
         }
 
         public List<ProcessEntry> pros() {
-            List<ScriptProcess> scriptProcessList = ProcessController.getProcessList();
-            List<Process> processList = new ArrayList<>();
+            List<? extends Process> processList = ProcessController.getProcessList();
+            List<IProcess> IProcessList = new ArrayList<>();
 
-            for (int i = 0; i < scriptProcessList.size(); i++) {
-                processList.add(new ScriptsProcess(scriptProcessList.get(i)));
+            for (int i = 0; i < processList.size(); i++) {
+                IProcessList.add(new ScriptsIProcess(processList.get(i)));
             }
 
             //任务管理器
             Container c;
             if ((c = getTopLevelAncestor()) != null) {
                 if (c instanceof JFrame) {
-                    OtherProcess taskManager = new OtherProcess(((JFrame) c).getTitle());
-                    processList.add(taskManager);
+                    OtherIProcess taskManager = new OtherIProcess(((JFrame) c).getTitle());
+                    IProcessList.add(taskManager);
                 }
             }
 
             //进程控制器
-            OtherProcess processController = new OtherProcess(Translate.get(TMS.tms7));
+            OtherIProcess processController = new OtherIProcess(Translate.get(TMS.tms7));
             processController.thread = ProcessController.getThread();
-            processList.add(processController);
+            IProcessList.add(processController);
 
             List<ProcessEntry> processEntryList1 = new ArrayList<>();
             ProcessEntry processEntry = null;
-            for (int i = 0; i < processList.size(); i++) {
-                processEntry = new ProcessEntry(processList.get(i));
+            for (int i = 0; i < IProcessList.size(); i++) {
+                processEntry = new ProcessEntry(IProcessList.get(i));
                 if (processEntryList.size() > i && processEntryList.get(i) != null) {
                     //按位继承
                     processEntry.extend(processEntryList.get(i));
@@ -684,7 +683,7 @@ public class CommandTm extends Command {
     }
 
     static class ProcessEntry extends Entry {
-        public Process process;
+        public IProcess IProcess;
         public String name;
         public double cpu;
         public long memory;
@@ -692,8 +691,8 @@ public class CommandTm extends Command {
 
         public boolean hasMouses = false;
 
-        public ProcessEntry(Process process) {
-            this.process = process;
+        public ProcessEntry(IProcess IProcess) {
+            this.IProcess = IProcess;
             setFont(new Font("Small Fonts", Font.PLAIN, 15));
 
             ProcessEntry that = this;
@@ -701,7 +700,7 @@ public class CommandTm extends Command {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     if (e.isPopupTrigger()) {
-                        new ProcessPopupMenu(process).show(that, e.getX(), e.getY());
+                        new ProcessPopupMenu(IProcess).show(that, e.getX(), e.getY());
                     }
                 }
 
@@ -724,10 +723,10 @@ public class CommandTm extends Command {
 
         @Override
         void updateData() {
-            name = process.getName();
-            cpu = process.getCPU();
-            memory = process.getMemory();
-            pid = process.getPid();
+            name = IProcess.getName();
+            cpu = IProcess.getCPU();
+            memory = IProcess.getMemory();
+            pid = IProcess.getPid();
         }
 
         @Override
@@ -768,7 +767,7 @@ public class CommandTm extends Command {
             g.drawString(m, getWidth() - 78 - stringWidth(m), 20);
             g.drawString(p, getWidth() - 18 - stringWidth(p), 20);
 
-            Image image = process.getIcon();
+            Image image = IProcess.getIcon();
             if (image != null) {
                 g.drawImage(image, 30, 6, null);
             }
@@ -790,7 +789,7 @@ public class CommandTm extends Command {
         }
     }
 
-    interface Process {
+    interface IProcess {
         /**
          * 获取名称
          *
@@ -865,7 +864,7 @@ public class CommandTm extends Command {
         Object properties();
     }
 
-    static class ProcessAdapter implements Process {
+    static class IProcessAdapter implements IProcess {
 
         @Override
         public String getName() {
@@ -924,35 +923,35 @@ public class CommandTm extends Command {
     }
 
     static class ProcessPopupMenu extends JPopupMenu {
-        public Process process;
+        public IProcess IProcess;
 
-        public ProcessPopupMenu(Process process) {
-            this.process = process;
+        public ProcessPopupMenu(IProcess IProcess) {
+            this.IProcess = IProcess;
 
             JMenuItem stopMenuItem = new JMenuItem(Translate.get(TMS.tms20));
             stopMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    process.stop();
+                    IProcess.stop();
                 }
             });
-            stopMenuItem.setEnabled(process.menuStop());
+            stopMenuItem.setEnabled(IProcess.menuStop());
             JMenuItem restartMenuItem = new JMenuItem(Translate.get(TMS.tms21));
             restartMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    process.restart();
+                    IProcess.restart();
                 }
             });
-            restartMenuItem.setEnabled(process.menuRestart());
+            restartMenuItem.setEnabled(IProcess.menuRestart());
             JMenuItem propertiesMenuItem = new JMenuItem(Translate.get(TMS.tms22));
             propertiesMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    properties(process.properties());
+                    properties(IProcess.properties());
                 }
             });
-            propertiesMenuItem.setEnabled(process.menuProperties());
+            propertiesMenuItem.setEnabled(IProcess.menuProperties());
 
             add(stopMenuItem);
             add(restartMenuItem);
@@ -964,36 +963,36 @@ public class CommandTm extends Command {
         }
     }
 
-    static class ScriptsProcess extends ProcessAdapter {
-        public ScriptProcess scriptProcess;
+    static class ScriptsIProcess extends IProcessAdapter {
+        public Process process;
 
-        public ScriptsProcess(ScriptProcess scriptProcess) {
-            this.scriptProcess = scriptProcess;
+        public ScriptsIProcess(Process process) {
+            this.process = process;
         }
 
         @Override
         public String getName() {
-            return scriptProcess.getName();
+            return process.getName();
         }
 
         @Override
         public Image getIcon() {
-            return scriptProcess.getIcon();
+            return process.getIcon();
         }
 
         @Override
         public double getCPU() {
-            return scriptProcess.getCPU();
+            return 0;
         }
 
         @Override
         public long getMemory() {
-            return scriptProcess.getMemory();
+            return 0;
         }
 
         @Override
         public int getPid() {
-            return scriptProcess.getPid();
+            return process.getPid();
         }
 
         @Override
@@ -1008,7 +1007,7 @@ public class CommandTm extends Command {
 
         @Override
         public void stop() {
-            scriptProcess.stop(ScriptProcess.STOPS);
+            process.stop(Process.STOPS);
         }
 
         @Override
@@ -1017,12 +1016,12 @@ public class CommandTm extends Command {
         }
     }
 
-    static class OtherProcess extends ProcessAdapter {
+    static class OtherIProcess extends IProcessAdapter {
         public String name;
         public Thread thread;
         public Image image = null;
 
-        public OtherProcess(String name) {
+        public OtherIProcess(String name) {
             this.name = name;
             this.thread = Thread.currentThread();
         }

@@ -4,7 +4,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.core.*;
+import rawfish.artedprvt.core.script.ScriptObject;
+import rawfish.artedprvt.core.script.ScriptProcess;
+import rawfish.artedprvt.core.script.ScriptSystem;
 
 import java.util.ArrayList;
 import java.util.List;

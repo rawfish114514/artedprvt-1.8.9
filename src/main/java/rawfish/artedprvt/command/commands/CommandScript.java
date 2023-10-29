@@ -4,13 +4,14 @@ import rawfish.artedprvt.command.*;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.ScriptLanguage;
-import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.script.ScriptLanguage;
+import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.WorkSpace;
-import rawfish.artedprvt.core.engine.Engines;
-import rawfish.artedprvt.core.engine.ServiceEngine;
+import rawfish.artedprvt.core.script.engine.Engines;
+import rawfish.artedprvt.core.script.engine.ServiceEngine;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.core.script.struct.SourceFileLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,7 +48,9 @@ public class CommandScript extends Command {
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {
-            ScriptProcess scriptProcess=new ScriptProcess("script",pack,scriptArgs);
+            ScriptProcess scriptProcess=new ScriptProcess(new SourceFileLoader(WorkSpace.currentWorkSpace().getDir()+"/src"),scriptArgs);
+            scriptProcess.getScriptInfo().setModule(pack);
+            scriptProcess.setName(pack);
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,12 +6,12 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ProcessController;
-import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.Process;
+import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.mi.ChatProvider;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class CommandPros extends Command {
     public void process(List<String> args) {
         if(args.size()==0){
             //全部
-            List<ScriptProcess> processList= ProcessController.getProcessList();
-            for(ScriptProcess process:processList){
+            List<? extends Process> processList= ProcessController.getProcessList();
+            for(Process process:processList){
                 printPro(process);
             }
             if(processList.size()==0){
@@ -38,13 +38,24 @@ public class CommandPros extends Command {
             //选择
             String arg=args.get(0);
             int n=0;
-            List<ScriptProcess> processList= ProcessController.getProcessList();
-            for(ScriptProcess process:processList){
-                if(String.valueOf(process.getPid()).equals(arg)
-                        ||process.getName().contains(arg)
-                        ||process.getScriptInfo().getId().equals(arg)){
+            List<? extends Process> processList= ProcessController.getProcessList();
+            for(Process process:processList){
+                if(String.valueOf(process.getPid()).equals(arg)){
                     printPro(process);
                     n++;
+                    continue;
+                }
+                if(process.getName().contains(arg)){
+                    printPro(process);
+                    n++;
+                    continue;
+                }
+                if(process instanceof ScriptProcess) {
+                    ScriptProcess scriptProcess=(ScriptProcess) process;
+                    if (scriptProcess.getScriptInfo().getId().equals(arg)) {
+                        printPro(process);
+                        n++;
+                    }
                 }
             }
             if(n==0){
@@ -55,16 +66,16 @@ public class CommandPros extends Command {
         }
     }
 
-    public void printPro(ScriptProcess pro){
+    public void printPro(Process pro){
         CommandMessages.printChat.print("§6>§f"+pro.getPid() + ": " + pro.getName(), new ChatProvider() {
-            public ScriptProcess p;
-            public ChatProvider setP(ScriptProcess p){
+            public Process p;
+            public ChatProvider setP(Process p){
                 this.p=p;
                 return this;
             }
             @Override
             public String getChat() {
-                if(p!=null){
+                if(p!=null){/*
                     String s=p.getName()+" ("+p.getScriptInfo().getId()+")";
                     s+="\n";
                     s+="pid: "+p.getPid();
@@ -79,9 +90,9 @@ public class CommandPros extends Command {
                         s += "\n";
                         s += "§fcpu: "+c;
                     }
-                    return s;
+                    return s;*/
                 }
-                if(p.getRet()==ScriptProcess.END){
+                if(p.getRet()== Process.END){
                     p=null;
                 }
                 return null;
@@ -94,16 +105,16 @@ public class CommandPros extends Command {
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.trim().isEmpty()){
-                List<ScriptProcess> processList= ProcessController.getProcessList();
+                List<? extends Process> processList= ProcessController.getProcessList();
                 List<String> l=new ArrayList<>();
-                for(ScriptProcess process:processList){
+                for(Process process:processList){
                     l.add(String.valueOf(process.getPid()));
                 }
                 return l;
             }
-            List<ScriptProcess> processList= ProcessController.getProcessList();
+            List<? extends Process> processList= ProcessController.getProcessList();
             List<String> l=new ArrayList<>();
-            for(ScriptProcess process:processList){
+            for(Process process:processList){
                 String s=String.valueOf(process.getPid());
                 if(s.contains(arg)){
                     l.add(s);
@@ -112,10 +123,11 @@ public class CommandPros extends Command {
                 if(s.contains(arg)&&!l.contains(s)){
                     l.add(s);
                 }
+                /*
                 s=process.getScriptInfo().getId();
                 if(s.contains(arg)&&!l.contains(s)){
                     l.add(s);
-                }
+                }*/
             }
             return l;
         }

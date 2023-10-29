@@ -8,8 +8,8 @@ import rawfish.artedprvt.command.minecraft.CommandLoader;
 import rawfish.artedprvt.core.UserOptions;
 import rawfish.artedprvt.core.ProcessController;
 import rawfish.artedprvt.core.WorkSpace;
-import rawfish.artedprvt.core.engine.ScriptEngineInit;
-import rawfish.artedprvt.core.rhino.Rhino;
+import rawfish.artedprvt.core.script.engine.ScriptEngineInit;
+import rawfish.artedprvt.core.script.rhino.Rhino;
 import rawfish.artedprvt.mi.group.ClassGroupLoader;
 
 public class CommonProxy

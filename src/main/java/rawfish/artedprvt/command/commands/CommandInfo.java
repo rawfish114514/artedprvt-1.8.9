@@ -5,13 +5,13 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.ScriptInfo;
+import rawfish.artedprvt.core.script.ScriptInfo;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
-import rawfish.artedprvt.core.struct.ApkgFileLoader;
-import rawfish.artedprvt.core.struct.FileLoader;
-import rawfish.artedprvt.core.struct.SourceFileLoader;
+import rawfish.artedprvt.core.script.struct.ApkgFileLoader;
+import rawfish.artedprvt.core.script.struct.FileLoader;
+import rawfish.artedprvt.core.script.struct.SourceFileLoader;
 import rawfish.artedprvt.mi.ChatProvider;
 
 import java.io.File;

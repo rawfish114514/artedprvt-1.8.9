@@ -2,7 +2,6 @@ package rawfish.artedprvt.command.util;
 
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.formats.*;
-import rawfish.artedprvt.core.engine.table;
 
 import java.util.ArrayList;
 import java.util.Collection;

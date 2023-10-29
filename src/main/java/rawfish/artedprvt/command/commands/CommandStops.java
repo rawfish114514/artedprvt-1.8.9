@@ -6,7 +6,8 @@ import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.ProcessController;
-import rawfish.artedprvt.core.ScriptProcess;
+import rawfish.artedprvt.core.Process;
+import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 
@@ -25,9 +26,9 @@ public class CommandStops extends Command {
     public void process(List<String> args) {
         if(args.size()==0){
             //全部
-            List<ScriptProcess> processList= ProcessController.getProcessList();
-            for(ScriptProcess process:processList){
-                process.stop(ScriptProcess.STOPS);
+            List<? extends Process> processList= ProcessController.getProcessList();
+            for(Process process:processList){
+                process.stop(Process.STOPS);
             }
             if(processList.size()==0){
                 CommandMessages.exception(getName(), CMS.cms18);
@@ -36,13 +37,24 @@ public class CommandStops extends Command {
             //选择
             String arg=args.get(0);
             int n=0;
-            List<ScriptProcess> processList= ProcessController.getProcessList();
-            for(ScriptProcess process:processList){
-                if(String.valueOf(process.getPid()).equals(arg)
-                        ||process.getName().equals(arg)
-                        ||process.getScriptInfo().getId().equals(arg)){
-                    process.stop(ScriptProcess.STOPS);
+            List<? extends Process> processList= ProcessController.getProcessList();
+            for(Process process:processList){
+                if(String.valueOf(process.getPid()).equals(arg)){
+                    process.stop(Process.STOPS);
                     n++;
+                    continue;
+                }
+                if(process.getName().contains(arg)){
+                    process.stop(Process.STOPS);
+                    n++;
+                    continue;
+                }
+                if(process instanceof ScriptProcess) {
+                    ScriptProcess scriptProcess=(ScriptProcess) process;
+                    if (scriptProcess.getScriptInfo().getId().equals(arg)) {
+                        process.stop(Process.STOPS);
+                        n++;
+                    }
                 }
             }
             if(n==0){
@@ -58,16 +70,16 @@ public class CommandStops extends Command {
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.trim().isEmpty()){
-                List<ScriptProcess> processList= ProcessController.getProcessList();
+                List<? extends Process> processList= ProcessController.getProcessList();
                 List<String> l=new ArrayList<>();
-                for(ScriptProcess process:processList){
+                for(Process process:processList){
                     l.add(String.valueOf(process.getPid()));
                 }
                 return l;
             }
-            List<ScriptProcess> processList= ProcessController.getProcessList();
+            List<? extends Process> processList= ProcessController.getProcessList();
             List<String> l=new ArrayList<>();
-            for(ScriptProcess process:processList){
+            for(Process process:processList){
                 String s=String.valueOf(process.getPid());
                 if(s.contains(arg)){
                     l.add(s);
@@ -76,10 +88,11 @@ public class CommandStops extends Command {
                 if(s.contains(arg)&&!l.contains(s)){
                     l.add(s);
                 }
+                /*
                 s=process.getScriptInfo().getId();
                 if(s.contains(arg)&&!l.contains(s)){
                     l.add(s);
-                }
+                }*/
             }
             return l;
         }

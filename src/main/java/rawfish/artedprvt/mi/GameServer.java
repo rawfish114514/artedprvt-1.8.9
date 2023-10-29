@@ -7,7 +7,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.core.ScriptObject;
+import rawfish.artedprvt.core.script.ScriptObject;
 
 @Solvable
 public class GameServer implements ScriptObject {

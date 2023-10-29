@@ -8,7 +8,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.core.*;
+import rawfish.artedprvt.core.script.ScriptLogger;
+import rawfish.artedprvt.core.script.ScriptObject;
+import rawfish.artedprvt.core.script.ScriptProcess;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
@@ -17,7 +19,7 @@ import java.awt.datatransfer.StringSelection;
  * 聊天消息打印
  */
 @Solvable
-public class PrintChat implements ScriptObject{
+public class PrintChat implements ScriptObject {
     private ScriptProcess process;
     private ScriptLogger logger=null;
     public GuiNewChat guiNewChat;

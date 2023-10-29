@@ -1,6 +1,7 @@
 package rawfish.artedprvt.core;
 
 import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.core.script.ScriptSystem;
 
 import java.util.List;
 
@@ -14,14 +15,14 @@ public class DebugInfo {
         if(isf3) {
             StringBuilder sb = new StringBuilder();
 
-            List<ScriptProcess> proList = ProcessController.getProcessList();
-            ScriptProcess pro;
+            List<? extends Process> proList = ProcessController.getProcessList();
+            Process pro;
 
             int p=proList.size();
             int t = 0;
             for (int i = 0; i < p; i++) {
                 pro = proList.get(i);
-                t += pro.getOnRunThreadNumber();
+                t += pro.getRunningThreadCount();
             }
 
             sb.append("  ");

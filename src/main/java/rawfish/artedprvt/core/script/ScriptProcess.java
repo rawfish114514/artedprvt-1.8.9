@@ -1,0 +1,402 @@
+package rawfish.artedprvt.core.script;
+
+import rawfish.artedprvt.core.*;
+import rawfish.artedprvt.core.Process;
+import rawfish.artedprvt.core.script.engine.*;
+import rawfish.artedprvt.core.script.rhino.RhinoEngine;
+import rawfish.artedprvt.core.script.rhino.RhinoStackParser;
+import rawfish.artedprvt.core.script.struct.*;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 进程
+ */
+public class ScriptProcess extends Process {
+    private WorkSpace workSpace;
+    private FileLoader fileLoader;//文件加载器
+    private ScriptLoader scriptLoader;//脚本加载器
+    private List<String> scriptArgument;//脚本参数
+    private ScriptInfo scriptInfo;//脚本配置
+    private ScriptLogger scriptLogger;//脚本日志记录器
+    private List<ScriptEngine> engines;//引擎列表
+    private MainThread mainThread;//主线程
+    private List<ScriptThread> threads;//脚本线程列表
+    private List<ScriptStackParser> stackParsers;//脚本堆栈解析器
+    private ScriptExceptionHandler exceptionHandler;//异常处理程序
+
+    private ScriptSystem scriptSystem;//脚本系统
+
+
+    private List<ScriptObject> scriptObjects;//脚本对象列表
+    private int scriptObjectNumber;//脚本对象创建数
+
+
+    /**
+     * 从输入流创建进程
+     * 以apkg的方式加载文件
+     * @param inputStream
+     * @param scriptArgument
+     * @throws Exception
+     */
+    public ScriptProcess(
+            InputStream inputStream,
+            List<String> scriptArgument) throws Exception {
+        this(new ApkgFileLoader(inputStream),scriptArgument);
+    }
+
+    public ScriptProcess(FileLoader fileLoader,List<String> scriptArgument) throws Exception{
+        super();
+
+        ret=CREATE;
+        workSpace=WorkSpace.currentWorkSpace();
+        this.fileLoader=fileLoader;
+        scriptLoader=new ScriptLoader(fileLoader);
+        this.scriptArgument=scriptArgument;
+
+        String apkginfo=fileLoader.getContent("apkg.info");
+        scriptInfo=ScriptInfo.parse(apkginfo);
+        ScriptInfo.inspect(scriptInfo);
+
+        name= scriptInfo.getName();
+        icon= loadIcon(fileLoader.getInputStream("icon.png"));
+
+        synchronized (ScriptProcess.class) {
+            LocalDate localDate = LocalDate.now();
+            File logDir = new File(workSpace.getDir() + "/.artedprvt/logs/" + localDate.getYear() + "-"
+                    + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth());
+            logDir.mkdirs();
+            int logFileNumber = logDir.list().length;
+            File logFile = new File(logDir.getPath() + "/" + logFileNumber + "." + name.substring(name.indexOf(':')+1) + ".txt");
+            scriptLogger = new ScriptLogger(this,localDate,Files.newOutputStream(logFile.toPath()));
+        }
+
+
+        engines=new ArrayList<>();
+        engines.add(new RhinoEngine(this));
+
+        stackParsers=new ArrayList<>();
+        stackParsers.add(new RhinoStackParser());
+
+        exceptionHandler=new ScriptExceptionHandler(this);
+
+        scriptObjects=new ArrayList<>();
+        scriptObjectNumber=0;
+    }
+
+    private BufferedImage loadIcon(InputStream stream){
+        if(stream==null){
+            return loadDefaultIcon();
+        }
+        a:try {
+            BufferedImage image= ImageIO.read(stream);
+            if(image==null||image.getHeight()!=16||image.getWidth()!=16){
+                break a;
+            }
+            return image;
+        } catch (IOException ignored) {
+        }
+        return loadDefaultIcon();
+    }
+
+
+    /**
+     * 准备工作并运行
+     * 由外部调用
+     */
+    @Override
+    public synchronized void start(){
+        if(ret!=CREATE){
+            ScriptExceptions.exception("进程状态异常");
+        }
+        ret=START;//进程启动 无效退出
+        threads=new ArrayList<>();
+        mainThread=new MainThread(this);
+
+        mainThread.start();
+    }
+
+    /**
+     * 准备工作完成
+     * 由主线程调用
+     */
+    public void begin(){
+        ret=BEGIN;//进程准备 正常退出
+        initTime();
+        printStart();
+    }
+
+    /**
+     * 终止进程
+     * 由外部调用或运行结束自动调用
+     * @param exitCode
+     */
+    @Override
+    public void stop(int exitCode){
+        //终止所有相关的线程 在最后终止当前线程前结束进程
+        Thread currentThread=Thread.currentThread();
+        if(currentThread==mainThread) {
+            //主线程
+            for (int i = 0; i < threads.size(); i++) {
+                threads.get(i).stop();
+            }
+            end(exitCode);
+            mainThread.jstop();
+        }else{
+            //脚本线程
+            ScriptThread t;
+            for (int i = 0; i < threads.size(); i++) {
+                t=threads.get(i);
+                if(!t.equals(currentThread)){
+                    t.stop();
+                }
+            }
+            end(exitCode);
+            mainThread.jstop();
+            if(threads.contains(currentThread)) {
+                currentThread.stop();
+            }
+        }
+    }
+
+    /**
+     * 进程结束
+     * 由外部调用或运行结束自动调用
+     * @param exitCode
+     */
+    @Override
+    public synchronized void end(int exitCode){
+        if(ret==END){
+            return;
+        }
+        closeScriptObject();
+        ret=END;
+        printEnd(exitCode,runningTime());
+        scriptLogger.closeAll();
+    }
+
+    private void printStart(){
+        String s="§3run:§r "+name;
+        scriptLogger.natives(s);
+        scriptSystem.print(ScriptSystem.DISPLAY,"§3run:§r "+name);
+    }
+
+    private void printEnd(int status,long runtime){
+        rtime=runtime;
+        String stat= getStatistics();
+        String s;
+        sw:{
+            if (status == EXIT) {
+                s="§2end:§r " + name + "§7(" + runtime + "ms)";
+                break sw;
+            }
+            if (status == ERROR) {
+                s="§4break:§r " + name + "§7(" + runtime + "ms)";
+                break sw;
+            }
+            if (status == STOPS) {
+                s="§4stop:§r " + name + "§7(" + runtime + "ms)";
+                break sw;
+            }
+            if (status >= 0) {
+                s="§2exit:§r " + name + "§7(" + runtime + "ms) " + status;
+            } else {
+                s="§4exit:§r " + name + "§7(" + runtime + "ms) " + status;
+            }
+        }
+        scriptLogger.natives(s);
+        scriptSystem.print(ScriptSystem.DISPLAY,s,stat);
+    }
+
+
+    public void addScriptObject(ScriptObject scriptObject){
+        scriptObjects.add(scriptObject);
+        scriptObjectNumber++;
+    }
+
+    public void closeScriptObject(){
+        ScriptObject scriptObject;
+        for(int i=0;i<scriptObjects.size();){
+            scriptObject=scriptObjects.get(i);
+            scriptObject.close();
+            scriptObjects.remove(scriptObject);
+        }
+    }
+
+    @Override
+    public int getRunningThreadCount(){
+        int n=0;
+        if(mainThread!=null&&mainThread.getState()!=Thread.State.TERMINATED){
+            n++;
+        }
+        ScriptThread thread;
+        for(int i=0;i<threads.size();i++){
+            thread=threads.get(i);
+            if(thread!=null&&thread.getState()!=Thread.State.TERMINATED){
+                n++;
+            }
+        }
+        return n;
+    }
+
+    public void setName(String name){
+        this.name=name;
+    }
+
+    private long rtime=-1;
+    public String getStatistics(){
+        long time=runningTime();
+
+        String line1="[";
+        for(String arg:scriptArgument){
+            line1+=arg;
+            line1+="§7, §r";
+        }
+        if(line1.length()>1) {
+            line1=line1.substring(0, line1.length() - 6);
+        }
+        line1+="]";
+        String line2="ret: "+ret;
+        String line3="object: "+scriptObjectNumber;
+        String stime=String.valueOf(time);
+        if(stime.length()>3){
+            stime=stime.substring(0,stime.length()-3)+"§7"+stime.substring(stime.length()-3);
+        }else{
+            stime="§7"+stime;
+        }
+        String line4="runtime: "+stime;
+
+        String str="";
+        if(!line1.equals("[]")){
+            str+=line1+"\n";
+        }
+        str+=line2+"\n";
+        str+=line3+"\n";
+        str+=line4;
+        return str;
+    }
+
+    public boolean isThread(Thread thread) {
+        if(thread==mainThread){
+            return true;
+        }
+        for (int i = 0; i < threads.size(); i++) {
+            if(thread==threads.get(i)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private long gclastCpuTime =-1;
+    private long gclastTime =-1;
+    private double oldCPU=0;
+    public double getCPU(){
+        if(ret==END){
+            return 0;
+        }
+        if(gclastCpuTime ==0){
+            gclastCpuTime =0;
+            gclastTime =System.currentTimeMillis();
+            List<Thread> threadList=new ArrayList<>();
+            threadList.add(mainThread);
+            threadList.addAll(threads);
+            ThreadMXBean threadMXBean= ManagementFactory.getThreadMXBean();
+            for(Thread t:threadList){
+                long cpu=threadMXBean.getThreadCpuTime(t.getId());
+                gclastCpuTime +=cpu;
+            }
+            return 0;
+        }
+        long cpuTime=0;
+        long time=System.currentTimeMillis();
+        List<Thread> threadList=new ArrayList<>();
+        threadList.add(mainThread);
+        threadList.addAll(threads);
+        ThreadMXBean threadMXBean= ManagementFactory.getThreadMXBean();
+        for(Thread t:threadList){
+            long cpu=threadMXBean.getThreadCpuTime(t.getId());
+            cpuTime+=cpu;
+        }
+
+        long cpuIncrement=cpuTime- gclastCpuTime;
+        long timeIncrement=time- gclastTime;
+        if(timeIncrement<200){
+            return oldCPU;
+        }
+        gclastCpuTime =cpuTime;
+        gclastTime =time;
+        if(timeIncrement>10000){
+            return 0;
+        }
+        oldCPU=cpuIncrement/1.0e6/Runtime.getRuntime().availableProcessors()/timeIncrement;
+        return oldCPU;
+    }
+
+    public long getMemory(){
+        return -1;
+    }
+
+    public WorkSpace getWorkSpace() {
+        return workSpace;
+    }
+
+    public FileLoader getFileLoader() {
+        return fileLoader;
+    }
+
+    public ScriptLoader getScriptLoader() {
+        return scriptLoader;
+    }
+
+    public List<String> getScriptArgument() {
+        return scriptArgument;
+    }
+
+    public ScriptInfo getScriptInfo() {
+        return scriptInfo;
+    }
+
+    public ScriptLogger getScriptLogger() {
+        return scriptLogger;
+    }
+
+    public List<ScriptEngine> getEngines() {
+        return engines;
+    }
+
+    public List<ScriptStackParser> getStackParsers(){
+        return stackParsers;
+    }
+
+    public ScriptExceptionHandler getExceptionHandler(){
+        return exceptionHandler;
+    }
+
+    public MainThread getMainThread() {
+        return mainThread;
+    }
+
+    public List<ScriptThread> getThreads() {
+        return threads;
+    }
+
+    public ScriptSystem getScriptSystem() {
+        return scriptSystem;
+    }
+
+    public void setScriptSystem(ScriptSystem scriptSystem) {
+        this.scriptSystem=scriptSystem;
+    }
+
+}

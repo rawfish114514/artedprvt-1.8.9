@@ -6,7 +6,7 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C01PacketChatMessage;
-import rawfish.artedprvt.core.ScriptObject;
+import rawfish.artedprvt.core.script.ScriptObject;
 import rawfish.artedprvt.api.Solvable;
 
 /**

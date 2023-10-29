@@ -13,7 +13,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import rawfish.artedprvt.api.Solvable;
 import rawfish.artedprvt.common.EventLoader;
-import rawfish.artedprvt.core.*;
+import rawfish.artedprvt.core.script.ScriptExceptions;
+import rawfish.artedprvt.core.script.ScriptObject;
+import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.event.InputStringEvent;
 
 /**

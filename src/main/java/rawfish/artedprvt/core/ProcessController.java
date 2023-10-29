@@ -1,7 +1,6 @@
 package rawfish.artedprvt.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ProcessController {
@@ -22,7 +21,7 @@ public class ProcessController {
     private static void control(){
         while(true){
             for (int i = 0; i < processes.length; i++) {
-                if(processes[i]!=null&&processes[i].getRet()==ScriptProcess.END){
+                if(processes[i]!=null&&processes[i].getRet()== Process.END){
                     processes[i]=null;
                 }
             }
@@ -34,14 +33,14 @@ public class ProcessController {
         }
     }
 
-    private static ScriptProcess[] processes=new ScriptProcess[256];
+    private static final Process[] processes=new Process[256];
 
     /**
      * 注册进程并获取PID
      * @param process
      * @return [0,255]注册成功 -1注册失败
      */
-    public static synchronized int registerProcess(ScriptProcess process){
+    public static synchronized int registerProcess(Process process){
         for (int i = 0; i < processes.length; i++) {
             if(processes[i]==null){
                 processes[i]=process;
@@ -51,8 +50,8 @@ public class ProcessController {
         return -1;
     }
 
-    public static List<ScriptProcess> getProcessList(){
-        List<ScriptProcess> processList=new ArrayList<>();
+    public static List<? extends Process> getProcessList(){
+        List<Process> processList=new ArrayList<>();
         for (int i = 0; i < processes.length; i++) {
             if(processes[i]!=null){
                 processList.add(processes[i]);

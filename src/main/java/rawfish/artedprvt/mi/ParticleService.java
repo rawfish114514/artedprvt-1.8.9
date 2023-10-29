@@ -1,8 +1,8 @@
 package rawfish.artedprvt.mi;
 
-import rawfish.artedprvt.core.ScriptObject;
-import rawfish.artedprvt.core.ScriptProcess;
-import rawfish.artedprvt.core.ScriptThread;
+import rawfish.artedprvt.core.script.ScriptObject;
+import rawfish.artedprvt.core.script.ScriptProcess;
+import rawfish.artedprvt.core.script.ScriptThread;
 
 import java.util.ArrayList;
 import java.util.List;
