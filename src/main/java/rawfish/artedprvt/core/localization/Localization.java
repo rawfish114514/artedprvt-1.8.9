@@ -69,9 +69,11 @@ public class Localization {
                         Map<String, String> table = parse(str);
 
                         Class<?> clas=Class.forName(type);
-                        for(String key:table.keySet()){
-                            String trans=table.get(key);
-                            clas.getField(key).set(clas,trans);
+                        if(Translatable.class.isAssignableFrom(clas)) {
+                            for (String key : table.keySet()) {
+                                String trans = table.get(key);
+                                clas.getField(key).set(clas, trans);
+                            }
                         }
                     }
                 }
