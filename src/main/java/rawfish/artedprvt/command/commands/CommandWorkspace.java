@@ -36,8 +36,8 @@ public class CommandWorkspace extends Command {
             if(arg.equals("current")){
                 //显示当前工作空间
                 CommandMessages.key(getName(),"当前工作空间: {0} = {1}",
-                        WorkSpace.currentWorkSpace().getName(),
-                        WorkSpace.currentWorkSpace().getDir());
+                        WorkSpace.name(),
+                        WorkSpace.dir());
                 return;
             }
 
@@ -59,7 +59,7 @@ public class CommandWorkspace extends Command {
     }
 
     public void create(){
-        String dir= WorkSpace.currentWorkSpace().getDir();
+        String dir= WorkSpace.dir();
         File artedprvt=new File(dir);
         if(artedprvt.isDirectory()){
             CommandMessages.exception(getName(), CMS.cms19);

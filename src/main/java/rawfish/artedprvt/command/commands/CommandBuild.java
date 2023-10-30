@@ -22,7 +22,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * 将src目录的文件构建为apkg
+ * 将src目录的文件构建为aar
  */
 public class CommandBuild extends Command {
     public CommandBuild(String commandName) {
@@ -35,24 +35,24 @@ public class CommandBuild extends Command {
             CommandMessages.exception(getName(),CMS.cms0);
             return;
         }
-        File ff=new File(WorkSpace.currentWorkSpace().getDir());
+        File ff=new File(WorkSpace.dir());
         if(!ff.isDirectory()){
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         ScriptInfo scriptInfo;
         try {
-            FileLoader fileLoader = new SourceFileLoader(WorkSpace.currentWorkSpace().getDir() + "/src");
-            String apkginfo = fileLoader.getContent("apkg.info");
-            scriptInfo = ScriptInfo.parse(apkginfo);
+            FileLoader fileLoader = new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC));
+            String aarinfo = fileLoader.getContent("aar.toml");
+            scriptInfo = ScriptInfo.parse(aarinfo);
             ScriptInfo.inspect(scriptInfo);
         }catch (Exception e){
             CommandMessages.exception(getName(),CMS.cms5);
             return;
         }
         String name=scriptInfo.getId();
-        String fd= WorkSpace.currentWorkSpace().getDir();
-        int code=zip(fd+"/src",fd+"/lib/"+name+".apkg");
+        String fd= WorkSpace.dir();
+        int code=zip(fd+"/src",fd+"/lib/"+name+".aar");
 
         if(code==0){
             CommandMessages.key(getName(), CMS.cms6);

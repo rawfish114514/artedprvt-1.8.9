@@ -20,9 +20,9 @@ public class CommandApf extends Command {
         super(commandName);
         commandList=new ArrayList<>();
 
+        commandList.add(new CommandAar("aar"));
         commandList.add(new CommandAc("ac"));
         commandList.add(new CommandAd("ad"));
-        commandList.add(new CommandApkg("apkg"));
         commandList.add(new CommandBuild("build"));
         commandList.add(new CommandExtract("extract"));
         commandList.add(new CommandIn("in"));

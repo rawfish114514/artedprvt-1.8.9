@@ -48,7 +48,7 @@ public class CommandScript extends Command {
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {
-            ScriptProcess scriptProcess=new ScriptProcess(new SourceFileLoader(WorkSpace.currentWorkSpace().getDir()+"/src"),scriptArgs);
+            ScriptProcess scriptProcess=new ScriptProcess(new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC)),scriptArgs);
             scriptProcess.getScriptInfo().setModule(pack);
             scriptProcess.setName(pack);
             scriptProcess.start();
@@ -65,7 +65,7 @@ public class CommandScript extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/src/script");
+            File script = new File(WorkSpace.derivation(WorkSpace.SCRIPT));
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -254,7 +254,7 @@ public class CommandScript extends Command {
     }
 
     public String readLiteralFile(String abbr) throws Exception{
-        File file=new File(WorkSpace.currentWorkSpace().getDir()+"/src/literal."+abbr);
+        File file=new File(WorkSpace.derivation(WorkSpace.LITERAL,abbr));
         if(file.isFile()){
             Reader reader=new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8);
             StringBuilder sb=new StringBuilder();

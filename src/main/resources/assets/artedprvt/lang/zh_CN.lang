@@ -2,7 +2,7 @@
 commands.ac.usage=/ac
 commands.ad.usage=/ad
 commands.apf.usage=/artedprvt|apf <command> [args ...]
-commands.apkg.usage=/apkg <pack> [args ...]
+commands.aar.usage=/aar <pack> [args ...]
 commands.build.usage=/build
 commands.extract.usage=/extract <pack>
 commands.in.usage=/in [string ...]

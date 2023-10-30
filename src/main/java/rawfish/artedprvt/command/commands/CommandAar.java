@@ -11,7 +11,7 @@ import rawfish.artedprvt.core.script.engine.Engines;
 import rawfish.artedprvt.core.script.engine.ServiceEngine;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
-import rawfish.artedprvt.core.script.struct.ApkgFileLoader;
+import rawfish.artedprvt.core.script.struct.AarFileLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,12 +27,12 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * 从apkg文件创建脚本进程
+ * 从aar文件创建脚本进程
  */
-public class CommandApkg extends Command {
+public class CommandAar extends Command {
     public Pattern packPattern=Pattern.compile("(([^\\/]+\\/)*)([^\\/]+)");
 
-    public CommandApkg(String commandName) {
+    public CommandAar(String commandName) {
         super(commandName);
     }
 
@@ -51,7 +51,7 @@ public class CommandApkg extends Command {
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {
-            ScriptProcess scriptProcess=new ScriptProcess(new ApkgFileLoader(WorkSpace.currentWorkSpace().getDir()+"/lib/"+pack+".apkg"),scriptArgs);
+            ScriptProcess scriptProcess=new ScriptProcess(new AarFileLoader(WorkSpace.derivation(WorkSpace.AAR,pack)),scriptArgs);
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
@@ -66,7 +66,7 @@ public class CommandApkg extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/lib");
+            File script = new File(WorkSpace.derivation(WorkSpace.LIB));
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -101,9 +101,9 @@ public class CommandApkg extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
+        File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
         FormatHandlerListBuilder fl=Literals.formatListBuilder();
-        if(apkg.isFile()){
+        if(aar.isFile()){
             fl.append("6");
         }else{
             fl.append("c");
@@ -143,8 +143,8 @@ public class CommandApkg extends Command {
             if(args.get(0).isEmpty()){
                 return Literals.infoBuilder().string(CIS.cis5);
             }
-            File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
-            if(apkg.isFile()){
+            File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+            if(aar.isFile()){
                 return Literals.emptyInfo();
             }
             return Literals.infoBuilder().string(CIS.cis1);
@@ -189,7 +189,7 @@ public class CommandApkg extends Command {
                 String name=file.getName();
                 int ind=name.lastIndexOf('.');
                 String abbr=name.substring(ind+1);
-                if(ind>0&&abbr.equals("apkg")){
+                if(ind>0&&abbr.equals("aar")){
                     packs.add(p+name.substring(0,ind));
                 }
             }else{
@@ -243,7 +243,7 @@ public class CommandApkg extends Command {
     }
 
     public String readLiteralFile(String pack, String abbr) throws Exception{
-        File file=new File(WorkSpace.currentWorkSpace().getDir()+"/lib/"+pack+".apkg");
+        File file=new File(WorkSpace.derivation(WorkSpace.AAR,pack));
         String target="literal."+abbr;
         if(file.isFile()){
             boolean t=false;

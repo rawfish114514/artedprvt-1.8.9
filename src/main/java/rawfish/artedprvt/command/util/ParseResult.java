@@ -3,7 +3,7 @@ package rawfish.artedprvt.command.util;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ParseResult implements ParseResultSupplier{
+public class ParseResult {
     private boolean correct;
 
     private Map<String,String> map;
@@ -22,10 +22,5 @@ public class ParseResult implements ParseResultSupplier{
 
     public boolean isCorrect(){
         return correct;
-    }
-
-    @Override
-    public ParseResult supply() {
-        return this;
     }
 }

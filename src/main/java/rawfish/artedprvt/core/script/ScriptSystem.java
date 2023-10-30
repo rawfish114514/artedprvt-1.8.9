@@ -282,7 +282,7 @@ public class ScriptSystem {
 
     /**
      * 获取文件内容
-     * 只能获取src目录下的或apkg包内的文件
+     * 只能获取src目录下的或aar包内的文件
      * @param path
      * @return
      */

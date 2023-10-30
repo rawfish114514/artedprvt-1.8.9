@@ -21,7 +21,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * 将apkg文件内容提取到src目录
+ * 将aar文件内容提取到src目录
  */
 public class CommandExtract extends Command {
     public Pattern packPattern=Pattern.compile("(([^\\/]+\\/)*)([^\\/]+)");
@@ -41,20 +41,20 @@ public class CommandExtract extends Command {
             CommandMessages.exception(getName(),CMS.cms2);
             return;
         }
-        File ff=new File(WorkSpace.currentWorkSpace().getDir());
+        File ff=new File(WorkSpace.dir());
         if(!ff.isDirectory()){
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
-        File srcf=new File(WorkSpace.currentWorkSpace().getDir()+"/src");
+        File srcf=new File(WorkSpace.derivation(WorkSpace.SRC));
         srcf.mkdirs();
         List<File> fs=getAllFile(srcf);
         if(fs.size()>0){
             CommandMessages.exception(getName(),CMS.cms8);
             return;
         }
-        String fd=WorkSpace.currentWorkSpace().getDir();
-        int code=unzip(fd+"/lib/"+pack+".apkg",fd+"/src");
+        String fd=WorkSpace.dir();
+        int code=unzip(WorkSpace.derivation(WorkSpace.AAR,pack),WorkSpace.derivation(WorkSpace.SRC));
 
         if(code==0){
             CommandMessages.key(getName(), CMS.cms9);
@@ -71,7 +71,7 @@ public class CommandExtract extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/lib");
+            File script = new File(WorkSpace.derivation(WorkSpace.LIB));
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -84,9 +84,9 @@ public class CommandExtract extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
+        File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
         FormatHandlerListBuilder fl=Literals.formatListBuilder();
-        if(apkg.isFile()){
+        if(aar.isFile()){
             fl.append("6");
         }else{
             fl.append("c");
@@ -101,8 +101,8 @@ public class CommandExtract extends Command {
             if(args.get(0).isEmpty()){
                 return Literals.infoBuilder().string(CIS.cis5);
             }
-            File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
-            if(apkg.isFile()){
+            File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+            if(aar.isFile()){
                 return Literals.emptyInfo();
             }
             return Literals.infoBuilder().string(CIS.cis1);
@@ -122,7 +122,7 @@ public class CommandExtract extends Command {
                 String name=file.getName();
                 int ind=name.lastIndexOf('.');
                 String abbr=name.substring(ind+1);
-                if(ind>0&&abbr.equals("apkg")){
+                if(ind>0&&abbr.equals("aar")){
                     packs.add(p+name.substring(0,ind));
                 }
             }else{

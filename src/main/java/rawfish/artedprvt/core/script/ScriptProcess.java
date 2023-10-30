@@ -44,7 +44,7 @@ public class ScriptProcess extends Process {
 
     /**
      * 从输入流创建进程
-     * 以apkg的方式加载文件
+     * 以aar的方式加载文件
      * @param inputStream
      * @param scriptArgument
      * @throws Exception
@@ -52,7 +52,7 @@ public class ScriptProcess extends Process {
     public ScriptProcess(
             InputStream inputStream,
             List<String> scriptArgument) throws Exception {
-        this(new ApkgFileLoader(inputStream),scriptArgument);
+        this(new AarFileLoader(inputStream),scriptArgument);
     }
 
     public ScriptProcess(FileLoader fileLoader,List<String> scriptArgument) throws Exception{
@@ -64,8 +64,8 @@ public class ScriptProcess extends Process {
         scriptLoader=new ScriptLoader(fileLoader);
         this.scriptArgument=scriptArgument;
 
-        String apkginfo=fileLoader.getContent("apkg.info");
-        scriptInfo=ScriptInfo.parse(apkginfo);
+        String aarinfo=fileLoader.getContent("aar.toml");
+        scriptInfo=ScriptInfo.parse(aarinfo);
         ScriptInfo.inspect(scriptInfo);
 
         name= scriptInfo.getName();
@@ -73,8 +73,8 @@ public class ScriptProcess extends Process {
 
         synchronized (ScriptProcess.class) {
             LocalDate localDate = LocalDate.now();
-            File logDir = new File(workSpace.getDir() + "/.artedprvt/logs/" + localDate.getYear() + "-"
-                    + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth());
+            File logDir = new File(workSpace.toDerivation(WorkSpace.LOG,localDate.getYear() + "-"
+                    + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth()));
             logDir.mkdirs();
             int logFileNumber = logDir.list().length;
             File logFile = new File(logDir.getPath() + "/" + logFileNumber + "." + name.substring(name.indexOf(':')+1) + ".txt");

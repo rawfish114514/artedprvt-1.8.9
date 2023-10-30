@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 从储存库安装apkg
+ * 从储存库安装aar
  */
 public class CommandInstall extends Command {
     public CommandInstall(String commandName) {
@@ -43,13 +43,13 @@ public class CommandInstall extends Command {
             CommandMessages.exception(getName(),CMS.cms16);
             return;
         }
-        File ff=new File(WorkSpace.currentWorkSpace().getDir());
+        File ff=new File(WorkSpace.dir());
         if(!ff.isDirectory()){
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
         String id=args.get(0);
-        File file=new File(WorkSpace.currentWorkSpace().getDir()+"/lib/"+id+".apkg");
+        File file=new File(WorkSpace.derivation(WorkSpace.AAR,id));
         install(file,id);
     }
 
@@ -129,7 +129,7 @@ public class CommandInstall extends Command {
                 String nt=t.toString();
                 ByteArrayBuffer buffer=new ByteArrayBuffer(0);
                 try {
-                    URL targetURL=new URL(server+nt+id+".apkg");
+                    URL targetURL=new URL(server+nt+id+".aar");
                     URLConnection connection=targetURL.openConnection();
 
                     if(connection instanceof HttpURLConnection){

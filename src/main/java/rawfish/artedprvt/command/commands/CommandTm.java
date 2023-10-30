@@ -427,17 +427,17 @@ public class CommandTm extends Command {
 
     static class Bar extends MenuBar {
         public JFrame frame;
-        public CommandDialog runApkgDialog;
+        public CommandDialog runAarDialog;
         public CommandDialog runScriptDialog;
 
         public Bar(JFrame frame) {
             this.frame = frame;
             Menu fileMenu = new Menu(Translate.get(TMS.tms8));
-            MenuItem runApkgMenuItem = new MenuItem(Translate.get(TMS.tms9));
-            runApkgMenuItem.addActionListener(new AbstractAction() {
+            MenuItem runAarMenuItem = new MenuItem(Translate.get(TMS.tms9));
+            runAarMenuItem.addActionListener(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    runApkg();
+                    runAar();
                 }
             });
             MenuItem runScriptMenuItem = new MenuItem(Translate.get(TMS.tms10));
@@ -455,7 +455,7 @@ public class CommandTm extends Command {
                 }
             });
 
-            fileMenu.add(runApkgMenuItem);
+            fileMenu.add(runAarMenuItem);
             fileMenu.add(runScriptMenuItem);
             fileMenu.add(closeMenuItem);
 
@@ -473,14 +473,14 @@ public class CommandTm extends Command {
             add(fileMenu);
             add(helpMenu);
 
-            runApkgDialog = new CommandDialog(Translate.get(TMS.tms14), frame, new CommandApkg("tm-apkg"),
+            runAarDialog = new CommandDialog(Translate.get(TMS.tms14), frame, new CommandAar("tm-aar"),
                     Translate.get(TMS.tms15));
             runScriptDialog = new CommandDialog(Translate.get(TMS.tms16), frame, new CommandScript("tm-script"),
                     Translate.get(TMS.tms17));
         }
 
-        public void runApkg() {
-            runApkgDialog.setVisible(true);
+        public void runAar() {
+            runAarDialog.setVisible(true);
         }
 
         public void runScript() {

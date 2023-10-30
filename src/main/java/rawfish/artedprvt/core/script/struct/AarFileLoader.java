@@ -11,16 +11,16 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * apkg文件加载器
+ * aar文件加载器
  */
-public class ApkgFileLoader implements FileLoader {
+public class AarFileLoader implements FileLoader {
     public Map<String,byte[]> map;
-    public ApkgFileLoader(String apkg) throws Exception{
+    public AarFileLoader(String aar) throws Exception{
         map =new HashMap<>();
-        readEntry(new FileInputStream(apkg),map);
+        readEntry(new FileInputStream(aar),map);
     }
 
-    public ApkgFileLoader(InputStream inputStream) throws Exception{
+    public AarFileLoader(InputStream inputStream) throws Exception{
         map =new HashMap<>();
         readEntry(inputStream,map);
     }

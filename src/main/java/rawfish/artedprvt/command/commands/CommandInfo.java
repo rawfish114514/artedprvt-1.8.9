@@ -9,7 +9,7 @@ import rawfish.artedprvt.core.script.ScriptInfo;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
-import rawfish.artedprvt.core.script.struct.ApkgFileLoader;
+import rawfish.artedprvt.core.script.struct.AarFileLoader;
 import rawfish.artedprvt.core.script.struct.FileLoader;
 import rawfish.artedprvt.core.script.struct.SourceFileLoader;
 import rawfish.artedprvt.mi.ChatProvider;
@@ -21,7 +21,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * 查看src或apkg的信息
+ * 查看src或aar的信息
  */
 public class CommandInfo extends Command {
     public CommandInfo(String commandName) {
@@ -57,23 +57,23 @@ public class CommandInfo extends Command {
             ScriptInfo info = readSrcInfo();
             printInfo(info,"<src>");
         } else {
-            ScriptInfo info=readApkgInfo(pack);
-            printInfo(info,pack+".apkg");
+            ScriptInfo info= readAarInfo(pack);
+            printInfo(info,pack+".aar");
         }
     }
 
-    public ScriptInfo readApkgInfo(String pack) throws Exception {
-        FileLoader fileLoader=new ApkgFileLoader(WorkSpace.currentWorkSpace().getDir()+"/lib/"+pack+".apkg");
-        String apkginfo=fileLoader.getContent("apkg.info");
-        ScriptInfo scriptInfo=ScriptInfo.parse(apkginfo);
+    public ScriptInfo readAarInfo(String pack) throws Exception {
+        FileLoader fileLoader=new AarFileLoader(WorkSpace.derivation(WorkSpace.AAR,pack));
+        String aarinfo=fileLoader.getContent("aar.toml");
+        ScriptInfo scriptInfo=ScriptInfo.parse(aarinfo);
         ScriptInfo.inspect(scriptInfo);
         return scriptInfo;
     }
 
     public ScriptInfo readSrcInfo() throws Exception {
-        FileLoader fileLoader=new SourceFileLoader(WorkSpace.currentWorkSpace().getDir()+"/src");
-        String apkginfo=fileLoader.getContent("apkg.info");
-        ScriptInfo scriptInfo=ScriptInfo.parse(apkginfo);
+        FileLoader fileLoader=new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC));
+        String aarinfo=fileLoader.getContent("aar.toml");
+        ScriptInfo scriptInfo=ScriptInfo.parse(aarinfo);
         ScriptInfo.inspect(scriptInfo);
         return scriptInfo;
     }
@@ -111,7 +111,7 @@ public class CommandInfo extends Command {
             List<String> opt = new ArrayList<>();
             String lastArgs=args.get(0);
             //包名
-            File script = new File(WorkSpace.currentWorkSpace().getDir() + "/lib");
+            File script = new File(WorkSpace.derivation(WorkSpace.LIB));
             if (script.isDirectory()) {
                 List<String> packs = pack(script, "");
                 opt.addAll(match(packs, lastArgs));
@@ -128,8 +128,8 @@ public class CommandInfo extends Command {
         if(args.get(0).equals("<src>")){
             return Literals.formatListBuilder().append("6");
         }
-        File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
-        if(apkg.isFile()){
+        File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+        if(aar.isFile()){
             return Literals.formatListBuilder().append("6");
         }else{
             return Literals.formatListBuilder().append("c");
@@ -145,8 +145,8 @@ public class CommandInfo extends Command {
             if(args.get(0).equals("<src>")){
                 return Literals.emptyInfo();
             }
-            File apkg = new File(WorkSpace.currentWorkSpace().getDir() + "/lib/"+args.get(0)+".apkg");
-            if(apkg.isFile()){
+            File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+            if(aar.isFile()){
                 return Literals.emptyInfo();
             }
             return Literals.infoBuilder().string(CIS.cis1);
@@ -166,7 +166,7 @@ public class CommandInfo extends Command {
                 String name=file.getName();
                 int ind=name.lastIndexOf('.');
                 String abbr=name.substring(ind+1);
-                if(ind>0&&abbr.equals("apkg")){
+                if(ind>0&&abbr.equals("aar")){
                     packs.add(p+name.substring(0,ind));
                 }
             }else{
