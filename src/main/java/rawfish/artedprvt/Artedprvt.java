@@ -1,68 +1,56 @@
 package rawfish.artedprvt;
 
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.fml.common.ModMetadata;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import org.apache.logging.log4j.Logger;
-import rawfish.artedprvt.common.CommonProxy;
 
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
+import net.minecraftforge.fml.common.ModMetadata;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import rawfish.artedprvt.common.CommonProxy;
+import rawfish.artedprvt.core.Environment;
 
 @Mod(
-        modid=Artedprvt.MODID,
-        name=Artedprvt.NAME,
-        acceptedMinecraftVersions=Artedprvt.MCVERSION,
+        modid= Environment.MODID,
+        name= Environment.MODNAME,
+        acceptedMinecraftVersions= Environment.MCVERSION,
         acceptableRemoteVersions="*"
 )
 public class Artedprvt
 {
     @SidedProxy(clientSide="rawfish.artedprvt.client.ClientProxy",serverSide="rawfish.artedprvt.common.CommonProxy")
     public static CommonProxy proxy;
-    public static final String MODID="artedprvt";
-    public static final String NAME="Artedprvt Frame";
-    public static final String VERSION="1.3";
-    public static final String MCVERSION="1.8.9";
 
-    @Instance(Artedprvt.MODID)
+    @Mod.Instance(Environment.MODID)
     public static Artedprvt instance;
 
-    public static Logger logger;
-
     public Artedprvt(){
-        init();
     }
 
     public ModMetadata modMetadata;
 
-    @EventHandler
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
         proxy.preInit(event);
         modMetadata=event.getModMetadata();
-        logger=event.getModLog();
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
         proxy.init(event);
         modMetadata.description=getDescription();
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         proxy.postInit(event);
     }
 
-    @EventHandler
+    @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
         proxy.serverStarting(event);
@@ -81,35 +69,5 @@ public class Artedprvt
             return tempVersion;
         }
         return "\n\n§c这是临时版本: '"+tempVersion+"'";
-    }
-
-    public boolean isNotDevelopment() {
-        return isNotDevelopment;
-    }
-
-    private boolean isNotDevelopment;
-
-    public boolean isHasClientSide() {
-        return hasClientSide;
-    }
-
-    private boolean hasClientSide;
-
-    public void init() {
-        try {
-            MinecraftServer.class.getDeclaredField("mcServer");
-            isNotDevelopment=false;
-        } catch (NoSuchFieldException e) {
-            isNotDevelopment=true;
-        }
-
-        try {
-            Class.forName("net.minecraft.client.Minecraft");
-            hasClientSide=true;
-        } catch (ClassNotFoundException e) {
-            hasClientSide=false;
-        }
-        System.out.println("Artedprvt.init.ind");
-        System.out.println("开发环境: d:"+!isNotDevelopment+" c:"+hasClientSide);
     }
 }

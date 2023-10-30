@@ -1,6 +1,5 @@
 package rawfish.artedprvt.core;
 
-import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.core.script.ScriptSystem;
 
 import java.util.List;
@@ -10,7 +9,7 @@ import java.util.List;
  * 显示到游戏调试界面
  */
 public class DebugInfo {
-    public static String version= Artedprvt.VERSION;
+    public static String version= Environment.MODVERSION;
     public static String call(boolean isf3){
         if(isf3) {
             StringBuilder sb = new StringBuilder();

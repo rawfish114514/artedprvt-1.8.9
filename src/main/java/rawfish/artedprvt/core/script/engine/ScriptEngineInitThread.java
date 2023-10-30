@@ -1,6 +1,6 @@
 package rawfish.artedprvt.core.script.engine;
 
-import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.core.Environment;
 
 public class ScriptEngineInitThread extends Thread{
     private ScriptEngine scriptEngine;
@@ -10,8 +10,8 @@ public class ScriptEngineInitThread extends Thread{
 
     @Override
     public void run(){
-        Artedprvt.logger.info("初始化脚本引擎类: "+scriptEngine.getClass().getName());
+        Environment.MODLOGGER.info("初始化脚本引擎类: "+scriptEngine.getClass().getName());
         scriptEngine.init();
-        Artedprvt.logger.info("初始化脚本引擎类完成: "+scriptEngine.getClass().getName());
+        Environment.MODLOGGER.info("初始化脚本引擎类完成: "+scriptEngine.getClass().getName());
     }
 }

@@ -6,8 +6,8 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
-import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.api.Solvable;
+import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.core.script.ScriptLogger;
 import rawfish.artedprvt.core.script.ScriptObject;
 import rawfish.artedprvt.core.script.ScriptProcess;
@@ -32,7 +32,7 @@ public class PrintChat implements ScriptObject {
         if(process!=null){
             logger=process.getScriptLogger();
         }
-        if(Artedprvt.instance.isHasClientSide()) {
+        if(Environment.MCCLIENT) {
             guiNewChat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
         }else {
             guiNewChat=null;

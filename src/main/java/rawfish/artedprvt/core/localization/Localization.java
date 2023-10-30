@@ -2,6 +2,7 @@ package rawfish.artedprvt.core.localization;
 
 import com.electronwill.toml.Toml;
 import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.core.UserOptions;
 
 import java.io.InputStream;
@@ -102,7 +103,7 @@ public class Localization {
     public static String getTranslate(String key,Object... args){
         String value=translation.get(key);
         if(value==null){
-            Artedprvt.logger.info("调用不存在的翻译键: "+key);
+            Environment.MODLOGGER.info("调用不存在的翻译键: "+key);
             return "";
         }
         return MessageFormat.format(value,args);

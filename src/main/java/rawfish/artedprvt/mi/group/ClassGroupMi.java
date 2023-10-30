@@ -1,7 +1,7 @@
 package rawfish.artedprvt.mi.group;
 
-import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.core.ClassGroup;
+import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.mi.*;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class ClassGroupMi implements ClassGroup {
         add(TagBuilder.ListTagBuilder.class);
         add(TagBuilder.CompoundTagBuilder.class);
 
-        if(Artedprvt.instance.isHasClientSide()) {
+        if(Environment.MCCLIENT) {
             add(GameClient.class);
             add(EffectSpawn.class);
             add(Particle.class);
