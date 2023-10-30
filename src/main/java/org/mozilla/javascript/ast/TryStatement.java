@@ -6,11 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * Try/catch/finally statement. Node type is {@link Token#TRY}.
@@ -27,7 +26,7 @@ import java.util.List;
 public class TryStatement extends AstNode {
 
     private static final List<CatchClause> NO_CATCHES =
-            Collections.unmodifiableList(new ArrayList<CatchClause>());
+            Collections.unmodifiableList(new ArrayList<>());
 
     private AstNode tryBlock;
     private List<CatchClause> catchClauses;
@@ -94,7 +93,7 @@ public class TryStatement extends AstNode {
     public void addCatchClause(CatchClause clause) {
         assertNotNull(clause);
         if (catchClauses == null) {
-            catchClauses = new ArrayList<CatchClause>();
+            catchClauses = new ArrayList<>();
         }
         catchClauses.add(clause);
         clause.setParent(this);

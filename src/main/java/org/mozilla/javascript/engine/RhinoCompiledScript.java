@@ -4,12 +4,11 @@
 
 package org.mozilla.javascript.engine;
 
-import org.mozilla.javascript.Script;
-
 import javax.script.CompiledScript;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
+import org.mozilla.javascript.Script;
 
 public class RhinoCompiledScript extends CompiledScript {
 

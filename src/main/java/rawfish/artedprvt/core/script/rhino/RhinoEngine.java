@@ -39,12 +39,12 @@ public class RhinoEngine implements ScriptEngine {
     public void execute(ScriptModule scriptModule) {
         ScriptSystem scriptSystem=process.getScriptSystem();
         ScriptableObject scope=rhino.initStandardObjects();
-        scope.put("_name",scope,scriptModule.getModuleFullName());
+        scope.put("_name",scope,scriptModule.getModuleFullNameLiteral());
         List<SystemMethod> systemMethodList=buildSystemMethodList(scriptSystem,scriptModule,rhino,scope);
         for(SystemMethod systemMethod:systemMethodList){
             scope.put(systemMethod.getName(),scope,systemMethod);
         }
-        rhino.evaluateString(scope,scriptModule.getSource(),scriptModule.getModuleFullName(),1,null);
+        rhino.evaluateString(scope,scriptModule.getSource(),scriptModule.getModuleFullNameLiteral(),1,null);
     }
 
     public static List<SystemMethod> buildSystemMethodList(ScriptSystem scriptSystem, ScriptModule scriptModule, Context context, Scriptable scope){

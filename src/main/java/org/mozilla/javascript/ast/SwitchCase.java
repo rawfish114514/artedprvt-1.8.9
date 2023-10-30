@@ -6,10 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * Switch-case AST node type. The switch case is always part of a switch statement. Node type is
@@ -98,7 +97,7 @@ public class SwitchCase extends AstNode {
     public void addStatement(AstNode statement) {
         assertNotNull(statement);
         if (statements == null) {
-            statements = new ArrayList<AstNode>();
+            statements = new ArrayList<>();
         }
         int end = statement.getPosition() + statement.getLength();
         this.setLength(end - this.getPosition());

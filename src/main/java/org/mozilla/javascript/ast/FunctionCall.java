@@ -6,17 +6,15 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /** AST node for a function call. Node type is {@link Token#CALL}. */
 public class FunctionCall extends AstNode {
 
-    protected static final List<AstNode> NO_ARGS =
-            Collections.unmodifiableList(new ArrayList<AstNode>());
+    protected static final List<AstNode> NO_ARGS = Collections.unmodifiableList(new ArrayList<>());
 
     protected AstNode target;
     protected List<AstNode> arguments;
@@ -89,7 +87,7 @@ public class FunctionCall extends AstNode {
     public void addArgument(AstNode arg) {
         assertNotNull(arg);
         if (arguments == null) {
-            arguments = new ArrayList<AstNode>();
+            arguments = new ArrayList<>();
         }
         arguments.add(arg);
         arg.setParent(this);

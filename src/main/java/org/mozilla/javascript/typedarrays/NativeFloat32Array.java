@@ -6,7 +6,11 @@
 
 package org.mozilla.javascript.typedarrays;
 
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.IdFunctionObject;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Undefined;
 
 /**
  * An array view that stores 32-bit quantities and implements the JavaScript "loat32Array"

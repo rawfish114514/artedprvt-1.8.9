@@ -6,11 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * AST node for an Object literal (also called an Object initialiser in Ecma-262). The elements list
@@ -33,7 +32,7 @@ import java.util.List;
 public class ObjectLiteral extends AstNode implements DestructuringForm {
 
     private static final List<ObjectProperty> NO_ELEMS =
-            Collections.unmodifiableList(new ArrayList<ObjectProperty>());
+            Collections.unmodifiableList(new ArrayList<>());
 
     private List<ObjectProperty> elements;
     boolean isDestructuring;
@@ -81,7 +80,7 @@ public class ObjectLiteral extends AstNode implements DestructuringForm {
     public void addElement(ObjectProperty element) {
         assertNotNull(element);
         if (elements == null) {
-            elements = new ArrayList<ObjectProperty>();
+            elements = new ArrayList<>();
         }
         elements.add(element);
         element.setParent(this);

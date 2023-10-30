@@ -6,9 +6,18 @@
 
 package org.mozilla.javascript;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import org.mozilla.javascript.debug.DebuggableObject;
-
-import java.util.*;
 
 /**
  * An object that implements deep equality test of objects, including their reference graph
@@ -29,6 +38,19 @@ import java.util.*;
  */
 final class EqualObjectGraphs {
     private static final ThreadLocal<EqualObjectGraphs> instance = new ThreadLocal<>();
+
+    private static final Set<Class<?>> valueClasses =
+            Collections.unmodifiableSet(
+                    new HashSet<>(
+                            Arrays.asList(
+                                    Boolean.class,
+                                    Byte.class,
+                                    Character.class,
+                                    Double.class,
+                                    Float.class,
+                                    Integer.class,
+                                    Long.class,
+                                    Short.class)));
 
     // Object pairs already known to be equal. Used to short-circuit repeated traversals of objects
     // reachable through
@@ -56,6 +78,21 @@ final class EqualObjectGraphs {
             return true;
         } else if (o1 == null || o2 == null) {
             return false;
+            // String (and ConsStrings), Booleans, and Doubles are considered
+            // JavaScript primitive values and are thus compared by value and
+            // with no regard to their object identity.
+        } else if (o1 instanceof String) {
+            if (o2 instanceof ConsString) {
+                return o1.equals(o2.toString());
+            }
+            return o1.equals(o2);
+        } else if (o1 instanceof ConsString) {
+            if (o2 instanceof String || o2 instanceof ConsString) {
+                return o1.toString().equals(o2.toString());
+            }
+            return false;
+        } else if (valueClasses.contains(o1.getClass())) {
+            return o1.equals(o2);
         }
 
         final Object curr2 = currentlyCompared.get(o1);
@@ -105,12 +142,11 @@ final class EqualObjectGraphs {
         if (o1 instanceof Wrapper) {
             return o2 instanceof Wrapper
                     && equalGraphs(((Wrapper) o1).unwrap(), ((Wrapper) o2).unwrap());
+        } else if (o1 instanceof NativeJavaTopPackage) {
+            // stateless objects, must check before Scriptable
+            return o2 instanceof NativeJavaTopPackage;
         } else if (o1 instanceof Scriptable) {
             return o2 instanceof Scriptable && equalScriptables((Scriptable) o1, (Scriptable) o2);
-        } else if (o1 instanceof ConsString) {
-            return ((ConsString) o1).toString().equals(o2);
-        } else if (o2 instanceof ConsString) {
-            return o1.equals(((ConsString) o2).toString());
         } else if (o1 instanceof SymbolKey) {
             return o2 instanceof SymbolKey
                     && equalGraphs(((SymbolKey) o1).getName(), ((SymbolKey) o2).getName());
@@ -128,8 +164,6 @@ final class EqualObjectGraphs {
             return o2 instanceof NativeGlobal; // stateless objects
         } else if (o1 instanceof JavaAdapter) {
             return o2 instanceof JavaAdapter; // stateless objects
-        } else if (o1 instanceof NativeJavaTopPackage) {
-            return o2 instanceof NativeJavaTopPackage; // stateless objects
         }
 
         // Fallback case for everything else.
@@ -318,7 +352,7 @@ final class EqualObjectGraphs {
         if (id instanceof Symbol) {
             return ScriptableObject.getProperty(s, (Symbol) id);
         } else if (id instanceof Integer) {
-            return ScriptableObject.getProperty(s, ((Integer) id).intValue());
+            return ScriptableObject.getProperty(s, (Integer) id);
         } else if (id instanceof String) {
             return ScriptableObject.getProperty(s, (String) id);
         } else {

@@ -4,7 +4,21 @@
 
 package org.mozilla.javascript.optimizer;
 
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.ArrowFunction;
+import org.mozilla.javascript.Callable;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.ES6Generator;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.JavaScriptException;
+import org.mozilla.javascript.NativeFunction;
+import org.mozilla.javascript.NativeGenerator;
+import org.mozilla.javascript.NativeIterator;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
 
 public final class OptRuntime extends ScriptRuntime {
     public static final Double oneObj = Double.valueOf(1.0);

@@ -6,10 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * AST node for an E4X (Ecma-357) embedded XML literal. Node type is {@link Token#XML}. The parser
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public class XmlLiteral extends AstNode {
 
-    private List<XmlFragment> fragments = new ArrayList<XmlFragment>();
+    private List<XmlFragment> fragments = new ArrayList<>();
 
     {
         type = Token.XML;

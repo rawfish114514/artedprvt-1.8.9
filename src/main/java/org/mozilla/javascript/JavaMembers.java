@@ -6,15 +6,23 @@
 
 package org.mozilla.javascript;
 
-import javax.lang.model.SourceVersion;
-import java.lang.reflect.*;
+import static java.lang.reflect.Modifier.isProtected;
+import static java.lang.reflect.Modifier.isPublic;
+
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.security.AccessControlContext;
 import java.security.AllPermission;
 import java.security.Permission;
-import java.util.*;
-
-import static java.lang.reflect.Modifier.isProtected;
-import static java.lang.reflect.Modifier.isPublic;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mike Shaver
@@ -22,10 +30,9 @@ import static java.lang.reflect.Modifier.isPublic;
  * @see NativeJavaObject
  * @see NativeJavaClass
  */
-public class JavaMembers {
+class JavaMembers {
 
-    private static final boolean STRICT_REFLECTIVE_ACCESS =
-            SourceVersion.latestSupported().ordinal() > 8;
+    private static final boolean STRICT_REFLECTIVE_ACCESS = isModularJava();
 
     private static final Permission allPermission = new AllPermission();
 
@@ -40,13 +47,26 @@ public class JavaMembers {
             if (shutter != null && !shutter.visibleToScripts(cl.getName())) {
                 throw Context.reportRuntimeErrorById("msg.access.prohibited", cl.getName());
             }
-            this.members = new HashMap<String, Object>();
-            this.staticMembers = new HashMap<String, Object>();
+            this.members = new HashMap<>();
+            this.staticMembers = new HashMap<>();
             this.cl = cl;
             boolean includePrivate = cx.hasFeature(Context.FEATURE_ENHANCED_JAVA_ACCESS);
             reflect(cx, scope, includeProtected, includePrivate);
         } finally {
             Context.exit();
+        }
+    }
+
+    /**
+     * This method returns true if we are on a "modular" version of Java (Java 11 or up). It does
+     * not use the SourceVersion class because this is not present on Android.
+     */
+    private static boolean isModularJava() {
+        try {
+            Class.class.getMethod("getModule");
+            return true;
+        } catch (NoSuchMethodException e) {
+            return false;
         }
     }
 
@@ -59,7 +79,7 @@ public class JavaMembers {
         return findExplicitFunction(name, isStatic) != null;
     }
 
-    public Object get(Scriptable scope, String name, Object javaObject, boolean isStatic) {
+    Object get(Scriptable scope, String name, Object javaObject, boolean isStatic) {
         Map<String, Object> ht = isStatic ? staticMembers : members;
         Object member = ht.get(name);
         if (!isStatic && member == null) {
@@ -164,7 +184,7 @@ public class JavaMembers {
 
     Object[] getIds(boolean isStatic) {
         Map<String, Object> map = isStatic ? staticMembers : members;
-        return map.keySet().toArray(new Object[map.size()]);
+        return map.keySet().toArray(new Object[0]);
     }
 
     static String javaSignature(Class<?> type) {
@@ -288,9 +308,9 @@ public class JavaMembers {
      */
     private Method[] discoverAccessibleMethods(
             Class<?> clazz, boolean includeProtected, boolean includePrivate) {
-        Map<MethodSignature, Method> map = new HashMap<MethodSignature, Method>();
+        Map<MethodSignature, Method> map = new HashMap<>();
         discoverAccessibleMethods(clazz, map, includeProtected, includePrivate);
-        return map.values().toArray(new Method[map.size()]);
+        return map.values().toArray(new Method[0]);
     }
 
     private void discoverAccessibleMethods(
@@ -480,7 +500,7 @@ public class JavaMembers {
                     Map<String, FieldAndMethods> fmht =
                             isStatic ? staticFieldAndMethods : fieldAndMethods;
                     if (fmht == null) {
-                        fmht = new HashMap<String, FieldAndMethods>();
+                        fmht = new HashMap<>();
                         if (isStatic) {
                             staticFieldAndMethods = fmht;
                         } else {
@@ -521,7 +541,7 @@ public class JavaMembers {
             boolean isStatic = (tableCursor == 0);
             Map<String, Object> ht = isStatic ? staticMembers : members;
 
-            Map<String, BeanProperty> toAdd = new HashMap<String, BeanProperty>();
+            Map<String, BeanProperty> toAdd = new HashMap<>();
 
             // Now, For each member, make "bean" properties.
             for (String name : ht.keySet()) {
@@ -639,7 +659,7 @@ public class JavaMembers {
     private Field[] getAccessibleFields(boolean includeProtected, boolean includePrivate) {
         if (includePrivate || includeProtected) {
             try {
-                List<Field> fieldsList = new ArrayList<Field>();
+                List<Field> fieldsList = new ArrayList<>();
                 Class<?> currentClass = cl;
 
                 while (currentClass != null) {
@@ -658,7 +678,7 @@ public class JavaMembers {
                     currentClass = currentClass.getSuperclass();
                 }
 
-                return fieldsList.toArray(new Field[fieldsList.size()]);
+                return fieldsList.toArray(new Field[0]);
             } catch (SecurityException e) {
                 // fall through to !includePrivate case
             }
@@ -748,10 +768,9 @@ public class JavaMembers {
         Map<String, FieldAndMethods> ht = isStatic ? staticFieldAndMethods : fieldAndMethods;
         if (ht == null) return null;
         int len = ht.size();
-        Map<String, FieldAndMethods> result = new HashMap<String, FieldAndMethods>(len);
+        Map<String, FieldAndMethods> result = new HashMap<>(len);
         for (FieldAndMethods fam : ht.values()) {
-            FieldAndMethods famNew;
-            famNew=new FieldAndMethods(scope, fam.methods, fam.field);
+            FieldAndMethods famNew = new FieldAndMethods(scope, fam.methods, fam.field);
             famNew.javaObject = javaObject;
             result.put(fam.field.getName(), famNew);
         }

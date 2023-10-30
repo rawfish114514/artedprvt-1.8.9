@@ -21,7 +21,7 @@ public class NativeConsole extends IdScriptableObject {
 
     private static final String DEFAULT_LABEL = "default";
 
-    private static final Pattern FMT_REG = Pattern.compile("%[sfdioO%]");
+    private static final Pattern FMT_REG = Pattern.compile("%[sfdioOc%]");
 
     private final Map<String, Long> timers = new ConcurrentHashMap<>();
 
@@ -214,8 +214,8 @@ public class NativeConsole extends IdScriptableObject {
         int argIndex = 0;
 
         Object first = args[0];
-        if (first instanceof String) {
-            String msg = (String) first;
+        if (first instanceof String || first instanceof ConsString) {
+            String msg = first.toString();
             Matcher matcher = FMT_REG.matcher(msg);
 
             argIndex = 1;
@@ -248,6 +248,9 @@ public class NativeConsole extends IdScriptableObject {
                         case "%O":
                             replaceArg = formatObj(cx, scope, val);
                             break;
+
+                            // %c is not supported,
+                            // simply removed from the output
 
                         default:
                             replaceArg = "";
@@ -324,6 +327,14 @@ public class NativeConsole extends IdScriptableObject {
             return Undefined.SCRIPTABLE_UNDEFINED.toString();
         }
 
+        if (arg instanceof NativeError) {
+            NativeError err = (NativeError) arg;
+            String msg = err.toString();
+            msg += "\n";
+            msg += err.get("stack");
+            return msg;
+        }
+
         try {
             // NativeJSON.stringify outputs Callable's as null, convert to string
             // to make the output less confusing
@@ -348,6 +359,9 @@ public class NativeConsole extends IdScriptableObject {
                             }
                             if (value instanceof Callable) {
                                 return ScriptRuntime.toString(value);
+                            }
+                            if (arg instanceof NativeError) {
+                                return ((NativeError) arg).toString();
                             }
                             return value;
                         }

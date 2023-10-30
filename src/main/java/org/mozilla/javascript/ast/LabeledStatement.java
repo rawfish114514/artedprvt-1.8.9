@@ -6,10 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * A labeled statement. A statement can have more than one label. In this AST representation, all
@@ -20,7 +19,7 @@ import java.util.List;
  */
 public class LabeledStatement extends AstNode {
 
-    private List<Label> labels = new ArrayList<Label>(); // always at least 1
+    private List<Label> labels = new ArrayList<>(); // always at least 1
     private AstNode statement;
 
     {

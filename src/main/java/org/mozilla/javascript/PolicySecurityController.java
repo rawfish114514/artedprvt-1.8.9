@@ -4,14 +4,19 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.classfile.ByteCode;
-import org.mozilla.classfile.ClassFileWriter;
-
 import java.lang.ref.SoftReference;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.security.*;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.Policy;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.SecureClassLoader;
 import java.util.Map;
 import java.util.WeakHashMap;
+import org.mozilla.classfile.ByteCode;
+import org.mozilla.classfile.ClassFileWriter;
 
 /**
  * A security controller relying on Java {@link Policy} in effect. When you use this security
@@ -31,7 +36,7 @@ public class PolicySecurityController extends SecurityController {
     // and soft references all the way, since we don't want to interfere with
     // cleanup of either CodeSource or ClassLoader objects.
     private static final Map<CodeSource, Map<ClassLoader, SoftReference<SecureCaller>>> callers =
-            new WeakHashMap<CodeSource, Map<ClassLoader, SoftReference<SecureCaller>>>();
+            new WeakHashMap<>();
 
     @Override
     public Class<?> getStaticSecurityDomainClassInternal() {
@@ -101,7 +106,7 @@ public class PolicySecurityController extends SecurityController {
         synchronized (callers) {
             classLoaderMap = callers.get(codeSource);
             if (classLoaderMap == null) {
-                classLoaderMap = new WeakHashMap<ClassLoader, SoftReference<SecureCaller>>();
+                classLoaderMap = new WeakHashMap<>();
                 callers.put(codeSource, classLoaderMap);
             }
         }
@@ -130,10 +135,10 @@ public class PolicySecurityController extends SecurityController {
                                                                     SecureCaller.class.getName()
                                                                             + "Impl",
                                                                     secureCallerImplBytecode);
-                                                    return c.newInstance();
+                                                    return c.getDeclaredConstructor().newInstance();
                                                 }
                                             });
-                    classLoaderMap.put(classLoader, new SoftReference<SecureCaller>(caller));
+                    classLoaderMap.put(classLoader, new SoftReference<>(caller));
                 } catch (PrivilegedActionException ex) {
                     throw new UndeclaredThrowableException(ex.getCause());
                 }

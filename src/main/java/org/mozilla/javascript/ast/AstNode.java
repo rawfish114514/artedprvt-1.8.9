@@ -6,15 +6,14 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * Base class for AST node types. The goal of the AST is to represent the physical source code, to
@@ -70,7 +69,7 @@ public abstract class AstNode extends Node implements Comparable<AstNode> {
      * and so on
      */
     protected AstNode inlineComment;
-    private static Map<Integer, String> operatorNames = new HashMap<Integer, String>();
+    private static Map<Integer, String> operatorNames = new HashMap<>();
 
     static {
         operatorNames.put(Token.IN, "in");

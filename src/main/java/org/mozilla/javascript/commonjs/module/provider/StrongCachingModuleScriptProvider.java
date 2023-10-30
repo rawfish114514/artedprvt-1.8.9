@@ -4,10 +4,9 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
-import org.mozilla.javascript.commonjs.module.ModuleScript;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.mozilla.javascript.commonjs.module.ModuleScript;
 
 /**
  * A module script provider that uses a module source provider to load modules and caches the loaded
@@ -22,7 +21,7 @@ public class StrongCachingModuleScriptProvider extends CachingModuleScriptProvid
 
     private static final long serialVersionUID = 1L;
     private final Map<String, CachedModuleScript> modules =
-            new ConcurrentHashMap<String, CachedModuleScript>(16, .75f, getConcurrencyLevel());
+            new ConcurrentHashMap<>(16, .75f, getConcurrencyLevel());
 
     /**
      * Creates a new module provider with the specified module source provider.

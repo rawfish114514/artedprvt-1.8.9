@@ -6,11 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.util.SortedSet;
 import java.util.TreeSet;
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * Node for the root of a parse tree. It contains the statements and functions in the script, and a
@@ -68,7 +67,7 @@ public class AstRoot extends ScriptNode {
     public void addComment(Comment comment) {
         assertNotNull(comment);
         if (comments == null) {
-            comments = new TreeSet<Comment>(new PositionComparator());
+            comments = new TreeSet<>(new AstNode.PositionComparator());
         }
         comments.add(comment);
         comment.setParent(this);

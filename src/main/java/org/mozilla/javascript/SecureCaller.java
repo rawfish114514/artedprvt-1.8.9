@@ -10,7 +10,12 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.net.URL;
-import java.security.*;
+import java.security.AccessController;
+import java.security.CodeSource;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedActionException;
+import java.security.PrivilegedExceptionAction;
+import java.security.SecureClassLoader;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -23,7 +28,7 @@ public abstract class SecureCaller {
     // and soft references all the way, since we don't want to interfere with
     // cleanup of either CodeSource or ClassLoader objects.
     private static final Map<CodeSource, Map<ClassLoader, SoftReference<SecureCaller>>> callers =
-            new WeakHashMap<CodeSource, Map<ClassLoader, SoftReference<SecureCaller>>>();
+            new WeakHashMap<>();
 
     public abstract Object call(
             Callable callable, Context cx, Scriptable scope, Scriptable thisObj, Object[] args);
@@ -54,7 +59,7 @@ public abstract class SecureCaller {
         synchronized (callers) {
             classLoaderMap = callers.get(codeSource);
             if (classLoaderMap == null) {
-                classLoaderMap = new WeakHashMap<ClassLoader, SoftReference<SecureCaller>>();
+                classLoaderMap = new WeakHashMap<>();
                 callers.put(codeSource, classLoaderMap);
             }
         }
@@ -94,10 +99,10 @@ public abstract class SecureCaller {
                                                                             + "Impl",
                                                                     secureCallerImplBytecode,
                                                                     codeSource);
-                                                    return c.newInstance();
+                                                    return c.getDeclaredConstructor().newInstance();
                                                 }
                                             });
-                    classLoaderMap.put(classLoader, new SoftReference<SecureCaller>(caller));
+                    classLoaderMap.put(classLoader, new SoftReference<>(caller));
                 } catch (PrivilegedActionException ex) {
                     throw new UndeclaredThrowableException(ex.getCause());
                 }
@@ -132,8 +137,7 @@ public abstract class SecureCaller {
     private static byte[] loadBytecodePrivileged() {
         URL url = SecureCaller.class.getResource("SecureCallerImpl.clazz");
         try {
-            InputStream in = url.openStream();
-            try {
+            try (InputStream in = url.openStream()) {
                 ByteArrayOutputStream bout = new ByteArrayOutputStream();
                 for (; ; ) {
                     int r = in.read();
@@ -142,8 +146,6 @@ public abstract class SecureCaller {
                     }
                     bout.write(r);
                 }
-            } finally {
-                in.close();
             }
         } catch (IOException e) {
             throw new UndeclaredThrowableException(e);

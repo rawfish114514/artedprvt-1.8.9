@@ -4,9 +4,8 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.TopLevel.NativeErrors;
-
 import java.util.ArrayList;
+import org.mozilla.javascript.TopLevel.NativeErrors;
 
 public class NativePromise extends ScriptableObject {
 
@@ -36,7 +35,6 @@ public class NativePromise extends ScriptableObject {
                         1,
                         LambdaConstructor.CONSTRUCTOR_NEW,
                         NativePromise::constructor);
-        constructor.setStandardPropertyAttributes(DONTENUM | READONLY);
         constructor.setPrototypePropertyAttributes(DONTENUM | READONLY | PERMANENT);
 
         constructor.defineConstructorMethod(
@@ -487,7 +485,7 @@ public class NativePromise extends ScriptableObject {
             return ((JavaScriptException) re).getValue();
         }
 
-        NativeErrors constructor = NativeErrors.Error;
+        TopLevel.NativeErrors constructor = NativeErrors.Error;
         if (re instanceof EcmaError) {
             EcmaError ee = (EcmaError) re;
             switch (ee.getName()) {
@@ -542,7 +540,6 @@ public class NativePromise extends ScriptableObject {
                                             scope,
                                             promise,
                                             (args.length > 0 ? args[0] : Undefined.instance)));
-            resolve.setStandardPropertyAttributes(DONTENUM | READONLY);
             reject =
                     new LambdaFunction(
                             topScope,
@@ -553,7 +550,6 @@ public class NativePromise extends ScriptableObject {
                                             scope,
                                             promise,
                                             (args.length > 0 ? args[0] : Undefined.instance)));
-            reject.setStandardPropertyAttributes(DONTENUM | READONLY);
         }
 
         private Object reject(Context cx, Scriptable scope, NativePromise promise, Object reason) {
@@ -665,7 +661,6 @@ public class NativePromise extends ScriptableObject {
                             2,
                             (Context cx, Scriptable scope, Scriptable thisObj, Object[] args) ->
                                     executor(args));
-            executorFunc.setStandardPropertyAttributes(DONTENUM | READONLY);
 
             promise = promiseConstructor.construct(topCx, topScope, new Object[] {executorFunc});
 
@@ -778,7 +773,6 @@ public class NativePromise extends ScriptableObject {
                                     }
                                     return eltResolver.resolve(cx, scope, value, this);
                                 });
-                resolveFunc.setStandardPropertyAttributes(DONTENUM | READONLY);
 
                 Callable rejectFunc = capability.reject;
                 if (!failFast) {

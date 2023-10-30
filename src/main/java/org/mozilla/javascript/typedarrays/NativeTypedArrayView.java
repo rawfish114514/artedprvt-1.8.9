@@ -6,11 +6,24 @@
 
 package org.mozilla.javascript.typedarrays;
 
-import org.mozilla.javascript.*;
-import org.mozilla.javascript.NativeArrayIterator.ARRAY_ITERATOR_TYPE;
-
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.RandomAccess;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ExternalArrayData;
+import org.mozilla.javascript.IdFunctionObject;
+import org.mozilla.javascript.NativeArray;
+import org.mozilla.javascript.NativeArrayIterator;
+import org.mozilla.javascript.NativeArrayIterator.ARRAY_ITERATOR_TYPE;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Symbol;
+import org.mozilla.javascript.SymbolKey;
+import org.mozilla.javascript.Undefined;
+import org.mozilla.javascript.Wrapper;
 
 /**
  * This class is the abstract parent for all of the various typed arrays. Each one shows a view of a
@@ -241,6 +254,21 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
                 new Object[] {arrayBuffer, Integer.valueOf(byteOff), Integer.valueOf(len)});
     }
 
+    private Object js_at(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+        long relativeIndex = 0;
+        if (args.length >= 1) {
+            relativeIndex = (long) ScriptRuntime.toInteger(args[0]);
+        }
+
+        long k = (relativeIndex >= 0) ? relativeIndex : length + relativeIndex;
+
+        if ((k < 0) || (k >= length)) {
+            return Undefined.instance;
+        }
+
+        return getProperty(thisObj, (int) k);
+    }
+
     // Dispatcher
 
     @Override
@@ -310,6 +338,13 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
                 }
                 throw ScriptRuntime.constructError("Error", "invalid arguments");
 
+            case Id_at:
+                NativeTypedArrayView<T> atSelf = realThis(thisObj, f);
+                if (cx.getLanguageVersion() >= Context.VERSION_ES6 || args.length > 0) {
+                    return atSelf.js_at(cx, scope, thisObj, args);
+                }
+                throw ScriptRuntime.constructError("Error", "invalid arguments");
+
             case SymbolId_iterator:
                 return new NativeArrayIterator(scope, thisObj, ARRAY_ITERATOR_TYPE.VALUES);
         }
@@ -346,6 +381,10 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
                 arity = 2;
                 s = "subarray";
                 break;
+            case Id_at:
+                arity = 1;
+                s = "at";
+                break;
             default:
                 throw new IllegalArgumentException(String.valueOf(id));
         }
@@ -379,6 +418,9 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
             case "subarray":
                 id = Id_subarray;
                 break;
+            case "at":
+                id = Id_at;
+                break;
             default:
                 id = 0;
                 break;
@@ -392,7 +434,8 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
             Id_get = 3,
             Id_set = 4,
             Id_subarray = 5,
-            SymbolId_iterator = 6;
+            Id_at = 6,
+            SymbolId_iterator = 7;
 
     protected static final int MAX_PROTOTYPE_ID = SymbolId_iterator;
 
@@ -604,13 +647,13 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
     @SuppressWarnings("unused")
     @Override
     public Iterator<T> iterator() {
-        return new NativeTypedArrayIterator<T>(this, 0);
+        return new NativeTypedArrayIterator<>(this, 0);
     }
 
     @SuppressWarnings("unused")
     @Override
     public ListIterator<T> listIterator() {
-        return new NativeTypedArrayIterator<T>(this, 0);
+        return new NativeTypedArrayIterator<>(this, 0);
     }
 
     @SuppressWarnings("unused")
@@ -619,7 +662,7 @@ public abstract class NativeTypedArrayView<T> extends NativeArrayBufferView
         if (checkIndex(start)) {
             throw new IndexOutOfBoundsException();
         }
-        return new NativeTypedArrayIterator<T>(this, start);
+        return new NativeTypedArrayIterator<>(this, start);
     }
 
     @SuppressWarnings("unused")

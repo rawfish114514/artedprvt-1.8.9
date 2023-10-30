@@ -6,11 +6,12 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.xml.XMLLib;
+import static org.mozilla.javascript.ScriptableObject.DONTENUM;
+import static org.mozilla.javascript.ScriptableObject.PERMANENT;
+import static org.mozilla.javascript.ScriptableObject.READONLY;
 
 import java.io.Serializable;
-
-import static org.mozilla.javascript.ScriptableObject.*;
+import org.mozilla.javascript.xml.XMLLib;
 
 /**
  * This class implements the global native object (function and value properties only).

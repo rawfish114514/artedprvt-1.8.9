@@ -6,7 +6,14 @@
 
 package org.mozilla.javascript.regexp;
 
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.RegExpProxy;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.Undefined;
 
 /** */
 public class RegExpImpl implements RegExpProxy {
@@ -480,7 +487,7 @@ public class RegExpImpl implements RegExpProxy {
             int[] skip = new int[1];
             do {
                 int len = dp - cp;
-                charBuf.append(da.substring(cp, dp));
+                charBuf.append(da, cp, dp);
                 cp = dp;
                 SubString sub = interpretDollar(cx, regExpImpl, da, dp, skip);
                 if (sub != null) {
@@ -498,7 +505,7 @@ public class RegExpImpl implements RegExpProxy {
         }
         int daL = da.length();
         if (daL > cp) {
-            charBuf.append(da.substring(cp, daL));
+            charBuf.append(da, cp, daL);
         }
     }
 

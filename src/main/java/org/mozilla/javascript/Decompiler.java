@@ -6,9 +6,8 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.ast.FunctionNode;
-
 import java.math.BigInteger;
+import org.mozilla.javascript.ast.FunctionNode;
 
 /**
  * The following class save decompilation information about the source. Source information is
@@ -837,8 +836,7 @@ public class Decompiler {
         ++offset;
         if (type == 'S') {
             if (sb != null) {
-                int ival = source.charAt(offset);
-                number = ival;
+                number = (int) source.charAt(offset);
             }
             ++offset;
         } else if (type == 'J' || type == 'D') {

@@ -1,16 +1,27 @@
 package org.mozilla.javascript.optimizer;
 
+import static org.mozilla.classfile.ClassFileWriter.ACC_PRIVATE;
+import static org.mozilla.classfile.ClassFileWriter.ACC_STATIC;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import org.mozilla.classfile.ByteCode;
 import org.mozilla.classfile.ClassFileWriter;
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.NativeGenerator;
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Token;
 import org.mozilla.javascript.ast.FunctionNode;
 import org.mozilla.javascript.ast.Jump;
 import org.mozilla.javascript.ast.ScriptNode;
-
-import java.util.*;
-
-import static org.mozilla.classfile.ClassFileWriter.ACC_PRIVATE;
-import static org.mozilla.classfile.ClassFileWriter.ACC_STATIC;
 
 class BodyCodegen {
     void generateBodyCode() {
@@ -499,8 +510,7 @@ class BodyCodegen {
             Map<Node, int[]> liveLocals = ((FunctionNode) scriptOrFn).getLiveLocals();
             if (liveLocals != null) {
                 List<Node> nodes = ((FunctionNode) scriptOrFn).getResumptionPoints();
-                for (int i = 0; i < nodes.size(); i++) {
-                    Node node = nodes.get(i);
+                for (Node node : nodes) {
                     int[] live = liveLocals.get(node);
                     if (live != null) {
                         cfw.markTableSwitchCase(generatorSwitch, getNextGeneratorState(node));
@@ -1587,10 +1597,9 @@ class BodyCodegen {
 
             case Token.WITHEXPR:
                 {
-                    Node enterWith = child;
-                    Node with = enterWith.getNext();
+                    Node with = child.getNext();
                     Node leaveWith = with.getNext();
-                    generateStatement(enterWith);
+                    generateStatement(child);
                     generateExpression(with.getFirstChild(), with);
                     generateStatement(leaveWith);
                     break;
@@ -1598,9 +1607,8 @@ class BodyCodegen {
 
             case Token.ARRAYCOMP:
                 {
-                    Node initStmt = child;
                     Node expr = child.getNext();
-                    generateStatement(initStmt);
+                    generateStatement(child);
                     generateExpression(expr, node);
                     break;
                 }
@@ -1983,7 +1991,7 @@ class BodyCodegen {
                 && !isGenerator
                 && !inLocalBlock) {
             if (literals == null) {
-                literals = new LinkedList<Node>();
+                literals = new LinkedList<>();
             }
             literals.add(node);
             String methodName =
@@ -2118,7 +2126,7 @@ class BodyCodegen {
                 && !isGenerator
                 && !inLocalBlock) {
             if (literals == null) {
-                literals = new LinkedList<Node>();
+                literals = new LinkedList<>();
             }
             literals.add(node);
             String methodName =
@@ -2679,7 +2687,7 @@ class BodyCodegen {
         if (isGenerator && finallyTarget != null) {
             FinallyReturnPoint ret = new FinallyReturnPoint();
             if (finallys == null) {
-                finallys = new HashMap<Node, FinallyReturnPoint>();
+                finallys = new HashMap<>();
             }
             // add the finally target to hashtable
             finallys.put(finallyTarget, ret);
@@ -2865,7 +2873,7 @@ class BodyCodegen {
      */
     private class ExceptionManager {
         ExceptionManager() {
-            exceptionInfo = new LinkedList<ExceptionInfo>();
+            exceptionInfo = new LinkedList<>();
         }
 
         /**
@@ -4381,7 +4389,7 @@ class BodyCodegen {
     private List<Node> literals;
 
     static class FinallyReturnPoint {
-        public List<Integer> jsrPoints = new ArrayList<Integer>();
+        public List<Integer> jsrPoints = new ArrayList<>();
         public int tableLabel = 0;
     }
 

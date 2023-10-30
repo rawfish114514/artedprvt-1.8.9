@@ -6,12 +6,11 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.Token;
 
 /**
  * Base type for {@link AstRoot} and {@link FunctionNode} nodes, which need to collect much of the
@@ -30,7 +29,7 @@ public class ScriptNode extends Scope {
     private List<TemplateLiteral> templateLiterals;
     private List<FunctionNode> EMPTY_LIST = Collections.emptyList();
 
-    private List<Symbol> symbols = new ArrayList<Symbol>(4);
+    private List<Symbol> symbols = new ArrayList<>(4);
     private int paramCount = 0;
     private String[] variableNames;
     private boolean[] isConsts;
@@ -143,7 +142,7 @@ public class ScriptNode extends Scope {
      * and throws an exception if the line number has already been set.
      */
     public void setBaseLineno(int lineno) {
-        //if (lineno < 0 || this.lineno >= 0) codeBug();
+        if (lineno < 0 || this.lineno >= 0) codeBug();
         this.lineno = lineno;
     }
 
@@ -177,7 +176,7 @@ public class ScriptNode extends Scope {
      */
     public int addFunction(FunctionNode fnNode) {
         if (fnNode == null) codeBug();
-        if (functions == null) functions = new ArrayList<FunctionNode>();
+        if (functions == null) functions = new ArrayList<>();
         functions.add(fnNode);
         return functions.size() - 1;
     }
@@ -197,7 +196,7 @@ public class ScriptNode extends Scope {
     /** Called by IRFactory to add a RegExp to the regexp table. */
     public void addRegExp(RegExpLiteral re) {
         if (re == null) codeBug();
-        if (regexps == null) regexps = new ArrayList<RegExpLiteral>();
+        if (regexps == null) regexps = new ArrayList<>();
         regexps.add(re);
         re.putIntProp(REGEXP_PROP, regexps.size() - 1);
     }
@@ -213,7 +212,7 @@ public class ScriptNode extends Scope {
     /** Called by IRFactory to add a Template Literal to the templateLiterals table. */
     public void addTemplateLiteral(TemplateLiteral templateLiteral) {
         if (templateLiteral == null) codeBug();
-        if (templateLiterals == null) templateLiterals = new ArrayList<TemplateLiteral>();
+        if (templateLiterals == null) templateLiterals = new ArrayList<>();
         templateLiterals.add(templateLiteral);
         templateLiteral.putIntProp(TEMPLATE_LITERAL_PROP, templateLiterals.size() - 1);
     }
@@ -277,13 +276,12 @@ public class ScriptNode extends Scope {
      */
     public void flattenSymbolTable(boolean flattenAllTables) {
         if (!flattenAllTables) {
-            List<Symbol> newSymbols = new ArrayList<Symbol>();
+            List<Symbol> newSymbols = new ArrayList<>();
             if (this.symbolTable != null) {
                 // Just replace "symbols" with the symbols in this object's
                 // symbol table. Can't just work from symbolTable map since
                 // we need to retain duplicate parameters.
-                for (int i = 0; i < symbols.size(); i++) {
-                    Symbol symbol = symbols.get(i);
+                for (Symbol symbol : symbols) {
                     if (symbol.getContainingTable() == this) {
                         newSymbols.add(symbol);
                     }

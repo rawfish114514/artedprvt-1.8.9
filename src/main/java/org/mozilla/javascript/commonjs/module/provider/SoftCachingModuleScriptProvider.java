@@ -4,11 +4,6 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.Script;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.commonjs.module.ModuleScript;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -19,6 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.commonjs.module.ModuleScript;
 
 /**
  * A module script provider that uses a module source provider to load modules and caches the loaded
@@ -32,9 +31,9 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class SoftCachingModuleScriptProvider extends CachingModuleScriptProviderBase {
     private static final long serialVersionUID = 1L;
-    private transient ReferenceQueue<Script> scriptRefQueue = new ReferenceQueue<Script>();
+    private transient ReferenceQueue<Script> scriptRefQueue = new ReferenceQueue<>();
     private transient ConcurrentMap<String, ScriptReference> scripts =
-            new ConcurrentHashMap<String, ScriptReference>(16, .75f, getConcurrencyLevel());
+            new ConcurrentHashMap<>(16, .75f, getConcurrencyLevel());
 
     /**
      * Creates a new module provider with the specified module source provider.
@@ -114,8 +113,8 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
 
     @SuppressWarnings("unchecked")
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        scriptRefQueue = new ReferenceQueue<Script>();
-        scripts = new ConcurrentHashMap<String, ScriptReference>();
+        scriptRefQueue = new ReferenceQueue<>();
+        scripts = new ConcurrentHashMap<>();
         final Map<String, CachedModuleScript> serScripts = (Map) in.readObject();
         for (Map.Entry<String, CachedModuleScript> entry : serScripts.entrySet()) {
             final CachedModuleScript cachedModuleScript = entry.getValue();
@@ -127,8 +126,7 @@ public class SoftCachingModuleScriptProvider extends CachingModuleScriptProvider
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
-        final Map<String, CachedModuleScript> serScripts =
-                new HashMap<String, CachedModuleScript>();
+        final Map<String, CachedModuleScript> serScripts = new HashMap<>();
         for (Map.Entry<String, ScriptReference> entry : scripts.entrySet()) {
             final CachedModuleScript cachedModuleScript = entry.getValue().getCachedModuleScript();
             if (cachedModuleScript != null) {

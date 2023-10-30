@@ -6,9 +6,6 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.mapping.ClassRegisterer;
-import org.mozilla.javascript.mapping.MemberMapping;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Modifier;
 import java.util.Map;
@@ -57,31 +54,9 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     public boolean has(String name, Scriptable start) {
         return members.has(name, true) || javaClassPropertyName.equals(name);
     }
+
     @Override
     public Object get(String name, Scriptable start) {
-        if(isMapping){
-            //转换为混淆名
-            MemberMapping member= ClassRegisterer.classMap.get(clas.getName());
-            if(member!=null){
-                String srg = member.get(name);
-                if(!srg.equals("0")) {
-                    if(srg.contains("/")){
-                        try {
-                            return NativeJavaMethod2Srg.getNativeJavaMethod2Srg(clas,name,srg);
-                        } catch (NoSuchMethodException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    Object obj=get_(srg);
-                    if(obj!=UniqueTag.NOT_FOUND){
-                        return obj;
-                    }
-                }
-            }
-        }
-        return get_(name);
-    }
-    public Object get_(String name, Scriptable start) {
         // When used as a constructor, ScriptRuntime.newObject() asks
         // for our prototype to create an object of the correct type.
         // We don't really care what the object is, since we're returning
@@ -118,25 +93,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     }
 
     @Override
-    public void put(String name, Scriptable start, Object value){
-        if(isMapping){
-            //转换为混淆名
-            MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
-            if(member!=null){
-                String srg = member.get(name);
-                if(!srg.equals("0")) {
-                    String[] vs=srg.split("/");
-                    for(String v:vs) {
-                        put_(v,start,value);
-                        return;
-                    }
-                }
-            }
-        }
-        put_(name,start,value);
-    }
-
-    public void put_(String name, Scriptable start, Object value) {
+    public void put(String name, Scriptable start, Object value) {
         members.put(this, name, javaObject, value, true);
     }
 
@@ -195,31 +152,6 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
         if (args.length == 0) {
             throw Context.reportRuntimeErrorById("msg.adapter.zero.args");
         }
-        Object arg0=args[0];
-        if(arg0 instanceof NativeObject){
-            NativeObject nativeObject=(NativeObject)arg0;
-            if(isMapping) {
-                //复制这个对象并对函数混淆 这意味着源对象不会被用来生成实现类
-                MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
-                if(member!=null) {
-                    NativeObject newObject = new NativeObject();
-                    newObject.setParentScope(nativeObject.getParentScope());
-                    Object[] keys = nativeObject.keySet().toArray();
-                    for (Object key : keys) {
-                        String name = (String) key;
-                        Object p = nativeObject.get(name, nativeObject);
-                        if (p instanceof Function) {
-                            String srg = member.get(name);
-                            if (!srg.equals("0")) {
-                                name = srg.split("/")[0];
-                            }
-                        }
-                        newObject.put(name, newObject,p);
-                    }
-                    arg0=newObject;
-                }
-            }
-        }
         Scriptable topLevel = ScriptableObject.getTopLevelScope(this);
         String msg = "";
         try {
@@ -228,7 +160,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
             if ("Dalvik".equals(System.getProperty("java.vm.name")) && classObject.isInterface()) {
                 Object obj =
                         createInterfaceAdapter(
-                                classObject, ScriptableObject.ensureScriptableObject(arg0));
+                                classObject, ScriptableObject.ensureScriptableObject(args[0]));
                 return cx.getWrapFactory().wrapAsJavaObject(cx, scope, obj, null);
             }
             // use JavaAdapter to construct a new class on the fly that
@@ -237,7 +169,7 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
             if (v != NOT_FOUND) {
                 Function f = (Function) v;
                 // Args are (interface, js object)
-                Object[] adapterArgs = {this, arg0};
+                Object[] adapterArgs = {this, args[0]};
                 return f.construct(cx, topLevel, adapterArgs);
             }
         } catch (Exception ex) {
@@ -346,4 +278,14 @@ public class NativeJavaClass extends NativeJavaObject implements Function {
     }
 
     private Map<String, FieldAndMethods> staticFieldAndMethods;
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }

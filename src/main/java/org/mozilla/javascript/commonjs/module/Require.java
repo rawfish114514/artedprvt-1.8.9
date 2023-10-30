@@ -4,14 +4,18 @@
 
 package org.mozilla.javascript.commonjs.module;
 
-import org.mozilla.javascript.*;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.mozilla.javascript.BaseFunction;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Script;
+import org.mozilla.javascript.ScriptRuntime;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
 
 /**
  * Implements the require() function as defined by <a
@@ -49,13 +53,12 @@ public class Require extends BaseFunction {
     private Scriptable mainExports;
 
     // Modules that completed loading; visible to all threads
-    private final Map<String, Scriptable> exportedModuleInterfaces =
-            new ConcurrentHashMap<String, Scriptable>();
+    private final Map<String, Scriptable> exportedModuleInterfaces = new ConcurrentHashMap<>();
     private final Object loadLock = new Object();
     // Modules currently being loaded on the thread. Used to resolve circular
     // dependencies while loading.
     private static final ThreadLocal<Map<String, Scriptable>> loadingModuleInterfaces =
-            new ThreadLocal<Map<String, Scriptable>>();
+            new ThreadLocal<>();
 
     /**
      * Creates a new instance of the require() function. Upon constructing it, you will either want
@@ -261,7 +264,7 @@ public class Require extends BaseFunction {
             // Are we the outermost locked invocation on this thread?
             final boolean outermostLocked = threadLoadingModules == null;
             if (outermostLocked) {
-                threadLoadingModules = new HashMap<String, Scriptable>();
+                threadLoadingModules = new HashMap<>();
                 loadingModuleInterfaces.set(threadLoadingModules);
             }
             // Must make the module exports available immediately on the

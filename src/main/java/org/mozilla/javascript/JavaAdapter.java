@@ -6,19 +6,22 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.classfile.ByteCode;
-import org.mozilla.classfile.ClassFileWriter;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.security.CodeSource;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
+import org.mozilla.classfile.ByteCode;
+import org.mozilla.classfile.ClassFileWriter;
 
 public final class JavaAdapter implements IdFunctionCall {
     /**
@@ -356,8 +359,7 @@ public final class JavaAdapter implements IdFunctionCall {
         // generate methods to satisfy all specified interfaces.
         for (int i = 0; i < interfacesCount; i++) {
             Method[] methods = interfaces[i].getMethods();
-            for (int j = 0; j < methods.length; j++) {
-                Method method = methods[j];
+            for (Method method : methods) {
                 int mods = method.getModifiers();
                 if (Modifier.isStatic(mods) || Modifier.isFinal(mods) || method.isDefault()) {
                     continue;
@@ -393,8 +395,7 @@ public final class JavaAdapter implements IdFunctionCall {
 
         // generate any additional overrides that the object might contain.
         Method[] methods = getOverridableMethods(superClass);
-        for (int j = 0; j < methods.length; j++) {
-            Method method = methods[j];
+        for (Method method : methods) {
             int mods = method.getModifiers();
             // if a method is marked abstract, must implement it or the
             // resulting class won't be instantiable. otherwise, if the object
@@ -444,8 +445,8 @@ public final class JavaAdapter implements IdFunctionCall {
     }
 
     static Method[] getOverridableMethods(Class<?> clazz) {
-        ArrayList<Method> list = new ArrayList<Method>();
-        HashSet<String> skip = new HashSet<String>();
+        ArrayList<Method> list = new ArrayList<>();
+        HashSet<String> skip = new HashSet<>();
         // Check superclasses before interfaces so we always choose
         // implemented methods over abstract ones, even if a subclass
         // re-implements an interface already implemented in a superclass
@@ -456,19 +457,18 @@ public final class JavaAdapter implements IdFunctionCall {
         for (Class<?> c = clazz; c != null; c = c.getSuperclass()) {
             for (Class<?> intf : c.getInterfaces()) appendOverridableMethods(intf, list, skip);
         }
-        return list.toArray(new Method[list.size()]);
+        return list.toArray(new Method[0]);
     }
 
     private static void appendOverridableMethods(
             Class<?> c, ArrayList<Method> list, HashSet<String> skip) {
         Method[] methods = c.isInterface() ? c.getMethods() : c.getDeclaredMethods();
 
-        for (int i = 0; i < methods.length; i++) {
+        for (Method method : methods) {
             String methodKey =
-                    methods[i].getName()
-                            + getMethodSignature(methods[i], methods[i].getParameterTypes());
+                    method.getName() + getMethodSignature(method, method.getParameterTypes());
             if (skip.contains(methodKey)) continue; // skip this method
-            int mods = methods[i].getModifiers();
+            int mods = method.getModifiers();
             if (Modifier.isStatic(mods)) continue;
             if (Modifier.isFinal(mods)) {
                 // Make sure we don't add a final method to the list
@@ -477,7 +477,7 @@ public final class JavaAdapter implements IdFunctionCall {
                 continue;
             }
             if (Modifier.isPublic(mods) || Modifier.isProtected(mods)) {
-                list.add(methods[i]);
+                list.add(method);
                 skip.add(methodKey);
             }
         }
@@ -1059,9 +1059,8 @@ public final class JavaAdapter implements IdFunctionCall {
         cfw.addInvoke(ByteCode.INVOKESPECIAL, superName, methodName, methodSignature);
 
         // now, handle the return type appropriately.
-        Class<?> retType = returnType;
-        if (!retType.equals(Void.TYPE)) {
-            generatePopResult(cfw, retType);
+        if (!returnType.equals(Void.TYPE)) {
+            generatePopResult(cfw, returnType);
         } else {
             cfw.add(ByteCode.RETURN);
         }

@@ -6,13 +6,6 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.ast.FunctionNode;
-import org.mozilla.javascript.resources.MessagesString;
-import org.mozilla.javascript.v8dtoa.DoubleConversion;
-import org.mozilla.javascript.v8dtoa.FastDtoa;
-import org.mozilla.javascript.xml.XMLLib;
-import org.mozilla.javascript.xml.XMLObject;
-
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringReader;
@@ -22,8 +15,16 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.text.MessageFormat;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
+import org.mozilla.javascript.ast.FunctionNode;
+import org.mozilla.javascript.resources.MessagesString;
+import org.mozilla.javascript.v8dtoa.DoubleConversion;
+import org.mozilla.javascript.v8dtoa.FastDtoa;
+import org.mozilla.javascript.xml.XMLLib;
+import org.mozilla.javascript.xml.XMLObject;
 
 /**
  * This is the class that implements the runtime.
@@ -393,7 +394,7 @@ public class ScriptRuntime {
             if (val == null || Undefined.isUndefined(val)) return false;
             if (val instanceof CharSequence) return ((CharSequence) val).length() != 0;
             if (val instanceof BigInteger) {
-                return !((BigInteger) val).equals(BigInteger.ZERO);
+                return !BigInteger.ZERO.equals(val);
             }
             if (val instanceof Number) {
                 double d = ((Number) val).doubleValue();
@@ -1228,6 +1229,12 @@ public class ScriptRuntime {
         }
 
         if (isSymbol(val)) {
+            if (val instanceof SymbolKey) {
+                NativeSymbol result = new NativeSymbol((SymbolKey) val);
+                setBuiltinProtoAndParent(result, scope, TopLevel.Builtins.Symbol);
+                return result;
+            }
+
             NativeSymbol result = new NativeSymbol((NativeSymbol) val);
             setBuiltinProtoAndParent(result, scope, TopLevel.Builtins.Symbol);
             return result;
@@ -1338,7 +1345,7 @@ public class ScriptRuntime {
 
     public static long toLength(Object[] args, int index) {
         double len = toInteger(args, index);
-        if (len <= +0.0) {
+        if (len <= 0.0) {
             return 0;
         }
         return (long) Math.min(len, NativeNumber.MAX_SAFE_INTEGER);
@@ -1559,6 +1566,7 @@ public class ScriptRuntime {
      * Helper to return a string or an integer. Always use a null check on s.stringId to determine
      * if the result is string or integer.
      *
+     * @see ScriptRuntime#toStringIdOrIndex(Context, Object)
      */
     static final class StringIdOrIndex {
         final String stringId;
@@ -2291,6 +2299,7 @@ public class ScriptRuntime {
         ((IdEnumeration) enumObj).enumNumbers = enumNumbers;
     }
 
+    /** @deprecated since 1.7.15. Use {@link #enumNext(Context, Object)} instead */
     @Deprecated
     public static Boolean enumNext(Object enumObj) {
         return enumNext(enumObj, Context.getContext());
@@ -2337,8 +2346,7 @@ public class ScriptRuntime {
             } else {
                 int intId = ((Number) id).intValue();
                 if (!x.obj.has(intId, x.obj)) continue; // must have been deleted
-                x.currentId =
-                        x.enumNumbers ? (Object) (Integer.valueOf(intId)) : String.valueOf(intId);
+                x.currentId = x.enumNumbers ? Integer.valueOf(intId) : String.valueOf(intId);
             }
             return Boolean.TRUE;
         }
@@ -2484,8 +2492,7 @@ public class ScriptRuntime {
                 throw notFunctionError(result, name);
             }
             // Top scope is not NativeWith or NativeCall => thisObj == scope
-            Scriptable thisObj = scope;
-            storeScriptable(cx, thisObj);
+            storeScriptable(cx, scope);
             return (Callable) result;
         }
 
@@ -2867,6 +2874,7 @@ public class ScriptRuntime {
         if (value instanceof BigInteger) return "bigint";
         if (value instanceof Number) return "number";
         if (value instanceof Boolean) return "boolean";
+        if (isSymbol(value)) return "symbol";
         throw errorWithClassName("msg.invalid.type", value);
     }
 
@@ -4074,7 +4082,7 @@ public class ScriptRuntime {
                 sourceUri = "";
             }
             int line = re.lineNumber();
-            Object args[];
+            Object[] args;
             if (line > 0) {
                 args = new Object[] {errorMsg, sourceUri, Integer.valueOf(line)};
             } else {
@@ -4172,7 +4180,7 @@ public class ScriptRuntime {
             sourceUri = "";
         }
         int line = re.lineNumber();
-        Object args[];
+        Object[] args;
         if (line > 0) {
             args = new Object[] {errorMsg, sourceUri, Integer.valueOf(line)};
         } else {
@@ -4250,23 +4258,36 @@ public class ScriptRuntime {
         return nw.getParentScope();
     }
 
+    /**
+     * @deprecated Use {@link #setFunctionProtoAndParent(BaseFunction, Context, Scriptable)} instead
+     */
+    @Deprecated
     public static void setFunctionProtoAndParent(BaseFunction fn, Scriptable scope) {
-        setFunctionProtoAndParent(fn, scope, false);
+        setFunctionProtoAndParent(fn, Context.getCurrentContext(), scope, false);
+    }
+
+    public static void setFunctionProtoAndParent(BaseFunction fn, Context cx, Scriptable scope) {
+        setFunctionProtoAndParent(fn, cx, scope, false);
+    }
+
+    /**
+     * @deprecated Use {@link #setFunctionProtoAndParent(BaseFunction, Context, Scriptable,
+     *     boolean)} instead
+     */
+    @Deprecated
+    public static void setFunctionProtoAndParent(
+            BaseFunction fn, Scriptable scope, boolean es6GeneratorFunction) {
+        setFunctionProtoAndParent(fn, Context.getCurrentContext(), scope, es6GeneratorFunction);
     }
 
     public static void setFunctionProtoAndParent(
-            BaseFunction fn, Scriptable scope, boolean es6GeneratorFunction) {
+            BaseFunction fn, Context cx, Scriptable scope, boolean es6GeneratorFunction) {
         fn.setParentScope(scope);
         if (es6GeneratorFunction) {
             fn.setPrototype(ScriptableObject.getGeneratorFunctionPrototype(scope));
         } else {
             fn.setPrototype(ScriptableObject.getFunctionPrototype(scope));
         }
-    }
-
-    public static void setFunctionProtoAndParent(
-            BaseFunction fn, Context cx, Scriptable scope, boolean es6GeneratorFunction) {
-        setFunctionProtoAndParent(fn, scope, es6GeneratorFunction);
 
         if (cx != null && cx.getLanguageVersion() >= Context.VERSION_ES6) {
             fn.setStandardPropertyAttributes(ScriptableObject.READONLY | ScriptableObject.DONTENUM);
@@ -4540,7 +4561,15 @@ public class ScriptRuntime {
     private static class DefaultMessageProvider implements MessageProvider {
         @Override
         public String getMessage(String messageId, Object[] arguments) {
+            /*
+            final String defaultResource = "org.mozilla.javascript.resources.Messages";
 
+            Context cx = Context.getCurrentContext();
+            Locale locale = cx != null ? cx.getLocale() : Locale.getDefault();
+
+            // ResourceBundle does caching.
+            ResourceBundle rb = ResourceBundle.getBundle(defaultResource, locale);
+*/
             String formatString;
             try {
                 formatString = pr.getProperty(messageId,"Error");
@@ -4555,7 +4584,6 @@ public class ScriptRuntime {
              * single 's.
              */
             MessageFormat formatter = new MessageFormat(formatString);
-
             return formatter.format(arguments);
         }
     }

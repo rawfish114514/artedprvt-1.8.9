@@ -4,13 +4,12 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
+import org.mozilla.javascript.Token;
 
 /**
  * AST node for a Template literal.
@@ -38,7 +37,7 @@ public class TemplateLiteral extends AstNode {
     /** Returns a list of all literal sections of this template literal */
     public List<TemplateCharacters> getTemplateStrings() {
         if (elements == null) return emptyList();
-        List<TemplateCharacters> strings = new ArrayList<TemplateCharacters>();
+        List<TemplateCharacters> strings = new ArrayList<>();
         for (AstNode e : elements) {
             if (e.getType() == Token.TEMPLATE_CHARS) {
                 strings.add((TemplateCharacters) e);
@@ -50,7 +49,7 @@ public class TemplateLiteral extends AstNode {
     /** Returns a list of all substitutions of this template literal */
     public List<AstNode> getSubstitutions() {
         if (elements == null) return emptyList();
-        List<AstNode> subs = new ArrayList<AstNode>();
+        List<AstNode> subs = new ArrayList<>();
         for (AstNode e : elements) {
             if (e.getType() != Token.TEMPLATE_CHARS) {
                 subs.add(e);
@@ -91,7 +90,7 @@ public class TemplateLiteral extends AstNode {
      */
     public void addElement(AstNode element) {
         assertNotNull(element);
-        if (elements == null) elements = new ArrayList<AstNode>();
+        if (elements == null) elements = new ArrayList<>();
         elements.add(element);
         element.setParent(this);
     }

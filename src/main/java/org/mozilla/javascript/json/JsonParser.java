@@ -6,12 +6,11 @@
 
 package org.mozilla.javascript.json;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.Scriptable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This class converts a stream of JSON tokens into a JSON value.
@@ -143,7 +142,7 @@ public class JsonParser {
             pos += 1;
             return cx.newArray(scope, 0);
         }
-        List<Object> list = new ArrayList<Object>();
+        List<Object> list = new ArrayList<>();
         boolean needsComma = false;
         while (pos < length) {
             char c = src.charAt(pos);

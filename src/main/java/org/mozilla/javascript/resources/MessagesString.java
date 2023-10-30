@@ -1,7 +1,7 @@
 package org.mozilla.javascript.resources;
 
 public class MessagesString {
-    public static String getMessagesString() {
+    public static String getMessagesString(){
         return "#\n" +
                 "# Default JavaScript messages file.\n" +
                 "#\n" +
@@ -599,7 +599,8 @@ public class MessagesString {
                 "msg.cyclic.value =\\\n" +
                 "    Cyclic {0} value not allowed.\n" +
                 "\n" +
-                "msg.is.not.defined =\"{0}\" is not defined.\n" +
+                "msg.is.not.defined =\\\n" +
+                "    \"{0}\" is not defined.\n" +
                 "\n" +
                 "msg.undef.prop.read =\\\n" +
                 "    Cannot read property \"{1}\" from {0}\n" +
@@ -939,10 +940,11 @@ public class MessagesString {
                 "msg.map.function.not =\\\n" +
                 "  Map function is not actually a function\n" +
                 "\n" +
-                "msg.constructor.no.function \\=\n" +
+                "msg.constructor.no.function =\\\n" +
                 "  The constructor for {0} may not be invoked as a function\n" +
                 "\n" +
-                "msg.this.not.instance \\= \\\"this\\\" is not an instance of the class\n" +
+                "msg.this.not.instance =\\\n" +
+                "  \\\"this\\\" is not an instance of the class\n" +
                 "\n" +
                 "# Promises\n" +
                 "msg.function.expected =\\\n" +
@@ -954,10 +956,10 @@ public class MessagesString {
                 "msg.promise.self.resolution =\\\n" +
                 "  Promise is being self-resolved\n" +
                 "\n" +
-                "msg.promise.capability.state \\=\n" +
-                "Invalid promise capability state\n" +
+                "msg.promise.capability.state =\\\n" +
+                "  Invalid promise capability state\n" +
                 "\n" +
-                "msg.promise.all.toobig \\=\n" +
+                "msg.promise.all.toobig =\\\n" +
                 "  Too many inputs to Promise.all";
     }
 }

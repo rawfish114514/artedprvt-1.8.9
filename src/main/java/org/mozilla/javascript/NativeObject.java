@@ -6,9 +6,16 @@
 
 package org.mozilla.javascript;
 
+import java.util.AbstractCollection;
+import java.util.AbstractSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
 import org.mozilla.javascript.ScriptRuntime.StringIdOrIndex;
-
-import java.util.*;
 
 /**
  * This class implements the Object native object. See ECMA 15.2.
@@ -486,10 +493,10 @@ public class NativeObject extends IdScriptableObject implements Map {
                     Scriptable s = getCompatibleObject(cx, scope, arg);
                     ScriptableObject obj = ensureScriptableObject(s);
                     Object[] ids = obj.getIds(true, true);
-                    ArrayList<Object> syms = new ArrayList<Object>();
-                    for (int i = 0; i < ids.length; i++) {
-                        if (ids[i] instanceof Symbol) {
-                            syms.add(ids[i]);
+                    ArrayList<Object> syms = new ArrayList<>();
+                    for (Object o : ids) {
+                        if (o instanceof Symbol) {
+                            syms.add(o);
                         }
                     }
                     return cx.newArray(scope, syms.toArray());
@@ -765,7 +772,7 @@ public class NativeObject extends IdScriptableObject implements Map {
     }
 
     @Override
-    public Set<Entry<Object, Object>> entrySet() {
+    public Set<Map.Entry<Object, Object>> entrySet() {
         return new EntrySet();
     }
 
@@ -787,7 +794,7 @@ public class NativeObject extends IdScriptableObject implements Map {
     class EntrySet extends AbstractSet<Entry<Object, Object>> {
         @Override
         public Iterator<Entry<Object, Object>> iterator() {
-            return new Iterator<Entry<Object, Object>>() {
+            return new Iterator<Map.Entry<Object, Object>>() {
                 Object[] ids = getIds();
                 Object key = null;
                 int index = 0;
@@ -798,10 +805,10 @@ public class NativeObject extends IdScriptableObject implements Map {
                 }
 
                 @Override
-                public Entry<Object, Object> next() {
+                public Map.Entry<Object, Object> next() {
                     final Object ekey = key = ids[index++];
                     final Object value = get(key);
-                    return new Entry<Object, Object>() {
+                    return new Map.Entry<Object, Object>() {
                         @Override
                         public Object getKey() {
                             return ekey;
@@ -822,7 +829,7 @@ public class NativeObject extends IdScriptableObject implements Map {
                             if (!(other instanceof Map.Entry)) {
                                 return false;
                             }
-                            Entry<?, ?> e = (Entry<?, ?>) other;
+                            Map.Entry<?, ?> e = (Map.Entry<?, ?>) other;
                             return (ekey == null ? e.getKey() == null : ekey.equals(e.getKey()))
                                     && (value == null
                                             ? e.getValue() == null

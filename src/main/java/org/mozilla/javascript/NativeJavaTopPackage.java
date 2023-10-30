@@ -23,14 +23,14 @@ public class NativeJavaTopPackage extends NativeJavaPackage implements Function,
     // we know these are packages so we can skip the class check
     // note that this is ok even if the package isn't present.
     private static final String[][] commonPackages = {
-            {"java", "lang", "reflect"},
-            {"java", "io"},
-            {"java", "math"},
-            {"java", "net"},
-            {"java", "util", "zip"},
-            {"java", "text", "resources"},
-            {"java", "applet"},
-            {"javax", "swing"},
+        {"java", "lang", "reflect"},
+        {"java", "io"},
+        {"java", "math"},
+        {"java", "net"},
+        {"java", "util", "zip"},
+        {"java", "text", "resources"},
+        {"java", "applet"},
+        {"javax", "swing"}
     };
 
     NativeJavaTopPackage(ClassLoader loader) {

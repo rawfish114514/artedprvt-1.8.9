@@ -19,7 +19,7 @@ package org.mozilla.javascript;
  * <p>The Rhino shell provides a short-cut for the creation of synchronized methods: <code>sync(fun)
  * </code> has the same effect as calling the above constructor.
  *
- * @see Delegator
+ * @see org.mozilla.javascript.Delegator
  * @author Matthias Radestock
  */
 public class Synchronizer extends Delegator {
@@ -47,7 +47,7 @@ public class Synchronizer extends Delegator {
         this.syncObject = syncObject;
     }
 
-    /** @see Function#call */
+    /** @see org.mozilla.javascript.Function#call */
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
         Object sync = syncObject != null ? syncObject : thisObj;

@@ -6,16 +6,15 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /** AST node for a JavaScript 1.7 Array comprehension. Node type is {@link Token#ARRAYCOMP}. */
 public class ArrayComprehension extends Scope {
 
     private AstNode result;
-    private List<ArrayComprehensionLoop> loops = new ArrayList<ArrayComprehensionLoop>();
+    private List<ArrayComprehensionLoop> loops = new ArrayList<>();
     private AstNode filter;
     private int ifPosition = -1;
     private int lp = -1;

@@ -6,10 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.EvaluatorException;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.javascript.EvaluatorException;
 
 /**
  * An error reporter that gathers the errors and warnings for later display. This a useful {@link
@@ -20,7 +19,7 @@ import java.util.List;
  */
 public class ErrorCollector implements IdeErrorReporter {
 
-    private List<ParseProblem> errors = new ArrayList<ParseProblem>();
+    private List<ParseProblem> errors = new ArrayList<>();
 
     /**
      * This is not called during AST generation. {@link #warning(String,String,int,int)} is used

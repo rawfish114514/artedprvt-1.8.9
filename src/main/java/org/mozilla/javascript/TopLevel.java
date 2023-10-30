@@ -23,7 +23,7 @@ import java.util.EnumMap;
  * ScriptRuntime#setBuiltinProtoAndParent ScriptRuntime.setBuiltinProtoAndParent} methods should be
  * used to create and initialize objects of built-in classes instead of their generic counterparts.
  *
- * <p>Calling {@link Context#initStandardObjects()} with an instance of this
+ * <p>Calling {@link org.mozilla.javascript.Context#initStandardObjects()} with an instance of this
  * class as argument will automatically cache built-in classes after initialization. For other
  * setups involving top-level scopes that inherit global properties from their proptotypes (e.g.
  * with dynamic scopes) embeddings should explicitly call {@link #cacheBuiltins(Scriptable,
@@ -97,7 +97,7 @@ public class TopLevel extends IdScriptableObject {
      * initStandardObjects()</code>.
      */
     public void cacheBuiltins(Scriptable scope, boolean sealed) {
-        ctors = new EnumMap<Builtins, BaseFunction>(Builtins.class);
+        ctors = new EnumMap<>(Builtins.class);
         for (Builtins builtin : Builtins.values()) {
             Object value = ScriptableObject.getProperty(this, builtin.name());
             if (value instanceof BaseFunction) {
@@ -110,7 +110,7 @@ public class TopLevel extends IdScriptableObject {
                         (BaseFunction) BaseFunction.initAsGeneratorFunction(scope, sealed));
             }
         }
-        errors = new EnumMap<NativeErrors, BaseFunction>(NativeErrors.class);
+        errors = new EnumMap<>(NativeErrors.class);
         for (NativeErrors error : NativeErrors.values()) {
             Object value = ScriptableObject.getProperty(this, error.name());
             if (value instanceof BaseFunction) {

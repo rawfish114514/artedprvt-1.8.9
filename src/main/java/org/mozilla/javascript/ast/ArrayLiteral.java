@@ -6,11 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * AST node for an Array literal. The elements list will always be non-{@code null}, although the
@@ -31,8 +30,7 @@ import java.util.List;
  */
 public class ArrayLiteral extends AstNode implements DestructuringForm {
 
-    private static final List<AstNode> NO_ELEMS =
-            Collections.unmodifiableList(new ArrayList<AstNode>());
+    private static final List<AstNode> NO_ELEMS = Collections.unmodifiableList(new ArrayList<>());
 
     private List<AstNode> elements;
     private int destructuringLength;
@@ -86,7 +84,7 @@ public class ArrayLiteral extends AstNode implements DestructuringForm {
      */
     public void addElement(AstNode element) {
         assertNotNull(element);
-        if (elements == null) elements = new ArrayList<AstNode>();
+        if (elements == null) elements = new ArrayList<>();
         elements.add(element);
         element.setParent(this);
     }

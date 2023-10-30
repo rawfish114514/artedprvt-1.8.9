@@ -6,10 +6,9 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * A list of one or more var, const or let declarations. Node type is {@link Token#VAR}, {@link
@@ -24,7 +23,7 @@ import java.util.List;
  */
 public class VariableDeclaration extends AstNode {
 
-    private List<VariableInitializer> variables = new ArrayList<VariableInitializer>();
+    private List<VariableInitializer> variables = new ArrayList<>();
     private boolean isStatement;
 
     {

@@ -6,9 +6,8 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.math.BigInteger;
+import org.mozilla.javascript.Token;
 
 /** AST node for a BigInt literal. Node type is {@link Token#BIGINT}. */
 public class BigIntLiteral extends AstNode {

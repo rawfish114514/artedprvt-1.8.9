@@ -6,7 +6,11 @@
 
 package org.mozilla.javascript;
 
-import java.beans.*;
+import java.beans.BeanDescriptor;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.function.UnaryOperator;
@@ -59,7 +63,7 @@ public class JavaToJSONConverters {
                 } catch (IntrospectionException e) {
                     return null;
                 }
-                LinkedHashMap<String, Object> properties = new LinkedHashMap<String, Object>();
+                LinkedHashMap<String, Object> properties = new LinkedHashMap<>();
                 for (PropertyDescriptor descriptor : beanInfo.getPropertyDescriptors()) {
                     if (descriptor.getReadMethod() == null) continue;
                     Object propValue;
@@ -73,7 +77,7 @@ public class JavaToJSONConverters {
 
                 if (properties.size() == 0) return null;
 
-                LinkedHashMap<String, Object> obj = new LinkedHashMap<String, Object>();
+                LinkedHashMap<String, Object> obj = new LinkedHashMap<>();
                 BeanDescriptor beanDescriptor = beanInfo.getBeanDescriptor();
                 obj.put("beanClass", beanDescriptor.getBeanClass().getName());
                 obj.put("properties", properties);

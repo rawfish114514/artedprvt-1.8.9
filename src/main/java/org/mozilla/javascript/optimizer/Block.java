@@ -4,17 +4,16 @@
 
 package org.mozilla.javascript.optimizer;
 
-import org.mozilla.javascript.Node;
-import org.mozilla.javascript.ObjArray;
-import org.mozilla.javascript.ObjToIntMap;
-import org.mozilla.javascript.Token;
-import org.mozilla.javascript.ast.Jump;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
+import org.mozilla.javascript.Node;
+import org.mozilla.javascript.ObjArray;
+import org.mozilla.javascript.ObjToIntMap;
+import org.mozilla.javascript.Token;
+import org.mozilla.javascript.ast.Jump;
 
 class Block {
 
@@ -95,9 +94,9 @@ class Block {
         typeFlow(fn, statementNodes, theBlocks, varTypes);
 
         if (DEBUG) {
-            for (int i = 0; i < theBlocks.length; i++) {
-                System.out.println("For block " + theBlocks[i].itsBlockID);
-                theBlocks[i].printLiveOnEntrySet(fn);
+            for (Block theBlock : theBlocks) {
+                System.out.println("For block " + theBlock.itsBlockID);
+                theBlock.printLiveOnEntrySet(fn);
             }
             System.out.println("Variable Table, size = " + varCount);
             for (int i = 0; i != varCount; i++) {
@@ -114,7 +113,7 @@ class Block {
 
     private static Block[] buildBlocks(Node[] statementNodes) {
         // a mapping from each target node to the block it begins
-        Map<Node, FatBlock> theTargetBlocks = new HashMap<Node, FatBlock>();
+        Map<Node, FatBlock> theTargetBlocks = new HashMap<>();
         ObjArray theBlocks = new ObjArray();
 
         // there's a block that starts at index 0
@@ -211,8 +210,7 @@ class Block {
         PrintWriter pw = new PrintWriter(sw);
 
         pw.println(blockList.length + " Blocks");
-        for (int i = 0; i < blockList.length; i++) {
-            Block b = blockList[i];
+        for (Block b : blockList) {
             pw.println("#" + b.itsBlockID);
             pw.println(
                     "from "
@@ -247,22 +245,22 @@ class Block {
     }
 
     private static void reachingDefDataFlow(
-            OptFunctionNode fn, Node[] statementNodes, Block theBlocks[], int[] varTypes) {
+            OptFunctionNode fn, Node[] statementNodes, Block[] theBlocks, int[] varTypes) {
         /*
             initialize the liveOnEntry and liveOnExit sets, then discover the variables
             that are def'd by each function, and those that are used before being def'd
             (hence liveOnEntry)
         */
-        for (int i = 0; i < theBlocks.length; i++) {
-            theBlocks[i].initLiveOnEntrySets(fn, statementNodes);
+        for (Block theBlock : theBlocks) {
+            theBlock.initLiveOnEntrySets(fn, statementNodes);
         }
         /*
             this visits every block starting at the last, re-adding the predecessors of
             any block whose inputs change as a result of the dataflow.
             REMIND, better would be to visit in CFG postorder
         */
-        boolean visit[] = new boolean[theBlocks.length];
-        boolean doneOnce[] = new boolean[theBlocks.length];
+        boolean[] visit = new boolean[theBlocks.length];
+        boolean[] doneOnce = new boolean[theBlocks.length];
         int vIndex = theBlocks.length - 1;
         boolean needRescan = false;
         visit[vIndex] = true;
@@ -271,10 +269,10 @@ class Block {
                 doneOnce[vIndex] = true;
                 visit[vIndex] = false;
                 if (theBlocks[vIndex].doReachedUseDataFlow()) {
-                    Block pred[] = theBlocks[vIndex].itsPredecessors;
+                    Block[] pred = theBlocks[vIndex].itsPredecessors;
                     if (pred != null) {
-                        for (int i = 0; i < pred.length; i++) {
-                            int index = pred[i].itsBlockID;
+                        for (Block block : pred) {
+                            int index = block.itsBlockID;
                             visit[index] = true;
                             needRescan |= (index > vIndex);
                         }
@@ -302,9 +300,9 @@ class Block {
     }
 
     private static void typeFlow(
-            OptFunctionNode fn, Node[] statementNodes, Block theBlocks[], int[] varTypes) {
-        boolean visit[] = new boolean[theBlocks.length];
-        boolean doneOnce[] = new boolean[theBlocks.length];
+            OptFunctionNode fn, Node[] statementNodes, Block[] theBlocks, int[] varTypes) {
+        boolean[] visit = new boolean[theBlocks.length];
+        boolean[] doneOnce = new boolean[theBlocks.length];
         int vIndex = 0;
         boolean needRescan = false;
         visit[vIndex] = true;
@@ -313,10 +311,10 @@ class Block {
                 doneOnce[vIndex] = true;
                 visit[vIndex] = false;
                 if (theBlocks[vIndex].doTypeFlow(fn, statementNodes, varTypes)) {
-                    Block succ[] = theBlocks[vIndex].itsSuccessors;
+                    Block[] succ = theBlocks[vIndex].itsSuccessors;
                     if (succ != null) {
-                        for (int i = 0; i < succ.length; i++) {
-                            int index = succ[i].itsBlockID;
+                        for (Block block : succ) {
+                            int index = block.itsBlockID;
                             visit[index] = true;
                             needRescan |= (index < vIndex);
                         }
@@ -433,8 +431,8 @@ class Block {
     private boolean doReachedUseDataFlow() {
         itsLiveOnExitSet.clear();
         if (itsSuccessors != null) {
-            for (int i = 0; i < itsSuccessors.length; i++) {
-                itsLiveOnExitSet.or(itsSuccessors[i].itsLiveOnEntrySet);
+            for (Block itsSuccessor : itsSuccessors) {
+                itsLiveOnExitSet.or(itsSuccessor.itsLiveOnEntrySet);
             }
         }
         return updateEntrySet(

@@ -11,7 +11,7 @@ package org.mozilla.javascript;
  *
  * <p>It is based on the C source files jsscan.c and jsscan.h in the jsref package.
  *
- * @see Parser
+ * @see org.mozilla.javascript.Parser
  * @author Mike McCabe
  * @author Brendan Eich
  */

@@ -6,10 +6,13 @@
 
 package org.mozilla.javascript.ast;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import org.mozilla.javascript.Node;
 import org.mozilla.javascript.Token;
-
-import java.util.*;
 
 /**
  * Represents a scope in the lexical scope chain. Base type for all {@link AstNode} implementations
@@ -70,7 +73,7 @@ public class Scope extends Jump {
      */
     public void addChildScope(Scope child) {
         if (childScopes == null) {
-            childScopes = new ArrayList<Scope>();
+            childScopes = new ArrayList<>();
         }
         childScopes.add(child);
         child.setParentScope(this);
@@ -189,7 +192,7 @@ public class Scope extends Jump {
 
     private Map<String, Symbol> ensureSymbolTable() {
         if (symbolTable == null) {
-            symbolTable = new LinkedHashMap<String, Symbol>(5);
+            symbolTable = new LinkedHashMap<>(5);
         }
         return symbolTable;
     }
@@ -201,7 +204,7 @@ public class Scope extends Jump {
      *     this method is called after the code generator begins the tree transformation.
      */
     public List<AstNode> getStatements() {
-        List<AstNode> stmts = new ArrayList<AstNode>();
+        List<AstNode> stmts = new ArrayList<>();
         Node n = getFirstChild();
         while (n != null) {
             stmts.add((AstNode) n);

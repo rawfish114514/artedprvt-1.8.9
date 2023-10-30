@@ -4,14 +4,13 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
+import java.net.URI;
+import java.util.LinkedList;
+import java.util.List;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.commonjs.module.ModuleScript;
 import org.mozilla.javascript.commonjs.module.ModuleScriptProvider;
-
-import java.net.URI;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * A multiplexer for module script providers.
@@ -28,11 +27,11 @@ public class MultiModuleScriptProvider implements ModuleScriptProvider {
      * @param providers the providers to multiplex.
      */
     public MultiModuleScriptProvider(Iterable<? extends ModuleScriptProvider> providers) {
-        final List<ModuleScriptProvider> l = new LinkedList<ModuleScriptProvider>();
+        final List<ModuleScriptProvider> l = new LinkedList<>();
         for (ModuleScriptProvider provider : providers) {
             l.add(provider);
         }
-        this.providers = l.toArray(new ModuleScriptProvider[l.size()]);
+        this.providers = l.toArray(new ModuleScriptProvider[0]);
     }
 
     @Override

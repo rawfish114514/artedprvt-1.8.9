@@ -6,9 +6,6 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.mapping.ClassRegisterer;
-import org.mozilla.javascript.mapping.MemberMapping;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,12 +17,7 @@ import java.math.BigInteger;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
-
-/*
-
-
-在此基础上修改
- */
+import java.util.Objects;
 
 /**
  * This class reflects non-Array Java objects into the JavaScript environment. It reflect fields
@@ -59,21 +51,8 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
         this.javaObject = javaObject;
         this.staticType = staticType;
         this.isAdapter = isAdapter;
-        if(javaObject==null||javaObject instanceof Class){
-            this.clas=(Class)javaObject;
-        }else{
-            this.clas=javaObject.getClass();
-        }
-        isMapping = ClassRegisterer.isMapping(scope,clas);
-        Thread t=Thread.currentThread();
-
-
         initMembers();
     }
-
-    public boolean isMapping;
-
-    public Class clas;
 
     protected void initMembers() {
         Class<?> dynamicType;
@@ -106,29 +85,6 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
 
     @Override
     public Object get(String name, Scriptable start) {
-        if(isMapping){
-            //转换为混淆名
-            MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
-            if(member!=null){
-                String srg = member.get(name);
-                if(!srg.equals("0")) {
-                    if(srg.contains("/")){
-                        try {
-                            return NativeJavaMethod2Srg.getNativeJavaMethod2Srg(clas,name,srg);
-                        } catch (NoSuchMethodException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                    Object obj=get_(srg);
-                    if(obj!=UniqueTag.NOT_FOUND){
-                        return obj;
-                    }
-                }
-            }
-        }
-        return get_(name);
-    }
-    public Object get_(String name){
         if (fieldAndMethods != null) {
             Object result = fieldAndMethods.get(name);
             if (result != null) {
@@ -155,27 +111,7 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     }
 
     @Override
-    public void put(String name, Scriptable start, Object value){
-
-        if(isMapping){
-            //转换为混淆名
-            MemberMapping member=ClassRegisterer.classMap.get(clas.getName());
-            if(member!=null){
-                String srg = member.get(name);
-                if(!srg.equals("0")) {
-                    String[] vs=srg.split("/");
-                    for(String v:vs) {
-                        put_(v,start,value);
-                        return;
-                        //对于赋值来说仅限于字段所以不存在重载
-                    }
-                }
-            }
-        }
-        put_(name,start,value);
-    }
-
-    public void put_(String name, Scriptable start, Object value) {
+    public void put(String name, Scriptable start, Object value) {
         // We could be asked to modify the value of a property in the
         // prototype. Since we can't add a property to a Java object,
         // we modify it in the prototype rather than copy it down.
@@ -539,7 +475,7 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
      * Not intended for public use. Callers should use the public API Context.toType.
      *
      * @deprecated as of 1.5 Release 4
-     * @see Context#jsToJava(Object, Class)
+     * @see org.mozilla.javascript.Context#jsToJava(Object, Class)
      */
     @Deprecated
     public static Object coerceType(Class<?> type, Object value) {
@@ -1002,7 +938,8 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
             if (!iterator.hasNext()) {
                 return Undefined.instance;
             }
-            return iterator.next();
+            Object obj = iterator.next();
+            return cx.getWrapFactory().wrap(cx, this, obj, obj == null ? null : obj.getClass());
         }
 
         @Override
@@ -1019,10 +956,10 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
     /** The parent scope of this object. */
     protected Scriptable parent;
 
-    public transient Object javaObject;
+    protected transient Object javaObject;
 
     protected transient Class<?> staticType;
-    public transient JavaMembers members;
+    protected transient JavaMembers members;
     private transient Map<String, FieldAndMethods> fieldAndMethods;
     protected transient boolean isAdapter;
 
@@ -1049,5 +986,17 @@ public class NativeJavaObject implements Scriptable, SymbolScriptable, Wrapper, 
                 adapter_readAdapterObject = null;
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null
+                && obj.getClass().equals(getClass())
+                && Objects.equals(((NativeJavaObject) obj).javaObject, javaObject);
+    }
+
+    @Override
+    public int hashCode() {
+        return javaObject == null ? 0 : javaObject.hashCode();
     }
 }

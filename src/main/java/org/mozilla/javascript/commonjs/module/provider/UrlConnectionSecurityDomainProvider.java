@@ -4,9 +4,8 @@
 
 package org.mozilla.javascript.commonjs.module.provider;
 
-import org.mozilla.javascript.Context;
-
 import java.net.URLConnection;
+import org.mozilla.javascript.Context;
 
 /**
  * Interface for URL connection based security domain providers. Used by {@link

@@ -6,12 +6,20 @@
 
 package org.mozilla.javascript.jdk18;
 
-import org.mozilla.javascript.*;
-
-import java.lang.reflect.*;
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
+import org.mozilla.javascript.InterfaceAdapter;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.VMBridge;
 
 public class VMBridge_jdk18 extends VMBridge {
-    private static final ThreadLocal<Object[]> contextLocal = new ThreadLocal<Object[]>();
+    private static final ThreadLocal<Object[]> contextLocal = new ThreadLocal<>();
 
     @Override
     protected Object getThreadContextHelper() {
@@ -65,7 +73,7 @@ public class VMBridge_jdk18 extends VMBridge {
         Class<?> cl = Proxy.getProxyClass(loader, interfaces);
         Constructor<?> c;
         try {
-            c = cl.getConstructor(new Class[] {InvocationHandler.class});
+            c = cl.getConstructor(InvocationHandler.class);
         } catch (NoSuchMethodException ex) {
             // Should not happen
             throw new IllegalStateException(ex);

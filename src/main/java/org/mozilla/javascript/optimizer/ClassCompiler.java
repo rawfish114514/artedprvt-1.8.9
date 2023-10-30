@@ -6,7 +6,12 @@
 
 package org.mozilla.javascript.optimizer;
 
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.CompilerEnvirons;
+import org.mozilla.javascript.IRFactory;
+import org.mozilla.javascript.JavaAdapter;
+import org.mozilla.javascript.ObjToIntMap;
+import org.mozilla.javascript.Parser;
+import org.mozilla.javascript.ScriptRuntime;
 import org.mozilla.javascript.ast.AstRoot;
 import org.mozilla.javascript.ast.FunctionNode;
 import org.mozilla.javascript.ast.ScriptNode;
@@ -69,7 +74,7 @@ public class ClassCompiler {
 
     /** Get the interfaces that the generated target will implement. */
     public Class<?>[] getTargetImplements() {
-        return targetImplements == null ? null : (Class[]) targetImplements.clone();
+        return targetImplements == null ? null : targetImplements.clone();
     }
 
     /**
@@ -79,7 +84,7 @@ public class ClassCompiler {
      *     extend
      */
     public void setTargetImplements(Class<?>[] implementsClasses) {
-        targetImplements = implementsClasses == null ? null : (Class[]) implementsClasses.clone();
+        targetImplements = implementsClasses == null ? null : implementsClasses.clone();
     }
 
     /**

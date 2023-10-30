@@ -11,7 +11,6 @@ public class Rhino implements Engine{
     static final RhinoServiceEngine SERVICE_ENGINE=new RhinoServiceEngine();
 
     public static void init(){
-        ClassCollection.load(McpToSrgString.getMcpToSrgString());
         Engines.reg(new Rhino());
     }
 

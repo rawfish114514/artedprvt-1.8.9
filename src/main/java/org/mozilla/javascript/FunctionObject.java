@@ -8,14 +8,13 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.commonjs.module.ModuleScope;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import org.mozilla.javascript.commonjs.module.ModuleScope;
 
 public class FunctionObject extends BaseFunction {
     private static final long serialVersionUID = -5332312783643935019L;
@@ -78,7 +77,7 @@ public class FunctionObject extends BaseFunction {
      * @param methodOrConstructor a java.lang.reflect.Method or a java.lang.reflect.Constructor that
      *     defines the object
      * @param scope enclosing scope of function
-     * @see Scriptable
+     * @see org.mozilla.javascript.Scriptable
      */
     public FunctionObject(String name, Member methodOrConstructor, Scriptable scope) {
         if (methodOrConstructor instanceof Constructor) {
@@ -264,8 +263,8 @@ public class FunctionObject extends BaseFunction {
         }
         Method[] result = new Method[count];
         int j = 0;
-        for (int i = 0; i < methods.length; i++) {
-            if (methods[i] != null) result[j++] = methods[i];
+        for (Method method : methods) {
+            if (method != null) result[j++] = method;
         }
         return result;
     }
@@ -279,26 +278,44 @@ public class FunctionObject extends BaseFunction {
      *
      * @param scope the scope in which to define the constructor (typically the global object)
      * @param prototype the prototype object
-     * @see Scriptable#setParentScope
-     * @see Scriptable#setPrototype
-     * @see Scriptable#getClassName
+     * @see org.mozilla.javascript.Scriptable#setParentScope
+     * @see org.mozilla.javascript.Scriptable#setPrototype
+     * @see org.mozilla.javascript.Scriptable#getClassName
      */
     public void addAsConstructor(Scriptable scope, Scriptable prototype) {
-        initAsConstructor(scope, prototype);
+        initAsConstructor(
+                scope,
+                prototype,
+                ScriptableObject.DONTENUM | ScriptableObject.PERMANENT | ScriptableObject.READONLY);
         defineProperty(scope, prototype.getClassName(), this, ScriptableObject.DONTENUM);
     }
 
-    void initAsConstructor(Scriptable scope, Scriptable prototype) {
-        ScriptRuntime.setFunctionProtoAndParent(this, scope);
+    /**
+     * Define this function as a JavaScript constructor.
+     *
+     * <p>Sets up the "prototype" and "constructor" properties. Also calls setParent and
+     * setPrototype with appropriate values. Then adds the function object as a property of the
+     * given scope, using <code>prototype.getClassName()</code> as the name of the property.
+     *
+     * @param scope the scope in which to define the constructor (typically the global object)
+     * @param prototype the prototype object
+     * @param attributes the attributes of the constructor property
+     * @see org.mozilla.javascript.Scriptable#setParentScope
+     * @see org.mozilla.javascript.Scriptable#setPrototype
+     * @see org.mozilla.javascript.Scriptable#getClassName
+     */
+    public void addAsConstructor(Scriptable scope, Scriptable prototype, int attributes) {
+        initAsConstructor(scope, prototype, attributes);
+        defineProperty(scope, prototype.getClassName(), this, ScriptableObject.DONTENUM);
+    }
+
+    void initAsConstructor(Scriptable scope, Scriptable prototype, int attributes) {
+        ScriptRuntime.setFunctionProtoAndParent(this, Context.getCurrentContext(), scope);
         setImmunePrototypeProperty(prototype);
 
         prototype.setParentScope(this);
 
-        defineProperty(
-                prototype,
-                "constructor",
-                this,
-                ScriptableObject.DONTENUM | ScriptableObject.PERMANENT | ScriptableObject.READONLY);
+        defineProperty(prototype, "constructor", this, attributes);
         setParentScope(scope);
     }
 
@@ -321,7 +338,7 @@ public class FunctionObject extends BaseFunction {
      *
      * <p>Implements Function.call.
      *
-     * @see Function#call( Context, Scriptable, Scriptable, Object[])
+     * @see org.mozilla.javascript.Function#call( Context, Scriptable, Scriptable, Object[])
      */
     @Override
     public Object call(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
@@ -437,7 +454,7 @@ public class FunctionObject extends BaseFunction {
         }
         Scriptable result;
         try {
-            result = (Scriptable) member.getDeclaringClass().newInstance();
+            result = (Scriptable) member.getDeclaringClass().getDeclaredConstructor().newInstance();
         } catch (Exception ex) {
             throw Context.throwAsScriptRuntimeEx(ex);
         }

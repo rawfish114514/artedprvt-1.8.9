@@ -6,11 +6,10 @@
 
 package org.mozilla.javascript.ast;
 
-import org.mozilla.javascript.Token;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.mozilla.javascript.Token;
 
 /**
  * Switch statement AST node type. Node type is {@link Token#SWITCH}.
@@ -31,7 +30,7 @@ import java.util.List;
 public class SwitchStatement extends Jump {
 
     private static final List<SwitchCase> NO_CASES =
-            Collections.unmodifiableList(new ArrayList<SwitchCase>());
+            Collections.unmodifiableList(new ArrayList<>());
 
     private AstNode expression;
     private List<SwitchCase> cases;
@@ -97,7 +96,7 @@ public class SwitchStatement extends Jump {
     public void addCase(SwitchCase switchCase) {
         assertNotNull(switchCase);
         if (cases == null) {
-            cases = new ArrayList<SwitchCase>();
+            cases = new ArrayList<>();
         }
         cases.add(switchCase);
         switchCase.setParent(this);

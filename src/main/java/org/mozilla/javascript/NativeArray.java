@@ -6,13 +6,21 @@
 
 package org.mozilla.javascript;
 
-import org.mozilla.javascript.regexp.NativeRegExp;
-import org.mozilla.javascript.xml.XMLObject;
+import static org.mozilla.javascript.ScriptRuntimeES6.requireObjectCoercible;
 
 import java.io.Serializable;
-import java.util.*;
-
-import static org.mozilla.javascript.ScriptRuntimeES6.requireObjectCoercible;
+import java.util.AbstractList;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+import org.mozilla.javascript.regexp.NativeRegExp;
+import org.mozilla.javascript.xml.XMLObject;
 
 /**
  * This class implements the Array native object.
@@ -283,6 +291,18 @@ public class NativeArray extends IdScriptableObject implements List {
                 arity = 2;
                 s = "copyWithin";
                 break;
+            case Id_at:
+                arity = 1;
+                s = "at";
+                break;
+            case Id_flat:
+                arity = 0;
+                s = "flat";
+                break;
+            case Id_flatMap:
+                arity = 1;
+                s = "flatMap";
+                break;
             default:
                 throw new IllegalArgumentException(String.valueOf(id));
         }
@@ -330,7 +350,7 @@ public class NativeArray extends IdScriptableObject implements List {
                         if (args.length > 0) {
                             thisObj = ScriptRuntime.toObject(cx, scope, args[0]);
                             Object[] newArgs = new Object[args.length - 1];
-                            for (int i = 0; i < newArgs.length; i++) newArgs[i] = args[i + 1];
+                            System.arraycopy(args, 1, newArgs, 0, newArgs.length);
                             args = newArgs;
                         }
                         id = -id;
@@ -418,6 +438,15 @@ public class NativeArray extends IdScriptableObject implements List {
 
                 case Id_copyWithin:
                     return js_copyWithin(cx, scope, thisObj, args);
+
+                case Id_at:
+                    return js_at(cx, scope, thisObj, args);
+
+                case Id_flat:
+                    return js_flat(cx, scope, thisObj, args);
+
+                case Id_flatMap:
+                    return js_flatMap(cx, scope, thisObj, args);
 
                 case Id_every:
                 case Id_filter:
@@ -619,7 +648,7 @@ public class NativeArray extends IdScriptableObject implements List {
 
     public List<Integer> getIndexIds() {
         Object[] ids = getIds();
-        List<Integer> indices = new ArrayList<Integer>(ids.length);
+        List<Integer> indices = new ArrayList<>(ids.length);
         for (Object id : ids) {
             int int32Id = ScriptRuntime.toInt32(id);
             if (int32Id >= 0
@@ -699,7 +728,7 @@ public class NativeArray extends IdScriptableObject implements List {
 
         super.defineOwnProperty(cx, id, desc, checkValid);
 
-        if (id instanceof String && ((String) id).equals("length")) {
+        if ("length".equals(id)) {
             lengthAttr =
                     getAttributes("length"); // Update cached attributes value for length property
         }
@@ -819,8 +848,16 @@ public class NativeArray extends IdScriptableObject implements List {
         final Scriptable result =
                 callConstructorOrCreateArray(cx, scope, thisObj, args.length, true);
 
-        for (int i = 0; i < args.length; i++) {
-            defineElem(cx, result, i, args[i]);
+        if (cx.getLanguageVersion() >= Context.VERSION_ES6 && result instanceof ScriptableObject) {
+            ScriptableObject desc = ScriptableObject.buildDataDescriptor(result, null, EMPTY);
+            for (int i = 0; i < args.length; i++) {
+                desc.put("value", desc, args[i]);
+                ((ScriptableObject) result).defineOwnProperty(cx, i, desc);
+            }
+        } else {
+            for (int i = 0; i < args.length; i++) {
+                defineElem(cx, result, i, args[i]);
+            }
         }
         setLengthProperty(cx, result, args.length);
 
@@ -891,8 +928,7 @@ public class NativeArray extends IdScriptableObject implements List {
             if (length - longVal > 0x1000) {
                 // assume that the representation is sparse
                 Object[] e = getIds(); // will only find in object itself
-                for (int i = 0; i < e.length; i++) {
-                    Object id = e[i];
+                for (Object id : e) {
                     if (id instanceof String) {
                         // > MAXINT will appear as string
                         String strId = (String) id;
@@ -929,7 +965,7 @@ public class NativeArray extends IdScriptableObject implements List {
             return ((NativeArray) obj).getLength();
         }
         if (obj instanceof XMLObject) {
-            Callable lengthFunc = (Callable) ((XMLObject) obj).get("length", obj);
+            Callable lengthFunc = (Callable) obj.get("length", obj);
             return ((Number) lengthFunc.call(cx, obj, obj, ScriptRuntime.emptyArgs)).longValue();
         }
 
@@ -990,6 +1026,14 @@ public class NativeArray extends IdScriptableObject implements List {
             target.put(id, target, value);
         } else {
             target.put((int) index, target, value);
+        }
+    }
+
+    private static void defineElemOrThrow(Context cx, Scriptable target, long index, Object value) {
+        if (index > NativeNumber.MAX_SAFE_INTEGER) {
+            throw ScriptRuntime.typeErrorById("msg.arraylength.too.big", String.valueOf(index));
+        } else {
+            defineElem(cx, target, index, value);
         }
     }
 
@@ -1102,6 +1146,27 @@ public class NativeArray extends IdScriptableObject implements List {
             else result.append(']');
         }
         return result.toString();
+    }
+
+    private static Function getCallbackArg(Context cx, Object callbackArg) {
+        if (!(callbackArg instanceof Function)) {
+            throw ScriptRuntime.notFunctionError(callbackArg);
+        }
+        if (cx.getLanguageVersion() >= Context.VERSION_ES6
+                && (callbackArg instanceof NativeRegExp)) {
+            // Previously, it was allowed to pass RegExp instance as a callback (it implements
+            // Function)
+            // But according to ES2015 21.2.6 Properties of RegExp Instances:
+            // > RegExp instances are ordinary objects that inherit properties from the RegExp
+            // prototype object.
+            // > RegExp instances have internal slots [[RegExpMatcher]], [[OriginalSource]], and
+            // [[OriginalFlags]].
+            // so, no [[Call]] for RegExp-s
+            throw ScriptRuntime.notFunctionError(callbackArg);
+        }
+
+        Function f = (Function) callbackArg;
+        return f;
     }
 
     /** See ECMA 15.4.4.3 */
@@ -1261,8 +1326,8 @@ public class NativeArray extends IdScriptableObject implements List {
         if (o instanceof NativeArray) {
             NativeArray na = (NativeArray) o;
             if (na.denseOnly && na.ensureCapacity((int) na.length + args.length)) {
-                for (int i = 0; i < args.length; i++) {
-                    na.dense[(int) na.length++] = args[i];
+                for (Object arg : args) {
+                    na.dense[(int) na.length++] = arg;
                     na.modCount++;
                 }
                 return ScriptRuntime.wrapNumber(na.length);
@@ -1373,9 +1438,7 @@ public class NativeArray extends IdScriptableObject implements List {
             NativeArray na = (NativeArray) o;
             if (na.denseOnly && na.ensureCapacity((int) na.length + args.length)) {
                 System.arraycopy(na.dense, 0, na.dense, args.length, (int) na.length);
-                for (int i = 0; i < args.length; i++) {
-                    na.dense[i] = args[i];
-                }
+                System.arraycopy(args, 0, na.dense, 0, args.length);
                 na.length += args.length;
                 na.modCount++;
                 return ScriptRuntime.wrapNumber(na.length);
@@ -1579,6 +1642,10 @@ public class NativeArray extends IdScriptableObject implements List {
             Context cx, Scriptable result, Scriptable arg, long offset) {
         long srclen = getLengthProperty(cx, arg);
         long newlen = srclen + offset;
+
+        if (newlen > NativeNumber.MAX_SAFE_INTEGER) {
+            throw ScriptRuntime.typeErrorById("msg.arraylength.too.big", newlen);
+        }
 
         // First, optimize for a pair of native, dense arrays
         if ((newlen <= Integer.MAX_VALUE) && (result instanceof NativeArray)) {
@@ -1954,6 +2021,100 @@ public class NativeArray extends IdScriptableObject implements List {
         return thisObj;
     }
 
+    private static Object js_at(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+        Scriptable o = ScriptRuntime.toObject(cx, scope, thisObj);
+        long len = getLengthProperty(cx, o);
+
+        long relativeIndex = 0;
+        if (args.length >= 1) {
+            relativeIndex = (long) ScriptRuntime.toInteger(args[0]);
+        }
+        long k = (relativeIndex >= 0) ? relativeIndex : len + relativeIndex;
+        if ((k < 0) || (k >= len)) {
+            return Undefined.instance;
+        }
+        return getElem(cx, thisObj, k);
+    }
+
+    private static Object js_flat(Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+        Scriptable o = ScriptRuntime.toObject(cx, scope, thisObj);
+        double depth;
+        if (args.length < 1 || Undefined.isUndefined(args[0])) {
+            depth = 1;
+        } else {
+            depth = ScriptRuntime.toInteger(args[0]);
+        }
+
+        return flat(cx, scope, o, depth);
+    }
+
+    private static Scriptable flat(Context cx, Scriptable scope, Scriptable source, double depth) {
+        long length = getLengthProperty(cx, source);
+
+        Scriptable result;
+        result = cx.newArray(scope, 0);
+        long j = 0;
+        for (long i = 0; i < length; i++) {
+            Object elem = getRawElem(source, i);
+            if (elem == Scriptable.NOT_FOUND) {
+                continue;
+            }
+            if (depth >= 1 && js_isArray(elem)) {
+                Scriptable arr = flat(cx, scope, (Scriptable) elem, depth - 1);
+                long arrLength = getLengthProperty(cx, arr);
+                for (long k = 0; k < arrLength; k++) {
+                    Object temp = getRawElem(arr, k);
+                    defineElemOrThrow(cx, result, j++, temp);
+                }
+            } else {
+                defineElemOrThrow(cx, result, j++, elem);
+            }
+        }
+        setLengthProperty(cx, result, j);
+        return result;
+    }
+
+    private static Object js_flatMap(
+            Context cx, Scriptable scope, Scriptable thisObj, Object[] args) {
+        Scriptable o = ScriptRuntime.toObject(cx, scope, thisObj);
+        Object callbackArg = args.length > 0 ? args[0] : Undefined.instance;
+
+        Function f = getCallbackArg(cx, callbackArg);
+        Scriptable parent = ScriptableObject.getTopLevelScope(f);
+        Scriptable thisArg;
+        if (args.length < 2 || args[1] == null || args[1] == Undefined.instance) {
+            thisArg = parent;
+        } else {
+            thisArg = ScriptRuntime.toObject(cx, scope, args[1]);
+        }
+
+        long length = getLengthProperty(cx, o);
+
+        Scriptable result;
+        result = cx.newArray(scope, 0);
+        long j = 0;
+        for (long i = 0; i < length; i++) {
+            Object elem = getRawElem(o, i);
+            if (elem == Scriptable.NOT_FOUND) {
+                continue;
+            }
+            Object[] innerArgs = new Object[] {elem, Long.valueOf(i), o};
+            Object mapCall = f.call(cx, parent, thisArg, innerArgs);
+            if (js_isArray(mapCall)) {
+                Scriptable arr = (Scriptable) mapCall;
+                long arrLength = getLengthProperty(cx, arr);
+                for (long k = 0; k < arrLength; k++) {
+                    Object temp = getRawElem(arr, k);
+                    defineElemOrThrow(cx, result, j++, temp);
+                }
+            } else {
+                defineElemOrThrow(cx, result, j++, mapCall);
+            }
+        }
+        setLengthProperty(cx, result, j);
+        return result;
+    }
+
     /** Implements the methods "every", "filter", "forEach", "map", and "some". */
     private static Object iterativeMethod(
             Context cx,
@@ -1979,23 +2140,8 @@ public class NativeArray extends IdScriptableObject implements List {
         }
 
         Object callbackArg = args.length > 0 ? args[0] : Undefined.instance;
-        if (callbackArg == null || !(callbackArg instanceof Function)) {
-            throw ScriptRuntime.notFunctionError(callbackArg);
-        }
-        if (cx.getLanguageVersion() >= Context.VERSION_ES6
-                && (callbackArg instanceof NativeRegExp)) {
-            // Previously, it was allowed to pass RegExp instance as a callback (it implements
-            // Function)
-            // But according to ES2015 21.2.6 Properties of RegExp Instances:
-            // > RegExp instances are ordinary objects that inherit properties from the RegExp
-            // prototype object.
-            // > RegExp instances have internal slots [[RegExpMatcher]], [[OriginalSource]], and
-            // [[OriginalFlags]].
-            // so, no [[Call]] for RegExp-s
-            throw ScriptRuntime.notFunctionError(callbackArg);
-        }
 
-        Function f = (Function) callbackArg;
+        Function f = getCallbackArg(cx, callbackArg);
         Scriptable parent = ScriptableObject.getTopLevelScope(f);
         Scriptable thisArg;
         if (args.length < 2 || args[1] == null || args[1] == Undefined.instance) {
@@ -2533,6 +2679,15 @@ public class NativeArray extends IdScriptableObject implements List {
             case "copyWithin":
                 id = Id_copyWithin;
                 break;
+            case "at":
+                id = Id_at;
+                break;
+            case "flat":
+                id = Id_flat;
+                break;
+            case "flatMap":
+                id = Id_flatMap;
+                break;
             default:
                 id = 0;
                 break;
@@ -2571,7 +2726,10 @@ public class NativeArray extends IdScriptableObject implements List {
             Id_entries = 29,
             Id_includes = 30,
             Id_copyWithin = 31,
-            SymbolId_iterator = 32,
+            Id_at = 32,
+            Id_flat = 33,
+            Id_flatMap = 34,
+            SymbolId_iterator = 35,
             MAX_PROTOTYPE_ID = SymbolId_iterator;
     private static final int ConstructorId_join = -Id_join,
             ConstructorId_reverse = -Id_reverse,

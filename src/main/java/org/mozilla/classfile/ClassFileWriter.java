@@ -6,14 +6,13 @@
 
 package org.mozilla.classfile;
 
-import org.mozilla.javascript.Kit;
-import org.mozilla.javascript.ObjArray;
-import org.mozilla.javascript.UintMap;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import org.mozilla.javascript.Kit;
+import org.mozilla.javascript.ObjArray;
+import org.mozilla.javascript.UintMap;
 
 /**
  * ClassFileWriter
@@ -1562,8 +1561,7 @@ public class ClassFileWriter {
             executeWorkList();
 
             // Replace dead code with no-ops.
-            for (int i = 0; i < superBlocks.length; i++) {
-                SuperBlock sb = superBlocks[i];
+            for (SuperBlock sb : superBlocks) {
                 if (!sb.isInitialized()) {
                     killSuperBlock(sb);
                 }
@@ -4408,7 +4406,7 @@ public class ClassFileWriter {
 
         final byte[] code;
 
-        BootstrapEntry(MHandle bsm, Object... bsmArgs) {
+        BootstrapEntry(ClassFileWriter.MHandle bsm, Object... bsmArgs) {
             int length = 2 + 2 + bsmArgs.length * 2;
             code = new byte[length];
             putInt16(itsConstantPool.addMethodHandle(bsm), code, 0);
