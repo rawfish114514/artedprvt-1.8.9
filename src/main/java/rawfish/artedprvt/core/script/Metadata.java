@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * 脚本配置
  */
-public class ScriptInfo {
-    private ScriptInfo(){}
+public class Metadata {
+    private Metadata(){}
 
     private String name="Example";
     private String id="example";
@@ -81,26 +81,26 @@ public class ScriptInfo {
      * @param str
      * @return
      */
-    public static ScriptInfo parse(String str){
-        ScriptInfo scriptInfo=null;
+    public static Metadata parse(String str){
+        Metadata metadata =null;
         Map<String,Object> result=Toml.read(str);
         Object infoVersion=result.get("info");
         if(infoVersion==null){
             infoVersion="1";
         }
         if(infoVersion.equals("1")){
-            scriptInfo=parse1(result);
+            metadata =parse1(result);
         }
-        return scriptInfo;
+        return metadata;
     }
 
     /**
      * 检查脚本配置是否合法
-     * @param scriptInfo
+     * @param metadata
      * @throws Exception
      */
-    public static void inspect(ScriptInfo scriptInfo) throws Exception{
-        String name=scriptInfo.getName();
+    public static void inspect(Metadata metadata) throws Exception{
+        String name= metadata.getName();
         if(name.length()>24){
             ScriptExceptions.exception(SES.ses8, "name");
         }
@@ -111,15 +111,15 @@ public class ScriptInfo {
      * @param map
      * @return
      */
-    public static ScriptInfo parse1(Map<String,Object> map){
-        ScriptInfo scriptInfo=new ScriptInfo();
-        scriptInfo.name=String.valueOf(map.get("name"));
-        scriptInfo.id=String.valueOf(map.get("id"));
-        scriptInfo.version=String.valueOf(map.get("version"));
-        scriptInfo.mcversion=String.valueOf(map.get("mcversion"));
-        scriptInfo.module=String.valueOf(map.get("module"));
-        scriptInfo.author=String.valueOf(map.get("author"));
-        scriptInfo.description=String.valueOf(map.get("description")).replace("\r","").trim();
-        return scriptInfo;
+    public static Metadata parse1(Map<String,Object> map){
+        Metadata metadata =new Metadata();
+        metadata.name=String.valueOf(map.get("name"));
+        metadata.id=String.valueOf(map.get("id"));
+        metadata.version=String.valueOf(map.get("version"));
+        metadata.mcversion=String.valueOf(map.get("mcversion"));
+        metadata.module=String.valueOf(map.get("module"));
+        metadata.author=String.valueOf(map.get("author"));
+        metadata.description=String.valueOf(map.get("description")).replace("\r","").trim();
+        return metadata;
     }
 }

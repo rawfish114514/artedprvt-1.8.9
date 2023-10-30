@@ -49,7 +49,7 @@ public class CommandInstall extends Command {
             return;
         }
         String id=args.get(0);
-        File file=new File(WorkSpace.derivation(WorkSpace.AAR,id));
+        File file=new File(WorkSpace.derivation(CommandAar.AAR,id));
         install(file,id);
     }
 

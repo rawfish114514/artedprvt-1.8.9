@@ -1,7 +1,5 @@
 package rawfish.artedprvt.core.script;
 
-import rawfish.artedprvt.core.script.ScriptProcess;
-
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDate;

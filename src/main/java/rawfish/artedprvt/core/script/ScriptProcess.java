@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.command.commands.CommandAar;
 import rawfish.artedprvt.core.*;
 import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.script.engine.*;
@@ -27,7 +28,7 @@ public class ScriptProcess extends Process {
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
     private List<String> scriptArgument;//脚本参数
-    private ScriptInfo scriptInfo;//脚本配置
+    private Metadata metadata;//脚本配置
     private ScriptLogger scriptLogger;//脚本日志记录器
     private List<ScriptEngine> engines;//引擎列表
     private MainThread mainThread;//主线程
@@ -65,15 +66,15 @@ public class ScriptProcess extends Process {
         this.scriptArgument=scriptArgument;
 
         String aarinfo=fileLoader.getContent("aar.toml");
-        scriptInfo=ScriptInfo.parse(aarinfo);
-        ScriptInfo.inspect(scriptInfo);
+        metadata = Metadata.parse(aarinfo);
+        Metadata.inspect(metadata);
 
-        name= scriptInfo.getName();
+        name= metadata.getName();
         icon= loadIcon(fileLoader.getInputStream("icon.png"));
 
         synchronized (ScriptProcess.class) {
             LocalDate localDate = LocalDate.now();
-            File logDir = new File(workSpace.toDerivation(WorkSpace.LOG,localDate.getYear() + "-"
+            File logDir = new File(workSpace.toDerivation(CommandAar.LOG,localDate.getYear() + "-"
                     + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth()));
             logDir.mkdirs();
             int logFileNumber = logDir.list().length;
@@ -363,8 +364,8 @@ public class ScriptProcess extends Process {
         return scriptArgument;
     }
 
-    public ScriptInfo getScriptInfo() {
-        return scriptInfo;
+    public Metadata getScriptInfo() {
+        return metadata;
     }
 
     public ScriptLogger getScriptLogger() {

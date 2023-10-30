@@ -47,18 +47,7 @@ public class WorkSpace {
 
     public static final Function<String[],String> LIB=strings -> "/lib";
 
-    public static final Function<String[],String> AAR=strings -> "/lib/"+strings[0]+".aar";
-
     public static final Function<String[],String> SRC=strings -> "/src";
-
-    public static final Function<String[],String> SCRIPT=strings -> "/src/script";
-
-    public static final Function<String[],String> LITERAL=strings -> "/src/literal."+strings[0];
-
-    public static final Function<String[],String> LOG=strings -> "/.artedprvt/logs/"+strings[0];
-
-
-
 
 
     public static void init(){

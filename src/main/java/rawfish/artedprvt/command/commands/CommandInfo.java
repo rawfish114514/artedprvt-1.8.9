@@ -5,7 +5,7 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.script.ScriptInfo;
+import rawfish.artedprvt.core.script.Metadata;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
@@ -54,34 +54,34 @@ public class CommandInfo extends Command {
 
     public void processPack(String pack) throws Exception {
         if (pack.equals("<src>")) {
-            ScriptInfo info = readSrcInfo();
+            Metadata info = readSrcInfo();
             printInfo(info,"<src>");
         } else {
-            ScriptInfo info= readAarInfo(pack);
+            Metadata info= readAarInfo(pack);
             printInfo(info,pack+".aar");
         }
     }
 
-    public ScriptInfo readAarInfo(String pack) throws Exception {
-        FileLoader fileLoader=new AarFileLoader(WorkSpace.derivation(WorkSpace.AAR,pack));
+    public Metadata readAarInfo(String pack) throws Exception {
+        FileLoader fileLoader=new AarFileLoader(WorkSpace.derivation(CommandAar.AAR,pack));
         String aarinfo=fileLoader.getContent("aar.toml");
-        ScriptInfo scriptInfo=ScriptInfo.parse(aarinfo);
-        ScriptInfo.inspect(scriptInfo);
-        return scriptInfo;
+        Metadata metadata = Metadata.parse(aarinfo);
+        Metadata.inspect(metadata);
+        return metadata;
     }
 
-    public ScriptInfo readSrcInfo() throws Exception {
+    public Metadata readSrcInfo() throws Exception {
         FileLoader fileLoader=new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC));
         String aarinfo=fileLoader.getContent("aar.toml");
-        ScriptInfo scriptInfo=ScriptInfo.parse(aarinfo);
-        ScriptInfo.inspect(scriptInfo);
-        return scriptInfo;
+        Metadata metadata = Metadata.parse(aarinfo);
+        Metadata.inspect(metadata);
+        return metadata;
     }
 
-    public void printInfo(ScriptInfo info,String entry){
+    public void printInfo(Metadata info, String entry){
         CommandMessages.printChat.print("§6>§f"+entry, new ChatProvider() {
-            public ScriptInfo info;
-            public ChatProvider setInfo(ScriptInfo info){
+            public Metadata info;
+            public ChatProvider setInfo(Metadata info){
                 this.info=info;
                 return this;
             }
@@ -128,7 +128,7 @@ public class CommandInfo extends Command {
         if(args.get(0).equals("<src>")){
             return Literals.formatListBuilder().append("6");
         }
-        File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+        File aar = new File(WorkSpace.derivation(CommandAar.AAR,args.get(0)));
         if(aar.isFile()){
             return Literals.formatListBuilder().append("6");
         }else{
@@ -145,7 +145,7 @@ public class CommandInfo extends Command {
             if(args.get(0).equals("<src>")){
                 return Literals.emptyInfo();
             }
-            File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+            File aar = new File(WorkSpace.derivation(CommandAar.AAR,args.get(0)));
             if(aar.isFile()){
                 return Literals.emptyInfo();
             }

@@ -54,7 +54,7 @@ public class CommandExtract extends Command {
             return;
         }
         String fd=WorkSpace.dir();
-        int code=unzip(WorkSpace.derivation(WorkSpace.AAR,pack),WorkSpace.derivation(WorkSpace.SRC));
+        int code=unzip(WorkSpace.derivation(CommandAar.AAR,pack),WorkSpace.derivation(WorkSpace.SRC));
 
         if(code==0){
             CommandMessages.key(getName(), CMS.cms9);
@@ -84,7 +84,7 @@ public class CommandExtract extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+        File aar = new File(WorkSpace.derivation(CommandAar.AAR,args.get(0)));
         FormatHandlerListBuilder fl=Literals.formatListBuilder();
         if(aar.isFile()){
             fl.append("6");
@@ -101,7 +101,7 @@ public class CommandExtract extends Command {
             if(args.get(0).isEmpty()){
                 return Literals.infoBuilder().string(CIS.cis5);
             }
-            File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+            File aar = new File(WorkSpace.derivation(CommandAar.AAR,args.get(0)));
             if(aar.isFile()){
                 return Literals.emptyInfo();
             }

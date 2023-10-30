@@ -311,7 +311,7 @@ public class ScriptSystem {
      * 获取脚本配置信息
      * @return
      */
-    public ScriptInfo getInfo(){
+    public Metadata getInfo(){
         return process.getScriptInfo();
     }
 

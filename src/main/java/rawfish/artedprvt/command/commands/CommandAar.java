@@ -20,6 +20,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -30,6 +31,8 @@ import java.util.zip.ZipInputStream;
  * 从aar文件创建脚本进程
  */
 public class CommandAar extends Command {
+    public static final Function<String[],String> AAR= strings -> "/lib/"+strings[0]+".aar";
+    public static final Function<String[],String> LOG= strings -> "/.artedprvt/logs/"+strings[0];
     public Pattern packPattern=Pattern.compile("(([^\\/]+\\/)*)([^\\/]+)");
 
     public CommandAar(String commandName) {
@@ -51,7 +54,7 @@ public class CommandAar extends Command {
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {
-            ScriptProcess scriptProcess=new ScriptProcess(new AarFileLoader(WorkSpace.derivation(WorkSpace.AAR,pack)),scriptArgs);
+            ScriptProcess scriptProcess=new ScriptProcess(new AarFileLoader(WorkSpace.derivation(AAR,pack)),scriptArgs);
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace(System.err);
@@ -101,7 +104,7 @@ public class CommandAar extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+        File aar = new File(WorkSpace.derivation(AAR,args.get(0)));
         FormatHandlerListBuilder fl=Literals.formatListBuilder();
         if(aar.isFile()){
             fl.append("6");
@@ -143,7 +146,7 @@ public class CommandAar extends Command {
             if(args.get(0).isEmpty()){
                 return Literals.infoBuilder().string(CIS.cis5);
             }
-            File aar = new File(WorkSpace.derivation(WorkSpace.AAR,args.get(0)));
+            File aar = new File(WorkSpace.derivation(AAR,args.get(0)));
             if(aar.isFile()){
                 return Literals.emptyInfo();
             }
@@ -243,7 +246,7 @@ public class CommandAar extends Command {
     }
 
     public String readLiteralFile(String pack, String abbr) throws Exception{
-        File file=new File(WorkSpace.derivation(WorkSpace.AAR,pack));
+        File file=new File(WorkSpace.derivation(AAR,pack));
         String target="literal."+abbr;
         if(file.isFile()){
             boolean t=false;
