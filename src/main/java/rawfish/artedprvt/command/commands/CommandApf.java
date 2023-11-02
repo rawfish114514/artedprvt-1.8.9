@@ -22,7 +22,6 @@ public class CommandApf extends Command {
 
         commandList.add(new CommandAar("aar"));
         commandList.add(new CommandAc("ac"));
-        commandList.add(new CommandAd("ad"));
         commandList.add(new CommandBuild("build"));
         commandList.add(new CommandExtract("extract"));
         commandList.add(new CommandIn("in"));
@@ -33,7 +32,6 @@ public class CommandApf extends Command {
         commandList.add(new CommandScript("script"));
         commandList.add(new CommandStops("stops"));
         commandList.add(new CommandStt("stt"));
-        commandList.add(new CommandTm("tm"));
         commandList.add(new CommandWorkspace("workspace"));
     }
 
@@ -101,7 +99,7 @@ public class CommandApf extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()==1&&args.get(0).isEmpty()){
-            return Literals.infoBuilder().string(CIS.cis4);
+            return Literals.infoFactory().string(CIS.cis4);
         }
         Command c=null;
         for(Command command:commandList){
@@ -110,7 +108,7 @@ public class CommandApf extends Command {
             }
         }
         if(c==null){
-            return Literals.infoBuilder().string(CIS.cis0);
+            return Literals.infoFactory().string(CIS.cis0);
         }
         List<String> sargs=args.subList(1,args.size());
         if(sargs.size()>0) {

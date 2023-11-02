@@ -32,7 +32,6 @@ import java.util.zip.ZipInputStream;
  */
 public class CommandAar extends Command {
     public static final Function<String[],String> AAR= strings -> "/lib/"+strings[0]+".aar";
-    public static final Function<String[],String> LOG= strings -> "/.artedprvt/logs/"+strings[0];
     public Pattern packPattern=Pattern.compile("(([^\\/]+\\/)*)([^\\/]+)");
 
     public CommandAar(String commandName) {
@@ -89,7 +88,7 @@ public class CommandAar extends Command {
                             for(Object obj:(Collection)result){
                                 stringList.add(String.valueOf(obj));
                             }
-                            return startWith(args,new ArrayList<>(stringList));
+                            return new ArrayList<>(stringList);
                         }else{
                             return Literals.emptyComplete();
                         }
@@ -144,13 +143,13 @@ public class CommandAar extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CIS.cis5);
+                return Literals.infoFactory().string(CIS.cis5);
             }
             File aar = new File(WorkSpace.derivation(AAR,args.get(0)));
             if(aar.isFile()){
                 return Literals.emptyInfo();
             }
-            return Literals.infoBuilder().string(CIS.cis1);
+            return Literals.infoFactory().string(CIS.cis1);
         }
         /*信息脚本参数*/
         literal(args.get(0),false);
@@ -163,7 +162,7 @@ public class CommandAar extends Command {
                         if(result instanceof InfoHandler){
                             return (InfoHandler) result;
                         }
-                        return Literals.infoBuilder().string(String.valueOf(result));
+                        return Literals.infoFactory().string(String.valueOf(result));
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
@@ -275,13 +274,5 @@ public class CommandAar extends Command {
         }else{
             return null;
         }
-    }
-
-    public List<String> startWith(List<String> args,List<String> cs){
-        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
-        if(ns.size()>0){
-            return ns;
-        }
-        return cs;
     }
 }

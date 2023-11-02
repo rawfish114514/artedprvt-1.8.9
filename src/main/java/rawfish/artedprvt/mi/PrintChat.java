@@ -1,6 +1,7 @@
 package rawfish.artedprvt.mi;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiIngame;
 import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
@@ -33,7 +34,14 @@ public class PrintChat implements ScriptObject {
             logger=process.getScriptLogger();
         }
         if(Environment.MCCLIENT) {
-            guiNewChat = Minecraft.getMinecraft().ingameGUI.getChatGUI();
+            Minecraft minecraft=Minecraft.getMinecraft();
+            if(minecraft!=null){
+                GuiIngame guiIngame=minecraft.ingameGUI;
+                if(guiIngame!=null){
+
+                    guiNewChat = guiIngame.getChatGUI();
+                }
+            }
         }else {
             guiNewChat=null;
         }

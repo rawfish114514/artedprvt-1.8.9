@@ -11,6 +11,7 @@ import rawfish.artedprvt.command.util.Literals;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CommandAdapter extends CommandBase {
     private final Command command;
@@ -44,7 +45,8 @@ public class CommandAdapter extends CommandBase {
     @Override
     public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos){
         if(!(sender.getEntityWorld() instanceof WorldServer)){
-            return command.complete(Arrays.asList(args));
+            List<String> argList=Arrays.asList(args);
+            return startWith(argList,command.complete(argList));
         }
         return Literals.emptyComplete();
     }
@@ -52,5 +54,14 @@ public class CommandAdapter extends CommandBase {
     @Override
     public int getRequiredPermissionLevel() {
         return 0;
+    }
+
+
+    public List<String> startWith(List<String> args,List<String> cs){
+        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
+        if(ns.size()>0){
+            return ns;
+        }
+        return cs;
     }
 }

@@ -68,17 +68,6 @@ public class UserOptions {
         Localization.load();
     }
 
-    public static void updateFile() throws Exception{
-        File file=new File(path);
-        if(file.isFile()){
-            String string=Toml.writeToString(options);
-            Writer writer=new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
-            writer.write(string);
-            writer.flush();
-            writer.close();
-        }
-    }
-
     public static void loadDefault(){
         options =new HashMap<>(defaultMap);
     }

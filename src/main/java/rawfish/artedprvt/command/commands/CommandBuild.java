@@ -75,7 +75,7 @@ public class CommandBuild extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>0&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CIS.cis3);
+            return Literals.infoFactory().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

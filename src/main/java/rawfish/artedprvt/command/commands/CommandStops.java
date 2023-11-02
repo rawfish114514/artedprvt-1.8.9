@@ -5,7 +5,7 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.ProcessController;
+import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.localization.types.CIS;
@@ -26,7 +26,7 @@ public class CommandStops extends Command {
     public void process(List<String> args) {
         if(args.size()==0){
             //全部
-            List<? extends Process> processList= ProcessController.getProcessList();
+            List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
             for(Process process:processList){
                 process.stop(Process.STOPS);
             }
@@ -37,7 +37,7 @@ public class CommandStops extends Command {
             //选择
             String arg=args.get(0);
             int n=0;
-            List<? extends Process> processList= ProcessController.getProcessList();
+            List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
             for(Process process:processList){
                 if(String.valueOf(process.getPid()).equals(arg)){
                     process.stop(Process.STOPS);
@@ -70,14 +70,14 @@ public class CommandStops extends Command {
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.trim().isEmpty()){
-                List<? extends Process> processList= ProcessController.getProcessList();
+                List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
                 List<String> l=new ArrayList<>();
                 for(Process process:processList){
                     l.add(String.valueOf(process.getPid()));
                 }
                 return l;
             }
-            List<? extends Process> processList= ProcessController.getProcessList();
+            List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
             List<String> l=new ArrayList<>();
             for(Process process:processList){
                 String s=String.valueOf(process.getPid());
@@ -107,10 +107,10 @@ public class CommandStops extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()>1){
-            return Literals.infoBuilder().string(CIS.cis3);
+            return Literals.infoFactory().string(CIS.cis3);
         }
         if(args.get(0).isEmpty()){
-            return Literals.infoBuilder().string(CIS.cis7);
+            return Literals.infoFactory().string(CIS.cis7);
         }
         return Literals.emptyInfo();
     }

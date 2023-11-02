@@ -140,7 +140,7 @@ public class CommandInfo extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CIS.cis5);
+                return Literals.infoFactory().string(CIS.cis5);
             }
             if(args.get(0).equals("<src>")){
                 return Literals.emptyInfo();
@@ -149,7 +149,7 @@ public class CommandInfo extends Command {
             if(aar.isFile()){
                 return Literals.emptyInfo();
             }
-            return Literals.infoBuilder().string(CIS.cis1);
+            return Literals.infoFactory().string(CIS.cis1);
         }
         return Literals.emptyInfo();
     }

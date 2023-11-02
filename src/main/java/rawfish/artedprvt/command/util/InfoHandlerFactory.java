@@ -7,7 +7,7 @@ import rawfish.artedprvt.command.infos.InfoHandlerString;
 
 import java.util.Map;
 
-public class InfoHandlerBuilder {
+public class InfoHandlerFactory {
     public InfoHandler empty(){
         return new InfoHandlerEmpty();
     }

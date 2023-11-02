@@ -14,7 +14,7 @@ public class DebugInfo {
         if(isf3) {
             StringBuilder sb = new StringBuilder();
 
-            List<? extends Process> proList = ProcessController.getProcessList();
+            List<? extends Process> proList = CoreInitializer.getProcessController().getProcessList();
             Process pro;
 
             int p=proList.size();
@@ -30,15 +30,10 @@ public class DebugInfo {
             sb.append(version);
             sb.append(" ");
 
-            if(ScriptSystem.B_CHAT){
-                sb.append("§aC§r");
+            if(ScriptSystem.CHAT_SWITCH){
+                sb.append("§aS§r");
             }else{
-                sb.append("C");
-            }
-            if(ScriptSystem.B_DEBUG){
-                sb.append("§aD§r");
-            }else{
-                sb.append("D");
+                sb.append("S");
             }
             sb.append(" ");
 

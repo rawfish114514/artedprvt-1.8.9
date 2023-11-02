@@ -37,11 +37,6 @@ public class Literals {
         return new FormatHandlerListBuilder();
     }
 
-    private static InfoHandlerBuilder infoHandlerBuilder=new InfoHandlerBuilder();
-    public static InfoHandlerBuilder infoBuilder(){
-        return infoHandlerBuilder;
-    }
-
     public static FormatHandlerMapBuilder formatMapBuilder(){
         return new FormatHandlerMapBuilder();
     }
@@ -50,6 +45,15 @@ public class Literals {
         return new InfoHandlerMapBuilder();
     }
 
+    private static InfoHandlerFactory infoHandlerFactory=new InfoHandlerFactory();
+    public static InfoHandlerFactory infoFactory(){
+        return infoHandlerFactory;
+    }
+
+    private static FormatHandlerFactory formatHandlerFactory=new FormatHandlerFactory();
+    public static FormatHandlerFactory formatFactory(){
+        return formatHandlerFactory;
+    }
 
 
     public static FormatHandler format(Function function){

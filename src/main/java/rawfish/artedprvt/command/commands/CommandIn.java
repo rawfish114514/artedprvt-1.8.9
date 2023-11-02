@@ -36,6 +36,6 @@ public class CommandIn extends Command {
 
     @Override
     public InfoHandler info(List<String> args) {
-        return Literals.infoBuilder().string(CIS.cis10);
+        return Literals.infoFactory().string(CIS.cis10);
     }
 }

@@ -139,15 +139,15 @@ public class CommandWorkspace extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
-            return Literals.infoBuilder().map(
+            return Literals.infoFactory().map(
                     Literals.infoMapBuilder()
-                            .puts("current",Literals.infoBuilder().string("当前"))
-                            .puts("create",Literals.infoBuilder().string("构建"))
-                            .puts("set",Literals.infoBuilder().string("设置")),
-                    Literals.infoBuilder().empty());
+                            .puts("current",Literals.infoFactory().string("当前"))
+                            .puts("create",Literals.infoFactory().string("构建"))
+                            .puts("set",Literals.infoFactory().string("设置")),
+                    Literals.infoFactory().empty());
         }
         if(args.size()>2&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CIS.cis3);
+            return Literals.infoFactory().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

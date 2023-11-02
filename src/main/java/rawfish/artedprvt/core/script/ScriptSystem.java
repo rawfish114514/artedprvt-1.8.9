@@ -26,117 +26,107 @@ public class ScriptSystem {
         logger=process.getScriptLogger();
         fileLoader=process.getFileLoader();
         printChat=new PrintChat();
-        printChat.isLog=false;
         printChat.longtime=true;
     }
 
     /**
-     * 打印类型
+     * 聊天信息类型
      */
     public static final int
     CHAT=0,
     DEBUG=1,
-    HIGH=2,
-    DISPLAY=3;
+    DISPLAY=2;
 
     /**
-     * 打印开关
+     * 开关
      */
-    public static boolean
-    B_CHAT=true,
-    B_DEBUG=false;
+    public static boolean CHAT_SWITCH =false;
+
+    /**
+     * 打印
+     * @param type 聊天信息类型
+     * @param chat 聊天信息
+     */
+    public void print(int type,String chat){
+        if(type==CHAT){
+            if(CHAT_SWITCH){
+                logger.info(chat);
+                printChat.print(chat);
+                return;
+            }
+        }
+        if(type==DEBUG){
+            chat=getDebugHead()+chat;
+            if(CHAT_SWITCH){
+                logger.info(chat);
+                printChat.print(chat);
+                return;
+            }
+        }
+        if(type==DISPLAY){
+            if(CHAT_SWITCH){
+                printChat.print(chat);
+                return;
+            }
+        }
+    }
+
+    /**
+     * 打印
+     * @param type 聊天信息类型
+     * @param chat 聊天信息
+     * @param hover 悬浮聊天信息
+     */
+    public void print(int type,String chat,String hover){
+        if(type==CHAT){
+            if(CHAT_SWITCH){
+                logger.info(chat);
+                printChat.print(chat,hover);
+                return;
+            }
+        }
+        if(type==DEBUG){
+            chat=getDebugHead()+chat;
+            if(CHAT_SWITCH){
+                logger.info(chat);
+                printChat.print(chat,hover);
+                return;
+            }
+        }
+        if(type==DISPLAY){
+            if(CHAT_SWITCH){
+                printChat.print(chat,hover);
+                return;
+            }
+        }
+    }
 
     /**
      * 打印
      * @param type 打印类型
      * @param chat 聊天信息
-     */
-    public void print(int type,String chat){
-        if(type==CHAT){
-            logger.info(chat);
-            if(B_CHAT){
-                printChat.print(chat);
-                return;
-            }
-        }
-        if(type==DEBUG){
-            chat=getDebugHead()+chat;
-            if(B_DEBUG){
-                printChat.print(chat);
-                return;
-            }
-        }
-        if(type==HIGH){
-            printChat.print(chat);
-            return;
-        }
-        if(type==DISPLAY){
-            if(B_CHAT||B_DEBUG){
-                printChat.print(chat);
-            }
-        }
-    }
-
-    /**
-     * 打印
-     * @param type 打印类型
-     * @param chat 聊天消息
-     * @param hover 悬浮聊天消息
-     */
-    public void print(int type,String chat,String hover){
-        if(type==CHAT){
-            logger.info(chat);
-            if(B_CHAT){
-                printChat.print(chat,hover);
-                return;
-            }
-        }
-        if(type==DEBUG){
-            chat=getDebugHead()+chat;
-            if(B_DEBUG){
-                printChat.print(chat,hover);
-                return;
-            }
-        }
-        if(type==HIGH){
-            printChat.print(chat,hover);
-            return;
-        }
-        if(type==DISPLAY){
-            if(B_CHAT||B_DEBUG){
-                printChat.print(chat,hover);
-            }
-        }
-    }
-
-    /**
-     * 打印
-     * @param type 打印类型
-     * @param chat 聊天消息
-     * @param hover 悬浮聊天消息供应商
+     * @param hover 悬浮聊天信息供应商
      */
     public void print(int type,String chat, ChatProvider hover){
         if(type==CHAT){
-            logger.info(chat);
-            if(B_CHAT){
+            if(CHAT_SWITCH){
+                logger.info(chat);
                 printChat.print(chat,hover);
                 return;
             }
         }
         if(type==DEBUG){
             chat=getDebugHead()+chat;
-            if(B_DEBUG){
+            if(CHAT_SWITCH){
+                logger.info(chat);
                 printChat.print(chat,hover);
                 return;
             }
         }
-        if(type==HIGH){
-            printChat.print(chat,hover);
-            return;
-        }
         if(type==DISPLAY){
-            if(B_CHAT||B_DEBUG){
+            if(CHAT_SWITCH){
                 printChat.print(chat,hover);
+                return;
             }
         }
     }

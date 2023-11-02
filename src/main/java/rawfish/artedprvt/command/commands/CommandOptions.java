@@ -37,11 +37,6 @@ public class CommandOptions extends Command {
                 //加载
                 UserOptions.load();
                 CommandMessages.key(getName(),CMS.cms27);
-                try {
-                    UserOptions.updateFile();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
                 return;
             }
             Object value= UserOptions.getValue(key);
@@ -62,7 +57,7 @@ public class CommandOptions extends Command {
             }else{
                 UserOptions.setValue(key,value);
                 try {
-                    UserOptions.updateFile();
+                    UserOptions.writeToFile();
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -76,13 +71,13 @@ public class CommandOptions extends Command {
         if(args.size()==1) {
             List<String> list= new ArrayList<>(UserOptions.options.keySet());
             list.add("load");
-            return startWith(args,list);
+            return list;
         }else if(args.size()==2) {
             List<String> vs= UserOptions.getValues(args.get(0));
             if(vs==null){
                 return Literals.emptyComplete();
             }
-            return startWith(args,new ArrayList<>(vs));
+            return new ArrayList<>(vs);
         }
         return Literals.emptyComplete();
     }
@@ -105,21 +100,21 @@ public class CommandOptions extends Command {
         if(args.size()==1){
             String key=args.get(0);
             if(key.isEmpty()){
-                return Literals.infoBuilder().string(CIS.cis8);
+                return Literals.infoFactory().string(CIS.cis8);
             }
             if(key.equals("load")){
-                return Literals.infoBuilder().string(CIS.cis11);
+                return Literals.infoFactory().string(CIS.cis11);
             }
             Object value= UserOptions.getValue(key);
             if(value==null){
-                return Literals.infoBuilder().string(CIS.cis9);
+                return Literals.infoFactory().string(CIS.cis9);
             }else{
                 /*key info*/
                 if(key.equals("language")){
-                    return Literals.infoBuilder().string("语言");
+                    return Literals.infoFactory().string("语言");
                 }
                 if(key.equals("repository")){
-                    return Literals.infoBuilder().string("存储库路径");
+                    return Literals.infoFactory().string("存储库路径");
                 }
             }
         }
@@ -127,16 +122,8 @@ public class CommandOptions extends Command {
 
         }
         if(args.size()>2){
-            return Literals.infoBuilder().string(CIS.cis3);
+            return Literals.infoFactory().string(CIS.cis3);
         }
         return Literals.emptyInfo();
-    }
-
-    public List<String> startWith(List<String> args,List<String> cs){
-        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
-        if(ns.size()>0){
-            return ns;
-        }
-        return cs;
     }
 }

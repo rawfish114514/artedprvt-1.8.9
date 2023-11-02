@@ -99,13 +99,13 @@ public class CommandExtract extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1){
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CIS.cis5);
+                return Literals.infoFactory().string(CIS.cis5);
             }
             File aar = new File(WorkSpace.derivation(CommandAar.AAR,args.get(0)));
             if(aar.isFile()){
                 return Literals.emptyInfo();
             }
-            return Literals.infoBuilder().string(CIS.cis1);
+            return Literals.infoFactory().string(CIS.cis1);
         }
         return Literals.emptyInfo();
     }

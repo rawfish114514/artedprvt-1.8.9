@@ -1,21 +1,22 @@
 package rawfish.artedprvt.core.script;
 
-import rawfish.artedprvt.command.commands.CommandAar;
-import rawfish.artedprvt.core.*;
+import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.Process;
-import rawfish.artedprvt.core.script.engine.*;
+import rawfish.artedprvt.core.WorkSpace;
+import rawfish.artedprvt.core.script.engine.ScriptEngine;
+import rawfish.artedprvt.core.script.engine.ScriptStackParser;
 import rawfish.artedprvt.core.script.rhino.RhinoEngine;
 import rawfish.artedprvt.core.script.rhino.RhinoStackParser;
-import rawfish.artedprvt.core.script.struct.*;
+import rawfish.artedprvt.core.script.struct.AarFileLoader;
+import rawfish.artedprvt.core.script.struct.FileLoader;
+import rawfish.artedprvt.core.script.struct.ScriptLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.List;
  * 进程
  */
 public class ScriptProcess extends Process {
+    public static final ProcessIdLevel SCRIPT_PROCESS_ID_LEVEL=new ProcessIdLevel(0,4095);
     private WorkSpace workSpace;
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
@@ -73,13 +75,56 @@ public class ScriptProcess extends Process {
         icon= loadIcon(fileLoader.getInputStream("icon.png"));
 
         synchronized (ScriptProcess.class) {
-            LocalDate localDate = LocalDate.now();
-            File logDir = new File(workSpace.toDerivation(CommandAar.LOG,localDate.getYear() + "-"
-                    + localDate.getMonth().getValue() + "-" + localDate.getDayOfMonth()));
-            logDir.mkdirs();
-            int logFileNumber = logDir.list().length;
-            File logFile = new File(logDir.getPath() + "/" + logFileNumber + "." + name.substring(name.indexOf(':')+1) + ".txt");
-            scriptLogger = new ScriptLogger(this,localDate,Files.newOutputStream(logFile.toPath()));
+            LocalDate localDate=LocalDate.now();
+            scriptLogger = new ScriptLogger(
+                    this,
+                    localDate,
+                    CoreInitializer.getLogFileController().openLog(
+                            workSpace,
+                            localDate,
+                            name.substring(name.indexOf(':')+1)));
+        }
+
+
+        engines=new ArrayList<>();
+        engines.add(new RhinoEngine(this));
+
+        stackParsers=new ArrayList<>();
+        stackParsers.add(new RhinoStackParser());
+
+        exceptionHandler=new ScriptExceptionHandler(this);
+
+        scriptObjects=new ArrayList<>();
+        scriptObjectNumber=0;
+    }
+
+    public ScriptProcess(String pack,FileLoader fileLoader,List<String> scriptArgument) throws Exception{
+        super();
+
+        ret=CREATE;
+        workSpace=WorkSpace.currentWorkSpace();
+        this.fileLoader=fileLoader;
+        scriptLoader=new ScriptLoader(fileLoader);
+        this.scriptArgument=scriptArgument;
+
+        String aarinfo=fileLoader.getContent("aar.toml");
+        metadata = Metadata.parse(aarinfo);
+        metadata.setModule(pack);
+        metadata.setName(pack);
+        Metadata.inspect(metadata);
+
+        name= metadata.getName();
+        icon= loadIcon(fileLoader.getInputStream("icon.png"));
+
+        synchronized (ScriptProcess.class) {
+            LocalDate localDate=LocalDate.now();
+            scriptLogger = new ScriptLogger(
+                    this,
+                    localDate,
+                    CoreInitializer.getLogFileController().openLog(
+                            workSpace,
+                            localDate,
+                            name.substring(name.indexOf(':')+1)));
         }
 
 
@@ -110,6 +155,11 @@ public class ScriptProcess extends Process {
         return loadDefaultIcon();
     }
 
+
+    @Override
+    public ProcessIdLevel pidLevel() {
+        return SCRIPT_PROCESS_ID_LEVEL;
+    }
 
     /**
      * 准备工作并运行
@@ -189,7 +239,7 @@ public class ScriptProcess extends Process {
     private void printStart(){
         String s="§3run:§r "+name;
         scriptLogger.natives(s);
-        scriptSystem.print(ScriptSystem.DISPLAY,"§3run:§r "+name);
+        scriptSystem.print(ScriptSystem.CHAT,"§3run:§r "+name);
     }
 
     private void printEnd(int status,long runtime){
@@ -216,7 +266,7 @@ public class ScriptProcess extends Process {
             }
         }
         scriptLogger.natives(s);
-        scriptSystem.print(ScriptSystem.DISPLAY,s,stat);
+        scriptSystem.print(ScriptSystem.CHAT,s,stat);
     }
 
 

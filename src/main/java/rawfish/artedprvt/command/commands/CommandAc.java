@@ -21,28 +21,36 @@ public class CommandAc extends Command {
 
     @Override
     public void process(List<String> args) {
-        if(args.size()>0){
-            CommandMessages.exception(getName(), CMS.cms0);
+        if(args.size()>1){
+            CommandMessages.exception(getName(), CMS.cms16);
             return;
         }
-        ScriptSystem.B_CHAT=!ScriptSystem.B_CHAT;
-        CommandMessages.key(getName(),CMS.cms12,ScriptSystem.B_CHAT);
+        if(args.size()==1){
+            ScriptSystem.CHAT_SWITCH =Boolean.valueOf(args.get(0));
+        }else{
+            ScriptSystem.CHAT_SWITCH =!ScriptSystem.CHAT_SWITCH;
+        }
+        CommandMessages.key(getName(),CMS.cms12,ScriptSystem.CHAT_SWITCH);
     }
 
     @Override
     public List<String> complete(List<String> args) {
-        return Literals.emptyComplete();
+        return Literals.stringListBuilder().adds("true","false");
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        return Literals.emptyFormat();
+        return Literals.formatListBuilder().set(
+                Literals.stringListBuilder().adds("true","false"),
+                Literals.formatFactory().append("9"),
+                Literals.formatFactory().append("c")
+        );
     }
 
     @Override
     public InfoHandler info(List<String> args) {
-        if(args.size()>0&&(!args.get(0).isEmpty())){
-            return Literals.infoBuilder().string(CIS.cis3);
+        if(args.size()>1){
+            return Literals.infoFactory().string(CIS.cis3);
         }
         return Literals.emptyInfo();
     }

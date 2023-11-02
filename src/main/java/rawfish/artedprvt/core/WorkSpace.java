@@ -62,4 +62,8 @@ public class WorkSpace {
     public static WorkSpace currentWorkSpace(){
         return workSpace;
     }
+
+    public static WorkSpace defaultWorkSpace(){
+        return defaultWorkSpace;
+    }
 }

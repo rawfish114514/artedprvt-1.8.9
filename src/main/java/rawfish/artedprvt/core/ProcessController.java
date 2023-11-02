@@ -3,23 +3,15 @@ package rawfish.artedprvt.core;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProcessController {
-    private static Thread thread=null;
-
-    public static Thread getThread(){
-        return thread;
+public class ProcessController extends SystemProcess{
+    public ProcessController() {
+        super("ProcessController");
     }
 
-    public static synchronized void init(){
-        if(thread==null){
-            thread=new Thread(ProcessController::control);
-            thread.setName("ProcessControllerThread");
-            thread.start();
-        }
-    }
-
-    private static void control(){
+    @Override
+    public void run() {
         while(true){
+            //清除死进程
             for (int i = 0; i < processes.length; i++) {
                 if(processes[i]!=null&&processes[i].getRet()== Process.END){
                     processes[i]=null;
@@ -33,15 +25,46 @@ public class ProcessController {
         }
     }
 
-    private static final Process[] processes=new Process[256];
+    /**
+     * 强制注册
+     * @return
+     */
+    @Override
+    protected int register(){
+        initProcesses();
+        processes[3072]=this;
+        return 3072;
+    }
+
+    private void initProcesses(){
+        if(processes==null){
+            processes=new Process[4096];
+        }
+    }
+
+    private Process[] processes;
+
+    private final ProcessIdLevel ALL=new ProcessIdLevel(0,4095);
 
     /**
      * 注册进程并获取PID
      * @param process
-     * @return [0,255]注册成功 -1注册失败
+     * @return [0,4095]注册成功 -1注册失败
      */
-    public static synchronized int registerProcess(Process process){
-        for (int i = 0; i < processes.length; i++) {
+    public synchronized int registerProcess(Process process){
+        return registerProcess(process,ALL);
+    }
+    /**
+     * 注册进程并获取PID
+     * @param process
+     * @param processIdLevel
+     * @return [0,4095]注册成功 -1注册失败
+     */
+    public synchronized int registerProcess(Process process,ProcessIdLevel processIdLevel){
+        if(!ALL.contain(processIdLevel)){
+            return -1;
+        }
+        for (int i = processIdLevel.START; i <= processIdLevel.END; i++) {
             if(processes[i]==null){
                 processes[i]=process;
                 return i;
@@ -50,7 +73,7 @@ public class ProcessController {
         return -1;
     }
 
-    public static List<? extends Process> getProcessList(){
+    public List<? extends Process> getProcessList(){
         List<Process> processList=new ArrayList<>();
         for (int i = 0; i < processes.length; i++) {
             if(processes[i]!=null){

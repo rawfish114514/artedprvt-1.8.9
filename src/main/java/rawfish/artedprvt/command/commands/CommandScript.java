@@ -1,16 +1,18 @@
 package rawfish.artedprvt.command.commands;
 
-import rawfish.artedprvt.command.*;
+import rawfish.artedprvt.command.Command;
+import rawfish.artedprvt.command.FormatHandler;
+import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.script.ScriptLanguage;
-import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.WorkSpace;
-import rawfish.artedprvt.core.script.engine.Engines;
-import rawfish.artedprvt.core.script.engine.ServiceEngine;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.core.script.ScriptLanguage;
+import rawfish.artedprvt.core.script.ScriptProcess;
+import rawfish.artedprvt.core.script.engine.Engines;
+import rawfish.artedprvt.core.script.engine.ServiceEngine;
 import rawfish.artedprvt.core.script.struct.SourceFileLoader;
 
 import java.io.File;
@@ -22,7 +24,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * 从src目录创建脚本进程
@@ -51,9 +52,7 @@ public class CommandScript extends Command {
         List<String> scriptArgs=args.subList(1,args.size());
 
         try {
-            ScriptProcess scriptProcess=new ScriptProcess(new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC)),scriptArgs);
-            scriptProcess.getScriptInfo().setModule(pack);
-            scriptProcess.setName(pack);
+            ScriptProcess scriptProcess=new ScriptProcess(pack,new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC)),scriptArgs);
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +87,7 @@ public class CommandScript extends Command {
                             for(Object obj:(Collection)result){
                                 stringList.add(String.valueOf(obj));
                             }
-                            return startWith(args,new ArrayList<>(stringList));
+                            return new ArrayList<>(stringList);
                         }else{
                             return Literals.emptyComplete();
                         }
@@ -148,7 +147,7 @@ public class CommandScript extends Command {
     public InfoHandler info(List<String> args) {
         if(args.size()==1) {
             if(args.get(0).isEmpty()){
-                return Literals.infoBuilder().string(CIS.cis6);
+                return Literals.infoFactory().string(CIS.cis6);
             }
             String a0 = args.get(0);
             List<String> all = complete(Literals.stringListBuilder().adds(""));
@@ -159,7 +158,7 @@ public class CommandScript extends Command {
                     return Literals.emptyInfo();
                 }
             }
-            return Literals.infoBuilder().string(CIS.cis2);
+            return Literals.infoFactory().string(CIS.cis2);
         }
         /*信息脚本参数*/
         literal(false);
@@ -172,7 +171,7 @@ public class CommandScript extends Command {
                         if(result instanceof InfoHandler){
                             return (InfoHandler) result;
                         }
-                        return Literals.infoBuilder().string(String.valueOf(result));
+                        return Literals.infoFactory().string(String.valueOf(result));
                     }
                 }catch (Exception e){
                     e.printStackTrace(System.err);
@@ -273,13 +272,5 @@ public class CommandScript extends Command {
         }else{
             return null;
         }
-    }
-
-    public List<String> startWith(List<String> args,List<String> cs){
-        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
-        if(ns.size()>0){
-            return ns;
-        }
-        return cs;
     }
 }

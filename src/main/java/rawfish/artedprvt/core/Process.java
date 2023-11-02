@@ -51,7 +51,7 @@ public abstract class Process {
 
     public Process(){
         ret=CREATE;
-        pid=ProcessController.registerProcess(this);
+        pid=register();
         if(pid==-1){
             throw new RuntimeException("注册进程失败");
         }
@@ -61,6 +61,12 @@ public abstract class Process {
         hasError=false;
         icon=loadDefaultIcon();
     }
+
+    protected int register(){
+        return CoreInitializer.getProcessController().registerProcess(this,pidLevel());
+    }
+
+    public abstract ProcessIdLevel pidLevel();
 
     /**
      * 启动进程
@@ -225,4 +231,18 @@ public abstract class Process {
     public static final int EXIT=0;
     public static final int ERROR=-1;
     public static final int STOPS=-2;
+
+    public static class ProcessIdLevel{
+        public final int START;
+        public final int END;
+
+        public ProcessIdLevel(int START, int END) {
+            this.START = START;
+            this.END = END;
+        }
+
+        public boolean contain(ProcessIdLevel target){
+            return START<=target.START&&END>=target.END;
+        }
+    }
 }
