@@ -82,4 +82,14 @@ public class ProcessController extends SystemProcess{
         }
         return processList;
     }
+
+    public <T extends Process> List<T> getProcessList(Class<T> clas){
+        List<T> processList=new ArrayList<>();
+        for (int i = 0; i < processes.length; i++) {
+            if(processes[i]!=null&&clas.isAssignableFrom(processes[i].getClass())){
+                processList.add((T)processes[i]);
+            }
+        }
+        return processList;
+    }
 }

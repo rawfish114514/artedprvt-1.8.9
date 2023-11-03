@@ -7,7 +7,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -49,8 +48,8 @@ public class LogFileController extends SystemProcess {
                 if (matcher.matches()) {
                     String dateStr = matcher.group();
                     LocalDate targetDate = LocalDate.parse(dateStr, dateFormatter);
-                    long monthDifference = ChronoUnit.MONTHS.between(currentDate, targetDate);
-                    if(monthDifference<0){
+                    int monthDifference = currentDate.getMonthValue()-targetDate.getMonthValue();
+                    if(monthDifference>0){
                         String year=yearFormatter.format(targetDate);
                         String month=monthFormatter.format(targetDate);
                         String key=year+"-"+month;

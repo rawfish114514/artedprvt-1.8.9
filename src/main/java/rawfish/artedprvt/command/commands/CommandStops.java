@@ -26,7 +26,7 @@ public class CommandStops extends Command {
     public void process(List<String> args) {
         if(args.size()==0){
             //全部
-            List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
+            List<ScriptProcess> processList= CoreInitializer.getProcessController().getProcessList(ScriptProcess.class);
             for(Process process:processList){
                 process.stop(Process.STOPS);
             }
@@ -37,8 +37,8 @@ public class CommandStops extends Command {
             //选择
             String arg=args.get(0);
             int n=0;
-            List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
-            for(Process process:processList){
+            List<ScriptProcess> processList= CoreInitializer.getProcessController().getProcessList(ScriptProcess.class);
+            for(ScriptProcess process:processList){
                 if(String.valueOf(process.getPid()).equals(arg)){
                     process.stop(Process.STOPS);
                     n++;
@@ -49,13 +49,11 @@ public class CommandStops extends Command {
                     n++;
                     continue;
                 }
-                if(process instanceof ScriptProcess) {
-                    ScriptProcess scriptProcess=(ScriptProcess) process;
-                    if (scriptProcess.getScriptInfo().getId().equals(arg)) {
-                        process.stop(Process.STOPS);
-                        n++;
-                    }
+                if (process.getScriptInfo().getId().equals(arg)) {
+                    process.stop(Process.STOPS);
+                    n++;
                 }
+
             }
             if(n==0){
                 CommandMessages.exception(getName(),CMS.cms15,arg);
@@ -70,16 +68,16 @@ public class CommandStops extends Command {
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.trim().isEmpty()){
-                List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
+                List<ScriptProcess> processList= CoreInitializer.getProcessController().getProcessList(ScriptProcess.class);
                 List<String> l=new ArrayList<>();
-                for(Process process:processList){
+                for(ScriptProcess process:processList){
                     l.add(String.valueOf(process.getPid()));
                 }
                 return l;
             }
-            List<? extends Process> processList= CoreInitializer.getProcessController().getProcessList();
+            List<ScriptProcess> processList= CoreInitializer.getProcessController().getProcessList(ScriptProcess.class);
             List<String> l=new ArrayList<>();
-            for(Process process:processList){
+            for(ScriptProcess process:processList){
                 String s=String.valueOf(process.getPid());
                 if(s.contains(arg)){
                     l.add(s);
@@ -88,11 +86,10 @@ public class CommandStops extends Command {
                 if(s.contains(arg)&&!l.contains(s)){
                     l.add(s);
                 }
-                /*
                 s=process.getScriptInfo().getId();
                 if(s.contains(arg)&&!l.contains(s)){
                     l.add(s);
-                }*/
+                }
             }
             return l;
         }

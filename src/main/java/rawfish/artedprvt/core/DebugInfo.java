@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core;
 
+import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.script.ScriptSystem;
 
 import java.util.List;
@@ -13,8 +14,7 @@ public class DebugInfo {
     public static String call(boolean isf3){
         if(isf3) {
             StringBuilder sb = new StringBuilder();
-
-            List<? extends Process> proList = CoreInitializer.getProcessController().getProcessList();
+            List<ScriptProcess> proList = CoreInitializer.getProcessController().getProcessList(ScriptProcess.class);
             Process pro;
 
             int p=proList.size();
