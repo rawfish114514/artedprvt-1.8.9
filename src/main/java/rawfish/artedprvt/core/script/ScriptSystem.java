@@ -1,15 +1,15 @@
 package rawfish.artedprvt.core.script;
 
-import rawfish.artedprvt.core.ClassGroupSystem;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.SES;
+import rawfish.artedprvt.core.script.engine.ScriptEngine;
 import rawfish.artedprvt.core.script.struct.FileLoader;
+import rawfish.artedprvt.core.script.struct.ScriptModule;
 import rawfish.artedprvt.mi.ChatProvider;
 import rawfish.artedprvt.mi.PrintChat;
-import rawfish.artedprvt.core.script.engine.ScriptEngine;
-import rawfish.artedprvt.core.script.struct.ScriptModule;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -214,10 +214,13 @@ public class ScriptSystem {
      * @param groupName 组名
      * @return
      */
-    public List<Class> importClassGroup(String groupName) {
-        List<Class> classes= ClassGroupSystem.get(groupName);
-        if(classes!=null){
-            return classes;
+    public Collection<Class> importClassGroup(String groupName) {
+        ClassGroup classGroup= ClassGroupSystem.get(groupName);
+        if(classGroup!=null){
+            Collection<Class> classes=classGroup.getClasses();
+            if(classes!=null){
+                return classes;
+            }
         }
         ScriptExceptions.exception(SES.ses10,groupName);
         return null;

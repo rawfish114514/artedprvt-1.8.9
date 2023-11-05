@@ -1,22 +1,22 @@
-package rawfish.artedprvt.core;
+package rawfish.artedprvt.core.script;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ClassGroupSystem {
-    private static Map<String, List<Class>> map=new LinkedHashMap<>();
+    private static Map<String, ClassGroup> map=new LinkedHashMap<>();
 
-    public static List<Class> get(String name){
+    public static ClassGroup get(String name){
         return map.get(name);
     }
 
     private static Pattern pattern= Pattern.compile("(([a-zA-Z_][0-9a-zA-Z_]*\\.)*)([a-zA-Z_][0-9a-zA-Z_]*)");
-    public static void reg(ClassGroup classGroup){
+    public static void add(ClassGroup classGroup){
         String name=classGroup.getName();
         Matcher matcher= pattern.matcher(name);
         if(matcher.matches()){
-            map.put(name, classGroup.getClasses());
+            map.put(name,classGroup);
         }
     }
 

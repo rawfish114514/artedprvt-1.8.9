@@ -10,7 +10,7 @@ import rawfish.artedprvt.core.UserOptions;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.script.engine.ScriptEngineInit;
 import rawfish.artedprvt.core.script.rhino.Rhino;
-import rawfish.artedprvt.mi.group.ClassGroupLoader;
+import rawfish.artedprvt.std.cgl.ClassGroupLoader;
 
 public class CommonProxy
 {
@@ -24,7 +24,7 @@ public class CommonProxy
         new EventLoader();
         WorkSpace.init();
         CoreInitializer.init();
-        ClassGroupLoader.reg();
+        ClassGroupLoader.load();
         UserOptions.load();
 
         ScriptEngineInit.init();

@@ -9,6 +9,9 @@
    id="svg1203"
    inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
    sodipodi:docname="logo.svg"
+   inkscape:export-filename="..\..\..\..\..\Users\Administrator\Desktop\0.png"
+   inkscape:export-xdpi="19.765768"
+   inkscape:export-ydpi="19.765768"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,21 +27,37 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      showgrid="false"
-     inkscape:zoom="2.0510461"
-     inkscape:cx="388.82598"
-     inkscape:cy="552.40104"
+     inkscape:zoom="1.122532"
+     inkscape:cx="517.57989"
+     inkscape:cy="571.03048"
      inkscape:window-width="1920"
      inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer3" />
   <defs
      id="defs1200" />
   <g
      inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="图层 3"
+     transform="translate(29.346147,-7.9069995)">
+    <rect
+       style="fill:none;stroke-width:1.48505"
+       id="rect357"
+       width="102.804"
+       height="102.804"
+       x="24.251425"
+       y="105.00385"
+       transform="translate(4.2798735e-4,0.00114623)" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
      id="layer2"
-     inkscape:label="图层 2">
+     inkscape:label="图层 2"
+     class="UnoptimicedTransforms"
+     transform="translate(4.2798756e-4,0.00114623)">
     <path
        id="rect564"
        style="fill:#d40000;stroke-width:0.264583"

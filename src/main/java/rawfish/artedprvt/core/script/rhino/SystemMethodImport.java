@@ -2,11 +2,11 @@ package rawfish.artedprvt.core.script.rhino;
 
 import org.mozilla.javascript.NativeJavaClass;
 import org.mozilla.javascript.Scriptable;
+import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.core.script.ScriptExceptions;
 import rawfish.artedprvt.core.script.ScriptSystem;
-import rawfish.artedprvt.core.localization.types.SES;
 
-import java.util.List;
+import java.util.Collection;
 
 public class SystemMethodImport extends SystemMethod{
     public SystemMethodImport(Scriptable scope,ScriptSystem scriptSystem) {
@@ -27,11 +27,9 @@ public class SystemMethodImport extends SystemMethod{
                 }
                 if(name.charAt(0)=='*'){
                     Scriptable scope=getScope();
-                    List<Class> classList=scriptSystem.importClassGroup(name.substring(1));
-                    Class clazz;
-                    for(int i=0;i<classList.size();i++){
-                        clazz=classList.get(i);
-                        scope.put(clazz.getSimpleName(),scope,new NativeJavaClass(scope,clazz));
+                    Collection<Class> classes=scriptSystem.importClassGroup(name.substring(1));
+                    for(Class clas:classes){
+                        scope.put(clas.getSimpleName(),scope,new NativeJavaClass(scope,clas));
                     }
                     return null;
                 }
