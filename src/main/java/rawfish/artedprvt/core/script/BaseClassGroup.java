@@ -7,8 +7,8 @@ public class BaseClassGroup implements ClassGroup{
     private final Set<Class> set;
 
     //super
-    public BaseClassGroup(String name){
-        this.name=name;
+    public BaseClassGroup(Object name){
+        this.name=String.valueOf(name);
         set=new HashSet<>();
     }
 

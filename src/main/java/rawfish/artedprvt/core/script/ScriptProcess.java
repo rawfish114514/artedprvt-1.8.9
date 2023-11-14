@@ -144,12 +144,12 @@ public class ScriptProcess extends Process {
         if(stream==null){
             return loadDefaultIcon();
         }
-        a:try {
+        try {
             BufferedImage image= ImageIO.read(stream);
             if(image==null||image.getHeight()!=16||image.getWidth()!=16){
-                break a;
+            }else {
+                return image;
             }
-            return image;
         } catch (IOException ignored) {
         }
         return loadDefaultIcon();
@@ -230,7 +230,11 @@ public class ScriptProcess extends Process {
         if(ret==END){
             return;
         }
-        closeScriptObject();
+        try {
+            closeScriptObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         ret=END;
         printEnd(exitCode,runningTime());
         scriptLogger.closeAll();
@@ -275,7 +279,7 @@ public class ScriptProcess extends Process {
         scriptObjectNumber++;
     }
 
-    public void closeScriptObject(){
+    public void closeScriptObject() throws Exception{
         ScriptObject scriptObject;
         for(int i=0;i<scriptObjects.size();){
             scriptObject=scriptObjects.get(i);

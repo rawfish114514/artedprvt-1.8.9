@@ -10,6 +10,10 @@ import java.lang.annotation.Target;
  * 在本地游戏和服务器
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE,ElementType.FIELD,ElementType.METHOD,ElementType.CONSTRUCTOR})
+@Target({
+        ElementType.TYPE,
+        ElementType.FIELD,
+        ElementType.METHOD,
+        ElementType.CONSTRUCTOR})
 public @interface ServerSideOnly {
 }

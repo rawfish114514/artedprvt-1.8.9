@@ -166,7 +166,7 @@ public class PrintChat implements ScriptObject {
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         if(!longtime) {
             guiNewChat = null;
         }
@@ -212,7 +212,7 @@ public class PrintChat implements ScriptObject {
         }
 
         @Override
-        public void onClose() {
+        public void close() {
             provider=null;
         }
     }

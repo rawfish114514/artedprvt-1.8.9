@@ -16,6 +16,10 @@ import java.lang.annotation.*;
  * @mcversion 1.8.9
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE,ElementType.FIELD,ElementType.METHOD,ElementType.CONSTRUCTOR})
+@Target({
+        ElementType.TYPE,
+        ElementType.FIELD,
+        ElementType.METHOD,
+        ElementType.CONSTRUCTOR})
 public @interface Solvable {
 }
