@@ -19,7 +19,7 @@ import java.util.Objects;
 @Solvable
 public class ChatConsole implements ScriptObject {
     private ScriptLogger logger=null;
-    private GuiNewChat guiNewChat=null;
+    private GuiNewChat MguiNewChat =null;
     private boolean log=true;
     private boolean longtime=false;
 
@@ -34,7 +34,7 @@ public class ChatConsole implements ScriptObject {
             if(Objects.nonNull(minecraft)){
                 GuiIngame guiIngame=minecraft.ingameGUI;
                 if(Objects.nonNull(guiIngame)){
-                    guiNewChat=guiIngame.getChatGUI();
+                    MguiNewChat =guiIngame.getChatGUI();
                 }
             }
         }
@@ -68,7 +68,7 @@ public class ChatConsole implements ScriptObject {
     @Solvable
     public ChatConsole delete(int id){
         synchronized (this) {
-            guiNewChat.deleteChatLine(id);
+            MguiNewChat.deleteChatLine(id);
         }
         return this;
     }
@@ -93,16 +93,16 @@ public class ChatConsole implements ScriptObject {
             return;
         }
         logger=null;
-        guiNewChat=null;
+        MguiNewChat =null;
     }
 
     private boolean isGuiNewChatNonnull(){
-        return Objects.nonNull(guiNewChat);
+        return Objects.nonNull(MguiNewChat);
     }
 
     private void printChat(IChatComponent chatComponent, int chatLineId){
         synchronized (this) {
-            guiNewChat.printChatMessageWithOptionalDeletion(chatComponent, chatLineId);
+            MguiNewChat.printChatMessageWithOptionalDeletion(chatComponent, chatLineId);
         }
     }
 

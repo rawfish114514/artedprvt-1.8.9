@@ -5,7 +5,7 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.script.Metadata;
+import rawfish.artedprvt.core.script.MetaData;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
@@ -40,12 +40,12 @@ public class CommandBuild extends Command {
             CommandMessages.exception(getName(),CMS.cms4);
             return;
         }
-        Metadata metadata;
+        MetaData metadata;
         try {
             FileLoader fileLoader = new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC));
             String aarinfo = fileLoader.getContent("aar.toml");
-            metadata = Metadata.parse(aarinfo);
-            Metadata.inspect(metadata);
+            metadata = MetaData.parse(aarinfo);
+            MetaData.inspect(metadata);
         }catch (Exception e){
             CommandMessages.exception(getName(),CMS.cms5);
             return;

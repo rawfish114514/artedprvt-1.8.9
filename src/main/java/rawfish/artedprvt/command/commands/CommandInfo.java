@@ -5,7 +5,7 @@ import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.script.Metadata;
+import rawfish.artedprvt.core.script.MetaData;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
@@ -54,34 +54,34 @@ public class CommandInfo extends Command {
 
     public void processPack(String pack) throws Exception {
         if (pack.equals("<src>")) {
-            Metadata info = readSrcInfo();
+            MetaData info = readSrcInfo();
             printInfo(info,"<src>");
         } else {
-            Metadata info= readAarInfo(pack);
+            MetaData info= readAarInfo(pack);
             printInfo(info,pack+".aar");
         }
     }
 
-    public Metadata readAarInfo(String pack) throws Exception {
+    public MetaData readAarInfo(String pack) throws Exception {
         FileLoader fileLoader=new AarFileLoader(WorkSpace.derivation(CommandAar.AAR,pack));
         String aarinfo=fileLoader.getContent("aar.toml");
-        Metadata metadata = Metadata.parse(aarinfo);
-        Metadata.inspect(metadata);
+        MetaData metadata = MetaData.parse(aarinfo);
+        MetaData.inspect(metadata);
         return metadata;
     }
 
-    public Metadata readSrcInfo() throws Exception {
+    public MetaData readSrcInfo() throws Exception {
         FileLoader fileLoader=new SourceFileLoader(WorkSpace.derivation(WorkSpace.SRC));
         String aarinfo=fileLoader.getContent("aar.toml");
-        Metadata metadata = Metadata.parse(aarinfo);
-        Metadata.inspect(metadata);
+        MetaData metadata = MetaData.parse(aarinfo);
+        MetaData.inspect(metadata);
         return metadata;
     }
 
-    public void printInfo(Metadata info, String entry){
+    public void printInfo(MetaData info, String entry){
         CommandMessages.printChat.print("§6>§f"+entry, new ChatProvider() {
-            public Metadata info;
-            public ChatProvider setInfo(Metadata info){
+            public MetaData info;
+            public ChatProvider setInfo(MetaData info){
                 this.info=info;
                 return this;
             }

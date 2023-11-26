@@ -30,7 +30,7 @@ public class ScriptProcess extends Process {
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
     private List<String> scriptArgument;//脚本参数
-    private Metadata metadata;//脚本配置
+    private MetaData metadata;//脚本配置
     private ScriptLogger scriptLogger;//脚本日志记录器
     private List<ScriptEngine> engines;//引擎列表
     private MainThread mainThread;//主线程
@@ -68,8 +68,8 @@ public class ScriptProcess extends Process {
         this.scriptArgument=scriptArgument;
 
         String aarinfo=fileLoader.getContent("aar.toml");
-        metadata = Metadata.parse(aarinfo);
-        Metadata.inspect(metadata);
+        metadata = MetaData.parse(aarinfo);
+        MetaData.inspect(metadata);
 
         name= metadata.getName();
         icon= loadIcon(fileLoader.getInputStream("icon.png"));
@@ -108,10 +108,10 @@ public class ScriptProcess extends Process {
         this.scriptArgument=scriptArgument;
 
         String aarinfo=fileLoader.getContent("aar.toml");
-        metadata = Metadata.parse(aarinfo);
+        metadata = MetaData.parse(aarinfo);
         metadata.setModule(pack);
         metadata.setName(pack);
-        Metadata.inspect(metadata);
+        MetaData.inspect(metadata);
 
         name= metadata.getName();
         icon= loadIcon(fileLoader.getInputStream("icon.png"));
@@ -418,7 +418,7 @@ public class ScriptProcess extends Process {
         return scriptArgument;
     }
 
-    public Metadata getScriptInfo() {
+    public MetaData getScriptInfo() {
         return metadata;
     }
 

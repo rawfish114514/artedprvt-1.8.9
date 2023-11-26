@@ -9,8 +9,8 @@ import java.util.Map;
 /**
  * 脚本配置
  */
-public class Metadata {
-    private Metadata(){}
+public class MetaData {
+    private MetaData(){}
 
     private String name="Example";
     private String id="example";
@@ -81,8 +81,8 @@ public class Metadata {
      * @param str
      * @return
      */
-    public static Metadata parse(String str){
-        Metadata metadata =null;
+    public static MetaData parse(String str){
+        MetaData metadata =null;
         Map<String,Object> result=Toml.read(str);
         Object infoVersion=result.get("info");
         if(infoVersion==null){
@@ -99,7 +99,7 @@ public class Metadata {
      * @param metadata
      * @throws Exception
      */
-    public static void inspect(Metadata metadata) throws Exception{
+    public static void inspect(MetaData metadata) throws Exception{
         String name= metadata.getName();
         if(name.length()>24){
             ScriptExceptions.exception(SES.ses8, "name");
@@ -111,8 +111,8 @@ public class Metadata {
      * @param map
      * @return
      */
-    public static Metadata parse1(Map<String,Object> map){
-        Metadata metadata =new Metadata();
+    public static MetaData parse1(Map<String,Object> map){
+        MetaData metadata =new MetaData();
         metadata.name=String.valueOf(map.get("name"));
         metadata.id=String.valueOf(map.get("id"));
         metadata.version=String.valueOf(map.get("version"));
