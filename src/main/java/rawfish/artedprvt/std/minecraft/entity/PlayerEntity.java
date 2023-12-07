@@ -1,4 +1,4 @@
-package rawfish.artedprvt.std.entity;
+package rawfish.artedprvt.std.minecraft.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
 import rawfish.artedprvt.api.Solvable;

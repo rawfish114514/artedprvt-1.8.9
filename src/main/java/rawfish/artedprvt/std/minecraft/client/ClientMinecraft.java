@@ -1,4 +1,4 @@
-package rawfish.artedprvt.std.client;
+package rawfish.artedprvt.std.minecraft.client;
 
 import net.minecraft.client.Minecraft;
 import rawfish.artedprvt.api.Solvable;

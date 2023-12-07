@@ -1,18 +1,17 @@
 package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.FormatHandler;
 import rawfish.artedprvt.command.InfoHandler;
+import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.Literals;
-import rawfish.artedprvt.core.script.MetaData;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.core.script.MetaData;
 import rawfish.artedprvt.core.script.struct.AarFileLoader;
 import rawfish.artedprvt.core.script.struct.FileLoader;
 import rawfish.artedprvt.core.script.struct.SourceFileLoader;
-import rawfish.artedprvt.mi.ChatProvider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -79,29 +78,6 @@ public class CommandInfo extends Command {
     }
 
     public void printInfo(MetaData info, String entry){
-        CommandMessages.printChat.print("§6>§f"+entry, new ChatProvider() {
-            public MetaData info;
-            public ChatProvider setInfo(MetaData info){
-                this.info=info;
-                return this;
-            }
-            @Override
-            public String getChat() {
-                if(info!=null){
-                    String s=info.getName()+"   --"+info.getAuthor();
-                    s+="\n\n";
-                    s+=info.getDescription();
-                    s+="\n\n";
-                    s+="id: "+info.getId();
-                    s+="\n";
-                    s+="version: "+info.getVersion();
-                    s+="\n";
-                    s+="mcversion: "+info.getMcversion();
-                    return s;
-                }
-                return null;
-            }
-        }.setInfo(info));
     }
 
     @Override

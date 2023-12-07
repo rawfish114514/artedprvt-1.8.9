@@ -1,12 +1,14 @@
 package rawfish.artedprvt.core;
 
 import rawfish.artedprvt.Artedprvt;
+import rawfish.artedprvt.api.Solvable;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Solvable
 public abstract class Process {
     /**
      * 进程状态
@@ -68,6 +70,9 @@ public abstract class Process {
 
     public abstract ProcessIdLevel pidLevel();
 
+    @Solvable
+    public abstract Logger logger();
+
     /**
      * 启动进程
      * 外部调用
@@ -88,7 +93,9 @@ public abstract class Process {
      */
     public abstract void end(int exitCode);
 
+    public abstract void up(InProcess inProcessObject);
 
+    public abstract void down(InProcess inProcessObject);
 
     /**
      * 获取进程状态

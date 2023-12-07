@@ -1,12 +1,13 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.core.script.engine.ScriptEngine;
 import rawfish.artedprvt.core.script.struct.FileLoader;
 import rawfish.artedprvt.core.script.struct.ScriptModule;
-import rawfish.artedprvt.mi.ChatProvider;
-import rawfish.artedprvt.mi.PrintChat;
+import rawfish.artedprvt.std.minecraft.chat.ChatComponent;
+import rawfish.artedprvt.std.minecraft.chat.ChatConsole;
 
 import java.io.InputStream;
 import java.util.Collection;
@@ -18,15 +19,16 @@ import java.util.List;
  */
 public class ScriptSystem {
     private ScriptProcess process;
-    private ScriptLogger logger;
+    private Logger logger;
     private FileLoader fileLoader;
-    private PrintChat printChat;
+    private ChatConsole chatConsole;
     public ScriptSystem(ScriptProcess process){
         this.process=process;
-        logger=process.getScriptLogger();
+        logger=process.logger();
         fileLoader=process.getFileLoader();
-        printChat=new PrintChat();
-        printChat.longtime=true;
+        chatConsole=new ChatConsole();
+        chatConsole.setLongtime(true);
+        chatConsole.setLog(false);
     }
 
     /**
@@ -34,8 +36,7 @@ public class ScriptSystem {
      */
     public static final int
     CHAT=0,
-    DEBUG=1,
-    DISPLAY=2;
+    DEBUG=1;
 
     /**
      * 开关
@@ -47,26 +48,17 @@ public class ScriptSystem {
      * @param type 聊天信息类型
      * @param chat 聊天信息
      */
-    public void print(int type,String chat){
-        if(type==CHAT){
-            if(CHAT_SWITCH){
-                logger.info(chat);
-                printChat.print(chat);
+    public void print(int type,String chat) {
+        logger.info(chat);
+
+        if (CHAT_SWITCH) {
+            if (type == CHAT) {
+                chatConsole.print(chat);
                 return;
             }
-        }
-        if(type==DEBUG){
-            chat=getDebugHead()+chat;
-            if(CHAT_SWITCH){
-                logger.info(chat);
-                printChat.print(chat);
-                return;
-            }
-        }
-        if(type==DISPLAY){
-            if(CHAT_SWITCH){
-                printChat.print(chat);
-                return;
+            if (type == DEBUG) {
+                chat = getDebugHead() + chat;
+                chatConsole.print(chat);
             }
         }
     }
@@ -75,59 +67,37 @@ public class ScriptSystem {
      * 打印
      * @param type 聊天信息类型
      * @param chat 聊天信息
-     * @param hover 悬浮聊天信息
+     * @param hover 悬浮信息
      */
-    public void print(int type,String chat,String hover){
-        if(type==CHAT){
-            if(CHAT_SWITCH){
-                logger.info(chat);
-                printChat.print(chat,hover);
+    public void print(int type,String chat,String hover) {
+        logger.info(chat);
+
+        if (CHAT_SWITCH) {
+            if (type == CHAT) {
+                chatConsole.print(new ChatComponent(chat,hover));
                 return;
             }
-        }
-        if(type==DEBUG){
-            chat=getDebugHead()+chat;
-            if(CHAT_SWITCH){
-                logger.info(chat);
-                printChat.print(chat,hover);
-                return;
-            }
-        }
-        if(type==DISPLAY){
-            if(CHAT_SWITCH){
-                printChat.print(chat,hover);
-                return;
+            if (type == DEBUG) {
+                chat = getDebugHead() + chat;
+                chatConsole.print(new ChatComponent(chat,hover));
             }
         }
     }
 
     /**
      * 打印
-     * @param type 打印类型
-     * @param chat 聊天信息
-     * @param hover 悬浮聊天信息供应商
+     * 没有聊天信息分类也不走日志
+     * @param chat
      */
-    public void print(int type,String chat, ChatProvider hover){
-        if(type==CHAT){
-            if(CHAT_SWITCH){
-                logger.info(chat);
-                printChat.print(chat,hover);
-                return;
-            }
+    public void print(String chat){
+        if (CHAT_SWITCH) {
+            chatConsole.print(chat);
         }
-        if(type==DEBUG){
-            chat=getDebugHead()+chat;
-            if(CHAT_SWITCH){
-                logger.info(chat);
-                printChat.print(chat,hover);
-                return;
-            }
-        }
-        if(type==DISPLAY){
-            if(CHAT_SWITCH){
-                printChat.print(chat,hover);
-                return;
-            }
+    }
+
+    public void print(String chat,String hover) {
+        if (CHAT_SWITCH) {
+            chatConsole.print(new ChatComponent(chat,hover));
         }
     }
 
@@ -142,14 +112,6 @@ public class ScriptSystem {
         }
         str+="] ";
         return str;
-    }
-
-    private String chatAddHover(String chat,String hover){
-        return chat+" -> \n"+hover;
-    }
-
-    private String chatAddHover(String chat,ChatProvider hover){
-        return chat+" -> \n"+hover.getChat();
     }
 
     /**

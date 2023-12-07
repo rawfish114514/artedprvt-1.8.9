@@ -1,4 +1,4 @@
-package rawfish.artedprvt.std.chat;
+package rawfish.artedprvt.std.minecraft.chat;
 
 import rawfish.artedprvt.api.Solvable;
 

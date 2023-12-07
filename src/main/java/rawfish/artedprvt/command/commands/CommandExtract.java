@@ -7,7 +7,6 @@ import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
-import rawfish.artedprvt.mi.PrintChat;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -165,7 +164,6 @@ public class CommandExtract extends Command {
             }
             zip.close();
         }catch (Exception e){
-            new PrintChat().print(e.toString());
             return -1;
         }
         return 0;

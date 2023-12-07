@@ -1,8 +1,8 @@
-package rawfish.artedprvt.std.client;
+package rawfish.artedprvt.std.minecraft.client;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.std.entity.PlayerEntity;
+import rawfish.artedprvt.std.minecraft.entity.PlayerEntity;
 
 @Solvable
 public class ClientPlayerEntity extends PlayerEntity {

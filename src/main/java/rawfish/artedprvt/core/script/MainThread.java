@@ -1,10 +1,11 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.core.ProcessThread;
 import rawfish.artedprvt.core.script.engine.ScriptEngine;
 
 import java.util.List;
 
-public class MainThread extends Thread{
+public class MainThread extends Thread implements ProcessThread {
     private ScriptProcess process;
     public MainThread(ScriptProcess process){
         this.process=process;
@@ -51,6 +52,7 @@ public class MainThread extends Thread{
         stop();
     }
 
+    @Override
     public ScriptProcess getProcess(){
         return process;
     }

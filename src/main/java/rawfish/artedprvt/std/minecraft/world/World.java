@@ -1,8 +1,8 @@
-package rawfish.artedprvt.std.world;
+package rawfish.artedprvt.std.minecraft.world;
 
 import net.minecraft.entity.player.EntityPlayer;
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.std.entity.PlayerEntity;
+import rawfish.artedprvt.std.minecraft.entity.PlayerEntity;
 
 import java.util.ArrayList;
 import java.util.List;

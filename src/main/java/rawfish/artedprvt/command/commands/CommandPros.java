@@ -6,13 +6,10 @@ import rawfish.artedprvt.command.InfoHandler;
 import rawfish.artedprvt.command.util.CommandMessages;
 import rawfish.artedprvt.command.util.Literals;
 import rawfish.artedprvt.core.CoreInitializer;
-import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.script.ScriptProcess;
-import rawfish.artedprvt.mi.ChatProvider;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,37 +62,6 @@ public class CommandPros extends Command {
     }
 
     public void printPro(ScriptProcess pro){
-        CommandMessages.printChat.print("§6>§f"+pro.getPid() + ": " + pro.getName(), new ChatProvider() {
-            public ScriptProcess p;
-            public ChatProvider setP(ScriptProcess p){
-                this.p=p;
-                return this;
-            }
-            @Override
-            public String getChat() {
-                if(p.getRet()== Process.END){
-                    p=null;
-                }
-                if(p!=null){
-                    String s=p.getName()+" ("+p.getScriptInfo().getId()+")";
-                    s+="\n";
-                    s+="pid: "+p.getPid();
-                    s+="\n";
-                    s+=p.getStatistics();
-                    String c =null;
-                    double cpu=p.getCPU();
-                    if (cpu >= 0) {
-                        c = new DecimalFormat("0.0").format(cpu * 100) + "%";
-                    }
-                    if(c!=null) {
-                        s += "\n";
-                        s += "§fcpu: "+c;
-                    }
-                    return s;
-                }
-                return null;
-            }
-        }.setP(pro));
     }
 
     @Override

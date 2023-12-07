@@ -15,6 +15,11 @@ public abstract class SystemProcess extends Process implements Runnable{
     }
 
     @Override
+    public Logger logger(){
+        return new Logger.VoidLogger();
+    }
+
+    @Override
     public void start() {
         thread.start();
     }
@@ -34,7 +39,16 @@ public abstract class SystemProcess extends Process implements Runnable{
         //pass
     }
 
-    private class SystemProcessThread extends Thread{
+    @Override
+    public void up(InProcess inProcessObject){
+        //pass
+    }
+
+    public void down(InProcess inProcessObject){
+        //pass
+    }
+
+    private class SystemProcessThread extends Thread implements ProcessThread{
         public SystemProcessThread(String name){
             setName(name);
         }
@@ -43,6 +57,11 @@ public abstract class SystemProcess extends Process implements Runnable{
         public void run(){
             SystemProcess.this.run();
             end(0);
+        }
+
+        @Override
+        public Process getProcess() {
+            return SystemProcess.this;
         }
     }
 }

@@ -1,8 +1,7 @@
-package rawfish.artedprvt.std.chat;
+package rawfish.artedprvt.std.minecraft.chat;
 
 import rawfish.artedprvt.api.Solvable;
 
-import javax.annotation.Nonnull;
 import java.util.Objects;
 
 @Solvable
@@ -48,7 +47,6 @@ public class ChatStyle {
     }
 
     @Solvable
-    @Nonnull
     public String getChat(){
         return chat;
     }

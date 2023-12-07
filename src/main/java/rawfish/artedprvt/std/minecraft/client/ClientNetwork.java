@@ -1,10 +1,10 @@
-package rawfish.artedprvt.std.client;
+package rawfish.artedprvt.std.minecraft.client;
 
 import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.std.entity.Entity;
+import rawfish.artedprvt.std.minecraft.entity.Entity;
 
 @Solvable
 public class ClientNetwork {

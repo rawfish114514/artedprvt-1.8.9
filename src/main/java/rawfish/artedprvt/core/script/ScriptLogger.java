@@ -1,5 +1,7 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.core.Logger;
+
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.time.LocalDate;
@@ -14,7 +16,8 @@ import java.util.stream.Collectors;
  * 日志记录器
  * 提供一系列输出方法输出到所有输出流
  */
-public class ScriptLogger {
+@rawfish.artedprvt.dev.FutureWork("添加缓存机制而不是立刻写入")
+public class ScriptLogger extends Logger {
     private ScriptProcess process;
     private List<PrintWriter> printWriters;
     private LocalDate initDate;
@@ -55,6 +58,13 @@ public class ScriptLogger {
     public synchronized void error(String message){
         String s=getDay()+"["+getDateStr()+" error]"+nonThread()+": "+appendLine(removeFormatCode(message));
         writeAll(s);
+    }
+
+    @Override
+    public void close() {
+        for(PrintWriter writer:printWriters){
+            writer.flush();
+        }
     }
 
     public synchronized void natives(String message){
@@ -98,13 +108,7 @@ public class ScriptLogger {
     private synchronized void writeAll(String s){
         for(PrintWriter writer:printWriters){
             writer.println(s);
-            writer.flush();
-        }
-    }
-
-    public void closeAll(){
-        for(PrintWriter writer:printWriters){
-            writer.close();
+            //writer.flush();
         }
     }
 }

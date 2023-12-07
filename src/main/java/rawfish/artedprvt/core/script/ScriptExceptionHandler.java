@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.script.engine.ScriptStackParser;
 
 import java.util.ArrayList;
@@ -7,10 +8,10 @@ import java.util.List;
 
 public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
     private ScriptProcess process;
-    private ScriptLogger logger;
+    private Logger logger;
     public ScriptExceptionHandler(ScriptProcess scriptProcess){
         this.process =scriptProcess;
-        logger=process.getScriptLogger();
+        logger=process.logger();
     }
 
     public void uncaughtException(Throwable e){
@@ -53,7 +54,8 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         logger.error(sb.toString());
         if(sb.length()>0) {
-            print(message, sb.toString());
+            //print(message, sb.toString());
+            print(message);
         }else{
             print(message);
         }
@@ -63,9 +65,5 @@ public class ScriptExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     public void print(String chat){
         process.getScriptSystem().print(ScriptSystem.DEBUG,chat);
-    }
-
-    public void print(String chat,String hover){
-        process.getScriptSystem().print(ScriptSystem.DEBUG,chat,hover);
     }
 }

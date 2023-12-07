@@ -1,4 +1,4 @@
-package rawfish.artedprvt.std.chat;
+package rawfish.artedprvt.std.minecraft.chat;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiIngame;
@@ -9,25 +9,25 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import rawfish.artedprvt.api.Solvable;
 import rawfish.artedprvt.core.Environment;
-import rawfish.artedprvt.core.script.ScriptLogger;
-import rawfish.artedprvt.core.script.ScriptObject;
-import rawfish.artedprvt.core.script.ScriptProcess;
+import rawfish.artedprvt.core.InProcess;
+import rawfish.artedprvt.core.Logger;
+import rawfish.artedprvt.core.Process;
 
 import java.util.List;
 import java.util.Objects;
 
 @Solvable
-public class ChatConsole implements ScriptObject {
-    private ScriptLogger logger=null;
+public class ChatConsole implements InProcess {
+    private Logger logger=null;
     private GuiNewChat MguiNewChat =null;
     private boolean log=true;
     private boolean longtime=false;
 
     @Solvable
     public ChatConsole(){
-        ScriptProcess scriptProcess=up();
-        if(scriptProcess!=null){
-            logger=scriptProcess.getScriptLogger();
+        Process process=up();
+        if(process!=null){
+            logger=process.logger();
         }
         if(Environment.MCCLIENT){
             Minecraft minecraft=Minecraft.getMinecraft();
@@ -88,7 +88,7 @@ public class ChatConsole implements ScriptObject {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         if(longtime){
             return;
         }
@@ -127,7 +127,7 @@ public class ChatConsole implements ScriptObject {
     }
 
 
-    private static class LClickEvent extends ClickEvent implements ScriptObject{
+    private static class LClickEvent extends ClickEvent implements InProcess{
         private ChatClick click;
         public LClickEvent(ChatClick click) {
             super(Action.SUGGEST_COMMAND, "");
@@ -147,14 +147,14 @@ public class ChatConsole implements ScriptObject {
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             synchronized (this){
                 click=null;
             }
         }
     }
 
-    private static class LHoverEvent extends HoverEvent implements ScriptObject{
+    private static class LHoverEvent extends HoverEvent implements InProcess{
         private ChatHover hover;
 
         public LHoverEvent(ChatHover hover) {
@@ -175,7 +175,7 @@ public class ChatConsole implements ScriptObject {
         }
 
         @Override
-        public void close() throws Exception {
+        public void close() {
             synchronized (this){
                 if(hover instanceof ChatHoverString){
                     return;

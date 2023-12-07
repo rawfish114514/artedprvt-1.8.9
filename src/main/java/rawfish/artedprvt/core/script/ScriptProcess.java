@@ -1,6 +1,8 @@
 package rawfish.artedprvt.core.script;
 
 import rawfish.artedprvt.core.CoreInitializer;
+import rawfish.artedprvt.core.InProcess;
+import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.script.engine.ScriptEngine;
@@ -13,8 +15,10 @@ import rawfish.artedprvt.core.script.struct.ScriptLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.time.LocalDate;
@@ -41,8 +45,13 @@ public class ScriptProcess extends Process {
     private ScriptSystem scriptSystem;//脚本系统
 
 
-    private List<ScriptObject> scriptObjects;//脚本对象列表
-    private int scriptObjectNumber;//脚本对象创建数
+    private List<InProcess> inProcessList;//InProcess列表
+    private int inProcessCount;//InProcess对象创建数
+
+
+
+
+    private OutputStream logFileOutputStream;//日志的文件输出流
 
 
     /**
@@ -56,6 +65,14 @@ public class ScriptProcess extends Process {
             InputStream inputStream,
             List<String> scriptArgument) throws Exception {
         this(new AarFileLoader(inputStream),scriptArgument);
+    }
+
+    public ScriptProcess(String pack,FileLoader fileLoader,List<String> scriptArgument) throws Exception{
+        this(fileLoader,scriptArgument);
+        metadata.setModule(pack);
+        metadata.setName(pack);
+        MetaData.inspect(metadata);
+        name= metadata.getName();
     }
 
     public ScriptProcess(FileLoader fileLoader,List<String> scriptArgument) throws Exception{
@@ -76,13 +93,16 @@ public class ScriptProcess extends Process {
 
         synchronized (ScriptProcess.class) {
             LocalDate localDate=LocalDate.now();
+            logFileOutputStream=CoreInitializer.getLogFileController().openLog(
+                    workSpace,
+                    localDate,
+                    name.substring(name.indexOf(':')+1));
+            logFileOutputStream=new BufferedOutputStream(logFileOutputStream);
             scriptLogger = new ScriptLogger(
                     this,
                     localDate,
-                    CoreInitializer.getLogFileController().openLog(
-                            workSpace,
-                            localDate,
-                            name.substring(name.indexOf(':')+1)));
+                    logFileOutputStream,
+                    System.out);
         }
 
 
@@ -94,51 +114,10 @@ public class ScriptProcess extends Process {
 
         exceptionHandler=new ScriptExceptionHandler(this);
 
-        scriptObjects=new ArrayList<>();
-        scriptObjectNumber=0;
+        inProcessList=new ArrayList<>();
+        inProcessCount=0;
     }
 
-    public ScriptProcess(String pack,FileLoader fileLoader,List<String> scriptArgument) throws Exception{
-        super();
-
-        ret=CREATE;
-        workSpace=WorkSpace.currentWorkSpace();
-        this.fileLoader=fileLoader;
-        scriptLoader=new ScriptLoader(fileLoader);
-        this.scriptArgument=scriptArgument;
-
-        String aarinfo=fileLoader.getContent("aar.toml");
-        metadata = MetaData.parse(aarinfo);
-        metadata.setModule(pack);
-        metadata.setName(pack);
-        MetaData.inspect(metadata);
-
-        name= metadata.getName();
-        icon= loadIcon(fileLoader.getInputStream("icon.png"));
-
-        synchronized (ScriptProcess.class) {
-            LocalDate localDate=LocalDate.now();
-            scriptLogger = new ScriptLogger(
-                    this,
-                    localDate,
-                    CoreInitializer.getLogFileController().openLog(
-                            workSpace,
-                            localDate,
-                            name.substring(name.indexOf(':')+1)));
-        }
-
-
-        engines=new ArrayList<>();
-        engines.add(new RhinoEngine(this));
-
-        stackParsers=new ArrayList<>();
-        stackParsers.add(new RhinoStackParser());
-
-        exceptionHandler=new ScriptExceptionHandler(this);
-
-        scriptObjects=new ArrayList<>();
-        scriptObjectNumber=0;
-    }
 
     private BufferedImage loadIcon(InputStream stream){
         if(stream==null){
@@ -159,6 +138,11 @@ public class ScriptProcess extends Process {
     @Override
     public ProcessIdLevel pidLevel() {
         return SCRIPT_PROCESS_ID_LEVEL;
+    }
+
+    @Override
+    public Logger logger() {
+        return scriptLogger;
     }
 
     /**
@@ -231,19 +215,19 @@ public class ScriptProcess extends Process {
             return;
         }
         try {
-            closeScriptObject();
+            closeInProcessObject();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
         ret=END;
         printEnd(exitCode,runningTime());
-        scriptLogger.closeAll();
+        closeLog();
     }
 
     private void printStart(){
         String s="§3run:§r "+name;
         scriptLogger.natives(s);
-        scriptSystem.print(ScriptSystem.CHAT,"§3run:§r "+name);
+        scriptSystem.print("§3run:§r "+name);
     }
 
     private void printEnd(int status,long runtime){
@@ -270,21 +254,35 @@ public class ScriptProcess extends Process {
             }
         }
         scriptLogger.natives(s);
-        scriptSystem.print(ScriptSystem.CHAT,s,stat);
+        scriptSystem.print(s,stat);
     }
 
-
-    public void addScriptObject(ScriptObject scriptObject){
-        scriptObjects.add(scriptObject);
-        scriptObjectNumber++;
+    @Override
+    public void up(InProcess inProcessObject){
+        inProcessList.add(inProcessObject);
+        inProcessCount++;
     }
 
-    public void closeScriptObject() throws Exception{
-        ScriptObject scriptObject;
-        for(int i=0;i<scriptObjects.size();){
-            scriptObject=scriptObjects.get(i);
-            scriptObject.close();
-            scriptObjects.remove(scriptObject);
+    @Override
+    public void down(InProcess inProcessObject) {
+        inProcessList.remove(inProcessObject);
+    }
+
+    private void closeInProcessObject(){
+        InProcess inProcess;
+        for(int i=0;i<inProcessList.size();){
+            inProcess=inProcessList.get(i);
+            inProcess.close();
+            inProcessList.remove(inProcess);
+        }
+    }
+
+    private void closeLog() {
+        scriptLogger.close();
+        try {
+            logFileOutputStream.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -322,7 +320,7 @@ public class ScriptProcess extends Process {
         }
         line1+="]";
         String line2="ret: "+ret;
-        String line3="object: "+scriptObjectNumber;
+        String line3="object: "+inProcessCount;
         String stime=String.valueOf(time);
         if(stime.length()>3){
             stime=stime.substring(0,stime.length()-3)+"§7"+stime.substring(stime.length()-3);
@@ -420,10 +418,6 @@ public class ScriptProcess extends Process {
 
     public MetaData getScriptInfo() {
         return metadata;
-    }
-
-    public ScriptLogger getScriptLogger() {
-        return scriptLogger;
     }
 
     public List<ScriptEngine> getEngines() {

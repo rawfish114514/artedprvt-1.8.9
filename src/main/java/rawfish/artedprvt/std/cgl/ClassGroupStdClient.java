@@ -2,8 +2,8 @@ package rawfish.artedprvt.std.cgl;
 
 import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.core.script.BaseClassGroup;
-import rawfish.artedprvt.std.client.ClientMinecraft;
-import rawfish.artedprvt.std.client.ClientPlayerEntity;
+import rawfish.artedprvt.std.minecraft.client.ClientMinecraft;
+import rawfish.artedprvt.std.minecraft.client.ClientPlayerEntity;
 
 /**
  * 可用于 ClientSide 的组

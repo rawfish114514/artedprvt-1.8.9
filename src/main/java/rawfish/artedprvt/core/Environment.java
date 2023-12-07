@@ -15,12 +15,12 @@ public class Environment {
     /**
      * 模组名称
      */
-    public static final String MODNAME ="Artedprvt Frame";
+    public static final String MODNAME="Artedprvt Frame";
 
     /**
      * 模组版本
      */
-    public static final String MODVERSION ="1.3";
+    public static final String MODVERSION="1.3";
 
     /**
      * mc版本

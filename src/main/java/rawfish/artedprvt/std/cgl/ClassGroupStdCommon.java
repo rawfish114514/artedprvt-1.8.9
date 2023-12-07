@@ -1,8 +1,8 @@
 package rawfish.artedprvt.std.cgl;
 
 import rawfish.artedprvt.core.script.BaseClassGroup;
-import rawfish.artedprvt.std.chat.*;
-import rawfish.artedprvt.std.entity.*;
+import rawfish.artedprvt.std.minecraft.chat.*;
+import rawfish.artedprvt.std.minecraft.entity.*;
 import rawfish.artedprvt.std.math.*;
 
 /**

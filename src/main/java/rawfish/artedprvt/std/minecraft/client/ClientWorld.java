@@ -1,7 +1,7 @@
-package rawfish.artedprvt.std.client;
+package rawfish.artedprvt.std.minecraft.client;
 
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.std.world.World;
+import rawfish.artedprvt.std.minecraft.world.World;
 
 @Solvable
 public class ClientWorld extends World {
