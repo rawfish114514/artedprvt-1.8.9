@@ -4,7 +4,8 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import rawfish.artedprvt.command.minecraft.CommandLoader;
+import rawfish.artedprvt.command.minecraft.ServerCommandLoader;
+import rawfish.artedprvt.core.ClassGroupSystem;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.UserOptions;
 import rawfish.artedprvt.core.WorkSpace;
@@ -25,6 +26,7 @@ public class CommonProxy
         WorkSpace.init();
         CoreInitializer.init();
         ClassGroupLoader.load();
+        System.out.println(ClassGroupSystem.getValue());
         UserOptions.load();
 
         ScriptEngineInit.init();
@@ -36,6 +38,6 @@ public class CommonProxy
 
     public void serverStarting(FMLServerStartingEvent event)
     {
-        new CommandLoader(event);
+        new ServerCommandLoader(event);
     }
 }

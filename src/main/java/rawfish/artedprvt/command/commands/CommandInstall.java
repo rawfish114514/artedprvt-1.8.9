@@ -2,16 +2,16 @@ package rawfish.artedprvt.command.commands;
 
 import com.electronwill.toml.Toml;
 import org.apache.http.util.ByteArrayBuffer;
-import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.formats.FormatHandlerAppend;
-import rawfish.artedprvt.command.formats.FormatHandlerSet;
-import rawfish.artedprvt.command.infos.InfoHandlerMap;
-import rawfish.artedprvt.command.infos.InfoHandlerString;
-import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.FormatHandler;
-import rawfish.artedprvt.command.InfoHandler;
-import rawfish.artedprvt.command.formats.FormatHandlerNumber;
-import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.std.cli.Command;
+import rawfish.artedprvt.std.cli.format.FormatHandlerAppend;
+import rawfish.artedprvt.std.cli.format.FormatHandlerSet;
+import rawfish.artedprvt.std.cli.info.InfoHandlerMap;
+import rawfish.artedprvt.std.cli.info.InfoHandlerString;
+import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.FormatHandler;
+import rawfish.artedprvt.std.cli.InfoHandler;
+import rawfish.artedprvt.std.cli.format.FormatHandlerNumber;
+import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CMS;
 

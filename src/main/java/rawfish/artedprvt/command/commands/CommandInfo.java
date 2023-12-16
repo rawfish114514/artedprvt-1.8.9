@@ -1,10 +1,10 @@
 package rawfish.artedprvt.command.commands;
 
-import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.FormatHandler;
-import rawfish.artedprvt.command.InfoHandler;
-import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.std.cli.Command;
+import rawfish.artedprvt.std.cli.FormatHandler;
+import rawfish.artedprvt.std.cli.InfoHandler;
+import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;

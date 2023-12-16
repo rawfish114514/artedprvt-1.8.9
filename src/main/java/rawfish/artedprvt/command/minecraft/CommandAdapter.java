@@ -5,8 +5,8 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldServer;
-import rawfish.artedprvt.command.Command;
-import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.std.cli.Command;
+import rawfish.artedprvt.std.cli.util.Literals;
 
 import java.util.ArrayList;
 import java.util.Arrays;

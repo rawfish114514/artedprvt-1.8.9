@@ -4,13 +4,13 @@ import net.minecraft.client.gui.*;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Mouse;
-import rawfish.artedprvt.command.util.CommandInputHandler;
-import rawfish.artedprvt.command.util.HandleResult;
-import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.std.cli.util.HandleResult;
+import rawfish.artedprvt.std.cli.util.Literals;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * 命令信息聊天界面
@@ -75,7 +75,7 @@ public class CommandLiteralGuiChat extends GuiChat {
         pos=inputField.getCursorPosition();
         if(!text.equals(oldText)){
             oldText=text;
-            HandleResult result=CommandInputHandler.handleFormat(text,pos);
+            HandleResult result= CommandHandler.handleFormat(text,pos);
             if(result.isHandle()) {
                 handledText=result.getResult();
                 formatField.setText(handledText);
@@ -85,7 +85,7 @@ public class CommandLiteralGuiChat extends GuiChat {
         }
         if(pos!=oldPos) {
             oldPos = pos;
-            HandleResult result=CommandInputHandler.handleInfo(text,pos);
+            HandleResult result= CommandHandler.handleInfo(text,pos);
             if (!result.isHandle()) {
                 infoText="";
             }else{
@@ -154,7 +154,38 @@ public class CommandLiteralGuiChat extends GuiChat {
 
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException{
-        super.keyTyped(typedChar,keyCode);
+        if (keyCode == 15) {
+            String s = this.inputField.getText();
+            List<String> result=CommandHandler.handleComplete(s,inputField.getCursorPosition());
+            if(result!=null){
+
+                System.out.println("自动补全: "+result);
+                return;
+            }else{
+                System.out.println("原生自动补全");
+                super.keyTyped(typedChar,keyCode);
+            }
+        }
+        if(keyCode == 28 || keyCode == 156){
+            String s = this.inputField.getText().trim();
+
+            scm:if (s.length() > 0)
+            {
+                this.mc.ingameGUI.getChatGUI().addToSentMessages(s);
+                if (net.minecraftforge.client.ClientCommandHandler.instance.executeCommand(mc.thePlayer, s) != 0){
+                    break scm;
+                }
+                if(CommandHandler.executeCommand(s)){
+                    break scm;
+                }
+
+                this.mc.thePlayer.sendChatMessage(s);
+            }
+
+            this.mc.displayGuiScreen((GuiScreen)null);
+        }else {
+            super.keyTyped(typedChar, keyCode);
+        }
     }
 
     public static Field lineScrollOffsetField=null;

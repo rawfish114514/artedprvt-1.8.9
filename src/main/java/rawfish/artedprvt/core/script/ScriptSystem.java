@@ -1,5 +1,7 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.core.ClassGroup;
+import rawfish.artedprvt.core.ClassGroupSystem;
 import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.SES;

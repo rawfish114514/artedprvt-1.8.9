@@ -1,9 +1,11 @@
 package rawfish.artedprvt.command.commands;
 
-import rawfish.artedprvt.command.*;
-import rawfish.artedprvt.command.util.CommandMessages;
-import rawfish.artedprvt.command.util.FormatHandlerListBuilder;
-import rawfish.artedprvt.command.util.Literals;
+import rawfish.artedprvt.std.cli.Command;
+import rawfish.artedprvt.std.cli.FormatHandler;
+import rawfish.artedprvt.std.cli.InfoHandler;
+import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
+import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.script.ScriptLanguage;
 import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.WorkSpace;
@@ -23,7 +25,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
