@@ -1,7 +1,7 @@
 package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.std.cli.Command;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.util.Literals;
@@ -10,7 +10,9 @@ import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.std.text.Formatting;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class CommandStops extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()==0){
             //全部
             List<ScriptProcess> processList= CoreInitializer.getProcessController().getProcessList(ScriptProcess.class);
@@ -31,7 +33,7 @@ public class CommandStops extends Command {
                 process.stop(Process.STOPS);
             }
             if(processList.size()==0){
-                CommandMessages.exception(getName(), CMS.cms18);
+                messager.send(Formatting.DARK_RED+getName()+ CMS.cms18);
             }
         }else if(args.size()==1){
             //选择
@@ -56,10 +58,10 @@ public class CommandStops extends Command {
 
             }
             if(n==0){
-                CommandMessages.exception(getName(),CMS.cms15,arg);
+                messager.send(Formatting.DARK_RED+getName()+ MessageFormat.format(CMS.cms15,arg));
             }
         }else{
-            CommandMessages.exception(getName(),CMS.cms16);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms16);
         }
     }
 

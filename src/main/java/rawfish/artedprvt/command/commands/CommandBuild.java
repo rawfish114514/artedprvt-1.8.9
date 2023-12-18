@@ -1,7 +1,7 @@
 package rawfish.artedprvt.command.commands;
 
 import rawfish.artedprvt.std.cli.Command;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.util.Literals;
@@ -11,6 +11,7 @@ import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.core.script.struct.FileLoader;
 import rawfish.artedprvt.core.script.struct.SourceFileLoader;
+import rawfish.artedprvt.std.text.Formatting;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,14 +31,14 @@ public class CommandBuild extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()>0){
-            CommandMessages.exception(getName(),CMS.cms0);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms0);
             return;
         }
         File ff=new File(WorkSpace.dir());
         if(!ff.isDirectory()){
-            CommandMessages.exception(getName(),CMS.cms4);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms4);
             return;
         }
         MetaData metadata;
@@ -47,7 +48,7 @@ public class CommandBuild extends Command {
             metadata = MetaData.parse(aarinfo);
             MetaData.inspect(metadata);
         }catch (Exception e){
-            CommandMessages.exception(getName(),CMS.cms5);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms5);
             return;
         }
         String name= metadata.getId();
@@ -55,10 +56,10 @@ public class CommandBuild extends Command {
         int code=zip(fd+"/src",fd+"/lib/"+name+".aar");
 
         if(code==0){
-            CommandMessages.key(getName(), CMS.cms6);
+            messager.send(Formatting.GOLD+getName()+CMS.cms6);
         }
         if(code==-1){
-            CommandMessages.exception(getName(),CMS.cms7);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms7);
         }
     }
 

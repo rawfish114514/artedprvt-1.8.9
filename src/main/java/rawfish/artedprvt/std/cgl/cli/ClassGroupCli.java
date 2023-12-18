@@ -14,6 +14,7 @@ import rawfish.artedprvt.std.cli.CommandProcess;
 import rawfish.artedprvt.std.cli.CommandRegistry;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
+import rawfish.artedprvt.std.cli.Messager;
 
 @Solvable
 public class ClassGroupCli extends BaseClassGroup {
@@ -40,5 +41,6 @@ public class ClassGroupCli extends BaseClassGroup {
         add(CommandRegistry.class);
         add(FormatHandler.class);
         add(InfoHandler.class);
+        add(Messager.class);
     }
 }

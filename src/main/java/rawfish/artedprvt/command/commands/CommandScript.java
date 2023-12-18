@@ -3,7 +3,7 @@ package rawfish.artedprvt.command.commands;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
@@ -14,12 +14,14 @@ import rawfish.artedprvt.core.script.ScriptProcess;
 import rawfish.artedprvt.core.script.engine.Engines;
 import rawfish.artedprvt.core.script.engine.ServiceEngine;
 import rawfish.artedprvt.core.script.struct.SourceFileLoader;
+import rawfish.artedprvt.std.text.Formatting;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Matcher;
@@ -38,15 +40,15 @@ public class CommandScript extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()<1){
-            CommandMessages.exception(getName(), CMS.cms1);
+            messager.send(Formatting.DARK_RED+getName()+ CMS.cms1);
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getName(),CMS.cms17);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms17);
             return;
         }
         List<String> scriptArgs=args.subList(1,args.size());
@@ -56,7 +58,7 @@ public class CommandScript extends Command {
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace();
-            CommandMessages.exception(getName(),CMS.cms3,e.getMessage());
+            messager.send(Formatting.DARK_RED+getName()+ MessageFormat.format(CMS.cms3,e.getMessage()));
         }
     }
 

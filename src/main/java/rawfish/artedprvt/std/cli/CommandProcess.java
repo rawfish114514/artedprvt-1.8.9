@@ -8,8 +8,10 @@ import java.util.List;
 public interface CommandProcess {
     /**
      * 执行这个命令
-     * @param args 参数列表
+     *
+     * @param args     参数列表
+     * @param messager
      */
     @Solvable
-    void process(List<String> args);
+    void process(List<String> args, Messager messager);
 }

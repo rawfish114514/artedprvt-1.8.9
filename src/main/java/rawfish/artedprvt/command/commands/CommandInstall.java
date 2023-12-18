@@ -3,17 +3,18 @@ package rawfish.artedprvt.command.commands;
 import com.electronwill.toml.Toml;
 import org.apache.http.util.ByteArrayBuffer;
 import rawfish.artedprvt.std.cli.Command;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.format.FormatHandlerAppend;
 import rawfish.artedprvt.std.cli.format.FormatHandlerSet;
 import rawfish.artedprvt.std.cli.info.InfoHandlerMap;
 import rawfish.artedprvt.std.cli.info.InfoHandlerString;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.format.FormatHandlerNumber;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.std.text.Formatting;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -34,23 +35,23 @@ public class CommandInstall extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()==0){
-            CommandMessages.exception(getName(), CMS.cms1);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms1);
             return;
         }
         if(args.size()>1){
-            CommandMessages.exception(getName(),CMS.cms16);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms16);
             return;
         }
         File ff=new File(WorkSpace.dir());
         if(!ff.isDirectory()){
-            CommandMessages.exception(getName(),CMS.cms4);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms4);
             return;
         }
         String id=args.get(0);
         File file=new File(WorkSpace.derivation(CommandAar.AAR,id));
-        install(file,id);
+        install(file,id,messager);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class CommandInstall extends Command {
         //return infoString("target");
     }
 
-    public void install(File file,String id){
+    public void install(File file,String id,Messager messager){
         String server="https://gitee.com/rawfishc/apse/raw/master/";
         new Thread(){
             public void run(){
@@ -174,7 +175,7 @@ public class CommandInstall extends Command {
                     throw new RuntimeException(e);
                 }
 
-                CommandMessages.key(CommandInstall.this.getName(),CMS.cms24);
+                messager.send(Formatting.GOLD+this.getName()+CMS.cms24);
             }
         }.start();
     }

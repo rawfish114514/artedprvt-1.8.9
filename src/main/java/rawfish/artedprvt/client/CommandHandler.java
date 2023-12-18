@@ -3,7 +3,11 @@ package rawfish.artedprvt.client;
 import org.apache.commons.lang3.StringUtils;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.HandleResult;
+import rawfish.artedprvt.std.cli.util.Literals;
+import rawfish.artedprvt.std.minecraft.chat.ChatComponent;
+import rawfish.artedprvt.std.minecraft.chat.ChatConsole;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,10 +80,9 @@ public class CommandHandler {
         }
 
         try{
-            System.out.println("p: "+command.getName());
-            command.process(Arrays.asList(args));
-        }catch (RuntimeException e){
-            throw e;
+            command.process(Arrays.asList(args), new ChatMessager());
+        }catch (Throwable throwable){
+            throwable.printStackTrace(System.err);
         }
 
         return true;
@@ -146,7 +149,12 @@ public class CommandHandler {
             return null;
         }
 
-        return command.complete(args);
+        try{
+            return command.complete(args);
+        }catch (Throwable throwable){
+            throwable.printStackTrace(System.err);
+            return Literals.emptyComplete();
+        }
     }
 
     public static HandleResult handleFormat(String input, int pos){
@@ -209,7 +217,13 @@ public class CommandHandler {
             return new HandleResult(handledText);
         }
 
-        List<? extends FormatHandler> formats=command.format(fargs);
+        List<? extends FormatHandler> formats;
+        try{
+            formats=command.format(fargs);
+        }catch (Throwable throwable){
+            throwable.printStackTrace(System.err);
+            return new HandleResult();
+        }
         for(int i=0;i<formats.size()&&i<args.size();i++){
             fargs.set(i,formats.get(i).handleFormat(args.get(i))+"§r");
         }
@@ -287,10 +301,37 @@ public class CommandHandler {
             return new HandleResult();
         }
 
-        String infoText=command.info(args).handleInfo(args.get(args.size()-1));
+        String infoText;
+        try{
+            infoText=command.info(args).handleInfo(args.get(args.size()-1));
+        }catch (Throwable throwable){
+            throwable.printStackTrace(System.err);
+            return new HandleResult();
+        }
 
 
         return new HandleResult(infoText,sp0);
     }
 
+    static class ChatMessager implements Messager{
+        private ChatConsole chatConsole;
+        private ChatMessager(){
+            chatConsole=new ChatConsole();
+        }
+
+        @Override
+        public void send(String message) {
+            chatConsole.print(message);
+        }
+
+        @Override
+        public void send(String message, String hover) {
+            chatConsole.print(new ChatComponent(message,hover));
+        }
+
+        @Override
+        public boolean canHover() {
+            return false;
+        }
+    }
 }

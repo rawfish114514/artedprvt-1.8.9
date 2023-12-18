@@ -3,12 +3,13 @@ package rawfish.artedprvt.command.commands;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.std.text.Formatting;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -31,37 +32,37 @@ public class CommandExtract extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()<1){
-            CommandMessages.exception(getName(),CMS.cms1);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms1);
             return;
         }
         String pack=args.get(0);
         Matcher matcher=packPattern.matcher(pack);
         if(!matcher.matches()){
-            CommandMessages.exception(getName(),CMS.cms2);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms2);
             return;
         }
         File ff=new File(WorkSpace.dir());
         if(!ff.isDirectory()){
-            CommandMessages.exception(getName(),CMS.cms4);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms4);
             return;
         }
         File srcf=new File(WorkSpace.derivation(WorkSpace.SRC));
         srcf.mkdirs();
         List<File> fs=getAllFile(srcf);
         if(fs.size()>0){
-            CommandMessages.exception(getName(),CMS.cms8);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms8);
             return;
         }
         String fd=WorkSpace.dir();
         int code=unzip(WorkSpace.derivation(CommandAar.AAR,pack),WorkSpace.derivation(WorkSpace.SRC));
 
         if(code==0){
-            CommandMessages.key(getName(), CMS.cms9);
+            messager.send(Formatting.GOLD+getName()+CMS.cms9);
         }
         if(code==-1){
-            CommandMessages.exception(getName(),CMS.cms10);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms10);
         }
     }
 

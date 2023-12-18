@@ -12,6 +12,7 @@ import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.core.InProcess;
 import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.Process;
+import rawfish.artedprvt.std.cli.util.Literals;
 
 import java.util.List;
 import java.util.Objects;
@@ -50,7 +51,7 @@ public class ChatConsole implements InProcess {
         if(isGuiNewChatNonnull()){
             printChat(LTM_ChatComponent_IChatComponent(chat),id);
         }
-        info(chat.getChatString());
+        info(Literals.fcClear(chat.getChatString()));
 
         return this;
     }

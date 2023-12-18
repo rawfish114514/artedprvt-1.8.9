@@ -3,13 +3,15 @@ package rawfish.artedprvt.command.commands;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.format.FormatHandlerAppend;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.std.text.Formatting;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,18 +39,18 @@ public class CommandApf extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()<1){
-            CommandMessages.exception(getName(), CMS.cms1);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms1);
             return;
         }
         for(Command command:commandList){
             if (command.getName().equals(args.get(0))){
-                command.process(args.subList(1,args.size()));
+                command.process(args.subList(1,args.size()), messager);
                 return;
             }
         }
-        CommandMessages.exception(getName(),CMS.cms13,args.get(0));
+        messager.send(Formatting.DARK_RED+getName()+ MessageFormat.format(CMS.cms13,args.get(0)));
     }
 
     @Override

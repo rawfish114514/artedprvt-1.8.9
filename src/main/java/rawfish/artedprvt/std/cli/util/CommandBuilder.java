@@ -8,6 +8,7 @@ import rawfish.artedprvt.std.cli.CommandInfo;
 import rawfish.artedprvt.std.cli.CommandProcess;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
+import rawfish.artedprvt.std.cli.Messager;
 
 import java.util.List;
 
@@ -84,48 +85,29 @@ public class CommandBuilder {
         }
 
         @Override
-        public void process(List<String> args) {
-            try {
-                process.process(args);
-            }catch (Throwable throwable){
-                throwable.printStackTrace(System.err);
-            }
+        public void process(List<String> args, Messager messager) {
+            process.process(args, messager);
         }
 
         @Override
         public List<String> complete(List<String> args) {
-            try {
-                return complete.complete(args);
-            }catch (Throwable throwable){
-                throwable.printStackTrace(System.err);
-            }
-            return Literals.emptyComplete();
+            return complete.complete(args);
         }
 
         @Override
         public List<? extends FormatHandler> format(List<String> args) {
-            try {
-                return format.format(args);
-            }catch (Throwable throwable){
-                throwable.printStackTrace(System.err);
-            }
-            return Literals.emptyFormat();
+            return format.format(args);
         }
 
         @Override
         public InfoHandler info(List<String> args) {
-            try {
-                return info.info(args);
-            }catch (Throwable throwable){
-                throwable.printStackTrace(System.err);
-            }
-            return Literals.emptyInfo();
+            return info.info(args);
         }
     }
 
     private static class EmptyProcess implements CommandProcess{
         @Override
-        public void process(List<String> args) {
+        public void process(List<String> args, Messager messager) {
 
         }
     }

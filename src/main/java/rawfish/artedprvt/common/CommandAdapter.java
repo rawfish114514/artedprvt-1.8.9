@@ -1,4 +1,4 @@
-package rawfish.artedprvt.command.minecraft;
+package rawfish.artedprvt.common;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -6,6 +6,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldServer;
 import rawfish.artedprvt.std.cli.Command;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.Literals;
 
 import java.util.ArrayList;
@@ -39,7 +40,11 @@ public class CommandAdapter extends CommandBase {
                 slist.add(arg);
             }
         }
-        command.process(slist);
+        try {
+            command.process(slist, messager);
+        }catch (Throwable throwable){
+            throw new CommandException(throwable.getMessage());
+        }
     }
 
     @Override
@@ -63,5 +68,24 @@ public class CommandAdapter extends CommandBase {
             return ns;
         }
         return cs;
+    }
+
+    private static Messager messager=new Messager0();
+
+    static class Messager0 implements Messager{
+        @Override
+        public void send(String message) {
+            System.out.println(Literals.fcClear(message));
+        }
+
+        @Override
+        public void send(String message, String hover) {
+            System.out.println(Literals.fcClear(message)+"\n\n"+Literals.fcClear(hover));
+        }
+
+        @Override
+        public boolean canHover() {
+            return false;
+        }
     }
 }

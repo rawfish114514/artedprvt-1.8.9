@@ -1,9 +1,8 @@
-package rawfish.artedprvt.command.minecraft;
+package rawfish.artedprvt.common;
 
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.command.commands.CommandApf;
-import rawfish.artedprvt.client.CommandHandler;
 
 public class ServerCommandLoader {
     public CommandApf apf=new CommandApf("apf");

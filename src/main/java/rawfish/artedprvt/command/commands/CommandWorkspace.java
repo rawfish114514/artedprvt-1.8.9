@@ -4,15 +4,17 @@ import rawfish.artedprvt.Artedprvt;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
-import rawfish.artedprvt.std.cli.util.CommandMessages;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.WorkSpace;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
+import rawfish.artedprvt.std.text.Formatting;
 
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,23 +28,23 @@ public class CommandWorkspace extends Command {
     }
 
     @Override
-    public void process(List<String> args) {
+    public void process(List<String> args, Messager messager) {
         if(args.size()==0) {
-            CommandMessages.exception(getName(), CMS.cms1);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms1);
             return;
         }
         if(args.size()==1){
             String arg=args.get(0);
             if(arg.equals("current")){
                 //显示当前工作空间
-                CommandMessages.key(getName(),"当前工作空间: {0} = {1}",
+                messager.send(Formatting.GOLD+getName()+ MessageFormat.format("当前工作空间: {0} = {1}",
                         WorkSpace.name(),
-                        WorkSpace.dir());
+                        WorkSpace.dir()));
                 return;
             }
 
             if(arg.equals("create")){
-                create();
+                create(messager);
                 return;
             }
         }
@@ -58,15 +60,15 @@ public class CommandWorkspace extends Command {
         }
     }
 
-    public void create(){
+    public void create(Messager messager){
         String dir= WorkSpace.dir();
         File artedprvt=new File(dir);
         if(artedprvt.isDirectory()){
-            CommandMessages.exception(getName(), CMS.cms19);
+            messager.send(Formatting.DARK_RED+getName()+ CMS.cms19);
             return;
         }
         if(!artedprvt.mkdir()){
-            CommandMessages.exception(getName(),CMS.cms20);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms20);
             return;
         }
         //将资源解压到工作目录
@@ -94,7 +96,7 @@ public class CommandWorkspace extends Command {
             reader.close();
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getName(),CMS.cms21);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms21);
             return;
         }
         Set<String> fileNames=files.keySet();
@@ -118,9 +120,9 @@ public class CommandWorkspace extends Command {
             }
         }catch (Throwable e){
             e.printStackTrace(System.err);
-            CommandMessages.exception(getName(),CMS.cms22);
+            messager.send(Formatting.DARK_RED+getName()+CMS.cms22);
         }
-        CommandMessages.key(getName(),CMS.cms23);
+        messager.send(Formatting.GOLD+getName()+CMS.cms23);
     }
 
     @Override
