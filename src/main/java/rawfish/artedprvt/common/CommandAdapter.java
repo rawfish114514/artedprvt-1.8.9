@@ -87,5 +87,17 @@ public class CommandAdapter extends CommandBase {
         public boolean canHover() {
             return false;
         }
+
+        @Override
+        public int dialog(String message, String... buttons) {
+            send(message);
+            send(String.join(" ",buttons));
+            return -1;
+        }
+
+        @Override
+        public boolean canDialog() {
+            return false;
+        }
     }
 }

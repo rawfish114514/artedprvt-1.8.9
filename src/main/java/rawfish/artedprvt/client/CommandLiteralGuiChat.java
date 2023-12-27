@@ -1,6 +1,8 @@
 package rawfish.artedprvt.client;
 
+import com.google.common.collect.Lists;
 import net.minecraft.client.gui.*;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Mouse;
@@ -10,7 +12,9 @@ import rawfish.artedprvt.std.cli.util.Literals;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 命令信息聊天界面
@@ -83,8 +87,9 @@ public class CommandLiteralGuiChat extends GuiChat {
                 formatField.setText(text);
             }
         }
-        if(pos!=oldPos) {
+        if(pos!=oldPos||tab) {
             oldPos = pos;
+            tab=false;
             HandleResult result= CommandHandler.handleInfo(text,pos);
             if (!result.isHandle()) {
                 infoText="";
@@ -152,19 +157,25 @@ public class CommandLiteralGuiChat extends GuiChat {
         }
     }
 
+    List<String> completeResult;
+
+    boolean tab=false;
+
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException{
         if (keyCode == 15) {
+            tab=true;
             String s = this.inputField.getText();
             List<String> result=CommandHandler.handleComplete(s,inputField.getCursorPosition());
             if(result!=null){
-
-                System.out.println("自动补全: "+result);
+                completeResult=new ArrayList<>(result);
+                autocompletePlayerNames114514();
                 return;
             }else{
-                System.out.println("原生自动补全");
                 super.keyTyped(typedChar,keyCode);
             }
+        }else{
+            playerNamesFound=false;
         }
         if(keyCode == 28 || keyCode == 156){
             String s = this.inputField.getText().trim();
@@ -183,10 +194,70 @@ public class CommandLiteralGuiChat extends GuiChat {
             }
 
             this.mc.displayGuiScreen((GuiScreen)null);
+
+            CommandHandler.reset();
         }else {
             super.keyTyped(typedChar, keyCode);
         }
     }
+
+    public boolean playerNamesFound;
+    public int autocompleteIndex;
+    private List<String> foundPlayerNames = Lists.<String>newArrayList();
+
+    public void autocompletePlayerNames114514() {
+        if (this.playerNamesFound)
+        {
+            this.inputField.deleteFromCursor(this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false) - this.inputField.getCursorPosition());
+
+            if (this.autocompleteIndex >= this.foundPlayerNames.size())
+            {
+                this.autocompleteIndex = 0;
+            }
+        }
+        else
+        {
+            int i = this.inputField.func_146197_a(-1, this.inputField.getCursorPosition(), false);
+            this.foundPlayerNames.clear();
+            this.autocompleteIndex = 0;
+            String s = this.inputField.getText().substring(i).toLowerCase();
+            String s1 = this.inputField.getText().substring(0, this.inputField.getCursorPosition());
+
+            if(completeResult!=null){
+                foundPlayerNames=completeResult;
+            }
+
+            if (this.foundPlayerNames.isEmpty())
+            {
+                return;
+            }
+
+            this.playerNamesFound = true;
+            this.inputField.deleteFromCursor(i - this.inputField.getCursorPosition());
+        }
+
+        if (this.foundPlayerNames.size() > 1)
+        {
+            StringBuilder stringbuilder = new StringBuilder();
+
+            for (String s2 : this.foundPlayerNames)
+            {
+                if (stringbuilder.length() > 0)
+                {
+                    stringbuilder.append(", ");
+                }
+
+                stringbuilder.append(s2);
+            }
+
+            this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new ChatComponentText(stringbuilder.toString()), 1);
+        }
+
+        this.inputField.writeText(net.minecraft.util.EnumChatFormatting.getTextWithoutFormattingCodes((String)this.foundPlayerNames.get(this.autocompleteIndex++)));
+    }
+
+
+
 
     public static Field lineScrollOffsetField=null;
     public static Field isEnabledField=null;

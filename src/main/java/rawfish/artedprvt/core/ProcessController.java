@@ -32,19 +32,23 @@ public class ProcessController extends SystemProcess{
     @Override
     protected int register(){
         initProcesses();
-        processes[3072]=this;
-        return 3072;
+        processes[768]=this;
+        return 768;
     }
 
     private void initProcesses(){
         if(processes==null){
-            processes=new Process[4096];
+            processes=new Process[1024];
         }
     }
 
     private Process[] processes;
 
-    private final ProcessIdLevel ALL=new ProcessIdLevel(0,4095);
+    private static final ProcessIdLevel ALL=new ProcessIdLevel(0,1023);
+
+    public static final ProcessIdLevel SYSTEM_PROCESS_ID_LEVEL=new ProcessIdLevel(768,1023);
+
+    public static final ProcessIdLevel APP_PROCESS_ID_LEVEL=new ProcessIdLevel(0,767);
 
     /**
      * 注册进程并获取PID
@@ -58,7 +62,7 @@ public class ProcessController extends SystemProcess{
      * 注册进程并获取PID
      * @param process
      * @param processIdLevel
-     * @return [0,4095]注册成功 -1注册失败
+     * @return [0,1023]注册成功 -1注册失败
      */
     public synchronized int registerProcess(Process process,ProcessIdLevel processIdLevel){
         if(!ALL.contain(processIdLevel)){

@@ -3,10 +3,8 @@ package rawfish.artedprvt.client;
 import org.apache.commons.lang3.StringUtils;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
-import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.HandleResult;
 import rawfish.artedprvt.std.cli.util.Literals;
-import rawfish.artedprvt.std.minecraft.chat.ChatComponent;
 import rawfish.artedprvt.std.minecraft.chat.ChatConsole;
 
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CommandHandler {
     private static Map<String, Command> commandMap=new HashMap<>();
@@ -80,7 +79,7 @@ public class CommandHandler {
         }
 
         try{
-            command.process(Arrays.asList(args), new ChatMessager());
+            command.process(Arrays.asList(args), new ChatConsole());
         }catch (Throwable throwable){
             throwable.printStackTrace(System.err);
         }
@@ -150,7 +149,7 @@ public class CommandHandler {
         }
 
         try{
-            return command.complete(args);
+            return startWith(args,command.complete(args));
         }catch (Throwable throwable){
             throwable.printStackTrace(System.err);
             return Literals.emptyComplete();
@@ -313,25 +312,16 @@ public class CommandHandler {
         return new HandleResult(infoText,sp0);
     }
 
-    static class ChatMessager implements Messager{
-        private ChatConsole chatConsole;
-        private ChatMessager(){
-            chatConsole=new ChatConsole();
-        }
-
-        @Override
-        public void send(String message) {
-            chatConsole.print(message);
-        }
-
-        @Override
-        public void send(String message, String hover) {
-            chatConsole.print(new ChatComponent(message,hover));
-        }
-
-        @Override
-        public boolean canHover() {
-            return false;
-        }
+    public static synchronized void reset() {
+        commandMap.values().forEach((Command::reset));
     }
+
+    public static List<String> startWith(List<String> args,List<String> cs){
+        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
+        if(ns.size()>0){
+            return ns;
+        }
+        return cs;
+    }
+
 }

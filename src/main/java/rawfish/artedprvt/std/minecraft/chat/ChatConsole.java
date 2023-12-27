@@ -12,13 +12,18 @@ import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.core.InProcess;
 import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.Process;
+import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.util.Literals;
+import rawfish.artedprvt.std.text.Formatting;
+import scala.actors.threadpool.Arrays;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Solvable
-public class ChatConsole implements InProcess {
+public class ChatConsole implements Messager,InProcess {
     private Logger logger=null;
     private GuiNewChat MguiNewChat =null;
     private boolean log=true;
@@ -68,8 +73,10 @@ public class ChatConsole implements InProcess {
 
     @Solvable
     public ChatConsole delete(int id){
-        synchronized (this) {
-            MguiNewChat.deleteChatLine(id);
+        if(isGuiNewChatNonnull()) {
+            synchronized (this) {
+                MguiNewChat.deleteChatLine(id);
+            }
         }
         return this;
     }
@@ -88,6 +95,8 @@ public class ChatConsole implements InProcess {
         longtime=b;
     }
 
+    boolean close=false;
+
     @Override
     public void close() {
         if(longtime){
@@ -95,6 +104,7 @@ public class ChatConsole implements InProcess {
         }
         logger=null;
         MguiNewChat =null;
+        close=true;
     }
 
     private boolean isGuiNewChatNonnull(){
@@ -125,6 +135,107 @@ public class ChatConsole implements InProcess {
             MsuperChatComponentText.appendSibling(MchatComponentText);
         }
         return MsuperChatComponentText;
+    }
+
+    @Override
+    @Solvable
+    public void send(String message) {
+        print(message);
+    }
+
+    @Override
+    @Solvable
+    public void send(String message, String hover) {
+        print(new ChatComponent(message,hover));
+    }
+
+    @Override
+    @Solvable
+    public boolean canHover() {
+        return true;
+    }
+
+    static Object target=null;
+
+    @Override
+    @Solvable
+    public int dialog(String message, String... buttons) {
+        if (buttons.length == 0) {
+            throw new RuntimeException("对话框没有按钮");
+        }
+        if(target!=null){
+            //System.out.println("抢占目标");
+        }
+        target=Thread.currentThread();
+        try {
+            List<String> buttonList= Arrays.asList(buttons);
+            List<Integer> actions = new ArrayList<>();
+            AtomicBoolean x= new AtomicBoolean(false);
+
+            ChatComponent c1=new ChatComponent(message + "   ","选择以下选项中的一个点击")
+                    .add(new ChatStyle(Formatting.GRAY+Formatting.BOLD+"(X)","关闭").click(() -> {
+                x.set(true);
+            }));
+            print(c1, 1919810);
+
+
+            ChatComponent c2 = new ChatComponent();
+            for (int i=0;i<buttonList.size();i++) {
+                int I=i;
+                c2.add(" ");
+                c2.add(new ChatStyle(buttonList.get(i)).click(() -> {
+                    actions.add(I);
+                }));
+            }
+            print(c2, 1919811);
+            int result=-1;
+
+            try {
+                long time = System.currentTimeMillis();
+                while (true) {
+                    if(Thread.currentThread()!=target){
+                        //System.out.println(target+": 被抢占目标");
+                        return -1;
+                    }
+                    if(close){
+                        return -1;
+                    }
+                    if(x.get()){
+                        return -1;
+                    }
+                    if (actions.size() > 0) {
+                        return result=actions.get(0);
+                    }
+                    if (System.currentTimeMillis() - time >= 60000) {
+                        return -1;
+                    }
+                    Thread.sleep(20);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                if(!close&&Thread.currentThread()==target) {
+                    print(c1, 1919810);
+                    if (result==-1) {
+                        c2.add(Formatting.RESET + "   已关闭");
+                    } else {
+                        c2.add(Formatting.RESET + "   已选择" + buttonList.get(result));
+                    }
+                    print(c2, 1919811);
+                }
+            }
+        }finally {
+            //System.out.println(target+": 释放目标");
+            if(Thread.currentThread()==target){
+                target=null;
+            }
+        }
+    }
+
+    @Override
+    @Solvable
+    public boolean canDialog() {
+        return true;
     }
 
 

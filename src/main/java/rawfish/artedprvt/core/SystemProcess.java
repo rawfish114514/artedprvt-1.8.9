@@ -1,17 +1,20 @@
 package rawfish.artedprvt.core;
 
-public abstract class SystemProcess extends Process implements Runnable{
-    public static final ProcessIdLevel SYSTEM_PROCESS_ID_LEVEL=new ProcessIdLevel(3072,4095);
+import java.util.ArrayList;
+import java.util.List;
 
+public abstract class SystemProcess extends Process implements Runnable{
     private final Thread thread;
+    private List<InProcess> inProcessList;
     public SystemProcess(String name){
         thread=new SystemProcessThread(name);
         this.name=name;
+        inProcessList=new ArrayList<>();
     }
 
     @Override
     public ProcessIdLevel pidLevel() {
-        return SYSTEM_PROCESS_ID_LEVEL;
+        return ProcessController.SYSTEM_PROCESS_ID_LEVEL;
     }
 
     @Override
@@ -21,6 +24,7 @@ public abstract class SystemProcess extends Process implements Runnable{
 
     @Override
     public void start() {
+        ret=START;
         thread.start();
     }
 
@@ -31,21 +35,44 @@ public abstract class SystemProcess extends Process implements Runnable{
 
     @Override
     public void stop(int exitCode) {
+        ret=STOP;
         thread.stop();
+        end(exitCode);
     }
 
     @Override
     public void end(int exitCode) {
-        //pass
+        if(ret==END){
+            return;
+        }
+        try {
+            closeInProcessObject();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        ret=END;
     }
 
     @Override
     public void up(InProcess inProcessObject){
-        //pass
+        inProcessList.add(inProcessObject);
     }
 
     public void down(InProcess inProcessObject){
-        //pass
+        inProcessList.remove(inProcessObject);
+    }
+
+    private void closeInProcessObject(){
+        InProcess inProcess;
+        for(int i=0;i<inProcessList.size();){
+            inProcess=inProcessList.get(i);
+            inProcess.close();
+            inProcessList.remove(inProcess);
+        }
+    }
+
+    public void fil(){
+
     }
 
     private class SystemProcessThread extends Thread implements ProcessThread{
@@ -55,7 +82,17 @@ public abstract class SystemProcess extends Process implements Runnable{
 
         @Override
         public void run(){
-            SystemProcess.this.run();
+            try {
+                SystemProcess.this.run();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }finally {
+                try {
+                    fil();
+                }catch (Throwable ignore){
+
+                }
+            }
             end(0);
         }
 

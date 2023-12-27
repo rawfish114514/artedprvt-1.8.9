@@ -31,7 +31,7 @@ public class DebugInfo {
             sb.append(" ");
 
             if(ScriptSystem.CHAT_SWITCH){
-                sb.append("§aS§r");
+                sb.append("§aC§r");
             }else{
                 sb.append("S");
             }

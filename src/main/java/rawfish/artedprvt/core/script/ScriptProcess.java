@@ -1,5 +1,6 @@
 package rawfish.artedprvt.core.script;
 
+import rawfish.artedprvt.core.AppProcess;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.InProcess;
 import rawfish.artedprvt.core.Logger;
@@ -28,8 +29,7 @@ import java.util.List;
 /**
  * 进程
  */
-public class ScriptProcess extends Process {
-    public static final ProcessIdLevel SCRIPT_PROCESS_ID_LEVEL=new ProcessIdLevel(0,4095);
+public class ScriptProcess extends AppProcess {
     private WorkSpace workSpace;
     private FileLoader fileLoader;//文件加载器
     private ScriptLoader scriptLoader;//脚本加载器
@@ -134,11 +134,6 @@ public class ScriptProcess extends Process {
         return loadDefaultIcon();
     }
 
-
-    @Override
-    public ProcessIdLevel pidLevel() {
-        return SCRIPT_PROCESS_ID_LEVEL;
-    }
 
     @Override
     public Logger logger() {

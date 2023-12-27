@@ -2,10 +2,10 @@ package rawfish.artedprvt.std.cli.util;
 
 import rawfish.artedprvt.api.Solvable;
 import rawfish.artedprvt.std.cli.Command;
-import rawfish.artedprvt.std.cli.CommandComplete;
-import rawfish.artedprvt.std.cli.CommandFormat;
-import rawfish.artedprvt.std.cli.CommandInfo;
-import rawfish.artedprvt.std.cli.CommandProcess;
+import rawfish.artedprvt.std.cli.CompleteInterface;
+import rawfish.artedprvt.std.cli.FormatInterface;
+import rawfish.artedprvt.std.cli.InfoInterface;
+import rawfish.artedprvt.std.cli.ProcessInterface;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.Messager;
@@ -15,10 +15,10 @@ import java.util.List;
 @Solvable
 public class CommandBuilder {
     private String name;
-    private CommandProcess process;
-    private CommandComplete complete;
-    private CommandFormat format;
-    private CommandInfo info;
+    private ProcessInterface process;
+    private CompleteInterface complete;
+    private FormatInterface format;
+    private InfoInterface info;
 
     @Solvable
     public CommandBuilder(String name){
@@ -26,25 +26,25 @@ public class CommandBuilder {
     }
 
     @Solvable
-    public CommandBuilder process(CommandProcess process){
+    public CommandBuilder process(ProcessInterface process){
         this.process=process;
         return this;
     }
 
     @Solvable
-    public CommandBuilder complete(CommandComplete complete){
+    public CommandBuilder complete(CompleteInterface complete){
         this.complete=complete;
         return this;
     }
 
     @Solvable
-    public CommandBuilder format(CommandFormat format){
+    public CommandBuilder format(FormatInterface format){
         this.format=format;
         return this;
     }
 
     @Solvable
-    public CommandBuilder info(CommandInfo info){
+    public CommandBuilder info(InfoInterface info){
         this.info=info;
         return this;
     }
@@ -55,12 +55,12 @@ public class CommandBuilder {
     }
 
     private static class ProxyCommand extends Command{
-        private CommandProcess process;
-        private CommandComplete complete;
-        private CommandFormat format;
-        private CommandInfo info;
+        private ProcessInterface process;
+        private CompleteInterface complete;
+        private FormatInterface format;
+        private InfoInterface info;
 
-        public ProxyCommand(String commandName, CommandProcess process, CommandComplete complete, CommandFormat format, CommandInfo info) {
+        public ProxyCommand(String commandName, ProcessInterface process, CompleteInterface complete, FormatInterface format, InfoInterface info) {
             super(commandName);
             this.process = process;
             this.complete = complete;
@@ -105,28 +105,28 @@ public class CommandBuilder {
         }
     }
 
-    private static class EmptyProcess implements CommandProcess{
+    private static class EmptyProcess implements ProcessInterface {
         @Override
         public void process(List<String> args, Messager messager) {
 
         }
     }
 
-    private static class EmptyComplete implements CommandComplete{
+    private static class EmptyComplete implements CompleteInterface {
         @Override
         public List<String> complete(List<String> args) {
             return Literals.emptyComplete();
         }
     }
 
-    private static class EmptyFormat implements CommandFormat{
+    private static class EmptyFormat implements FormatInterface {
         @Override
         public List<? extends FormatHandler> format(List<String> args) {
             return Literals.emptyFormat();
         }
     }
 
-    private static class EmptyInfo implements CommandInfo{
+    private static class EmptyInfo implements InfoInterface {
         @Override
         public InfoHandler info(List<String> args) {
             return Literals.emptyInfo();

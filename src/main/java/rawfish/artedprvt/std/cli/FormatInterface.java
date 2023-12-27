@@ -5,7 +5,7 @@ import rawfish.artedprvt.api.Solvable;
 import java.util.List;
 
 @Solvable
-public interface CommandFormat {
+public interface FormatInterface {
     /**
      * 参数格式
      * 在参数前添加格式代码

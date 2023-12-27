@@ -5,12 +5,11 @@ import rawfish.artedprvt.core.BaseClassGroup;
 import rawfish.artedprvt.std.cgl.cli.format.ClassGroupCliFormat;
 import rawfish.artedprvt.std.cgl.cli.info.ClassGroupCliInfo;
 import rawfish.artedprvt.std.cgl.cli.util.ClassGroupCliUtil;
-import rawfish.artedprvt.std.cgl.cli.util.parser.ClassGroupCliUtilParser;
 import rawfish.artedprvt.std.cli.Command;
-import rawfish.artedprvt.std.cli.CommandComplete;
-import rawfish.artedprvt.std.cli.CommandFormat;
-import rawfish.artedprvt.std.cli.CommandInfo;
-import rawfish.artedprvt.std.cli.CommandProcess;
+import rawfish.artedprvt.std.cli.CompleteInterface;
+import rawfish.artedprvt.std.cli.FormatInterface;
+import rawfish.artedprvt.std.cli.InfoInterface;
+import rawfish.artedprvt.std.cli.ProcessInterface;
 import rawfish.artedprvt.std.cli.CommandRegistry;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
@@ -34,10 +33,10 @@ public class ClassGroupCli extends BaseClassGroup {
 
 
         add(Command.class);
-        add(CommandComplete.class);
-        add(CommandFormat.class);
-        add(CommandInfo.class);
-        add(CommandProcess.class);
+        add(CompleteInterface.class);
+        add(FormatInterface.class);
+        add(InfoInterface.class);
+        add(ProcessInterface.class);
         add(CommandRegistry.class);
         add(FormatHandler.class);
         add(InfoHandler.class);

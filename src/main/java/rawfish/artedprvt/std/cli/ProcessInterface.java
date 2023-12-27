@@ -5,7 +5,7 @@ import rawfish.artedprvt.api.Solvable;
 import java.util.List;
 
 @Solvable
-public interface CommandProcess {
+public interface ProcessInterface {
     /**
      * 执行这个命令
      *

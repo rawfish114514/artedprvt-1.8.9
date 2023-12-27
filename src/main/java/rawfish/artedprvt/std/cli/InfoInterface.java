@@ -5,12 +5,13 @@ import rawfish.artedprvt.api.Solvable;
 import java.util.List;
 
 @Solvable
-public interface CommandComplete {
+public interface InfoInterface {
     /**
-     * 补全参数
+     * 参数信息
+     *
      * @param args 光标之前的参数列表
-     * @return 最后一个参数的补全参数列表 不能为null
+     * @return 对参数的解释或提示 不能为null
      */
     @Solvable
-    List<String> complete(List<String> args);
+    InfoHandler info(List<String> args);
 }

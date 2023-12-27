@@ -7,7 +7,7 @@ import rawfish.artedprvt.api.Solvable;
  * 这个接口和item子包的所有实现类都是mc版本无关的
  */
 @Solvable
-public abstract class Command implements CommandProcess,CommandComplete,CommandFormat,CommandInfo{
+public abstract class Command implements ProcessInterface, CompleteInterface, FormatInterface, InfoInterface {
     @Solvable
     public Command(String commandName){
         this.commandName=commandName;
