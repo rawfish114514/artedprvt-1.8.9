@@ -63,7 +63,7 @@ public class Artedprvt
                 "\n\n作者 ↓\nhttps://space.bilibili.com/455906194";
     }
 
-    public String tempVersion="temp 2023/12/18";
+    public String tempVersion="temp 2023/12/29";
     public String otherDescription(){
         if(tempVersion.isEmpty()){
             return tempVersion;

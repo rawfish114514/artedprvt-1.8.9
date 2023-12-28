@@ -26,13 +26,13 @@ public class PhaseHandle extends Command {
     }
 
     @Override
-    public void process(List<String> args, Messager messager){
-        goals.forEach(goal->goal.process(args,messager));
+    public void process(List<String> args, Messager messager) {
+        goals.forEach(goal -> goal.process(args, messager));
     }
 
     @Override
     public List<String> complete(List<String> args) {
-        if(complete==null) {
+        if (complete == null) {
             return Literals.emptyComplete();
         }
         return complete.complete(args);
@@ -40,7 +40,7 @@ public class PhaseHandle extends Command {
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        if(format==null) {
+        if (format == null) {
             return Literals.emptyFormat();
         }
         return format.format(args);
@@ -48,7 +48,7 @@ public class PhaseHandle extends Command {
 
     @Override
     public InfoHandler info(List<String> args) {
-        if(info==null){
+        if (info == null) {
             return Literals.emptyInfo();
         }
         return info.info(args);

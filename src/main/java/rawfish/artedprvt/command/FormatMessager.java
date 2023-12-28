@@ -40,15 +40,15 @@ public class FormatMessager implements Messager {
 
 
     public void red(String patt,Object... args){
-        send(Formatting.DARK_RED+source+": "+MessageFormat.format(patt,args));
+        send(Formatting.DARK_RED+source+": "+MessageFormat.format(String.valueOf(patt),args));
     }
 
     public void gold(String patt,Object... args){
-        send(Formatting.GOLD+source+Formatting.GRAY+": "+MessageFormat.format(patt,args));
+        send(Formatting.GOLD+source+Formatting.GRAY+": "+MessageFormat.format(String.valueOf(patt),args));
     }
 
     public void white(String patt,Object... args){
-        send(Formatting.WHITE+source+Formatting.GRAY+": "+MessageFormat.format(patt,args));
+        send(Formatting.WHITE+source+Formatting.GRAY+": "+MessageFormat.format(String.valueOf(patt),args));
     }
 
 }

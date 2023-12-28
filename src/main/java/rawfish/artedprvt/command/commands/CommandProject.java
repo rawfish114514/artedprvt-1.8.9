@@ -58,10 +58,17 @@ public class CommandProject extends BaseCommand {
                             return;
                         }
 
+                        if(!project.isInit()){
+                            messager.red("未初始化");
+                            project.closeLog();
+                            return;
+                        }
+
                         try {
                             project.initLog();
                         } catch (IOException e) {
                             messager.red("日志初始化失败");
+                            project.closeLog();
                             return;
                         }
 
@@ -118,13 +125,23 @@ public class CommandProject extends BaseCommand {
                                 return;
                             }
                             messager.gold("加载成功");
-
                             return;
                         } finally {
                             project.closeLog();
                         }
                     }
+                    if(arg0.equals("close")){
+                        Project project=Project.project;
+                        if(project!=null){
+                            project.close();
+                        }else{
+                            messager.red("未打开项目");
+                        }
+
+                        return;
+                    }
                     messager.red("无效命令");
+                    return;
                 }
                 if (args.size() == 2) {
                     String arg0 = args.get(0);
@@ -144,7 +161,12 @@ public class CommandProject extends BaseCommand {
                         if (project != null) {
                             ProjectInitializer initializer = ProjectInitializer.initializerMap.get(arg1);
                             if (initializer != null) {
-                                project.init(initializer);
+                                try {
+                                    project.init(initializer);
+                                } catch (IOException e) {
+                                    messager.red("初始化异常");
+                                    e.printStackTrace();
+                                }
                             } else {
                                 messager.red("无效初始化器");
                             }
@@ -167,7 +189,7 @@ public class CommandProject extends BaseCommand {
     @Override
     public List<String> complete(List<String> args) {
         if (args.size() == 1) {
-            return Literals.stringListBuilder().adds("open", "init", "load");
+            return Literals.stringListBuilder().adds("open", "init", "load","close");
         }
         if (args.size() == 2) {
             String arg0 = args.get(0);
@@ -178,10 +200,6 @@ public class CommandProject extends BaseCommand {
             if (arg0.equals("init")) {
                 //初始化 补全可用的初始化器
                 return Literals.stringListBuilder().adds("script", "java");
-            }
-            if (arg0.equals("load")) {
-                //加载
-                return Literals.emptyComplete();
             }
         }
         return Literals.emptyComplete();
@@ -211,6 +229,9 @@ public class CommandProject extends BaseCommand {
             if (arg0.equals("load")) {
                 builder.append("d");
             }
+            if (arg0.equals("close")) {
+                builder.append("c");
+            }
         }
         return builder;
     }
@@ -222,7 +243,8 @@ public class CommandProject extends BaseCommand {
                     Literals.infoMapBuilder()
                             .string("open", "打开项目")
                             .string("init", "初始化项目")
-                            .string("load", "加载项目"),
+                            .string("load", "加载项目")
+                            .string("close", "关闭项目"),
                     Literals.infoFactory().string("无效命令")
             );
         }

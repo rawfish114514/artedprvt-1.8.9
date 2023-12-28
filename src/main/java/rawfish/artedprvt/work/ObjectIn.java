@@ -10,6 +10,6 @@ public class ObjectIn extends ObjectInputStream {
     }
 
     public String readString() throws IOException, ClassNotFoundException {
-        return (String)readObject();
+        return (String) readObject();
     }
 }
