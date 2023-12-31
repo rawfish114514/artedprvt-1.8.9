@@ -9,18 +9,16 @@ import java.lang.annotation.Target;
  * 阶段
  * 是生命周期的一部分
  * <p>
- * 命令系统
- * phase可以实现补全,格式,信息接口
- * {@link rawfish.artedprvt.std.cli.CompleteInterface}
- * {@link rawfish.artedprvt.std.cli.FormatInterface}
- * {@link rawfish.artedprvt.std.cli.InfoInterface}
+ * 阶段可以实现
+ * {@link rawfish.artedprvt.std.cli.InfoHandler}
+ * 仅在需要获取此阶段的info时调用
  * <p>
- * 当参数属于phase类型时(无冒号)
+ * 当参数属于阶段类型时(无冒号)
  * <p>
- * phase被调用时，会找到自己的生命周期并从第一个的阶段开始执行直到目的阶段
+ * 阶段被调用时，会找到自己的生命周期并从第一个阶段开始执行直到此阶段
  * 每个阶段都调用所有自身阶段的目标,调用顺序无法确定
  * <p>
- * 参数补全格式信息由此phase处理
+ * 类名必须是: PhaseName
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

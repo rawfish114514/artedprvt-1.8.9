@@ -1,57 +1,30 @@
 package rawfish.artedprvt.work;
 
-import rawfish.artedprvt.std.cli.Command;
-import rawfish.artedprvt.std.cli.CompleteInterface;
-import rawfish.artedprvt.std.cli.FormatHandler;
-import rawfish.artedprvt.std.cli.FormatInterface;
 import rawfish.artedprvt.std.cli.InfoHandler;
-import rawfish.artedprvt.std.cli.InfoInterface;
 import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.ProcessInterface;
-import rawfish.artedprvt.std.cli.util.Literals;
 
 import java.util.List;
 
-public class GoalHandle extends Command {
-    private ProcessInterface process;
-    private CompleteInterface complete;
-    private FormatInterface format;
-    private InfoInterface info;
+public class GoalHandle implements ProcessInterface,InfoHandler{
+    private ProcessInterface processInterface;
+    private InfoHandler infoHandler;
 
-    public GoalHandle(String commandName, ProcessInterface process, CompleteInterface complete, FormatInterface format, InfoInterface info) {
-        super(commandName);
-        this.process = process;
-        this.complete = complete;
-        this.format = format;
-        this.info = info;
+    public GoalHandle(String goalName, ProcessInterface processInterface,InfoHandler infoHandler) {
+        this.processInterface = processInterface;
+        this.infoHandler = infoHandler;
     }
 
     @Override
     public void process(List<String> args, Messager messager) {
-        process.process(args, messager);
+        processInterface.process(args, messager);
     }
 
     @Override
-    public List<String> complete(List<String> args) {
-        if (complete == null) {
-            return Literals.emptyComplete();
+    public String handleInfo(String source) {
+        if(infoHandler==null){
+            return "";
         }
-        return complete.complete(args);
-    }
-
-    @Override
-    public List<? extends FormatHandler> format(List<String> args) {
-        if (format == null) {
-            return Literals.emptyFormat();
-        }
-        return format.format(args);
-    }
-
-    @Override
-    public InfoHandler info(List<String> args) {
-        if (info == null) {
-            return Literals.emptyInfo();
-        }
-        return info.info(args);
+        return infoHandler.handleInfo(source);
     }
 }

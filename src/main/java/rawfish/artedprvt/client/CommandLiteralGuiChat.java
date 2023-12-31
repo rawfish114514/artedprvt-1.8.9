@@ -6,6 +6,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import org.lwjgl.input.Mouse;
+import rawfish.artedprvt.std.cli.CommandHandler;
 import rawfish.artedprvt.std.cli.util.HandleResult;
 import rawfish.artedprvt.std.cli.util.Literals;
 
@@ -14,7 +15,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 命令信息聊天界面

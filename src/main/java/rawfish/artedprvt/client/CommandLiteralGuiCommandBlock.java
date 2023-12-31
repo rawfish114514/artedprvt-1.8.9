@@ -4,6 +4,7 @@ import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.command.server.CommandBlockLogic;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import rawfish.artedprvt.std.cli.CommandHandler;
 import rawfish.artedprvt.std.cli.util.HandleResult;
 import rawfish.artedprvt.std.cli.util.Literals;
 

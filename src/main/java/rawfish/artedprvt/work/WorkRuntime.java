@@ -2,6 +2,7 @@ package rawfish.artedprvt.work;
 
 import rawfish.artedprvt.std.cli.CompleteInterface;
 import rawfish.artedprvt.std.cli.FormatInterface;
+import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.InfoInterface;
 import rawfish.artedprvt.std.cli.ProcessInterface;
 
@@ -17,27 +18,33 @@ public class WorkRuntime {
     private Map<String, PhaseData> phaseDataMap = new HashMap<>();
     private Map<String, LifecycleData> lifecycleDataMap = new HashMap<>();
     private Map<String, GoalData> goalDataMap = new HashMap<>();
+    private Map<String, CommandData> commandDataMap = new HashMap<>();
 
 
     private Map<String, PhaseHandle> phaseHandleMap = new HashMap<>();//close
     private Map<String, List<PhaseHandle>> lifecyclePhaseHandleMap = new HashMap<>();//close
     private Map<String, GoalHandle> goalHandleMap = new HashMap<>();//close
+    private Map<String, CommandHandle> commandHandleMap = new HashMap<>();//close
 
     private List<String> phaseRefNameList = new ArrayList<>();
     private List<String> lifecycleRefNameList = new ArrayList<>();
     private List<String> goalRefNameList = new ArrayList<>();
+    private List<String> commandRefNameList = new ArrayList<>();
 
     private Map<String, String> phaseLifecycleMap = new HashMap<>();
+    private Map<String, String> goalLifecycleMap = new HashMap<>();
 
     public WorkRuntime(
             ClassLoader classLoader,
             List<PhaseData> phaseDataList,
             List<LifecycleData> lifecycleDataList,
-            List<GoalData> goalDataList) {
+            List<GoalData> goalDataList,
+            List<CommandData> commandDataList) {
         this.classLoader = classLoader;
         phaseDataList.forEach(v -> phaseDataMap.put(v.phaseName, v));
         lifecycleDataList.forEach(v -> lifecycleDataMap.put(v.lifecycleName, v));
         goalDataList.forEach(v -> goalDataMap.put(v.goalName, v));
+        commandDataList.forEach(v -> commandDataMap.put(v.commandName, v));
         try {
             init();
         } catch (Exception e) {
@@ -54,6 +61,10 @@ public class WorkRuntime {
                 String phaseHandleName = lifecycleData.lifecycleName + "/" + phaseName;
                 String phaseRefName = phaseName;
 
+                Constructor phaseConstructor = phaseClass.getConstructor();
+                phaseConstructor.setAccessible(true);
+                Object phaseObject = phaseConstructor.newInstance();
+
                 List<GoalHandle> goalHandleList = new ArrayList<>();
                 for (GoalData goalData : goalDataMap.values()) {
                     if (goalData.phaseName.equals(phaseName)) {
@@ -63,32 +74,30 @@ public class WorkRuntime {
                         Constructor goalConstructor = goalClass.getConstructor();
                         goalConstructor.setAccessible(true);
                         Object goalObject = goalConstructor.newInstance();
+                        InfoHandler infoHandler=getInfoHandler(goalObject);
+                        if(infoHandler==null){
+                            infoHandler=getInfoHandler(phaseObject);
+                        }
                         GoalHandle goalHandle = new GoalHandle(
                                 goalHandleName,
-                                getProcess(goalObject),
-                                getComplete(goalObject),
-                                getFormat(goalObject),
-                                getInfo(goalObject));
+                                getProcessInterface(goalObject),
+                                infoHandler);
 
                         goalHandleList.add(goalHandle);
                         goalHandleMap.put(goalRefName, goalHandle);
                         goalRefNameList.add(goalRefName);
+
+                        goalLifecycleMap.put(goalRefName, goalData.goalName);
                     }
                 }
 
-                Constructor phaseConstructor = phaseClass.getConstructor();
-                phaseConstructor.setAccessible(true);
-                Object phaseObject = phaseConstructor.newInstance();
                 PhaseHandle phaseHandle = new PhaseHandle(
                         phaseHandleName,
-                        getComplete(phaseObject),
-                        getFormat(phaseObject),
-                        getInfo(phaseObject),
-                        goalHandleList
-                );
+                        goalHandleList,
+                        getInfoHandler(phaseObject));
 
                 phaseHandleList.add(phaseHandle);
-                phaseHandleMap.put(phaseHandleName, phaseHandle);
+                phaseHandleMap.put(phaseRefName, phaseHandle);
                 phaseRefNameList.add(phaseRefName);
 
                 phaseLifecycleMap.put(phaseRefName, lifecycleData.lifecycleName);
@@ -99,7 +108,7 @@ public class WorkRuntime {
         }
 
         for (GoalData goalData : goalDataMap.values()) {
-            if (goalData.phaseName.equals(".null")) {
+            if (goalData.phaseName.equals("null;")) {
                 Class goalClass = classLoader.loadClass(goalData.className);
                 String goalHandleName = "/" + goalData.goalName;
                 String goalRefName = ":" + goalData.goalName;
@@ -108,41 +117,64 @@ public class WorkRuntime {
                 Object goalObject = goalConstructor.newInstance();
                 GoalHandle goalHandle = new GoalHandle(
                         goalHandleName,
-                        getProcess(goalObject),
-                        getComplete(goalObject),
-                        getFormat(goalObject),
-                        getInfo(goalObject));
+                        getProcessInterface(goalObject),
+                        getInfoHandler(goalObject));
 
                 goalHandleMap.put(goalRefName, goalHandle);
                 goalRefNameList.add(goalRefName);
             }
         }
+
+        for (CommandData commandData : commandDataMap.values()) {
+            Class commandClass = classLoader.loadClass(commandData.className);
+            String commandHandleName = commandData.commandName;
+            String commandRefName = commandData.commandName;
+            Constructor commandConstructor = commandClass.getConstructor();
+            commandConstructor.setAccessible(true);
+            Object commandObject = commandConstructor.newInstance();
+            CommandHandle commandHandle = new CommandHandle(
+                    commandHandleName,
+                    getProcessInterface(commandObject),
+                    getCompleteInterface(commandObject),
+                    getFormatInterface(commandObject),
+                    getInfoInterface(commandObject));
+
+            commandHandleMap.put(commandRefName, commandHandle);
+            commandRefNameList.add(commandRefName);
+        }
     }
 
-    private ProcessInterface getProcess(Object object) {
+    private ProcessInterface getProcessInterface(Object object) {
         if (ProcessInterface.class.isAssignableFrom(object.getClass())) {
             return (ProcessInterface) object;
         }
         return null;
     }
 
-    private CompleteInterface getComplete(Object object) {
+    private CompleteInterface getCompleteInterface(Object object) {
         if (CompleteInterface.class.isAssignableFrom(object.getClass())) {
             return (CompleteInterface) object;
         }
         return null;
     }
 
-    private FormatInterface getFormat(Object object) {
+    private FormatInterface getFormatInterface(Object object) {
         if (FormatInterface.class.isAssignableFrom(object.getClass())) {
             return (FormatInterface) object;
         }
         return null;
     }
 
-    private InfoInterface getInfo(Object object) {
+    private InfoInterface getInfoInterface(Object object) {
         if (InfoInterface.class.isAssignableFrom(object.getClass())) {
             return (InfoInterface) object;
+        }
+        return null;
+    }
+
+    private InfoHandler getInfoHandler(Object object) {
+        if (InfoHandler.class.isAssignableFrom(object.getClass())) {
+            return (InfoHandler) object;
         }
         return null;
     }
@@ -185,12 +217,31 @@ public class WorkRuntime {
     }
 
     /**
+     * 获取目标的生命周期
+     *
+     * @param goalName goal
+     * @return lifecycle
+     */
+    public String getLifecycleOfGoal(String goalName) {
+        return goalLifecycleMap.get(goalName);
+    }
+
+    /**
+     * 获取所有命令名
+     *
+     * @return command
+     */
+    public List<String> getCommands() {
+        return new ArrayList<>(commandRefNameList);
+    }
+
+    /**
      * 获取阶段处理
      *
      * @param name 阶段名
      * @return 阶段处理列表 所在生命周期从第一个阶段到此阶段
      */
-    public List<PhaseHandle> getPhaseHandle(String name) {
+    public List<PhaseHandle> getPhaseHandles(String name) {
         LifecycleData lifecycleData = lifecycleDataMap.get(phaseLifecycleMap.get(name));
         List<PhaseHandle> phaseHandleList = lifecyclePhaseHandleMap.get(lifecycleData.lifecycleName);
         List<PhaseHandle> result = new LinkedList<>();
@@ -205,6 +256,16 @@ public class WorkRuntime {
     }
 
     /**
+     * 获取阶段处理
+     *
+     * @param name 阶段名
+     * @return
+     */
+    public PhaseHandle getPhaseHandle(String name) {
+        return phaseHandleMap.get(name);
+    }
+
+    /**
      * 获取目标处理
      *
      * @param name 目标名
@@ -214,10 +275,21 @@ public class WorkRuntime {
         return goalHandleMap.get(name);
     }
 
+    /**
+     * 返回命令处理
+     *
+     * @param name 命令名
+     * @return
+     */
+    public CommandHandle getCommandHandle(String name) {
+        return commandHandleMap.get(name);
+    }
+
     public void close() {
         classLoader = null;
         phaseHandleMap = null;
         lifecyclePhaseHandleMap = null;
         goalHandleMap = null;
+        commandHandleMap = null;
     }
 }

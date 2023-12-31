@@ -1,6 +1,6 @@
 package rawfish.artedprvt.command;
 
-import rawfish.artedprvt.client.CommandHandler;
+import rawfish.artedprvt.std.cli.CommandHandler;
 import rawfish.artedprvt.command.commands.CommandApf;
 import rawfish.artedprvt.std.cli.Command;
 

@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
  * 由阶段构成
  * <p>
  * 不参与命令系统
+ * <p>
+ * 类名必须是: LifecycleName
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

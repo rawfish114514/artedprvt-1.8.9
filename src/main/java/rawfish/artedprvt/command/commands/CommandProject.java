@@ -7,181 +7,240 @@ import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.std.cli.util.Literals;
+import rawfish.artedprvt.std.text.Formatting;
 import rawfish.artedprvt.work.Project;
 import rawfish.artedprvt.work.ProjectInitializer;
+import rawfish.artedprvt.work.WorkRuntime;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class CommandProject extends BaseCommand {
-    private static final ReentrantLock lock = new ReentrantLock();
-
     public CommandProject(String commandName) {
         super(commandName);
     }
 
     @Override
     public void process(List<String> args, FormatMessager messager) {
-        if (lock.isLocked()) {
-            return;
-        }
         new TaskProcess(this) {
             @Override
             public void run() {
-                lock.lock();
-
-                if (args.size() == 0) {
+                if (Project.lock.tryLock()) {
                     Project project = Project.project;
-                    if (project != null) {
-                        messager.gold(project.getDir());
-                    }
-                    return;
-                }
-                if (args.size() == 1) {
-                    String arg0 = args.get(0);
-                    if (arg0.equals("open")) {
-                        messager.red("参数不够，需要文件目录。");
+                    boolean isOpen = project != null;
+
+                    if (args.size() == 0) {
+                        if (isOpen) {
+                            messager.gold("已打开项目: " + project.getDir());
+                        } else {
+                            messager.white("未打开项目");
+                        }
                         return;
                     }
-                    if (arg0.equals("init")) {
-                        messager.red("参数不够，需要初始化器。");
-                        return;
-                    }
-                    if (arg0.equals("load")) {
-                        //load
-
-                        Project project = Project.project;
-                        if (project == null) {
-                            messager.red("未打开项目");
+                    if (args.size() == 1) {
+                        String arg0 = args.get(0);
+                        if (arg0.equals("open")) {
+                            messager.red("参数不够，需要文件目录。");
                             return;
                         }
-
-                        if(!project.isInit()){
-                            messager.red("未初始化");
-                            project.closeLog();
+                        if (arg0.equals("init")) {
+                            messager.red("参数不够，需要初始化器。");
                             return;
                         }
+                        if (arg0.equals("load")) {
+                            //load
 
-                        try {
-                            project.initLog();
-                        } catch (IOException e) {
-                            messager.red("日志初始化失败");
-                            project.closeLog();
-                            return;
-                        }
-
-                        try {
-                            a:
-                            {
-                                try {
-                                    messager.white("验证");
-                                    project.verify();
-                                } catch (Exception e) {
-                                    messager.red("验证失败");
-
-                                    e.printStackTrace();
-                                    break a;
-                                }
-                                messager.white("验证成功");
-
-                                try {
-                                    messager.white("加载");
-                                    project.load();
-                                } catch (Exception e) {
-                                    messager.red("加载失败");
-
-                                    e.printStackTrace();
-                                    break a;
-                                }
-                                messager.gold("加载成功");
+                            if (!isOpen) {
+                                messager.red("未打开项目");
                                 return;
                             }
 
+                            if (!project.isInit()) {
+                                messager.red("未初始化");
+                                project.closeLog();
+                                return;
+                            }
 
                             try {
-                                messager.white("编译");
-                                project.compile();
-                            } catch (Exception e) {
-                                messager.red("编译失败");
-                                messager.red(e.getMessage());
-                                messager.red("已失败");
-
-                                e.printStackTrace();
+                                project.initLog();
+                            } catch (IOException e) {
+                                messager.red("日志初始化失败");
+                                project.closeLog();
                                 return;
                             }
-                            messager.white("编译成功");
 
                             try {
-                                messager.white("加载");
-                                project.load();
-                            } catch (Exception e) {
-                                messager.red("加载失败");
-                                messager.red(e.getMessage());
-                                messager.red("已失败");
+                                long time = System.currentTimeMillis();
 
-                                e.printStackTrace();
+                                boolean success = false;
+                                a:
+                                {
+                                    try {
+                                        messager.white("验证");
+                                        project.verify();
+                                    } catch (Exception e) {
+                                        messager.red("验证失败");
+
+                                        e.printStackTrace();
+                                        break a;
+                                    }
+                                    messager.white("验证成功");
+
+                                    try {
+                                        messager.white("加载");
+                                        project.load();
+                                    } catch (Exception e) {
+                                        messager.red("加载失败");
+
+                                        e.printStackTrace();
+                                        break a;
+                                    }
+                                    success = true;
+                                }
+
+
+                                if (!success) a:{
+                                    try {
+                                        messager.white("编译");
+                                        project.compile();
+                                    } catch (Exception e) {
+                                        messager.red("编译失败");
+                                        messager.red(e.getMessage());
+
+                                        e.printStackTrace();
+                                        break a;
+                                    }
+                                    messager.white("编译成功");
+
+                                    try {
+                                        messager.white("加载");
+                                        project.load();
+                                        success = true;
+                                    } catch (Exception e) {
+                                        messager.red("加载失败");
+                                        messager.red(e.getMessage());
+
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                                time = System.currentTimeMillis() - time;
+                                if (success) {
+                                    messager.gold("加载成功 (" + time + "ms)");
+                                } else {
+                                    messager.red("已失败 " + Formatting.GRAY + "(" + time + "ms)");
+                                }
+                                return;
+                            } finally {
+                                project.closeLog();
+                            }
+                        }
+                        if (arg0.equals("close")) {
+                            if (isOpen) {
+                                project.close();
+                                messager.white("已关闭项目");
+                            } else {
+                                messager.red("未打开项目");
+                            }
+
+                            return;
+                        }
+                        messager.red("无效命令");
+                        return;
+                    }
+                    if (args.size() == 2) {
+                        String arg0 = args.get(0);
+                        String arg1 = args.get(1);
+                        if (arg0.equals("open")) {
+                            if (isOpen) {
+                                messager.white("已打开项目");
+                            }
+                            File file = new File(arg1);
+                            if (!file.isDirectory()) {
+                                messager.red("不存在或不是目录");
                                 return;
                             }
-                            messager.gold("加载成功");
+                            new Project(arg1);
+                            messager.gold("已打开项目: " + arg1);
                             return;
-                        } finally {
-                            project.closeLog();
                         }
-                    }
-                    if(arg0.equals("close")){
-                        Project project=Project.project;
-                        if(project!=null){
-                            project.close();
-                        }else{
-                            messager.red("未打开项目");
-                        }
+                        if (arg0.equals("init")) {
+                            if (isOpen) {
+                                ProjectInitializer initializer = ProjectInitializer.initializerMap.get(arg1);
+                                if (initializer != null) {
+                                    try {
+                                        project.init(initializer);
+                                        messager.gold("初始化完成");
+                                    } catch (Exception e) {
+                                        messager.red("初始化异常");
+                                        messager.red(e.getMessage());
+                                        e.printStackTrace();
+                                    }
+                                } else {
 
-                        return;
-                    }
-                    messager.red("无效命令");
-                    return;
-                }
-                if (args.size() == 2) {
-                    String arg0 = args.get(0);
-                    String arg1 = args.get(1);
-                    if (arg0.equals("open")) {
-                        File file = new File(arg1);
-                        if (!file.isDirectory()) {
-                            messager.red("不存在或不是目录");
-                            return;
-                        }
-                        new Project(arg1);
-                        messager.gold("已打开项目: " + arg1);
-                        return;
-                    }
-                    if (arg0.equals("init")) {
-                        Project project = Project.project;
-                        if (project != null) {
-                            ProjectInitializer initializer = ProjectInitializer.initializerMap.get(arg1);
-                            if (initializer != null) {
-                                try {
-                                    project.init(initializer);
-                                } catch (IOException e) {
-                                    messager.red("初始化异常");
-                                    e.printStackTrace();
+                                    URL url;
+                                    try {
+                                        url = new URL(arg1);
+                                    } catch (MalformedURLException e) {
+                                        if (new File(arg1).isFile()) {
+                                            try {
+                                                url = new URL("file:" + arg1);
+                                            } catch (MalformedURLException ex) {
+                                                messager.red("找不到初始化器");
+                                                e.printStackTrace();
+                                                return;
+                                            }
+                                        } else {
+                                            messager.red("找不到初始化器");
+                                            return;
+                                        }
+                                    }
+                                    try {
+                                        InputStream inputStream = url.openStream();
+                                        messager.white("下载初始化器: " + arg1);
+
+                                        try {
+                                            initializer = new ProjectInitializer(inputStream);
+                                        } catch (Exception e) {
+                                            messager.red("初始化器异常");
+                                            messager.red(e.getMessage());
+
+                                            return;
+                                        }
+
+                                        try {
+                                            project.init(initializer);
+                                            messager.gold("初始化完成");
+                                        } catch (Exception e) {
+                                            messager.red("初始化异常");
+                                            messager.red(e.getMessage());
+                                            e.printStackTrace();
+                                        }
+
+                                    } catch (IOException e) {
+                                        messager.red("打开失败");
+                                        e.printStackTrace();
+                                    }
                                 }
                             } else {
-                                messager.red("无效初始化器");
+                                messager.red("未打开项目");
                             }
-                        } else {
-                            messager.red("未打开项目");
+                            return;
                         }
-                        return;
                     }
+                    messager.red("参数异常");
                 }
-                messager.red("参数异常");
             }
 
             @Override
             public void fil() {
-                lock.unlock();
+                Project.lock.unlock();
             }
         };
     }
@@ -189,7 +248,7 @@ public class CommandProject extends BaseCommand {
     @Override
     public List<String> complete(List<String> args) {
         if (args.size() == 1) {
-            return Literals.stringListBuilder().adds("open", "init", "load","close");
+            return Literals.stringListBuilder().adds("open", "init", "load", "close");
         }
         if (args.size() == 2) {
             String arg0 = args.get(0);
@@ -199,7 +258,7 @@ public class CommandProject extends BaseCommand {
             }
             if (arg0.equals("init")) {
                 //初始化 补全可用的初始化器
-                return Literals.stringListBuilder().adds("script", "java");
+                return new ArrayList<>(ProjectInitializer.initializerMap.keySet());
             }
         }
         return Literals.emptyComplete();
@@ -220,9 +279,28 @@ public class CommandProject extends BaseCommand {
                 builder.append("6");
                 if (args.size() >= 2) {
                     String arg1 = args.get(1);
-                    //暂时枚举
-                    if (arg1.equals("script") || arg1.equals("java")) {
-                        builder.append("a");
+                    ProjectInitializer initializer = ProjectInitializer.initializerMap.get(arg1);
+                    if (initializer == null) {
+                        URL url = null;
+                        try {
+                            url = new URL(arg1);
+                        } catch (MalformedURLException e) {
+                            if (new File(arg1).isFile()) {
+                                try {
+                                    url = new URL("file:" + arg1);
+                                } catch (MalformedURLException ex) {
+                                    ex.printStackTrace();
+                                }
+                            }
+                        }
+                        if (url == null) {
+                            builder.append("4");
+                        } else {
+                            builder.add(urlFormat(url));
+                        }
+
+                    } else {
+                        builder.append("e");
                     }
                 }
             }
@@ -238,6 +316,9 @@ public class CommandProject extends BaseCommand {
 
     @Override
     public InfoHandler info(List<String> args) {
+        if (args.size() == 0) {
+            return Literals.infoFactory().string("项目结构工具");
+        }
         if (args.size() == 1) {
             return Literals.infoFactory().map(
                     Literals.infoMapBuilder()
@@ -260,15 +341,42 @@ public class CommandProject extends BaseCommand {
             }
             if (arg0.equals("init")) {
                 //初始化
-                return Literals.infoFactory().map(
-                        Literals.infoMapBuilder()
-                                .string("", "初始化器")
-                                .string("script", "脚本初始化器 用于构建asp")
-                                .string("java", "java初始化器 用于构建jar"),
-                        Literals.infoFactory().string("找不到初始化器")
-                );
+                if (arg1.isEmpty()) {
+                    return Literals.infoFactory().string("选择内置初始化器或指定URL");
+                }
+                ProjectInitializer initializer = ProjectInitializer.initializerMap.get(arg1);
+                if (initializer == null) {
+                    URL url = null;
+                    try {
+                        url = new URL(arg1);
+                    } catch (MalformedURLException e) {
+                        if (new File(arg1).isFile()) {
+                            try {
+                                url = new URL("file:" + arg1);
+                            } catch (MalformedURLException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }
+                    if (url == null) {
+                        return Literals.infoFactory().string("无效URL");
+                    }
+                    return Literals.infoFactory().string("从此位置下载初始化器 " + urlFormat(url).handleFormat("<" + url.getProtocol() + ">"));
+                }
+                return Literals.infoFactory().string(initializer.getDescription());
             }
         }
         return Literals.emptyInfo();
+    }
+
+    public FormatHandler urlFormat(URL url) {
+        String p = url.getProtocol();
+        if ("file".equals(p)) {
+            return Literals.formatFactory().append("6");
+        }
+        if ("http".equals(p)) {
+            return Literals.formatFactory().append("9");
+        }
+        return Literals.formatFactory().append("c");
     }
 }

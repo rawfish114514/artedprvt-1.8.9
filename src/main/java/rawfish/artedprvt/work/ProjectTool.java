@@ -2,6 +2,7 @@ package rawfish.artedprvt.work;
 
 import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.std.cli.ProcessInterface;
+import rawfish.artedprvt.work.anno.Command;
 import rawfish.artedprvt.work.anno.Exclude;
 import rawfish.artedprvt.work.anno.Goal;
 import rawfish.artedprvt.work.anno.Lifecycle;
@@ -29,8 +30,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -110,6 +113,7 @@ public class ProjectTool {
             List<Class> phaseClasses = new ArrayList<>();
             List<Class> lifecycleClasses = new ArrayList<>();
             List<Class> goalClasses = new ArrayList<>();
+            List<Class> commandClasses = new ArrayList<>();
 
             //验证Class ap 有唯一的注解 ProjectScript
             {
@@ -187,12 +191,29 @@ public class ProjectTool {
                 log.println("</register> Goal");
             }
 
+            //注册Command
+            {
+                log.println("<register> Command");
+
+                for (Class c : map.values()) {
+                    Command command = single(Command.class, c);
+                    if (command != null) {
+                        commandClasses.add(c);
+
+                        log.println(c);
+                    }
+                }
+
+                log.println("</register> Command");
+            }
+
             log.println("</register>");
 
 
             Map<Class, PhaseData> phaseDataMap = new HashMap<>();
             Map<Class, LifecycleData> lifecycleDataMap = new HashMap<>();
             Map<Class, GoalData> goalDataMap = new HashMap<>();
+            Map<Class, CommandData> commandDataMap = new HashMap<>();
 
             //验证并提取数据
             log.println("<data>");
@@ -247,7 +268,7 @@ public class ProjectTool {
                     Goal goal = single(Goal.class, c);
                     Class clas = goal.value();
                     if (clas == Goal.class) {
-                        goalData.phaseName = ".null";
+                        goalData.phaseName = "null;";
                     } else {
                         if (phaseClasses.contains(clas)) {
                             goalData.phaseName = phaseDataMap.get(clas).phaseName;
@@ -261,6 +282,22 @@ public class ProjectTool {
                 }
 
                 log.println("</data> Goal");
+            }
+
+            {
+                log.println("<data> Command");
+
+                for (Class c : commandClasses) {
+                    CommandData commandData = new CommandData();
+                    commandData.className = c.getName();
+                    commandData.commandName = named("Command", c);
+
+                    commandDataMap.put(c, commandData);
+
+                    log.println(c);
+                }
+
+                log.println("</data> Command");
             }
 
             //验证 Goal 注解的类必须实现 ProcessInterface 接口
@@ -300,6 +337,124 @@ public class ProjectTool {
 
                 log.println("</phase-in-lifecycle>");
             }
+
+            //验证 所有 Phase 名和 Command 名不重复
+            {
+                log.println("<lifecycle-command-name-unequals>");
+
+                List<String> names = new ArrayList<>();
+                for (PhaseData phaseData : phaseDataMap.values()) {
+                    String name = phaseData.phaseName;
+                    if (names.contains(name)) {
+                        throw new RuntimeException("Phase 或 Command 名重复: " + name);
+                    }
+                    names.add(name);
+
+                    log.println(name);
+                }
+                for (CommandData commandData : commandDataMap.values()) {
+                    String name = commandData.commandName;
+                    if (names.contains(name)) {
+                        throw new RuntimeException("Phase 或 Command 名重复: " + name);
+                    }
+                    names.add(name);
+
+                    log.println(name);
+                }
+
+                log.println("</lifecycle-command-name-unequals>");
+            }
+
+
+            //检查排除
+            {
+                log.println("<exclude>");
+
+                Set<Class> lifecycleCatchSet=new HashSet<>();
+                Set<Class> phaseCatchSet=new HashSet<>();
+                Set<Class> goalCatchSet=new HashSet<>();
+                Set<Class> commandCatchSet=new HashSet<>();
+
+                for(Class lifecycleClass:lifecycleClasses){
+                    if(exclude(lifecycleClass)){
+                        //排除生命周期
+                        LifecycleData lifecycleData=lifecycleDataMap.get(lifecycleClass);
+                        lifecycleCatchSet.add(lifecycleClass);
+
+                        log.println(lifecycleData);
+
+                        //排除生命周期的阶段
+                        for(String phaseName:lifecycleData.phaseNames){
+                            for(Class phaseClass:phaseClasses){
+                                PhaseData phaseData=phaseDataMap.get(phaseClass);
+                                if(phaseData.phaseName.equals(phaseName)){
+                                    phaseCatchSet.add(phaseClass);
+                                    break;
+                                }
+                            }
+                        }
+
+                        //排除生命周期的阶段的目标
+                        for(Class phaseClass:phaseCatchSet){
+                            PhaseData phaseData=phaseDataMap.get(phaseClass);
+                            for(Class goalClass:goalClasses){
+                                GoalData goalData=goalDataMap.get(goalClass);
+                                if(goalData.phaseName.equals(phaseData.phaseName)){
+                                    goalCatchSet.add(goalClass);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                for(Class phaseClass:phaseClasses){
+                    if(exclude(phaseClass)){
+                        //排除阶段
+                        phaseCatchSet.add(phaseClass);
+                    }
+                }
+
+                for(Class lifecycleClass:lifecycleClasses){
+                    //排除阶段的生命周期的此阶段
+                    LifecycleData lifecycleData=lifecycleDataMap.get(lifecycleClass);
+                    List<String> phaseNameList=new ArrayList<>(Arrays.asList(lifecycleData.phaseNames));
+                    for(Class phaseClass:phaseCatchSet){
+                        PhaseData phaseData=phaseDataMap.get(phaseClass);
+                        phaseNameList.remove(phaseData.phaseName);
+                    }
+                    lifecycleData.phaseNames=phaseNameList.toArray(new String[phaseNameList.size()]);
+                }
+
+                for(Class goalClass:goalClasses){
+                    if(exclude(goalClass)){
+                        //排除目标
+                        goalCatchSet.add(goalClass);
+                    }
+                }
+
+                for(Class commandClass:commandClasses){
+                    if(exclude(commandClass)){
+                        //排除目标
+                        commandCatchSet.add(commandClass);
+                    }
+                }
+
+                //移除
+                lifecycleCatchSet.forEach(e->log.println(lifecycleDataMap.get(e)));
+                phaseCatchSet.forEach(e->log.println(phaseDataMap.get(e)));
+                goalCatchSet.forEach(e->log.println(goalDataMap.get(e)));
+                commandCatchSet.forEach(e->log.println(commandDataMap.get(e)));
+
+                lifecycleCatchSet.forEach(lifecycleDataMap::remove);
+                phaseCatchSet.forEach(phaseDataMap::remove);
+                goalCatchSet.forEach(goalDataMap::remove);
+                commandCatchSet.forEach(commandDataMap::remove);
+
+
+                log.println("</exclude>");
+            }
+
 
             log.println("</data>");
 
@@ -390,6 +545,19 @@ public class ProjectTool {
                     }
 
                     log.println("</block-register> Goal");
+
+                    //对于每个Command 写入"command" 写入类名 写入command名
+                    log.println("<block-register> Command");
+
+                    for (CommandData commandData : commandDataMap.values()) {
+                        out.writeString("command");
+                        out.writeString(commandData.className);
+                        out.writeString(commandData.commandName);
+
+                        log.println(commandData.className);
+                    }
+
+                    log.println("</block-register> Command");
 
                     //类注册数据块结束
                     out.writeString("register end");
@@ -647,8 +815,6 @@ public class ProjectTool {
 
             byte[] classBlockBytes = new byte[classBlockByteSize];
 
-            Map<String, byte[]> classByteMap = new HashMap<>();
-
             //读取类数据块
             {
                 log.println("read class block");
@@ -878,6 +1044,7 @@ public class ProjectTool {
             List<PhaseData> phaseDataList = new ArrayList<>();
             List<LifecycleData> lifecycleDataList = new ArrayList<>();
             List<GoalData> goalDataList = new ArrayList<>();
+            List<CommandData> commandDataList = new ArrayList<>();
 
             //读取类注册数据块
             {
@@ -935,7 +1102,18 @@ public class ProjectTool {
 
                         continue;
                     }
-                    throw new RuntimeException("读取不正确 类注册数据块不正确 期望 \"phase\" 或 \"lifecycle\" 或 \"goal\" 或\"register end\"");
+                    if (token.equals("command")) {
+                        CommandData commandData = new CommandData();
+                        commandData.className = in.readString();
+                        commandData.commandName = in.readString();
+
+                        commandDataList.add(commandData);
+
+                        log.println(commandData);
+
+                        continue;
+                    }
+                    throw new RuntimeException("读取不正确 类注册数据块不正确 期望 \"phase\" 或 \"lifecycle\" 或 \"goal\" 或 \"command\" 或\"register end\"");
                 }
 
                 log.println("</read-block-register>");
@@ -951,7 +1129,7 @@ public class ProjectTool {
             log.println("[LOAD] SUCCESSFUL");
 
 
-            return new WorkRuntime(ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList);
+            return new WorkRuntime(ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
 
         } catch (RuntimeException e) {
             e.printStackTrace(log);
@@ -1039,6 +1217,7 @@ public class ProjectTool {
             if (c == Phase.class
                     || c == Lifecycle.class
                     || c == Goal.class
+                    || c == Command.class
                     || c == ProjectScript.class) {
                 list.add(annotation);
             }

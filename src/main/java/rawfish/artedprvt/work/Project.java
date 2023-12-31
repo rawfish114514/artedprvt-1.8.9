@@ -16,6 +16,8 @@ import java.nio.file.Files;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -89,6 +91,10 @@ public class Project {
      */
     public void load() throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         throwLogNull();
+        if(runtime!=null){
+            runtime.close();
+            runtime=null;
+        }
         runtime = ProjectTool.load(getBytesIn(), log, null);
     }
 
@@ -191,5 +197,8 @@ public class Project {
         return inputStreams;
     }
 
+    /* 单例和非阻塞同步 */
+
     public static Project project = null;
+    public static final Lock lock=new ReentrantLock();
 }

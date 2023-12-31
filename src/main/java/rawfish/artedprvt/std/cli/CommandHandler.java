@@ -1,8 +1,6 @@
-package rawfish.artedprvt.client;
+package rawfish.artedprvt.std.cli;
 
 import org.apache.commons.lang3.StringUtils;
-import rawfish.artedprvt.std.cli.Command;
-import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.util.HandleResult;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.std.minecraft.chat.ChatConsole;
@@ -296,13 +294,17 @@ public class CommandHandler {
         for(int i=1;i<items.size();i++){
             args.add(items.get(i));
         }
+
+        String lastArg;
         if(args.size()<1){
-            return new HandleResult();
+            lastArg=i0;
+        }else{
+            lastArg=args.get(args.size()-1);
         }
 
         String infoText;
         try{
-            infoText=command.info(args).handleInfo(args.get(args.size()-1));
+            infoText=command.info(args).handleInfo(lastArg);
         }catch (Throwable throwable){
             throwable.printStackTrace(System.err);
             return new HandleResult();

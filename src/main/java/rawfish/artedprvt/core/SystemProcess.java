@@ -3,6 +3,12 @@ package rawfish.artedprvt.core;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 系统进程
+ * 与普通进程不同
+ * 有更特殊的行为
+ * 同时也是最快速构造进程的方法
+ */
 public abstract class SystemProcess extends Process implements Runnable{
     private final Thread thread;
     private List<InProcess> inProcessList;
@@ -13,7 +19,7 @@ public abstract class SystemProcess extends Process implements Runnable{
     }
 
     @Override
-    public ProcessIdLevel pidLevel() {
+    public final ProcessIdLevel pidLevel() {
         return ProcessController.SYSTEM_PROCESS_ID_LEVEL;
     }
 
@@ -58,6 +64,7 @@ public abstract class SystemProcess extends Process implements Runnable{
         inProcessList.add(inProcessObject);
     }
 
+    @Override
     public void down(InProcess inProcessObject){
         inProcessList.remove(inProcessObject);
     }
@@ -71,6 +78,10 @@ public abstract class SystemProcess extends Process implements Runnable{
         }
     }
 
+    /**
+     * 最后执行
+     * 实际线程在finally块内调用此方法保证这个方法一定有机会执行
+     */
     public void fil(){
 
     }

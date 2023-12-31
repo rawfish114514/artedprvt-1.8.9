@@ -1,7 +1,6 @@
 package rawfish.artedprvt.std.cli;
 
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.client.CommandHandler;
 import rawfish.artedprvt.core.InProcess;
 
 import java.util.HashMap;

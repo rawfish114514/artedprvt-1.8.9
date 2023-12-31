@@ -1,11 +1,11 @@
 package rawfish.artedprvt.work;
 
-class PhaseData {
+public class CommandData {
     String className;
-    String phaseName;
+    String commandName;
 
     @Override
     public String toString() {
-        return className + "/Phase " + phaseName;
+        return className + "/Command " + commandName;
     }
 }

@@ -12,20 +12,19 @@ import java.lang.annotation.Target;
  * 可以绑定到阶段在阶段被调用时调用自身(有阶段目标)
  * 或者使用默认值(Goal.class)表示不绑定阶段(无阶段目标)
  * <p>
- * 命令系统
- * goal可以实现处理，补全，格式，信息接口
- * {@link rawfish.artedprvt.std.cli.ProcessInterface}
- * {@link rawfish.artedprvt.std.cli.CompleteInterface}
- * {@link rawfish.artedprvt.std.cli.FormatInterface}
- * {@link rawfish.artedprvt.std.cli.InfoInterface}
- * goal必须实现处理的接口
+ * 目标可以实现
+ * {@link rawfish.artedprvt.std.cli.InfoHandler}
+ * 仅在需要获取此目标的info时调用
+ * 如果没有实现此接口可能会尝试调用有阶段目标的阶段的实现
  * <p>
- * 当参数属于goal类型时(有冒号)
+ * 目标必须实现
+ * {@link rawfish.artedprvt.std.cli.ProcessInterface}
+ * <p>
+ * 当参数属于目标类型时(有冒号)
  * 有阶段目标: "phase:goal"
  * 无阶段目标: ":goal"
  * <p>
- * 参数处理，补全，格式，信息由此goal处理
- * 对于有阶段目标,如果没有对应接口实现会尝试调用阶段的实现
+ * 类名必须是: GoalName
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)

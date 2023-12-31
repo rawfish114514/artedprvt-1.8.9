@@ -35,8 +35,6 @@ import java.util.zip.ZipInputStream;
  */
 public class ProjectInitializer {
     public static final Map<String, ProjectInitializer> initializerMap = new HashMap<String, ProjectInitializer>() {{
-        put("script", new ProjectInitializer());
-        put("java", new ProjectInitializer());
         try {
             put("test", new ProjectInitializer(new FileInputStream(new File("C:/Users/Administrator/Desktop/init.zip"))));
         } catch (Exception e) {
@@ -80,6 +78,11 @@ public class ProjectInitializer {
 
     private List<String> libs;
 
+    private String description;
+
+
+    private List<String> moveing;
+
     /**
      * 检查
      * 要求必须存在ap.java和pi.toml
@@ -93,14 +96,50 @@ public class ProjectInitializer {
      * pi.toml定义了依赖项的位置 依赖项被特殊处理
      */
     private void check() {
+        for (String s : map.keySet()) {
+            String[] c = s.split("/");
+            if (c.length > 1) {
+                if (c[0].equals(".apf")) {
+                    if (!(c.length > 2 && c[1].equals("project"))) {
+                        throw new RuntimeException("此位置不能有文件 " + s);
+                    }
+                }
+            }
+        }
 
+        if (map.get("ap.java") == null) {
+            throw new RuntimeException("找不到文件 ap.java");
+        }
+        if (map.get("pi.toml") == null) {
+            throw new RuntimeException("找不到文件 pi.toml");
+        }
+
+        String pitoml = new String(map.get("pi.toml"), StandardCharsets.UTF_8);
+        Map<String, Object> toml = Toml.read(pitoml);
+        List<Object> dependList = (List) toml.get("depend");
+
+        for (Object dependObject : dependList) {
+            Map<String, Object> depend = (Map<String, Object>) dependObject;
+            String target = depend.get("target").toString();
+            if (map.get(target) == null) {
+                throw new RuntimeException("找不到依赖项 " + target);
+            }
+        }
     }
 
     @FutureWork("未处理其他文件")
-    private void load() throws IOException {
+    private void load() {
+        moveing = new ArrayList<>(map.keySet());
+
+        moveing.remove("ap.java");
         apjava = new String(map.get("ap.java"), StandardCharsets.UTF_8);
+        moveing.remove("pi.toml");
         String pitoml = new String(map.get("pi.toml"), StandardCharsets.UTF_8);
         Map<String, Object> toml = Toml.read(pitoml);
+        description = String.valueOf(toml.get("description"));
+        if (description.equals("null")) {
+            description = "";
+        }
         List<Object> dependList = (List) toml.get("depend");
 
         libs = new ArrayList<>();
@@ -110,6 +149,7 @@ public class ProjectInitializer {
             String target = depend.get("target").toString();
 
             libs.add(target);
+            moveing.remove(target);
         }
 
     }
@@ -142,5 +182,17 @@ public class ProjectInitializer {
             outputStream.write(map.get(lib));
             outputStream.close();
         }
+
+        for (String moveitem : moveing) {
+            File mf = new File(file, moveitem);
+            mf.getParentFile().mkdirs();
+            OutputStream outputStream = new FileOutputStream(mf);
+            outputStream.write(map.get(moveitem));
+            outputStream.close();
+        }
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

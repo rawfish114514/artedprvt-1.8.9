@@ -5,6 +5,7 @@ class GoalData {
     String goalName;
     String phaseName;
 
+    @Override
     public String toString() {
         return className + "/Goal " + goalName + "(" + phaseName + ")";
     }

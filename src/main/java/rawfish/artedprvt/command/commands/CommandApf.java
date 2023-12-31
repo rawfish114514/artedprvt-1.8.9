@@ -103,6 +103,9 @@ public class CommandApf extends Command {
 
     @Override
     public InfoHandler info(List<String> args) {
+        if(args.size()==0){
+            return Literals.infoFactory().string("模组命令集合");
+        }
         if(args.size()==1&&args.get(0).isEmpty()){
             return Literals.infoFactory().string(CIS.cis4);
         }
@@ -115,10 +118,6 @@ public class CommandApf extends Command {
         if(c==null){
             return Literals.infoFactory().string(CIS.cis0);
         }
-        List<String> sargs=args.subList(1,args.size());
-        if(sargs.size()>0) {
-            return c.info(args.subList(1,args.size()));
-        }
-        return Literals.emptyInfo();
+        return c.info(args.subList(1,args.size()));
     }
 }

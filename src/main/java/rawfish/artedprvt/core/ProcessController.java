@@ -53,7 +53,7 @@ public class ProcessController extends SystemProcess{
     /**
      * 注册进程并获取PID
      * @param process
-     * @return [0,4095]注册成功 -1注册失败
+     * @return [0,1023]注册成功 -1注册失败
      */
     public synchronized int registerProcess(Process process){
         return registerProcess(process,ALL);
