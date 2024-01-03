@@ -127,7 +127,6 @@ public class ProjectInitializer {
         }
     }
 
-    @FutureWork("未处理其他文件")
     private void load() {
         moveing = new ArrayList<>(map.keySet());
 
@@ -171,7 +170,7 @@ public class ProjectInitializer {
         Random random = new Random();
 
         for (String lib : libs) {
-            byte[] bytes = new byte[64];
+            byte[] bytes = new byte[32];
             random.nextBytes(bytes);
 
             File aplibsFile = new File(file, ".apf/libs/" +

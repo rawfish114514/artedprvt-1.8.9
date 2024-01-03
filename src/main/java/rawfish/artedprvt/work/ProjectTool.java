@@ -218,6 +218,42 @@ public class ProjectTool {
             //验证并提取数据
             log.println("<data>");
 
+            //验证包名
+            {
+                log.println("<package>");
+
+                for (Class c : phaseClasses) {
+                    if (!c.getName().equals("rawfish.artedprvt.work._0." + c.getSimpleName())) {
+                        throw new RuntimeException("包名必须是 rawfish.artedprvt.work._0: " + c);
+                    }
+
+                    log.println(c);
+                }
+                for (Class c : lifecycleClasses) {
+                    if (!c.getName().equals("rawfish.artedprvt.work._0." + c.getSimpleName())) {
+                        throw new RuntimeException("包名必须是 rawfish.artedprvt.work._0: " + c);
+                    }
+
+                    log.println(c);
+                }
+                for (Class c : goalClasses) {
+                    if (!c.getName().equals("rawfish.artedprvt.work._0." + c.getSimpleName())) {
+                        throw new RuntimeException("包名必须是 rawfish.artedprvt.work._0: " + c);
+                    }
+
+                    log.println(c);
+                }
+                for (Class c : commandClasses) {
+                    if (!c.getName().equals("rawfish.artedprvt.work._0." + c.getSimpleName())) {
+                        throw new RuntimeException("包名必须是 rawfish.artedprvt.work._0: " + c);
+                    }
+
+                    log.println(c);
+                }
+
+                log.println("</package>");
+            }
+
             {
                 log.println("<data> Phase");
 
@@ -370,24 +406,24 @@ public class ProjectTool {
             {
                 log.println("<exclude>");
 
-                Set<Class> lifecycleCatchSet=new HashSet<>();
-                Set<Class> phaseCatchSet=new HashSet<>();
-                Set<Class> goalCatchSet=new HashSet<>();
-                Set<Class> commandCatchSet=new HashSet<>();
+                Set<Class> lifecycleCatchSet = new HashSet<>();
+                Set<Class> phaseCatchSet = new HashSet<>();
+                Set<Class> goalCatchSet = new HashSet<>();
+                Set<Class> commandCatchSet = new HashSet<>();
 
-                for(Class lifecycleClass:lifecycleClasses){
-                    if(exclude(lifecycleClass)){
+                for (Class lifecycleClass : lifecycleClasses) {
+                    if (exclude(lifecycleClass)) {
                         //排除生命周期
-                        LifecycleData lifecycleData=lifecycleDataMap.get(lifecycleClass);
+                        LifecycleData lifecycleData = lifecycleDataMap.get(lifecycleClass);
                         lifecycleCatchSet.add(lifecycleClass);
 
                         log.println(lifecycleData);
 
                         //排除生命周期的阶段
-                        for(String phaseName:lifecycleData.phaseNames){
-                            for(Class phaseClass:phaseClasses){
-                                PhaseData phaseData=phaseDataMap.get(phaseClass);
-                                if(phaseData.phaseName.equals(phaseName)){
+                        for (String phaseName : lifecycleData.phaseNames) {
+                            for (Class phaseClass : phaseClasses) {
+                                PhaseData phaseData = phaseDataMap.get(phaseClass);
+                                if (phaseData.phaseName.equals(phaseName)) {
                                     phaseCatchSet.add(phaseClass);
                                     break;
                                 }
@@ -395,11 +431,11 @@ public class ProjectTool {
                         }
 
                         //排除生命周期的阶段的目标
-                        for(Class phaseClass:phaseCatchSet){
-                            PhaseData phaseData=phaseDataMap.get(phaseClass);
-                            for(Class goalClass:goalClasses){
-                                GoalData goalData=goalDataMap.get(goalClass);
-                                if(goalData.phaseName.equals(phaseData.phaseName)){
+                        for (Class phaseClass : phaseCatchSet) {
+                            PhaseData phaseData = phaseDataMap.get(phaseClass);
+                            for (Class goalClass : goalClasses) {
+                                GoalData goalData = goalDataMap.get(goalClass);
+                                if (goalData.phaseName.equals(phaseData.phaseName)) {
                                     goalCatchSet.add(goalClass);
                                     break;
                                 }
@@ -408,43 +444,43 @@ public class ProjectTool {
                     }
                 }
 
-                for(Class phaseClass:phaseClasses){
-                    if(exclude(phaseClass)){
+                for (Class phaseClass : phaseClasses) {
+                    if (exclude(phaseClass)) {
                         //排除阶段
                         phaseCatchSet.add(phaseClass);
                     }
                 }
 
-                for(Class lifecycleClass:lifecycleClasses){
+                for (Class lifecycleClass : lifecycleClasses) {
                     //排除阶段的生命周期的此阶段
-                    LifecycleData lifecycleData=lifecycleDataMap.get(lifecycleClass);
-                    List<String> phaseNameList=new ArrayList<>(Arrays.asList(lifecycleData.phaseNames));
-                    for(Class phaseClass:phaseCatchSet){
-                        PhaseData phaseData=phaseDataMap.get(phaseClass);
+                    LifecycleData lifecycleData = lifecycleDataMap.get(lifecycleClass);
+                    List<String> phaseNameList = new ArrayList<>(Arrays.asList(lifecycleData.phaseNames));
+                    for (Class phaseClass : phaseCatchSet) {
+                        PhaseData phaseData = phaseDataMap.get(phaseClass);
                         phaseNameList.remove(phaseData.phaseName);
                     }
-                    lifecycleData.phaseNames=phaseNameList.toArray(new String[phaseNameList.size()]);
+                    lifecycleData.phaseNames = phaseNameList.toArray(new String[phaseNameList.size()]);
                 }
 
-                for(Class goalClass:goalClasses){
-                    if(exclude(goalClass)){
+                for (Class goalClass : goalClasses) {
+                    if (exclude(goalClass)) {
                         //排除目标
                         goalCatchSet.add(goalClass);
                     }
                 }
 
-                for(Class commandClass:commandClasses){
-                    if(exclude(commandClass)){
+                for (Class commandClass : commandClasses) {
+                    if (exclude(commandClass)) {
                         //排除目标
                         commandCatchSet.add(commandClass);
                     }
                 }
 
                 //移除
-                lifecycleCatchSet.forEach(e->log.println(lifecycleDataMap.get(e)));
-                phaseCatchSet.forEach(e->log.println(phaseDataMap.get(e)));
-                goalCatchSet.forEach(e->log.println(goalDataMap.get(e)));
-                commandCatchSet.forEach(e->log.println(commandDataMap.get(e)));
+                lifecycleCatchSet.forEach(e -> log.println(lifecycleDataMap.get(e)));
+                phaseCatchSet.forEach(e -> log.println(phaseDataMap.get(e)));
+                goalCatchSet.forEach(e -> log.println(goalDataMap.get(e)));
+                commandCatchSet.forEach(e -> log.println(commandDataMap.get(e)));
 
                 lifecycleCatchSet.forEach(lifecycleDataMap::remove);
                 phaseCatchSet.forEach(phaseDataMap::remove);
@@ -1205,7 +1241,7 @@ public class ProjectTool {
 
     /**
      * 提取注解
-     * Phase,Lifecycle,Goal,ProjectScript
+     * Phase,Lifecycle,Goal,Command,ProjectScript
      *
      * @param annotations
      * @return

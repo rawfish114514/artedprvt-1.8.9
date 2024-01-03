@@ -10,16 +10,21 @@ import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.std.text.Formatting;
 import rawfish.artedprvt.work.Project;
 import rawfish.artedprvt.work.ProjectInitializer;
-import rawfish.artedprvt.work.WorkRuntime;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.regex.Pattern;
 
 public class CommandProject extends BaseCommand {
     public CommandProject(String commandName) {
@@ -201,30 +206,50 @@ public class CommandProject extends BaseCommand {
                                             return;
                                         }
                                     }
+                                    ByteArrayOutputStream byteArrayOutputStream;
                                     try {
-                                        InputStream inputStream = url.openStream();
-                                        messager.white("下载初始化器: " + arg1);
-
-                                        try {
-                                            initializer = new ProjectInitializer(inputStream);
-                                        } catch (Exception e) {
-                                            messager.red("初始化器异常");
-                                            messager.red(e.getMessage());
-
-                                            return;
+                                        messager.white("下载初始化器");
+                                        URLConnection connection = url.openConnection();
+                                        connection.setReadTimeout(10000);
+                                        connection.connect();
+                                        InputStream inputStream = connection.getInputStream();
+                                        byteArrayOutputStream = new ByteArrayOutputStream();
+                                        int n;
+                                        while ((n = inputStream.read()) != -1) {
+                                            byteArrayOutputStream.write(n);
                                         }
+                                        messager.white("下载完成");
+                                    } catch (UnknownServiceException e) {
+                                        messager.red("协议不支持输入: " + url.getProtocol());
+                                        e.printStackTrace();
 
-                                        try {
-                                            project.init(initializer);
-                                            messager.gold("初始化完成");
-                                        } catch (Exception e) {
-                                            messager.red("初始化异常");
-                                            messager.red(e.getMessage());
-                                            e.printStackTrace();
-                                        }
+                                        return;
+                                    } catch (SocketTimeoutException e) {
+                                        messager.red("连接超时 10000ms");
+                                        e.printStackTrace();
 
+                                        return;
                                     } catch (IOException e) {
-                                        messager.red("打开失败");
+                                        messager.red("I/O异常");
+                                        e.printStackTrace();
+
+                                        return;
+                                    }
+                                    try {
+                                        initializer = new ProjectInitializer(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
+                                    } catch (Exception e) {
+                                        messager.red("初始化器异常");
+                                        messager.red(e.getMessage());
+
+                                        return;
+                                    }
+
+                                    try {
+                                        project.init(initializer);
+                                        messager.gold("初始化完成");
+                                    } catch (Exception e) {
+                                        messager.red("初始化异常");
+                                        messager.red(e.getMessage());
                                         e.printStackTrace();
                                     }
                                 }
@@ -235,6 +260,8 @@ public class CommandProject extends BaseCommand {
                         }
                     }
                     messager.red("参数异常");
+                } else {
+                    messager.red("有项目相关的任务正在执行");
                 }
             }
 
@@ -296,7 +323,7 @@ public class CommandProject extends BaseCommand {
                         if (url == null) {
                             builder.append("4");
                         } else {
-                            builder.add(urlFormat(url));
+                            builder.add(urlFormatHandler);
                         }
 
                     } else {
@@ -361,7 +388,7 @@ public class CommandProject extends BaseCommand {
                     if (url == null) {
                         return Literals.infoFactory().string("无效URL");
                     }
-                    return Literals.infoFactory().string("从此位置下载初始化器 " + urlFormat(url).handleFormat("<" + url.getProtocol() + ">"));
+                    return Literals.infoFactory().string("从此位置下载初始化器");
                 }
                 return Literals.infoFactory().string(initializer.getDescription());
             }
@@ -369,14 +396,12 @@ public class CommandProject extends BaseCommand {
         return Literals.emptyInfo();
     }
 
-    public FormatHandler urlFormat(URL url) {
-        String p = url.getProtocol();
-        if ("file".equals(p)) {
-            return Literals.formatFactory().append("6");
-        }
-        if ("http".equals(p)) {
-            return Literals.formatFactory().append("9");
-        }
-        return Literals.formatFactory().append("c");
-    }
+    public FormatHandler urlFormatHandler = Literals.formatFactory().regex(
+            Pattern.compile("(?<protocol>file://|http://|https://|)(?<other>.*)"),
+            "§?protocol§?other",
+            Literals.formatMapBuilder()
+                    .puts("protocol", Literals.formatFactory().append("9"))
+                    .puts("other", Literals.formatFactory().append("7")),
+            Literals.formatFactory().append("4")
+    );
 }

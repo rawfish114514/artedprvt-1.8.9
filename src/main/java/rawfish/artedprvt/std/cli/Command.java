@@ -4,13 +4,12 @@ import rawfish.artedprvt.api.Solvable;
 
 /**
  * 命令
- * 这个接口和item子包的所有实现类都是mc版本无关的
  */
 @Solvable
 public abstract class Command implements ProcessInterface, CompleteInterface, FormatInterface, InfoInterface {
     @Solvable
-    public Command(String commandName){
-        this.commandName=commandName;
+    public Command(String commandName) {
+        this.commandName = commandName;
     }
 
     /**
@@ -20,13 +19,14 @@ public abstract class Command implements ProcessInterface, CompleteInterface, Fo
      * 此方法保证在合适的时机被聊天控件被关闭时调用
      */
     @Solvable
-    public void reset(){}
+    public void reset() {
+    }
 
 
     private final String commandName;
 
     @Solvable
-    public String getName(){
+    public String getName() {
         return commandName;
     }
 

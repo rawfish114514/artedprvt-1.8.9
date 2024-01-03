@@ -61,7 +61,7 @@ public class CommandWork extends BaseCommand {
                                             if (goals.contains(arg)) {
                                                 processed.add(arg);
                                             } else {
-                                                messager.red("找不到 phase 或 goal: "+arg);
+                                                messager.red("找不到 phase 或 goal: " + arg);
                                                 return;
                                             }
                                         }
@@ -88,7 +88,7 @@ public class CommandWork extends BaseCommand {
                                 if (existPhaseOrGoal || existCommand) {
 
                                 } else {
-                                    messager.red("找不到 phase 或 goal 或 command: "+arg0);
+                                    messager.red("找不到 phase 或 goal 或 command: " + arg0);
                                 }
                             }
                         } else {
@@ -97,6 +97,8 @@ public class CommandWork extends BaseCommand {
                     } else {
                         messager.red("未打开项目");
                     }
+                } else {
+                    messager.red("有项目相关的任务正在执行");
                 }
             }
 

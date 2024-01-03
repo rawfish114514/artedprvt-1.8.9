@@ -12,62 +12,58 @@ import rawfish.artedprvt.common.CommonProxy;
 import rawfish.artedprvt.core.Environment;
 
 @Mod(
-        modid= Environment.MODID,
-        name= Environment.MODNAME,
-        acceptedMinecraftVersions= Environment.MCVERSION,
-        acceptableRemoteVersions="*"
+        modid = Environment.MODID,
+        name = Environment.MODNAME,
+        acceptedMinecraftVersions = Environment.MCVERSION,
+        acceptableRemoteVersions = "*"
 )
-public class Artedprvt
-{
-    @SidedProxy(clientSide="rawfish.artedprvt.client.ClientProxy",serverSide="rawfish.artedprvt.common.CommonProxy")
+public class Artedprvt {
+    @SidedProxy(clientSide = "rawfish.artedprvt.client.ClientProxy", serverSide = "rawfish.artedprvt.common.CommonProxy")
     public static CommonProxy proxy;
 
     @Mod.Instance(Environment.MODID)
     public static Artedprvt instance;
 
-    public Artedprvt(){
+    public Artedprvt() {
     }
 
     public ModMetadata modMetadata;
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) {
         proxy.preInit(event);
-        modMetadata=event.getModMetadata();
+        modMetadata = event.getModMetadata();
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
-    {
+    public void init(FMLInitializationEvent event) {
         proxy.init(event);
-        modMetadata.description=getDescription();
+        modMetadata.description = getDescription();
     }
 
     @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event)
-    {
+    public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit(event);
     }
 
     @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
-    {
+    public void serverStarting(FMLServerStartingEvent event) {
         proxy.serverStarting(event);
     }
 
 
-    public String getDescription(){
+    public String getDescription() {
         return "Artedprvt Frame 是专为 Minecraft 设计的脚本运行框架，它仅以在某时刻添加代码的方式对游戏修改。" +
-                otherDescription()+
+                otherDescription() +
                 "\n\n作者 ↓\nhttps://space.bilibili.com/455906194";
     }
 
-    public String tempVersion="temp 2023/12/29";
-    public String otherDescription(){
-        if(tempVersion.isEmpty()){
+    public String tempVersion = "temp 2024/1/4";
+
+    public String otherDescription() {
+        if (tempVersion.isEmpty()) {
             return tempVersion;
         }
-        return "\n\n§c这是临时版本: '"+tempVersion+"'";
+        return "\n\n§c这是临时版本: '" + tempVersion + "'";
     }
 }
