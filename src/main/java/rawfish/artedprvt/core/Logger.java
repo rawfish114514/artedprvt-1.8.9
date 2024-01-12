@@ -80,7 +80,7 @@ public abstract class Logger {
         ERROR,
     }
 
-    static class VoidLogger extends Logger{
+    public static class VoidLogger extends Logger{
         public static final VoidLogger INSTANCE= new VoidLogger();
 
         public VoidLogger(){

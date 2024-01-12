@@ -115,17 +115,20 @@ public class ProjectTool {
             List<Class> goalClasses = new ArrayList<>();
             List<Class> commandClasses = new ArrayList<>();
 
-            //验证Class ap 有唯一的注解 ProjectScript
+            //验证Class ap 有唯一的注解 ProjectScript 且实现 ProjectAccess
             {
                 Class c = map.get("rawfish.artedprvt.work._0.ap");
                 if (c == null) {
                     throw new RuntimeException("找不到: class rawfish.artedprvt.work._0.ap");
                 }
                 if (!script(c)) {
-                    throw new RuntimeException("class rawfish.artedprvt.work._0.ap 不是ProjectScript单注解");
+                    throw new RuntimeException("class rawfish.artedprvt.work._0.ap 不是 ProjectScript 单注解");
                 }
                 if (exclude(c)) {
-                    throw new RuntimeException("class rawfish.artedprvt.work._0.ap 不是ProjectScript单注解");
+                    throw new RuntimeException("class rawfish.artedprvt.work._0.ap 不是 ProjectScript 单注解");
+                }
+                if(!ProjectAccess.class.isAssignableFrom(c)){
+                    throw new RuntimeException("class rawfish.artedprvt.work._0.ap 未实现 ProjectAccess 接口");
                 }
                 ProjectScript projectScript = single(ProjectScript.class, c);
                 ap_name = projectScript.name();
@@ -901,15 +904,16 @@ public class ProjectTool {
     /**
      * 加载字节码
      *
-     * @param bytesInput 字节码输入流 最后关闭
-     * @param log        日志输出流
-     * @param args       参数
+     * @param projectSystem 项目系统
+     * @param bytesInput    字节码输入流 最后关闭
+     * @param log           日志输出流
+     * @param args          参数
      * @return
      * @throws IOException
      * @throws NoSuchAlgorithmException
      * @throws ClassNotFoundException
      */
-    public static WorkRuntime load(InputStream bytesInput, PrintWriter log, String[] args) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
+    public static WorkRuntime load(ProjectSystem projectSystem, InputStream bytesInput, PrintWriter log, String[] args) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         try {
             if (args == null) {
                 args = new String[0];
@@ -1165,7 +1169,7 @@ public class ProjectTool {
             log.println("[LOAD] SUCCESSFUL");
 
 
-            return new WorkRuntime(ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
+            return new WorkRuntime(projectSystem, ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
 
         } catch (RuntimeException e) {
             e.printStackTrace(log);

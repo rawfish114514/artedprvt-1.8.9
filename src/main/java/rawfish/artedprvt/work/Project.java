@@ -33,7 +33,7 @@ public class Project {
     private WorkRuntime runtime;
 
     public Project(String dir) {
-        this.dir = dir;
+        this.dir = dir.replace(File.separatorChar, '/');
         target = new File(dir);
         if (!target.isDirectory()) {
             throw new RuntimeException("不存在或不是目录");
@@ -91,11 +91,11 @@ public class Project {
      */
     public void load() throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         throwLogNull();
-        if(runtime!=null){
+        if (runtime != null) {
             runtime.close();
-            runtime=null;
+            runtime = null;
         }
-        runtime = ProjectTool.load(getBytesIn(), log, null);
+        runtime = ProjectTool.load(new ProjectSystem(this), getBytesIn(), log, null);
     }
 
     public void close() {
@@ -200,5 +200,5 @@ public class Project {
     /* 单例和非阻塞同步 */
 
     public static Project project = null;
-    public static final Lock lock=new ReentrantLock();
+    public static final Lock lock = new ReentrantLock();
 }

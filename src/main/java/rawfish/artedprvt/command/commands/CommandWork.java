@@ -5,8 +5,6 @@ import rawfish.artedprvt.command.FormatMessager;
 import rawfish.artedprvt.command.TaskProcess;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
-import rawfish.artedprvt.std.cli.InfoInterface;
-import rawfish.artedprvt.std.cli.ProcessInterface;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.work.PhaseHandle;
@@ -14,7 +12,6 @@ import rawfish.artedprvt.work.Project;
 import rawfish.artedprvt.work.WorkRuntime;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -188,45 +185,46 @@ public class CommandWork extends BaseCommand {
 
     @Override
     public InfoHandler info(List<String> args) {
-        if (args.size() == 0) {
-            return Literals.infoFactory().string("项目构建工具");
-        }
         Project project = Project.project;
         if (project != null) {
             if (project.isLoaded()) {
+                if (args.size() == 0) {
+                    return Literals.infoFactory().string("项目构建工具 §d[" + project.getDir() + "]");
+                }
                 WorkRuntime workRuntime = project.getRuntime();
-                if (args.size() > 0) {
-                    String arg0 = args.get(0);
-                    List<String> phases = workRuntime.getPhases();
-                    List<String> goals = workRuntime.getGoals();
-                    List<String> commands = workRuntime.getCommands();
+                String arg0 = args.get(0);
+                List<String> phases = workRuntime.getPhases();
+                List<String> goals = workRuntime.getGoals();
+                List<String> commands = workRuntime.getCommands();
 
-                    boolean existPhaseOrGoal = false;
-                    boolean existCommand = false;
+                boolean existPhaseOrGoal = false;
+                boolean existCommand = false;
 
-                    if (phases.contains(arg0) || goals.contains(arg0)) {
-                        existPhaseOrGoal = true;
-                    }
-                    if (commands.contains(arg0)) {
-                        existCommand = true;
-                    }
+                if (phases.contains(arg0) || goals.contains(arg0)) {
+                    existPhaseOrGoal = true;
+                }
+                if (commands.contains(arg0)) {
+                    existCommand = true;
+                }
 
-                    if (existPhaseOrGoal) {
-                        String lastArg = args.get(args.size() - 1);
-                        if (phases.contains(lastArg)) {
-                            return Literals.infoFactory().string("" + workRuntime.getPhaseHandle(lastArg).handleInfo(lastArg));
-                        } else {
-                            if (goals.contains(lastArg)) {
-                                return workRuntime.getGoalHandle(lastArg);
-                            }
-                        }
+                if (existPhaseOrGoal) {
+                    String lastArg = args.get(args.size() - 1);
+                    if (phases.contains(lastArg)) {
+                        return Literals.infoFactory().string("" + workRuntime.getPhaseHandle(lastArg).handleInfo(lastArg));
                     } else {
-                        if (existCommand) {
-                            return workRuntime.getCommandHandle(arg0).info(args.subList(1, args.size()));
+                        if (goals.contains(lastArg)) {
+                            return workRuntime.getGoalHandle(lastArg);
                         }
+                    }
+                } else {
+                    if (existCommand) {
+                        return workRuntime.getCommandHandle(arg0).info(args.subList(1, args.size()));
                     }
                 }
             }
+        }
+        if (args.size() == 0) {
+            return Literals.infoFactory().string("项目构建工具 §c未加载项目");
         }
         return Literals.emptyInfo();
     }

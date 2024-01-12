@@ -4,12 +4,12 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import rawfish.artedprvt.core.ClassGroupSystem;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.UserOptions;
-import rawfish.artedprvt.core.WorkSpace;
-import rawfish.artedprvt.core.script.engine.ScriptEngineInit;
-import rawfish.artedprvt.core.script.rhino.Rhino;
+import rawfish.artedprvt.core.app.App;
+import rawfish.artedprvt.core.app.Home;
+import rawfish.artedprvt.core.app.script.engine.ScriptEngineInit;
+import rawfish.artedprvt.core.app.script.rhino.Rhino;
 import rawfish.artedprvt.std.cgl.ClassGroupLoader;
 
 public class CommonProxy
@@ -22,13 +22,12 @@ public class CommonProxy
     public void init(FMLInitializationEvent event)
     {
         new EventLoader();
-        WorkSpace.init();
         CoreInitializer.init();
         ClassGroupLoader.load();
-        System.out.println(ClassGroupSystem.getValue());
         UserOptions.load();
 
         ScriptEngineInit.init();
+        App.init();
     }
 
     public void postInit(FMLPostInitializationEvent event)

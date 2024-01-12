@@ -86,7 +86,7 @@ public abstract class SystemProcess extends Process implements Runnable{
 
     }
 
-    private class SystemProcessThread extends Thread implements ProcessThread{
+    private class SystemProcessThread extends Thread implements ProcessProvider {
         public SystemProcessThread(String name){
             setName(name);
         }

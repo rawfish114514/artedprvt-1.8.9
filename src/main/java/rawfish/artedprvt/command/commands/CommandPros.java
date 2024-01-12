@@ -8,7 +8,7 @@ import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
-import rawfish.artedprvt.core.script.ScriptProcess;
+import rawfish.artedprvt.core.app.script.ScriptProcess;
 import rawfish.artedprvt.std.text.Formatting;
 
 import java.text.MessageFormat;

@@ -1,6 +1,6 @@
 package rawfish.artedprvt.core;
 
-import rawfish.artedprvt.core.script.LogFileController;
+import rawfish.artedprvt.core.app.LogFileController;
 
 public class CoreInitializer {
     public static void init(){

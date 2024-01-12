@@ -20,7 +20,6 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.net.UnknownServiceException;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,15 +163,16 @@ public class CommandProject extends BaseCommand {
                         String arg1 = args.get(1);
                         if (arg0.equals("open")) {
                             if (isOpen) {
-                                messager.white("已打开项目");
+                                messager.red("已存在打开的项目");
+                                return;
                             }
                             File file = new File(arg1);
                             if (!file.isDirectory()) {
                                 messager.red("不存在或不是目录");
                                 return;
                             }
-                            new Project(arg1);
-                            messager.gold("已打开项目: " + arg1);
+                            Project project1 = new Project(arg1);
+                            messager.gold("已打开项目: " + project1.getDir());
                             return;
                         }
                         if (arg0.equals("init")) {
@@ -274,8 +274,12 @@ public class CommandProject extends BaseCommand {
 
     @Override
     public List<String> complete(List<String> args) {
+        Project project = Project.project;
         if (args.size() == 1) {
-            return Literals.stringListBuilder().adds("open", "init", "load", "close");
+            if (project != null) {
+                return Literals.stringListBuilder().adds("load", "close", "open", "init");
+            }
+            return Literals.stringListBuilder().adds("open", "load", "close", "init");
         }
         if (args.size() == 2) {
             String arg0 = args.get(0);
@@ -297,7 +301,7 @@ public class CommandProject extends BaseCommand {
         if (args.size() >= 1) {
             String arg0 = args.get(0);
             if (arg0.equals("open")) {
-                builder.append("6");
+                builder.append("a");
                 if (args.size() >= 2) {
                     builder.append("7");
                 }
@@ -343,8 +347,15 @@ public class CommandProject extends BaseCommand {
 
     @Override
     public InfoHandler info(List<String> args) {
+        Project project = Project.project;
         if (args.size() == 0) {
-            return Literals.infoFactory().string("项目结构工具");
+            if (project != null) {
+                if (project.isLoaded()) {
+                    return Literals.infoFactory().string("项目管理工具 §d[" + project.getDir() + "]");
+                }
+                return Literals.infoFactory().string("项目管理工具 §a[" + project.getDir() + "]");
+            }
+            return Literals.infoFactory().string("项目管理工具 §c未打开项目");
         }
         if (args.size() == 1) {
             return Literals.infoFactory().map(

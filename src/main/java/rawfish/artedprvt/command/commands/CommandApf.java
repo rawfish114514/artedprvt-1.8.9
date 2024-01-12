@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 命令集合
  * 可执行所有这个模组定义的命令 防止命名冲突
  */
 public class CommandApf extends Command {
@@ -23,13 +24,8 @@ public class CommandApf extends Command {
     public CommandApf(String commandName) {
         super(commandName);
         commandList=new ArrayList<>();
-
-        commandList.add(new CommandAar("aar"));
-        commandList.add(new CommandAc("ac"));
-        commandList.add(new CommandBuild("build"));
-        commandList.add(new CommandExtract("extract"));
-        commandList.add(new CommandInfo("info"));
-        commandList.add(new CommandInstall("install"));
+;
+        commandList.add(new CommandApp("app"));
         commandList.add(new CommandOptions("options"));
         commandList.add(new CommandProject("project"));
         commandList.add(new CommandPros("pros"));
@@ -37,7 +33,6 @@ public class CommandApf extends Command {
         commandList.add(new CommandStops("stops"));
         commandList.add(new CommandStt("stt"));
         commandList.add(new CommandWork("work"));
-        commandList.add(new CommandWorkspace("workspace"));
     }
 
     @Override

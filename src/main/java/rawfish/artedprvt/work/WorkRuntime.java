@@ -7,6 +7,7 @@ import rawfish.artedprvt.std.cli.InfoInterface;
 import rawfish.artedprvt.std.cli.ProcessInterface;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class WorkRuntime {
+    private ProjectSystem projectSystem;//close
     private ClassLoader classLoader;//close
     private Map<String, PhaseData> phaseDataMap = new HashMap<>();
     private Map<String, LifecycleData> lifecycleDataMap = new HashMap<>();
@@ -35,11 +37,13 @@ public class WorkRuntime {
     private Map<String, String> goalLifecycleMap = new HashMap<>();
 
     public WorkRuntime(
+            ProjectSystem projectSystem,
             ClassLoader classLoader,
             List<PhaseData> phaseDataList,
             List<LifecycleData> lifecycleDataList,
             List<GoalData> goalDataList,
             List<CommandData> commandDataList) {
+        this.projectSystem=projectSystem;
         this.classLoader = classLoader;
         phaseDataList.forEach(v -> phaseDataMap.put(v.phaseName, v));
         lifecycleDataList.forEach(v -> lifecycleDataMap.put(v.lifecycleName, v));
@@ -142,6 +146,10 @@ public class WorkRuntime {
             commandHandleMap.put(commandRefName, commandHandle);
             commandRefNameList.add(commandRefName);
         }
+
+        Class apClass=classLoader.loadClass("rawfish.artedprvt.work._0.ap");
+        ProjectAccess projectAccess=(ProjectAccess)apClass.newInstance();
+        projectAccess.main(projectSystem);
     }
 
     private ProcessInterface getProcessInterface(Object object) {
@@ -286,6 +294,7 @@ public class WorkRuntime {
     }
 
     public void close() {
+        projectSystem=null;
         classLoader = null;
         phaseHandleMap = null;
         lifecyclePhaseHandleMap = null;

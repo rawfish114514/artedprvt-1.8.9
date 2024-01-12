@@ -7,7 +7,7 @@ import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.Process;
-import rawfish.artedprvt.core.script.ScriptProcess;
+import rawfish.artedprvt.core.app.script.ScriptProcess;
 import rawfish.artedprvt.core.localization.types.CIS;
 import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.std.text.Formatting;

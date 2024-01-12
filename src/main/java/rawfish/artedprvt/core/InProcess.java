@@ -8,8 +8,8 @@ public interface InProcess {
     default Process up(){
         Thread thread=Thread.currentThread();
         Process process=null;
-        if(thread instanceof ProcessThread){
-            process=((ProcessThread)thread).getProcess();
+        if(thread instanceof ProcessProvider){
+            process=((ProcessProvider)thread).getProcess();
         }
         if(process!=null){
             process.up(this);
