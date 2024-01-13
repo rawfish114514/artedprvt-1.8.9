@@ -18,7 +18,6 @@ public class CommandRegistry implements InProcess {
     }
 
 
-    @rawfish.artedprvt.dev.FutureWork("正确处理异常")
     @Solvable
     public void register(Command command){
         if(up){

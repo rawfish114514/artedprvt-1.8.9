@@ -1,11 +1,11 @@
 package rawfish.artedprvt.core.app.script;
 
 import rawfish.artedprvt.core.AbstractThread;
-import rawfish.artedprvt.core.app.AppProcess;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.InProcess;
 import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.app.AppLogger;
+import rawfish.artedprvt.core.app.AppProcess;
 import rawfish.artedprvt.core.app.script.engine.ScriptEngine;
 import rawfish.artedprvt.core.app.script.engine.ScriptStackParser;
 import rawfish.artedprvt.core.app.script.rhino.RhinoEngine;
@@ -77,9 +77,7 @@ public class ScriptProcess extends AppProcess<ScriptProcess> {
         name= metadata.getName();
         icon= loadIcon(fileLoader.getInputStream("icon.png"));
 
-        synchronized (ScriptProcess.class) {
-            appLogger=CoreInitializer.getLogFileController().openLog(this);
-        }
+        appLogger = CoreInitializer.getLogFileController().openLog(this);
 
 
         engines=new ArrayList<>();
@@ -138,8 +136,8 @@ public class ScriptProcess extends AppProcess<ScriptProcess> {
     @Override
     public synchronized void end(int exitCode){
         super.end(exitCode);
-        printEnd(exitCode,runningTime());
-        closeLog();
+        printEnd(exitCode, runningTime());
+        appLogger.close();
     }
 
     private void printStart(){
@@ -175,10 +173,6 @@ public class ScriptProcess extends AppProcess<ScriptProcess> {
     public void up(InProcess inProcessObject){
         super.up(inProcessObject);
         inProcessCount++;
-    }
-
-    private void closeLog() {
-        appLogger.close();
     }
 
     public String getStatistics(){

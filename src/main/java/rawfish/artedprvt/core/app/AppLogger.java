@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
  * 日志记录器
  * 提供一系列输出方法输出到所有输出流
  */
-@rawfish.artedprvt.dev.FutureWork("添加缓存机制而不是立刻写入")
 public class AppLogger extends Logger {
     private AppProcess appProcess;
     private List<PrintWriter> printWriters;

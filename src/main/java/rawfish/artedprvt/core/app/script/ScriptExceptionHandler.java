@@ -2,6 +2,7 @@ package rawfish.artedprvt.core.app.script;
 
 import rawfish.artedprvt.core.AbstractExceptionHandler;
 import rawfish.artedprvt.core.Logger;
+import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.app.script.engine.ScriptStackParser;
 
 import java.util.ArrayList;
@@ -53,17 +54,7 @@ public class ScriptExceptionHandler extends AbstractExceptionHandler<ScriptProce
         }
 
         logger.error(sb.toString());
-        if(sb.length()>0) {
-            //print(message, sb.toString());
-            print(message);
-        }else{
-            print(message);
-        }
         process.hasError();
-        process.getScriptSystem().exit(ScriptProcess.ERROR);
-    }
-
-    public void print(String chat){
-        process.getScriptSystem().print(chat);
+        process.stop(Process.ERROR);
     }
 }

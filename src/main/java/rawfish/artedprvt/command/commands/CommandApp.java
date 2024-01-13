@@ -36,18 +36,23 @@ public class CommandApp extends BaseCommand {
 
         try {
             loadAppType(Home.app());
-            String appPath = args.get(0);
-            AppTarget<?> appTarget = nameAppTargetMap.get(appPath);
-            if (appTarget == null) {
-                messager.red("找不到应用程序");
-                return;
-            }
-            AppProcess<?> appProcess = appTarget.open(args.subList(1, args.size()));
-            appProcess.start();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        String appPath = args.get(0);
+        AppTarget<?> appTarget = nameAppTargetMap.get(appPath);
+        if (appTarget == null) {
+            messager.red("找不到应用程序");
+            return;
+        }
+        try {
+            AppProcess<?> appProcess = appTarget.open(args.subList(1, args.size()));
+            appProcess.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            messager.red("应用程序创建失败");
+        }
+
     }
 
     @Override
@@ -148,19 +153,25 @@ public class CommandApp extends BaseCommand {
         Map<String, Long> nameLastModifiedMap0 = new HashMap<>();
         for (File file : files) {
             String name = getRelName(file, app);
-            long laseModified = file.lastModified();
-            if (nameAppTargetMap.get(name) != null) {
+            AppTarget<?> appTarget;
+            long lastModified = file.lastModified();
+            if ((appTarget = nameAppTargetMap.get(name)) != null) {
                 long old = nameLastModifiedMap.get(name);
-                if (old != laseModified) {
-                    continue;
+                if (old == lastModified) {
+                    nameAppTargetMap0.put(name, appTarget);
+                } else {
+                    nameAppTargetMap0.put(name, appTarget.getAppType().target(file.toURI().toURL()));
                 }
+                nameLastModifiedMap0.put(name, lastModified);
+                continue;
             }
 
             String e = getExtension(name);
             for (AppType<?> appType : appTypes) {
                 if (appType.extensions().contains(e)) {
-                    nameAppTargetMap0.put(name, appType.target(file.toURI().toURL()));
-                    nameLastModifiedMap0.put(name, laseModified);
+                    appTarget = appType.target(file.toURI().toURL());
+                    nameAppTargetMap0.put(name, appTarget);
+                    nameLastModifiedMap0.put(name, lastModified);
                     break;
                 }
             }

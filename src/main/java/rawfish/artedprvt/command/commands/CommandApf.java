@@ -1,5 +1,7 @@
 package rawfish.artedprvt.command.commands;
 
+import rawfish.artedprvt.core.localization.types.CIS;
+import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.std.cli.Command;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
@@ -7,8 +9,6 @@ import rawfish.artedprvt.std.cli.Messager;
 import rawfish.artedprvt.std.cli.format.FormatHandlerAppend;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import rawfish.artedprvt.std.cli.util.Literals;
-import rawfish.artedprvt.core.localization.types.CIS;
-import rawfish.artedprvt.core.localization.types.CMS;
 import rawfish.artedprvt.std.text.Formatting;
 
 import java.text.MessageFormat;
@@ -21,10 +21,11 @@ import java.util.List;
  */
 public class CommandApf extends Command {
     public List<Command> commandList;
+
     public CommandApf(String commandName) {
         super(commandName);
-        commandList=new ArrayList<>();
-;
+        commandList = new ArrayList<>();
+
         commandList.add(new CommandApp("app"));
         commandList.add(new CommandOptions("options"));
         commandList.add(new CommandProject("project"));
@@ -37,60 +38,60 @@ public class CommandApf extends Command {
 
     @Override
     public void process(List<String> args, Messager messager) {
-        if(args.size()<1){
-            messager.send(Formatting.DARK_RED+getName()+CMS.cms1);
+        if (args.size() < 1) {
+            messager.send(Formatting.DARK_RED + getName() + CMS.cms1);
             return;
         }
-        for(Command command:commandList){
-            if (command.getName().equals(args.get(0))){
-                command.process(args.subList(1,args.size()), messager);
+        for (Command command : commandList) {
+            if (command.getName().equals(args.get(0))) {
+                command.process(args.subList(1, args.size()), messager);
                 return;
             }
         }
-        messager.send(Formatting.DARK_RED+getName()+ MessageFormat.format(CMS.cms13,args.get(0)));
+        messager.send(Formatting.DARK_RED + getName() + MessageFormat.format(CMS.cms13, args.get(0)));
     }
 
     @Override
     public List<String> complete(List<String> args) {
-        if(args.size()==1){
-            List<String> cl=new ArrayList<>();
+        if (args.size() == 1) {
+            List<String> cl = new ArrayList<>();
             String name;
-            for(Command command:commandList){
-                name=command.getName();
-                if(name.startsWith(args.get(0))){
+            for (Command command : commandList) {
+                name = command.getName();
+                if (name.startsWith(args.get(0))) {
                     cl.add(name);
                 }
             }
             return cl;
         }
         //补全子命令参数
-        Command c=null;
-        for(Command command:commandList){
-            if(command.getName().equals(args.get(0))){
-                c=command;
+        Command c = null;
+        for (Command command : commandList) {
+            if (command.getName().equals(args.get(0))) {
+                c = command;
             }
         }
-        if(c==null){
+        if (c == null) {
             return Literals.emptyComplete();
         }
-        return c.complete(args.subList(1,args.size()));
+        return c.complete(args.subList(1, args.size()));
     }
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        Command c=null;
-        for(Command command:commandList){
-            if(command.getName().equals(args.get(0))){
-                c=command;
+        Command c = null;
+        for (Command command : commandList) {
+            if (command.getName().equals(args.get(0))) {
+                c = command;
             }
         }
-        if(c==null){
+        if (c == null) {
             return Literals.formatListBuilder().append("c");
         }
-        FormatHandlerListBuilder fl=Literals.formatListBuilder();
+        FormatHandlerListBuilder fl = Literals.formatListBuilder();
         fl.add(new FormatHandlerAppend("bo"));
-        List<String> sargs=args.subList(1,args.size());
-        if(sargs.size()>0) {
+        List<String> sargs = args.subList(1, args.size());
+        if (sargs.size() > 0) {
             fl.addAll(c.format(sargs));
         }
         return fl;
@@ -98,21 +99,21 @@ public class CommandApf extends Command {
 
     @Override
     public InfoHandler info(List<String> args) {
-        if(args.size()==0){
+        if (args.size() == 0) {
             return Literals.infoFactory().string("模组命令集合");
         }
-        if(args.size()==1&&args.get(0).isEmpty()){
+        if (args.size() == 1 && args.get(0).isEmpty()) {
             return Literals.infoFactory().string(CIS.cis4);
         }
-        Command c=null;
-        for(Command command:commandList){
-            if(command.getName().equals(args.get(0))){
-                c=command;
+        Command c = null;
+        for (Command command : commandList) {
+            if (command.getName().equals(args.get(0))) {
+                c = command;
             }
         }
-        if(c==null){
+        if (c == null) {
             return Literals.infoFactory().string(CIS.cis0);
         }
-        return c.info(args.subList(1,args.size()));
+        return c.info(args.subList(1, args.size()));
     }
 }

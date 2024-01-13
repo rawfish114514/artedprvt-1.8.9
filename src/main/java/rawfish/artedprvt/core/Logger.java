@@ -4,11 +4,6 @@ import rawfish.artedprvt.api.Solvable;
 
 @Solvable
 public abstract class Logger {
-    @rawfish.artedprvt.dev.FutureWork("注册this到日志记录器控制进程")
-    protected Logger(){
-
-    }
-
     /**
      * 记录INFO级别的日志消息
      * @param message
@@ -52,17 +47,8 @@ public abstract class Logger {
     }
 
     /**
-     * 逻辑刻 由日志记录器控制进程调用 时间是不确定的
-     */
-    @rawfish.artedprvt.dev.FutureWork("逻辑刻")
-    public void logicTick(){
-
-    }
-
-    /**
      * 关闭日志记录器
      */
-    @rawfish.artedprvt.dev.FutureWork("注销")
     public void close(){
         //注销
     }

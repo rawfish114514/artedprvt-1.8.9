@@ -2,11 +2,23 @@ package rawfish.artedprvt.core.app;
 
 import rawfish.artedprvt.core.SystemProcess;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilterOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -104,17 +116,17 @@ public class LogFileController extends SystemProcess {
         return openLog(appProcess,LocalDate.now());
     }
 
-    public AppLogger openLog(AppProcess appProcess,LocalDate localDate) throws FileNotFoundException {
+    public synchronized AppLogger openLog(AppProcess appProcess, LocalDate localDate) throws FileNotFoundException {
         File logDir = new File(Home.log(),
                 yearFormatter.format(localDate)
-                + "-"
-                + monthFormatter.format(localDate)
-                + "-"
-                + dayFormatter.format(localDate));
+                        + "-"
+                        + monthFormatter.format(localDate)
+                        + "-"
+                        + dayFormatter.format(localDate));
         logDir.mkdirs();
         int logFileNumber = logDir.list().length;
-        String processName=appProcess.getName();
-        File logFile = new File(logDir,logFileNumber + "." + processName.substring(processName.indexOf(':')+1) + ".txt");
+        String processName = appProcess.getName();
+        File logFile = new File(logDir, logFileNumber + "." + processName.substring(processName.indexOf(':') + 1) + ".txt");
         OutputStream fileOutputStream=new FileOutputStream(logFile);
         OutputStream systemOutputStream=new FilterOutputStream(System.out){
             @Override

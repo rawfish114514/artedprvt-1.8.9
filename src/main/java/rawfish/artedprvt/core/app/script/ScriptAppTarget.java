@@ -41,7 +41,7 @@ public class ScriptAppTarget implements AppTarget<ScriptProcess>, CompleteInterf
 
     @Override
     public ScriptProcess open(List<String> args) throws Exception {
-        return new ScriptProcess(new AspFileLoader(url.openStream()), args);
+        return new ScriptProcess(url.openStream(), args);
     }
 
     @Override
@@ -110,24 +110,26 @@ public class ScriptAppTarget implements AppTarget<ScriptProcess>, CompleteInterf
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        FormatHandlerListBuilder builder = Literals.formatListBuilder();
-        ServiceEngine engine = Engines.getService(abbr);
-        if (engine != null) {
-            try {
-                Object result = engine.unwrap(engine.call(code, "format", args, Literals.class));
-                if (result instanceof Collection) {
-                    for (Object obj : (Collection) result) {
-                        if (obj instanceof FormatHandler) {
-                            builder.add((FormatHandler) obj);
-                        } else {
-                            builder.append(String.valueOf(obj));
+        if (code != null) {
+            FormatHandlerListBuilder builder = Literals.formatListBuilder();
+            ServiceEngine engine = Engines.getService(abbr);
+            if (engine != null) {
+                try {
+                    Object result = engine.unwrap(engine.call(code, "format", args, Literals.class));
+                    if (result instanceof Collection) {
+                        for (Object obj : (Collection) result) {
+                            if (obj instanceof FormatHandler) {
+                                builder.add((FormatHandler) obj);
+                            } else {
+                                builder.append(String.valueOf(obj));
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+                return builder;
             }
-            return builder;
         }
         return Literals.emptyFormat();
     }

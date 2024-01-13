@@ -1,10 +1,9 @@
 package rawfish.artedprvt.std.cli.util;
 
 import rawfish.artedprvt.api.Solvable;
-import rawfish.artedprvt.dev.FutureWork;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
-import rawfish.artedprvt.std.cli.info.*;
+import rawfish.artedprvt.std.cli.info.InfoHandlerEmpty;
 
 import java.util.Collections;
 import java.util.List;

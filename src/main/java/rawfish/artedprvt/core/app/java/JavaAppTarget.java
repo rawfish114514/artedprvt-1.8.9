@@ -18,7 +18,7 @@ public class JavaAppTarget implements AppTarget<JavaProcess> {
 
     @Override
     public JavaProcess open(List<String> args) throws Exception {
-        return new JavaProcess(url.getPath(), args);
+        return new JavaProcess(url.openStream(), args);
     }
 
     @Override

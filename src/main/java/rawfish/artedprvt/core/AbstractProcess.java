@@ -21,7 +21,6 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
 
     public AbstractProcess(){
         super();
-        ret=CREATE;
 
         inProcessList=new ArrayList<>();
     }
