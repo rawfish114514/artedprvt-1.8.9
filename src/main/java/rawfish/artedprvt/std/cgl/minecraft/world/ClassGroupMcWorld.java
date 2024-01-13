@@ -7,7 +7,7 @@ import rawfish.artedprvt.std.minecraft.world.World;
 @Solvable
 public class ClassGroupMcWorld extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupMcWorld INSTANCE=new ClassGroupMcWorld("mc.world");
+    public static final ClassGroupMcWorld INSTANCE = new ClassGroupMcWorld("mc.world");
 
     @Solvable
     public ClassGroupMcWorld(Object name) {

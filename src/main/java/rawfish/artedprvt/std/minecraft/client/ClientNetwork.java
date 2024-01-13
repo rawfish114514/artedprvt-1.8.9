@@ -10,17 +10,17 @@ import rawfish.artedprvt.std.minecraft.entity.Entity;
 public class ClientNetwork {
     private NetHandlerPlayClient MnetHandlerPlayClient;
 
-    public ClientNetwork(NetHandlerPlayClient MnetHandlerPlayClient){
-        this.MnetHandlerPlayClient=MnetHandlerPlayClient;
+    public ClientNetwork(NetHandlerPlayClient MnetHandlerPlayClient) {
+        this.MnetHandlerPlayClient = MnetHandlerPlayClient;
     }
 
     @Solvable
-    public void sendChat(String chat){
+    public void sendChat(String chat) {
         MnetHandlerPlayClient.addToSendQueue(new C01PacketChatMessage(chat));
     }
 
     @Solvable
-    public void sendAttack(Entity entity){
-        MnetHandlerPlayClient.addToSendQueue(new C02PacketUseEntity(entity.getMentity(),C02PacketUseEntity.Action.ATTACK));
+    public void sendAttack(Entity entity) {
+        MnetHandlerPlayClient.addToSendQueue(new C02PacketUseEntity(entity.getMentity(), C02PacketUseEntity.Action.ATTACK));
     }
 }

@@ -9,26 +9,26 @@ import java.util.Map;
 public class ParseResult {
     private boolean correct;
 
-    private Map<String,String> map;
+    private Map<String, String> map;
 
     @Solvable
-    public ParseResult(boolean correct){
-        this.correct=correct;
-        map=new HashMap<>();
+    public ParseResult(boolean correct) {
+        this.correct = correct;
+        map = new HashMap<>();
     }
 
     @Solvable
-    public void put(String key,String value){
-        map.put(key,value);
+    public void put(String key, String value) {
+        map.put(key, value);
     }
 
     @Solvable
-    public String get(String key){
+    public String get(String key) {
         return map.get(key);
     }
 
     @Solvable
-    public boolean isCorrect(){
+    public boolean isCorrect() {
         return correct;
     }
 }

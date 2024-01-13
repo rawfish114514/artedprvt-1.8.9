@@ -7,7 +7,6 @@ import rawfish.artedprvt.std.cli.InfoInterface;
 import rawfish.artedprvt.std.cli.ProcessInterface;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -43,7 +42,7 @@ public class WorkRuntime {
             List<LifecycleData> lifecycleDataList,
             List<GoalData> goalDataList,
             List<CommandData> commandDataList) {
-        this.projectSystem=projectSystem;
+        this.projectSystem = projectSystem;
         this.classLoader = classLoader;
         phaseDataList.forEach(v -> phaseDataMap.put(v.phaseName, v));
         lifecycleDataList.forEach(v -> lifecycleDataMap.put(v.lifecycleName, v));
@@ -78,9 +77,9 @@ public class WorkRuntime {
                         Constructor goalConstructor = goalClass.getConstructor();
                         goalConstructor.setAccessible(true);
                         Object goalObject = goalConstructor.newInstance();
-                        InfoHandler infoHandler=getInfoHandler(goalObject);
-                        if(infoHandler==null){
-                            infoHandler=getInfoHandler(phaseObject);
+                        InfoHandler infoHandler = getInfoHandler(goalObject);
+                        if (infoHandler == null) {
+                            infoHandler = getInfoHandler(phaseObject);
                         }
                         GoalHandle goalHandle = new GoalHandle(
                                 goalHandleName,
@@ -147,8 +146,8 @@ public class WorkRuntime {
             commandRefNameList.add(commandRefName);
         }
 
-        Class apClass=classLoader.loadClass("rawfish.artedprvt.work._0.ap");
-        ProjectAccess projectAccess=(ProjectAccess)apClass.newInstance();
+        Class apClass = classLoader.loadClass("rawfish.artedprvt.work._0.ap");
+        ProjectAccess projectAccess = (ProjectAccess) apClass.newInstance();
         projectAccess.main(projectSystem);
     }
 
@@ -294,7 +293,7 @@ public class WorkRuntime {
     }
 
     public void close() {
-        projectSystem=null;
+        projectSystem = null;
         classLoader = null;
         phaseHandleMap = null;
         lifecyclePhaseHandleMap = null;

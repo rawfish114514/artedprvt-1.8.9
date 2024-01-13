@@ -9,7 +9,8 @@ public class table {
         ScriptStackParserFactory _4;
         ServiceEngine _5;
     }
-    static class regClasses{
+
+    static class regClasses {
         Engines _0;
     }
 }

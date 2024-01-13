@@ -9,7 +9,7 @@ import rawfish.artedprvt.std.cgl.minecraft.world.ClassGroupMcWorld;
 @Solvable
 public class ClassGroupCommon extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupCommon INSTANCE=new ClassGroupCommon("mccommon");
+    public static final ClassGroupCommon INSTANCE = new ClassGroupCommon("mccommon");
 
     @Solvable
     public ClassGroupCommon(Object name) {

@@ -1,8 +1,8 @@
 package rawfish.artedprvt.command.commands;
 
+import rawfish.artedprvt.command.BaseCommand;
 import rawfish.artedprvt.command.FormatMessager;
 import rawfish.artedprvt.command.TaskProcess;
-import rawfish.artedprvt.command.BaseCommand;
 import rawfish.artedprvt.std.cli.FormatHandler;
 import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.util.FormatHandlerListBuilder;

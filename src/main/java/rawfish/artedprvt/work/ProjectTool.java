@@ -127,7 +127,7 @@ public class ProjectTool {
                 if (exclude(c)) {
                     throw new RuntimeException("class rawfish.artedprvt.work._0.ap 不是 ProjectScript 单注解");
                 }
-                if(!ProjectAccess.class.isAssignableFrom(c)){
+                if (!ProjectAccess.class.isAssignableFrom(c)) {
                     throw new RuntimeException("class rawfish.artedprvt.work._0.ap 未实现 ProjectAccess 接口");
                 }
                 ProjectScript projectScript = single(ProjectScript.class, c);

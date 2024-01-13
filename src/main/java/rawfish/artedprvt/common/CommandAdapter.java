@@ -16,8 +16,9 @@ import java.util.stream.Collectors;
 
 public class CommandAdapter extends CommandBase {
     private final Command command;
-    public CommandAdapter(Command command){
-        this.command=command;
+
+    public CommandAdapter(Command command) {
+        this.command = command;
     }
 
     @Override
@@ -27,31 +28,31 @@ public class CommandAdapter extends CommandBase {
 
     @Override
     public String getCommandUsage(ICommandSender sender) {
-        return "commands."+command.getName()+".usage";
+        return "commands." + command.getName() + ".usage";
     }
 
 
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException {
         //去空参数
-        List<String> slist=new ArrayList<>();
-        for(String arg:args){
-            if(!arg.equals("")){
+        List<String> slist = new ArrayList<>();
+        for (String arg : args) {
+            if (!arg.equals("")) {
                 slist.add(arg);
             }
         }
         try {
             command.process(slist, messager);
-        }catch (Throwable throwable){
+        } catch (Throwable throwable) {
             throw new CommandException(throwable.getMessage());
         }
     }
 
     @Override
-    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos){
-        if(!(sender.getEntityWorld() instanceof WorldServer)){
-            List<String> argList=Arrays.asList(args);
-            return startWith(argList,command.complete(argList));
+    public List<String> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        if (!(sender.getEntityWorld() instanceof WorldServer)) {
+            List<String> argList = Arrays.asList(args);
+            return startWith(argList, command.complete(argList));
         }
         return Literals.emptyComplete();
     }
@@ -62,17 +63,17 @@ public class CommandAdapter extends CommandBase {
     }
 
 
-    public List<String> startWith(List<String> args,List<String> cs){
-        List<String> ns=cs.stream().filter(v->v.startsWith(args.get(args.size()-1))).collect(Collectors.toList());
-        if(ns.size()>0){
+    public List<String> startWith(List<String> args, List<String> cs) {
+        List<String> ns = cs.stream().filter(v -> v.startsWith(args.get(args.size() - 1))).collect(Collectors.toList());
+        if (ns.size() > 0) {
             return ns;
         }
         return cs;
     }
 
-    private static Messager messager=new Messager0();
+    private static Messager messager = new Messager0();
 
-    static class Messager0 implements Messager{
+    static class Messager0 implements Messager {
         @Override
         public void send(String message) {
             System.out.println(Literals.fcClear(message));
@@ -80,7 +81,7 @@ public class CommandAdapter extends CommandBase {
 
         @Override
         public void send(String message, String hover) {
-            System.out.println(Literals.fcClear(message)+"\n\n"+Literals.fcClear(hover));
+            System.out.println(Literals.fcClear(message) + "\n\n" + Literals.fcClear(hover));
         }
 
         @Override
@@ -91,7 +92,7 @@ public class CommandAdapter extends CommandBase {
         @Override
         public int dialog(String message, String... buttons) {
             send(message);
-            send(String.join(" ",buttons));
+            send(String.join(" ", buttons));
             return -1;
         }
 

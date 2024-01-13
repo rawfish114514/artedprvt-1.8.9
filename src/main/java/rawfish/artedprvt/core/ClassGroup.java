@@ -12,6 +12,7 @@ import java.util.Collection;
 public interface ClassGroup {
     /**
      * 要求 for each loop 是安全的
+     *
      * @return
      */
     @Solvable

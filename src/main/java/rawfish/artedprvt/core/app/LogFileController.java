@@ -25,7 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class LogFileController extends SystemProcess {
-    private static final Pattern datePattern= Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
+    private static final Pattern datePattern = Pattern.compile("\\d{4}-\\d{2}-\\d{2}");
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter dayFormatter = DateTimeFormatter.ofPattern("dd");
@@ -39,30 +39,30 @@ public class LogFileController extends SystemProcess {
 
     @Override
     public void run() {
-        while(true){
+        while (true) {
             //合并很久以前的日志
-            LocalDate currentDate=LocalDate.now();
+            LocalDate currentDate = LocalDate.now();
             File logDir = new File(Home.log());
-            File[] files=logDir.listFiles();
-            if(files==null||files.length==0){
+            File[] files = logDir.listFiles();
+            if (files == null || files.length == 0) {
                 continue;
             }
 
-            Map<String, List<File>> map=new HashMap<>();
-            for(File file:files){
-                String name=file.getName();
+            Map<String, List<File>> map = new HashMap<>();
+            for (File file : files) {
+                String name = file.getName();
 
                 Matcher matcher = datePattern.matcher(name);
                 if (matcher.matches()) {
                     String dateStr = matcher.group();
                     LocalDate targetDate = LocalDate.parse(dateStr, dateFormatter);
-                    int monthDifference = currentDate.getMonthValue()-targetDate.getMonthValue();
-                    if(monthDifference>0){
-                        String year=yearFormatter.format(targetDate);
-                        String month=monthFormatter.format(targetDate);
-                        String key=year+"-"+month;
+                    int monthDifference = currentDate.getMonthValue() - targetDate.getMonthValue();
+                    if (monthDifference > 0) {
+                        String year = yearFormatter.format(targetDate);
+                        String month = monthFormatter.format(targetDate);
+                        String key = year + "-" + month;
                         map.computeIfAbsent(key, k -> new ArrayList<>());
-                        List<File> list=map.get(key);
+                        List<File> list = map.get(key);
 
                         list.add(file);
                     }
@@ -70,24 +70,24 @@ public class LogFileController extends SystemProcess {
             }
 
             try {
-                Set<String> keys=map.keySet();
-                for(String key:keys){
-                    List<File> list=map.get(key);
-                    File zipFile = new File(Home.log(),key+".zip");
+                Set<String> keys = map.keySet();
+                for (String key : keys) {
+                    List<File> list = map.get(key);
+                    File zipFile = new File(Home.log(), key + ".zip");
                     ZipOutputStream zip;
-                        zip=new ZipOutputStream(new FileOutputStream(zipFile), Charset.forName("cp437"));
+                    zip = new ZipOutputStream(new FileOutputStream(zipFile), Charset.forName("cp437"));
 
 
-                    for(File dayDir:list){
-                        for(File file: Objects.requireNonNull(dayDir.listFiles())){
-                            String name=file.toPath().subpath(logDir.toPath().getNameCount(),file.toPath().getNameCount()).toString();
-                            ZipEntry entry=new ZipEntry(name);
+                    for (File dayDir : list) {
+                        for (File file : Objects.requireNonNull(dayDir.listFiles())) {
+                            String name = file.toPath().subpath(logDir.toPath().getNameCount(), file.toPath().getNameCount()).toString();
+                            ZipEntry entry = new ZipEntry(name);
                             zip.putNextEntry(entry);
 
-                            InputStream input=new FileInputStream(file);
+                            InputStream input = new FileInputStream(file);
                             int n;
-                            while(true){
-                                if((n=input.read())==-1){
+                            while (true) {
+                                if ((n = input.read()) == -1) {
                                     break;
                                 }
                                 zip.write(n);
@@ -113,7 +113,7 @@ public class LogFileController extends SystemProcess {
 
 
     public AppLogger openLog(AppProcess appProcess) throws FileNotFoundException {
-        return openLog(appProcess,LocalDate.now());
+        return openLog(appProcess, LocalDate.now());
     }
 
     public synchronized AppLogger openLog(AppProcess appProcess, LocalDate localDate) throws FileNotFoundException {
@@ -127,12 +127,12 @@ public class LogFileController extends SystemProcess {
         int logFileNumber = logDir.list().length;
         String processName = appProcess.getName();
         File logFile = new File(logDir, logFileNumber + "." + processName.substring(processName.indexOf(':') + 1) + ".txt");
-        OutputStream fileOutputStream=new FileOutputStream(logFile);
-        OutputStream systemOutputStream=new FilterOutputStream(System.out){
+        OutputStream fileOutputStream = new FileOutputStream(logFile);
+        OutputStream systemOutputStream = new FilterOutputStream(System.out) {
             @Override
             public void close() throws IOException {
             }
         };
-        return new AppLogger(appProcess,localDate,fileOutputStream,systemOutputStream);
+        return new AppLogger(appProcess, localDate, fileOutputStream, systemOutputStream);
     }
 }

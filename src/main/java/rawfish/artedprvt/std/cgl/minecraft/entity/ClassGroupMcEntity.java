@@ -8,7 +8,7 @@ import rawfish.artedprvt.std.minecraft.entity.PlayerEntity;
 @Solvable
 public class ClassGroupMcEntity extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupMcEntity INSTANCE=new ClassGroupMcEntity("mc.entity");
+    public static final ClassGroupMcEntity INSTANCE = new ClassGroupMcEntity("mc.entity");
 
     @Solvable
     public ClassGroupMcEntity(Object name) {

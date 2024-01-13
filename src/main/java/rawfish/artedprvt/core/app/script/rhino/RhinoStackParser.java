@@ -12,13 +12,13 @@ public class RhinoStackParser implements ScriptStackParser {
 
     @Override
     public ScriptStackElement[] parse(Throwable e) {
-        RhinoException rhinoException=(RhinoException)e;
-        org.mozilla.javascript.ScriptStackElement[] jses=rhinoException.getScriptStack();
+        RhinoException rhinoException = (RhinoException) e;
+        org.mozilla.javascript.ScriptStackElement[] jses = rhinoException.getScriptStack();
         org.mozilla.javascript.ScriptStackElement jse;
-        ScriptStackElement[] stackElements=new ScriptStackElement[jses.length];
-        for(int i=0;i<jses.length;i++){
-            jse=jses[i];
-            stackElements[i]=new ScriptStackElement(jse.fileName,jse.lineNumber);
+        ScriptStackElement[] stackElements = new ScriptStackElement[jses.length];
+        for (int i = 0; i < jses.length; i++) {
+            jse = jses[i];
+            stackElements[i] = new ScriptStackElement(jse.fileName, jse.lineNumber);
         }
         return stackElements;
     }

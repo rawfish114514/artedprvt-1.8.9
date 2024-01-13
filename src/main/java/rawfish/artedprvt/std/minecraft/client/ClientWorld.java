@@ -5,7 +5,7 @@ import rawfish.artedprvt.std.minecraft.world.World;
 
 @Solvable
 public class ClientWorld extends World {
-    public ClientWorld(net.minecraft.client.multiplayer.WorldClient MworldClient){
+    public ClientWorld(net.minecraft.client.multiplayer.WorldClient MworldClient) {
         super(MworldClient);
     }
 }

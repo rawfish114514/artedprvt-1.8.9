@@ -5,6 +5,6 @@ import rawfish.artedprvt.core.app.script.ScriptProcess;
 /**
  * 脚本引擎工厂
  */
-public interface ScriptEngineFactory{
+public interface ScriptEngineFactory {
     ScriptEngine create(ScriptProcess process);
 }

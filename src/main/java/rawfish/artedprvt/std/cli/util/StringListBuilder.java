@@ -8,13 +8,13 @@ import java.util.Arrays;
 @Solvable
 public class StringListBuilder extends ArrayList<String> {
     @Solvable
-    public StringListBuilder adds(String string){
+    public StringListBuilder adds(String string) {
         add(string);
         return this;
     }
 
     @Solvable
-    public StringListBuilder adds(String... strings){
+    public StringListBuilder adds(String... strings) {
         addAll(Arrays.asList(strings));
         return this;
     }

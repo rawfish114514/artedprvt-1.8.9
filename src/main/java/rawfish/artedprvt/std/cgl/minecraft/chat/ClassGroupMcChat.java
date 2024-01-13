@@ -12,7 +12,7 @@ import rawfish.artedprvt.std.minecraft.chat.ChatStyle;
 @Solvable
 public class ClassGroupMcChat extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupMcChat INSTANCE=new ClassGroupMcChat("mc.chat");
+    public static final ClassGroupMcChat INSTANCE = new ClassGroupMcChat("mc.chat");
 
     @Solvable
     public ClassGroupMcChat(Object name) {

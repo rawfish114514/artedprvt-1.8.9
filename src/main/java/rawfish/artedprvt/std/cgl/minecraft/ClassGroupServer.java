@@ -6,7 +6,7 @@ import rawfish.artedprvt.core.BaseClassGroup;
 @Solvable
 public class ClassGroupServer extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupServer INSTANCE=new ClassGroupServer("mcserver");
+    public static final ClassGroupServer INSTANCE = new ClassGroupServer("mcserver");
 
     @Solvable
     public ClassGroupServer(Object name) {

@@ -6,11 +6,11 @@ import rawfish.artedprvt.std.cli.ProcessInterface;
 
 import java.util.List;
 
-public class GoalHandle implements ProcessInterface,InfoHandler{
+public class GoalHandle implements ProcessInterface, InfoHandler {
     private ProcessInterface processInterface;
     private InfoHandler infoHandler;
 
-    public GoalHandle(String goalName, ProcessInterface processInterface,InfoHandler infoHandler) {
+    public GoalHandle(String goalName, ProcessInterface processInterface, InfoHandler infoHandler) {
         this.processInterface = processInterface;
         this.infoHandler = infoHandler;
     }
@@ -22,7 +22,7 @@ public class GoalHandle implements ProcessInterface,InfoHandler{
 
     @Override
     public String handleInfo(String source) {
-        if(infoHandler==null){
+        if (infoHandler == null) {
             return "";
         }
         return infoHandler.handleInfo(source);

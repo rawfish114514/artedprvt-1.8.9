@@ -17,7 +17,7 @@ import rawfish.artedprvt.std.cgl.minecraft.world.ClassGroupMcWorld;
 import java.util.Arrays;
 
 public class ClassGroupLoader {
-    public static void load(){
+    public static void load() {
         addAll(new ClassGroup[]{
                 //other
                 ClassGroupCgl.INSTANCE,
@@ -39,7 +39,7 @@ public class ClassGroupLoader {
     }
 
 
-    private static void addAll(ClassGroup[] classGroups){
+    private static void addAll(ClassGroup[] classGroups) {
         Arrays.stream(classGroups).forEach(ClassGroupSystem::add);
     }
 }

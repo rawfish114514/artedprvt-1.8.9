@@ -11,19 +11,19 @@ import java.util.Map;
 @Solvable
 public class InfoHandlerFactory {
     @Solvable
-    public InfoHandler empty(){
+    public InfoHandler empty() {
         return new InfoHandlerEmpty();
     }
 
     @Solvable
     public InfoHandler map(
-            Map<String,InfoHandler> map,
-            InfoHandler falseHandler){
-        return new InfoHandlerMap(map,falseHandler);
+            Map<String, InfoHandler> map,
+            InfoHandler falseHandler) {
+        return new InfoHandlerMap(map, falseHandler);
     }
 
     @Solvable
-    public InfoHandler string(String string){
+    public InfoHandler string(String string) {
         return new InfoHandlerString(string);
     }
 }

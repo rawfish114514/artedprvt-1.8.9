@@ -6,6 +6,7 @@ import rawfish.artedprvt.api.Solvable;
 public abstract class Logger {
     /**
      * 记录INFO级别的日志消息
+     *
      * @param message
      */
     @Solvable
@@ -13,6 +14,7 @@ public abstract class Logger {
 
     /**
      * 记录WARN级别的日志消息
+     *
      * @param message
      */
     @Solvable
@@ -20,6 +22,7 @@ public abstract class Logger {
 
     /**
      * 记录ERROR级别的日志消息
+     *
      * @param message
      */
     @Solvable
@@ -27,12 +30,13 @@ public abstract class Logger {
 
     /**
      * 记录日志消息
-     * @param level 日志消息级别
+     *
+     * @param level   日志消息级别
      * @param message
      */
     @Solvable
-    public void log(Level level,String message){
-        switch (level){
+    public void log(Level level, String message) {
+        switch (level) {
             case INFO:
                 info(message);
                 break;
@@ -49,7 +53,7 @@ public abstract class Logger {
     /**
      * 关闭日志记录器
      */
-    public void close(){
+    public void close() {
         //注销
     }
 
@@ -57,7 +61,7 @@ public abstract class Logger {
      * 日志消息级别
      */
     @Solvable
-    enum Level{
+    enum Level {
         @Solvable
         INFO,
         @Solvable
@@ -66,10 +70,10 @@ public abstract class Logger {
         ERROR,
     }
 
-    public static class VoidLogger extends Logger{
-        public static final VoidLogger INSTANCE= new VoidLogger();
+    public static class VoidLogger extends Logger {
+        public static final VoidLogger INSTANCE = new VoidLogger();
 
-        public VoidLogger(){
+        public VoidLogger() {
             super();
         }
 

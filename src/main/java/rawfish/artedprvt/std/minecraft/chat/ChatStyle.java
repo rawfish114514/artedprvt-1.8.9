@@ -8,66 +8,66 @@ import java.util.Objects;
 public class ChatStyle {
     private String chat;
 
-    private ChatClick click=null;
+    private ChatClick click = null;
 
-    private ChatHover hover=null;
+    private ChatHover hover = null;
 
     @Solvable
-    public ChatStyle(){
+    public ChatStyle() {
         this("");
     }
 
     @Solvable
-    public ChatStyle(String chat){
-        this.chat=chat;
+    public ChatStyle(String chat) {
+        this.chat = chat;
     }
 
     @Solvable
-    public ChatStyle(String chat,String hover){
+    public ChatStyle(String chat, String hover) {
         this(chat);
         hover(hover);
     }
 
     @Solvable
-    public ChatStyle click(ChatClick chatClick){
-        click =chatClick;
+    public ChatStyle click(ChatClick chatClick) {
+        click = chatClick;
         return this;
     }
 
     @Solvable
-    public ChatStyle hover(ChatHover chatHover){
-        hover =chatHover;
+    public ChatStyle hover(ChatHover chatHover) {
+        hover = chatHover;
         return this;
     }
 
     @Solvable
-    public ChatStyle hover(String chatHover){
-        hover =new ChatHoverString(chatHover);
+    public ChatStyle hover(String chatHover) {
+        hover = new ChatHoverString(chatHover);
         return this;
     }
 
     @Solvable
-    public String getChat(){
+    public String getChat() {
         return chat;
     }
 
     @Solvable
-    public ChatClick getClick(){
+    public ChatClick getClick() {
         return click;
     }
 
     @Solvable
-    public ChatHover getHover(){
+    public ChatHover getHover() {
         return hover;
     }
 
     @Solvable
-    public boolean isClickNonnull(){
+    public boolean isClickNonnull() {
         return Objects.nonNull(click);
     }
 
     @Solvable
-    public boolean isHoverNonnull(){
+    public boolean isHoverNonnull() {
         return Objects.nonNull(hover);
     }
 }

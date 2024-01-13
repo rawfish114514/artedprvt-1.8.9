@@ -8,8 +8,8 @@ public class InfoHandlerString implements InfoHandler {
     private String string;
 
     @Solvable
-    public InfoHandlerString(String string){
-        this.string=string;
+    public InfoHandlerString(String string) {
+        this.string = string;
     }
 
     @Override

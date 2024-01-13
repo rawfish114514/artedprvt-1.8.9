@@ -21,20 +21,20 @@ public class FormatHandlerRegex implements FormatHandler {
     private FormatHandler falseHandler;
 
     /**
-     * @param pattern 正则表达式
-     * @param template 输出模板 定义group的位置 使用§?group
+     * @param pattern         正则表达式
+     * @param template        输出模板 定义group的位置 使用§?group
      * @param groupHandlerMap 方案 定义group的格式处理程序 {groupName:formatter...}
-     * @param falseHandler 失败的格式处理程序
+     * @param falseHandler    失败的格式处理程序
      */
     @Solvable
     public FormatHandlerRegex(
             Pattern pattern,
             String template,
             Map<String, FormatHandler> groupHandlerMap,
-            FormatHandler falseHandler){
-        this.pattern=pattern;
-        this.template=template;
-        this.groupHandlerMap =new HashMap<>(groupHandlerMap);
+            FormatHandler falseHandler) {
+        this.pattern = pattern;
+        this.template = template;
+        this.groupHandlerMap = new HashMap<>(groupHandlerMap);
         this.falseHandler = falseHandler;
     }
 
@@ -43,26 +43,26 @@ public class FormatHandlerRegex implements FormatHandler {
             String regex,
             String template,
             Map<String, FormatHandler> groupHandlerMap,
-            FormatHandler falseHandler){
-        this(Pattern.compile(regex),template, groupHandlerMap, falseHandler);
+            FormatHandler falseHandler) {
+        this(Pattern.compile(regex), template, groupHandlerMap, falseHandler);
     }
 
     @Override
     @Solvable
     public synchronized String handleFormat(String source) {
-        ParseResult result= ArgumentsParserRegex.parse(pattern,groupHandlerMap.keySet(),source);
-        if(result.isCorrect()){
-            String s=template;
-            Set<String> groups= groupHandlerMap.keySet();
-            for(String group:groups){
-                if(!group.isEmpty() && group.charAt(0)!='$'){
-                    FormatHandler formatter= groupHandlerMap.get(group);
-                    s=s.replace("§?"+group,
+        ParseResult result = ArgumentsParserRegex.parse(pattern, groupHandlerMap.keySet(), source);
+        if (result.isCorrect()) {
+            String s = template;
+            Set<String> groups = groupHandlerMap.keySet();
+            for (String group : groups) {
+                if (!group.isEmpty() && group.charAt(0) != '$') {
+                    FormatHandler formatter = groupHandlerMap.get(group);
+                    s = s.replace("§?" + group,
                             formatter.handleFormat(result.get(group)));
                 }
             }
             return s;
-        }else{
+        } else {
             return falseHandler.handleFormat(source);
         }
     }

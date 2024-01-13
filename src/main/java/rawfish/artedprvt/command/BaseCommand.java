@@ -12,8 +12,8 @@ public abstract class BaseCommand extends Command {
 
     @Override
     public void process(List<String> args, Messager messager) {
-        process(args,new FormatMessager(messager,getName()));
+        process(args, new FormatMessager(messager, getName()));
     }
 
-    public abstract void process(List<String> args,FormatMessager messager);
+    public abstract void process(List<String> args, FormatMessager messager);
 }

@@ -12,8 +12,8 @@ public class ArgumentsParserSet {
     @Solvable
     public static ParseResult parse(
             Collection<String> sets,
-            String source){
-        if(sets.contains(source)){
+            String source) {
+        if (sets.contains(source)) {
             return new ParseResult(true);
         }
         return new ParseResult(false);

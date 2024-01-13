@@ -7,7 +7,7 @@ import rawfish.artedprvt.std.cli.util.parser.ArgumentsParserSet;
 
 @Solvable
 public class ClassGroupCliUtilParser extends BaseClassGroup {
-    public static final ClassGroupCliUtilParser INSTANCE=new ClassGroupCliUtilParser("cli.util.parser");
+    public static final ClassGroupCliUtilParser INSTANCE = new ClassGroupCliUtilParser("cli.util.parser");
 
     @Solvable
     public ClassGroupCliUtilParser(Object name) {

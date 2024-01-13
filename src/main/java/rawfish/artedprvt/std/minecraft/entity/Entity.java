@@ -9,34 +9,33 @@ import java.util.UUID;
 public class Entity {
     protected net.minecraft.entity.Entity Mentity;
 
-    public Entity(net.minecraft.entity.Entity Mentity){
-        this.Mentity=Mentity;
+    public Entity(net.minecraft.entity.Entity Mentity) {
+        this.Mentity = Mentity;
     }
 
-    public net.minecraft.entity.Entity getMentity(){
+    public net.minecraft.entity.Entity getMentity() {
         return Mentity;
     }
 
     @Solvable
-    public int getId(){
+    public int getId() {
         return Mentity.getEntityId();
     }
 
     @Solvable
-    public String getName(){
+    public String getName() {
         return Mentity.getName();
     }
 
     @Solvable
-    public UUID getUUID(){
+    public UUID getUUID() {
         return Mentity.getUniqueID();
     }
 
     @Solvable
-    public Vector3 getPosition(){
-        return new Vector3(Mentity.posX,Mentity.posY,Mentity.posZ);
+    public Vector3 getPosition() {
+        return new Vector3(Mentity.posX, Mentity.posY, Mentity.posZ);
     }
-
 
 
 }

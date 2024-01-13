@@ -8,7 +8,7 @@ import rawfish.artedprvt.std.cli.info.InfoHandlerString;
 
 @Solvable
 public class ClassGroupCliInfo extends BaseClassGroup {
-    public static final ClassGroupCliInfo INSTANCE=new ClassGroupCliInfo("cli.info");
+    public static final ClassGroupCliInfo INSTANCE = new ClassGroupCliInfo("cli.info");
 
     @Solvable
     public ClassGroupCliInfo(Object name) {

@@ -9,13 +9,14 @@ import java.util.List;
  * 有更特殊的行为
  * 同时也是最快速构造进程的方法
  */
-public abstract class SystemProcess extends Process implements Runnable{
+public abstract class SystemProcess extends Process implements Runnable {
     private final Thread thread;
     private List<InProcess> inProcessList;
-    public SystemProcess(String name){
-        thread=new SystemProcessThread(name);
-        this.name=name;
-        inProcessList=new ArrayList<>();
+
+    public SystemProcess(String name) {
+        thread = new SystemProcessThread(name);
+        this.name = name;
+        inProcessList = new ArrayList<>();
     }
 
     @Override
@@ -24,31 +25,31 @@ public abstract class SystemProcess extends Process implements Runnable{
     }
 
     @Override
-    public Logger logger(){
+    public Logger logger() {
         return new Logger.VoidLogger();
     }
 
     @Override
     public void start() {
-        ret=START;
+        ret = START;
         thread.start();
     }
 
-    public <T extends SystemProcess> T toStart(){
+    public <T extends SystemProcess> T toStart() {
         start();
-        return (T)this;
+        return (T) this;
     }
 
     @Override
     public void stop(int exitCode) {
-        ret=STOP;
+        ret = STOP;
         thread.stop();
         end(exitCode);
     }
 
     @Override
     public void end(int exitCode) {
-        if(ret==END){
+        if (ret == END) {
             return;
         }
         try {
@@ -56,23 +57,23 @@ public abstract class SystemProcess extends Process implements Runnable{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        ret=END;
+        ret = END;
     }
 
     @Override
-    public void up(InProcess inProcessObject){
+    public void up(InProcess inProcessObject) {
         inProcessList.add(inProcessObject);
     }
 
     @Override
-    public void down(InProcess inProcessObject){
+    public void down(InProcess inProcessObject) {
         inProcessList.remove(inProcessObject);
     }
 
-    private void closeInProcessObject(){
+    private void closeInProcessObject() {
         InProcess inProcess;
-        for(int i=0;i<inProcessList.size();){
-            inProcess=inProcessList.get(i);
+        for (int i = 0; i < inProcessList.size(); ) {
+            inProcess = inProcessList.get(i);
             inProcess.close();
             inProcessList.remove(inProcess);
         }
@@ -82,25 +83,25 @@ public abstract class SystemProcess extends Process implements Runnable{
      * 最后执行
      * 实际线程在finally块内调用此方法保证这个方法一定有机会执行
      */
-    public void fil(){
+    public void fil() {
 
     }
 
     private class SystemProcessThread extends Thread implements ProcessProvider {
-        public SystemProcessThread(String name){
+        public SystemProcessThread(String name) {
             setName(name);
         }
 
         @Override
-        public void run(){
+        public void run() {
             try {
                 SystemProcess.this.run();
             } catch (Exception e) {
                 throw new RuntimeException(e);
-            }finally {
+            } finally {
                 try {
                     fil();
-                }catch (Throwable ignore){
+                } catch (Throwable ignore) {
 
                 }
             }

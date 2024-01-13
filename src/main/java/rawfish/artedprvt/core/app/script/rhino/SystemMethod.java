@@ -1,28 +1,33 @@
 package rawfish.artedprvt.core.app.script.rhino;
 
-import org.mozilla.javascript.*;
+import org.mozilla.javascript.BaseFunction;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.NativeString;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.Wrapper;
 import rawfish.artedprvt.core.app.script.ScriptSystem;
 
 public abstract class SystemMethod extends BaseFunction {
     protected ScriptSystem scriptSystem;
     private Scriptable scope;
-    protected String name="null";
-    public SystemMethod(Scriptable scope,ScriptSystem scriptSystem){
-        this.scriptSystem=scriptSystem;
+    protected String name = "null";
+
+    public SystemMethod(Scriptable scope, ScriptSystem scriptSystem) {
+        this.scriptSystem = scriptSystem;
         setScope(scope);
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 
     public abstract Object invoke(Object[] args);
 
-    private void setScope(Scriptable scope){
-        this.scope=scope;
+    private void setScope(Scriptable scope) {
+        this.scope = scope;
     }
 
-    public Scriptable getScope(){
+    public Scriptable getScope() {
         return scope;
     }
 
@@ -38,24 +43,25 @@ public abstract class SystemMethod extends BaseFunction {
 
     /**
      * 拆箱
+     *
      * @param objs
      * @return
      */
-    public static Object[] unwrap(Object[] objs){
-        Object[] nobjs=new Object[objs.length];
+    public static Object[] unwrap(Object[] objs) {
+        Object[] nobjs = new Object[objs.length];
         Object obj;
-        for(int i=0;i<objs.length;i++){
-            obj=objs[i];
-            if(obj instanceof Wrapper){
-                obj=((Wrapper)obj).unwrap();
+        for (int i = 0; i < objs.length; i++) {
+            obj = objs[i];
+            if (obj instanceof Wrapper) {
+                obj = ((Wrapper) obj).unwrap();
             }
-            nobjs[i]=obj;
+            nobjs[i] = obj;
         }
         return nobjs;
     }
 
     @Override
-    public String toString(){
-        return "system method "+name;
+    public String toString() {
+        return "system method " + name;
     }
 }

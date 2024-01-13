@@ -9,12 +9,12 @@ import java.util.HashMap;
 @Solvable
 public class InfoHandlerMapBuilder extends HashMap<String, InfoHandler> {
     @Solvable
-    public InfoHandlerMapBuilder puts(String string,InfoHandler infoHandler){
-        put(string,infoHandler);
+    public InfoHandlerMapBuilder puts(String string, InfoHandler infoHandler) {
+        put(string, infoHandler);
         return this;
     }
 
-    public InfoHandlerMapBuilder string(String string,String info){
-        return puts(string,new InfoHandlerString(info));
+    public InfoHandlerMapBuilder string(String string, String info) {
+        return puts(string, new InfoHandlerString(info));
     }
 }

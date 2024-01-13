@@ -1,13 +1,13 @@
 package rawfish.artedprvt.core;
 
-public class AbstractThread<T extends AbstractProcess<T>> extends Thread implements ProcessProvider{
+public class AbstractThread<T extends AbstractProcess<T>> extends Thread implements ProcessProvider {
     protected T process;
 
-    public AbstractThread(T process){
+    public AbstractThread(T process) {
         this.process = process;
     }
 
-    public AbstractThread(T process, Runnable runnable){
+    public AbstractThread(T process, Runnable runnable) {
         super(runnable);
         this.process = process;
     }

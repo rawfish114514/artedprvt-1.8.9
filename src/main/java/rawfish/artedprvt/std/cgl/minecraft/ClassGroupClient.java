@@ -7,7 +7,7 @@ import rawfish.artedprvt.std.cgl.minecraft.client.ClassGroupMcClient;
 @Solvable
 public class ClassGroupClient extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupClient INSTANCE=new ClassGroupClient("mcclient");
+    public static final ClassGroupClient INSTANCE = new ClassGroupClient("mcclient");
 
     @Solvable
     public ClassGroupClient(Object name) {

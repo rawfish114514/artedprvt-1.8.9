@@ -11,15 +11,15 @@ import java.util.List;
 public class World {
     protected net.minecraft.world.World Mworld;
 
-    public World(net.minecraft.world.World Mworld){
-        this.Mworld=Mworld;
+    public World(net.minecraft.world.World Mworld) {
+        this.Mworld = Mworld;
     }
 
     @Solvable
-    public List<PlayerEntity> getPlayerEntityList(){
-        List<EntityPlayer> MplayerEntities=Mworld.playerEntities;
-        List<PlayerEntity> playerEntityList=new ArrayList<>();
-        for(EntityPlayer MentityPlayer:MplayerEntities){
+    public List<PlayerEntity> getPlayerEntityList() {
+        List<EntityPlayer> MplayerEntities = Mworld.playerEntities;
+        List<PlayerEntity> playerEntityList = new ArrayList<>();
+        for (EntityPlayer MentityPlayer : MplayerEntities) {
             playerEntityList.add(new PlayerEntity(MentityPlayer));
         }
         return playerEntityList;

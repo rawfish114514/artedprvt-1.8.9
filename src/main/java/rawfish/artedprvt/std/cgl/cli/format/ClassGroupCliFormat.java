@@ -10,7 +10,7 @@ import rawfish.artedprvt.std.cli.format.FormatHandlerSet;
 
 @Solvable
 public class ClassGroupCliFormat extends BaseClassGroup {
-    public static final ClassGroupCliFormat INSTANCE=new ClassGroupCliFormat("cli.format");
+    public static final ClassGroupCliFormat INSTANCE = new ClassGroupCliFormat("cli.format");
 
     @Solvable
     public ClassGroupCliFormat(Object name) {

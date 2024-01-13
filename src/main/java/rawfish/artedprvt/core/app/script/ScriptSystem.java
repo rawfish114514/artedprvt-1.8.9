@@ -4,10 +4,10 @@ import rawfish.artedprvt.core.ClassGroup;
 import rawfish.artedprvt.core.ClassGroupSystem;
 import rawfish.artedprvt.core.Logger;
 import rawfish.artedprvt.core.app.BaseSystem;
-import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.core.app.script.engine.ScriptEngine;
 import rawfish.artedprvt.core.app.script.struct.FileLoader;
 import rawfish.artedprvt.core.app.script.struct.ScriptModule;
+import rawfish.artedprvt.core.localization.types.SES;
 import rawfish.artedprvt.std.cli.Messager;
 
 import java.io.InputStream;
@@ -28,7 +28,7 @@ public class ScriptSystem {
         this.process = process;
         logger = process.logger();
         fileLoader = process.getFileLoader();
-        messager= BaseSystem.getMessager();
+        messager = BaseSystem.getMessager();
     }
 
 

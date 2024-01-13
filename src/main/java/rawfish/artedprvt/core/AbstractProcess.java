@@ -11,7 +11,7 @@ import java.util.List;
  * 要求实现进程线程
  * 要求实现异常处理程序
  */
-public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Process implements Runnable{
+public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Process implements Runnable {
     protected List<InProcess> inProcessList;
 
     protected AbstractThread<T> mainThread;
@@ -19,10 +19,10 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
     protected List<AbstractThread<T>> threads;
 
 
-    public AbstractProcess(){
+    public AbstractProcess() {
         super();
 
-        inProcessList=new ArrayList<>();
+        inProcessList = new ArrayList<>();
     }
 
     public abstract AbstractExceptionHandler<T> getExceptionHandler();
@@ -35,13 +35,13 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
      * 由外部调用
      */
     @Override
-    public synchronized void start(){
-        if(ret!=CREATE){
+    public synchronized void start() {
+        if (ret != CREATE) {
             throw new RuntimeException("进程异常");
         }
-        ret=START;
-        threads =new ArrayList<>();
-        mainThread=createThread(this);
+        ret = START;
+        threads = new ArrayList<>();
+        mainThread = createThread(this);
 
         mainThread.start();
     }
@@ -50,17 +50,18 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
      * 准备工作完成
      * 由主线程调用
      */
-    public void begin(){
-        ret=BEGIN;
+    public void begin() {
+        ret = BEGIN;
     }
 
     /**
      * 终止进程
      * 由外部调用或运行结束自动调用
+     *
      * @param exitCode
      */
     @Override
-    public void stop(int exitCode){
+    public void stop(int exitCode) {
         synchronized (threads) {
             //终止所有相关的线程 在最后终止当前线程前结束进程
             Thread currentThread = Thread.currentThread();
@@ -91,25 +92,26 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
     /**
      * 进程结束
      * 由外部调用或运行结束自动调用
+     *
      * @param exitCode
      */
     @Override
-    public synchronized void end(int exitCode){
-        if(ret==END){
+    public synchronized void end(int exitCode) {
+        if (ret == END) {
             return;
         }
         try {
             closeInProcessObject();
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }finally {
-            ret=END;
+        } finally {
+            ret = END;
         }
     }
 
 
     @Override
-    public void up(InProcess inProcessObject){
+    public void up(InProcess inProcessObject) {
         inProcessList.add(inProcessObject);
     }
 
@@ -118,10 +120,10 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
         inProcessList.remove(inProcessObject);
     }
 
-    protected void closeInProcessObject(){
+    protected void closeInProcessObject() {
         InProcess inProcess;
-        for(int i=0;i<inProcessList.size();){
-            inProcess=inProcessList.get(i);
+        for (int i = 0; i < inProcessList.size(); ) {
+            inProcess = inProcessList.get(i);
             inProcess.close();
             inProcessList.remove(inProcess);
         }
@@ -129,7 +131,7 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
 
 
     @Override
-    public int getRunningThreadCount(){
+    public int getRunningThreadCount() {
         synchronized (threads) {
             int n = 0;
             AbstractThread thread;
@@ -145,67 +147,68 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
 
     public boolean isThread(Thread thread) {
         for (int i = 0; i < threads.size(); i++) {
-            if(thread== threads.get(i)){
+            if (thread == threads.get(i)) {
                 return true;
             }
         }
         return false;
     }
 
-    private long gclastCpuTime =-1;
-    private long gclastTime =-1;
-    private double oldCPU=0;
-    public double getCPU(){
-        if(ret==END){
+    private long gclastCpuTime = -1;
+    private long gclastTime = -1;
+    private double oldCPU = 0;
+
+    public double getCPU() {
+        if (ret == END) {
             return 0;
         }
-        if(gclastCpuTime ==0){
-            gclastCpuTime =0;
-            gclastTime =System.currentTimeMillis();
-            List<Thread> threadList=new ArrayList<>();
+        if (gclastCpuTime == 0) {
+            gclastCpuTime = 0;
+            gclastTime = System.currentTimeMillis();
+            List<Thread> threadList = new ArrayList<>();
             threadList.add(mainThread);
             threadList.addAll(this.threads);
-            ThreadMXBean threadMXBean= ManagementFactory.getThreadMXBean();
-            for(Thread t:threadList){
-                long cpu=threadMXBean.getThreadCpuTime(t.getId());
-                gclastCpuTime +=cpu;
+            ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+            for (Thread t : threadList) {
+                long cpu = threadMXBean.getThreadCpuTime(t.getId());
+                gclastCpuTime += cpu;
             }
             return 0;
         }
-        long cpuTime=0;
-        long time=System.currentTimeMillis();
-        List<Thread> threadList=new ArrayList<>();
+        long cpuTime = 0;
+        long time = System.currentTimeMillis();
+        List<Thread> threadList = new ArrayList<>();
         threadList.add(mainThread);
         threadList.addAll(this.threads);
-        ThreadMXBean threadMXBean= ManagementFactory.getThreadMXBean();
-        for(Thread t:threadList){
-            long cpu=threadMXBean.getThreadCpuTime(t.getId());
-            cpuTime+=cpu;
+        ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+        for (Thread t : threadList) {
+            long cpu = threadMXBean.getThreadCpuTime(t.getId());
+            cpuTime += cpu;
         }
 
-        long cpuIncrement=cpuTime- gclastCpuTime;
-        long timeIncrement=time- gclastTime;
-        if(timeIncrement<200){
+        long cpuIncrement = cpuTime - gclastCpuTime;
+        long timeIncrement = time - gclastTime;
+        if (timeIncrement < 200) {
             return oldCPU;
         }
-        gclastCpuTime =cpuTime;
-        gclastTime =time;
-        if(timeIncrement>10000){
+        gclastCpuTime = cpuTime;
+        gclastTime = time;
+        if (timeIncrement > 10000) {
             return 0;
         }
-        oldCPU=cpuIncrement/1.0e6/Runtime.getRuntime().availableProcessors()/timeIncrement;
+        oldCPU = cpuIncrement / 1.0e6 / Runtime.getRuntime().availableProcessors() / timeIncrement;
         return oldCPU;
     }
 
-    public long getMemory(){
+    public long getMemory() {
         return -1;
     }
 
-    public AbstractThread<T> getMainThread(){
+    public AbstractThread<T> getMainThread() {
         return mainThread;
     }
 
-    public List<AbstractThread<T>> getThreads(){
+    public List<AbstractThread<T>> getThreads() {
         return threads;
     }
 }

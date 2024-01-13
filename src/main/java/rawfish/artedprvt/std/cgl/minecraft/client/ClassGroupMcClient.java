@@ -8,7 +8,7 @@ import rawfish.artedprvt.std.minecraft.client.ClientPlayerEntity;
 @Solvable
 public class ClassGroupMcClient extends ClientBaseClassGroup {
     @Solvable
-    public static final ClassGroupMcClient INSTANCE=new ClassGroupMcClient("mc.client");
+    public static final ClassGroupMcClient INSTANCE = new ClassGroupMcClient("mc.client");
 
     @Solvable
     public ClassGroupMcClient(Object name) {
@@ -17,7 +17,7 @@ public class ClassGroupMcClient extends ClientBaseClassGroup {
     }
 
     private void init() {
-        if(permission()){
+        if (permission()) {
             add(ClientMinecraft.class);
             add(ClientPlayerEntity.class);
         }

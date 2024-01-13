@@ -17,10 +17,11 @@ import rawfish.artedprvt.std.cgl.minecraft.chat.ClassGroupMcChat;
 import rawfish.artedprvt.std.cgl.minecraft.client.ClassGroupMcClient;
 import rawfish.artedprvt.std.cgl.minecraft.entity.ClassGroupMcEntity;
 import rawfish.artedprvt.std.cgl.minecraft.world.ClassGroupMcWorld;
+
 @Solvable
 public class ClassGroupCgl extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupCgl INSTANCE=new ClassGroupCgl("cgl");
+    public static final ClassGroupCgl INSTANCE = new ClassGroupCgl("cgl");
 
     @Solvable
     public ClassGroupCgl(Object name) {

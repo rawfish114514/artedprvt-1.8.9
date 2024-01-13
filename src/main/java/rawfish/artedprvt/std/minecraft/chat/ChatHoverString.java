@@ -7,8 +7,8 @@ public class ChatHoverString implements ChatHover {
     private String chat;
 
     @Solvable
-    public ChatHoverString(String chat){
-        this.chat=chat;
+    public ChatHoverString(String chat) {
+        this.chat = chat;
     }
 
     @Solvable

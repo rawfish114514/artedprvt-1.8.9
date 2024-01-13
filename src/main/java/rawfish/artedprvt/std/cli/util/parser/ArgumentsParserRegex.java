@@ -17,15 +17,15 @@ public class ArgumentsParserRegex {
     public static ParseResult parse(
             Pattern pattern,
             Collection<String> groups,
-            String source){
-        Matcher matcher=pattern.matcher(source);
-        if(matcher.matches()){
-            ParseResult result=new ParseResult(true);
+            String source) {
+        Matcher matcher = pattern.matcher(source);
+        if (matcher.matches()) {
+            ParseResult result = new ParseResult(true);
             String value;
-            for(String group:groups){
-                value=matcher.group(group);
-                if(value!=null){
-                    result.put(group,value);
+            for (String group : groups) {
+                value = matcher.group(group);
+                if (value != null) {
+                    result.put(group, value);
                 }
 
                 //System.out.println(group+": "+matcher.group(group));
@@ -37,11 +37,11 @@ public class ArgumentsParserRegex {
 
 
     @Solvable
-    public static final Pattern patternNumber= Pattern.compile(
+    public static final Pattern patternNumber = Pattern.compile(
             "(?<symbol>[+-]|)(?<number>[0-9]+((\\.[0-9]+)|))(?<invalid>.*)");
 
     @Solvable
-    public static final Set<String> groupsNumber=new HashSet<String>(){{
+    public static final Set<String> groupsNumber = new HashSet<String>() {{
         add("symbol");
         add("number");
         add("invalid");

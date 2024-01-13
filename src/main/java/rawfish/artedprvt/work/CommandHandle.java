@@ -17,7 +17,7 @@ public class CommandHandle implements ProcessInterface, CompleteInterface, Forma
     private FormatInterface formatInterface;
     private InfoInterface infoInterface;
 
-    public CommandHandle(String commandName,ProcessInterface processInterface, CompleteInterface completeInterface, FormatInterface formatInterface, InfoInterface infoInterface) {
+    public CommandHandle(String commandName, ProcessInterface processInterface, CompleteInterface completeInterface, FormatInterface formatInterface, InfoInterface infoInterface) {
         this.processInterface = processInterface;
         this.completeInterface = completeInterface;
         this.formatInterface = formatInterface;
@@ -26,15 +26,15 @@ public class CommandHandle implements ProcessInterface, CompleteInterface, Forma
 
     @Override
     public void process(List<String> args, Messager messager) {
-        if(processInterface==null){
+        if (processInterface == null) {
             return;
         }
-        processInterface.process(args,messager);
+        processInterface.process(args, messager);
     }
 
     @Override
     public List<String> complete(List<String> args) {
-        if(completeInterface==null){
+        if (completeInterface == null) {
             return Literals.emptyComplete();
         }
         return completeInterface.complete(args);
@@ -42,7 +42,7 @@ public class CommandHandle implements ProcessInterface, CompleteInterface, Forma
 
     @Override
     public List<? extends FormatHandler> format(List<String> args) {
-        if(formatInterface==null){
+        if (formatInterface == null) {
             return Literals.emptyFormat();
         }
         return formatInterface.format(args);
@@ -50,7 +50,7 @@ public class CommandHandle implements ProcessInterface, CompleteInterface, Forma
 
     @Override
     public InfoHandler info(List<String> args) {
-        if(infoInterface==null){
+        if (infoInterface == null) {
             return Literals.emptyInfo();
         }
         return infoInterface.info(args);

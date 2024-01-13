@@ -4,7 +4,6 @@ import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.Environment;
 import rawfish.artedprvt.core.Process;
 import rawfish.artedprvt.core.app.AppProcess;
-import rawfish.artedprvt.core.app.script.ScriptProcess;
 
 import java.util.List;
 

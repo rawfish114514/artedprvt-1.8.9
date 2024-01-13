@@ -17,7 +17,7 @@ import rawfish.artedprvt.std.cli.util.StringListBuilder;
 
 @Solvable
 public class ClassGroupCliUtil extends BaseClassGroup {
-    public static final ClassGroupCliUtil INSTANCE=new ClassGroupCliUtil("cli.util");
+    public static final ClassGroupCliUtil INSTANCE = new ClassGroupCliUtil("cli.util");
 
     @Solvable
     public ClassGroupCliUtil(Object name) {

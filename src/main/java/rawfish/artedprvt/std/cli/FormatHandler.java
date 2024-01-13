@@ -9,6 +9,7 @@ import rawfish.artedprvt.api.Solvable;
 public interface FormatHandler {
     /**
      * 处理格式
+     *
      * @param source 参数
      * @return 返回处理后的参数 要求可见长度和参数长度相等
      */

@@ -6,7 +6,7 @@ import rawfish.artedprvt.core.BaseClassGroup;
 @Solvable
 public class ClassGroupMc extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupMc INSTANCE=new ClassGroupMc("mc");
+    public static final ClassGroupMc INSTANCE = new ClassGroupMc("mc");
 
     @Solvable
     public ClassGroupMc(Object name) {

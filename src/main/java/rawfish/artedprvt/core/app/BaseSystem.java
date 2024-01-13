@@ -7,7 +7,7 @@ import rawfish.artedprvt.std.minecraft.chat.ChatConsole;
  * 提供各种应用程序常用的基础设施
  */
 public abstract class BaseSystem {
-    private static BaseSystem baseSystem=new BaseSystem() {
+    private static BaseSystem baseSystem = new BaseSystem() {
         @Override
         public Messager messager() {
             return new ChatConsole();
@@ -18,7 +18,7 @@ public abstract class BaseSystem {
     public abstract Messager messager();
 
 
-    public static Messager getMessager(){
+    public static Messager getMessager() {
         return baseSystem.messager();
     }
 }

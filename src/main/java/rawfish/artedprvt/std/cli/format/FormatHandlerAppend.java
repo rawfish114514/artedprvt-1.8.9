@@ -12,17 +12,16 @@ public class FormatHandlerAppend implements FormatHandler {
     private final String append;
 
     /**
-     *
      * @param append 附加的格式代码
      */
     @Solvable
-    public FormatHandlerAppend(String append){
-        this.append= Literals.fcToString(append);
+    public FormatHandlerAppend(String append) {
+        this.append = Literals.fcToString(append);
     }
 
     @Override
     @Solvable
     public String handleFormat(String source) {
-        return append+source;
+        return append + source;
     }
 }

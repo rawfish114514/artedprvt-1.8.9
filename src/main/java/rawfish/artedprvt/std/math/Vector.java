@@ -7,22 +7,22 @@ public class Vector {
     private final double[] doubles;
 
     @Solvable
-    public Vector(double... doubles){
-        this.doubles=doubles;
+    public Vector(double... doubles) {
+        this.doubles = doubles;
     }
 
     @Solvable
-    public double get(int index){
+    public double get(int index) {
         return doubles[index];
     }
 
     @Override
-    public String toString(){
-        StringBuilder sb=new StringBuilder();
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
         sb.append('[');
-        for(int i=0;i<doubles.length;i++){
+        for (int i = 0; i < doubles.length; i++) {
             sb.append(doubles[i]);
-            if(i+1<doubles.length){
+            if (i + 1 < doubles.length) {
                 sb.append(", ");
             }
         }

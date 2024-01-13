@@ -11,7 +11,7 @@ public class ClientPlayerEntity extends PlayerEntity {
     }
 
     @Solvable
-    public ClientNetwork getNetwork(){
-        return new ClientNetwork(((EntityPlayerSP)Mentity).sendQueue);
+    public ClientNetwork getNetwork() {
+        return new ClientNetwork(((EntityPlayerSP) Mentity).sendQueue);
     }
 }

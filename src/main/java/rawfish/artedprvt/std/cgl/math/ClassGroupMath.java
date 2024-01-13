@@ -8,7 +8,7 @@ import rawfish.artedprvt.std.math.Vector3;
 @Solvable
 public class ClassGroupMath extends BaseClassGroup {
     @Solvable
-    public static final ClassGroupMath INSTANCE=new ClassGroupMath("math");
+    public static final ClassGroupMath INSTANCE = new ClassGroupMath("math");
 
     @Solvable
     public ClassGroupMath(Object name) {
