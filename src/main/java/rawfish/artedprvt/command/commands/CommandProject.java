@@ -285,7 +285,9 @@ public class CommandProject extends BaseCommand {
             String arg0 = args.get(0);
             if (arg0.equals("open")) {
                 //打开项目 补全已知的可用的目录
-                return Literals.stringListBuilder().adds("C:\\Users\\Administrator\\Desktop\\ap-test");
+                return Literals.stringListBuilder().adds(
+                        "C:/Users/Administrator/Desktop/script-test",
+                        "C:/Users/Administrator/Desktop/java-test");
             }
             if (arg0.equals("init")) {
                 //初始化 补全可用的初始化器

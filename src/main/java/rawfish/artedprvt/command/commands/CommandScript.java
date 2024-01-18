@@ -11,6 +11,7 @@ import rawfish.artedprvt.std.cli.InfoHandler;
 import rawfish.artedprvt.std.cli.util.Literals;
 import rawfish.artedprvt.std.text.Formatting;
 
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -30,12 +31,14 @@ public class CommandScript extends BaseCommand {
         List<String> scriptArgs = new ArrayList<>(args);
 
         try {
-            File src = new File("C:/Users/Administrator/Desktop/src");
+            FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+            File home=fileSystemView.getHomeDirectory();
+            File src = new File(home,"src");
             if (!src.isDirectory()) {
                 messager.white("未在在桌面上找到src目录");
                 return;
             }
-            ScriptProcess scriptProcess = new ScriptProcess(new SourceFileLoader("C:/Users/Administrator/Desktop/src"), scriptArgs);
+            ScriptProcess scriptProcess = new ScriptProcess(new SourceFileLoader(src.getPath()), scriptArgs);
             scriptProcess.start();
         } catch (Exception e) {
             e.printStackTrace();

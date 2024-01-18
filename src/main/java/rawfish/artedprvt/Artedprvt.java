@@ -53,12 +53,12 @@ public class Artedprvt {
 
 
     public String getDescription() {
-        return "Artedprvt Frame 是专为 Minecraft 设计的脚本运行框架，它仅以在某时刻添加代码的方式对游戏修改。" +
+        return "创造世界的最简单编程。" +
                 otherDescription() +
-                "\n\n作者 ↓\nhttps://space.bilibili.com/455906194";
+                "\n\n作者以及更多信息 ↓\nhttps://space.bilibili.com/455906194";
     }
 
-    public String tempVersion = "temp 2024/1/14";
+    public String tempVersion = "";
 
     public String otherDescription() {
         if (tempVersion.isEmpty()) {

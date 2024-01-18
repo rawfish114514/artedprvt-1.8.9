@@ -54,8 +54,8 @@ public class JavaProcess extends AppProcess<JavaProcess> {
     @Override
     public void run() {
         begin();
-        try (InputStream inputStream = classLoader.getResourceAsStream("info.toml")) {
-
+        try {
+            InputStream inputStream = classLoader.getResourceAsStream("info.toml");
             Map<String, Object> info = Toml.read(inputStream);
             String main = info.get("main").toString();
 

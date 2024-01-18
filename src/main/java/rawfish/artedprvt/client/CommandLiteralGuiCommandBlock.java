@@ -105,8 +105,9 @@ public class CommandLiteralGuiCommandBlock extends GuiCommandBlock {
                 formatField.setText(text);
             }
         }
-        if (pos != oldPos) {
+        if (pos != oldPos||tab) {
             oldPos = pos;
+            tab = false;
             HandleResult result = CommandHandler.handleInfo(text, pos);
             if (!result.isHandle()) {
                 infoText = "";
@@ -193,6 +194,7 @@ public class CommandLiteralGuiCommandBlock extends GuiCommandBlock {
     @Override
     public void keyTyped(char typedChar, int keyCode) throws IOException {
         if (keyCode == 15) {
+            tab=true;
             String s = this.inputField.getText();
             List<String> result = CommandHandler.handleComplete(s, inputField.getCursorPosition());
             if (result != null) {

@@ -1,5 +1,8 @@
 package rawfish.artedprvt.work;
 
+import rawfish.artedprvt.api.APIJavaFileObjects;
+import rawfish.artedprvt.api.APIJavaFileObjects.JFO;
+
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.FileObject;
@@ -22,9 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class ClassByteTool {
-    static Map<String, byte[]> compile(Map<String, String> sourceMap) throws IOException {
+    public static Map<String, byte[]> compile(Map<String, String> sourceMap) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
 
@@ -54,7 +58,7 @@ public class ClassByteTool {
         return fileManager.getClassByteMap();
     }
 
-    static ClassLoader inMemoryCreate(Map<String, byte[]> classByteMap) {
+    public static ClassLoader inMemoryCreate(Map<String, byte[]> classByteMap) {
         return new MemoryClassLoader(classByteMap);
     }
 
@@ -63,7 +67,7 @@ public class ClassByteTool {
         Map<String, byte[]> classByteMap;
 
         MemoryClassLoader(Map<String, byte[]> classByteMap) {
-            super(MemoryClassLoader.class.getClassLoader());
+            super(ClassByteTool.class.getClassLoader());
             this.classByteMap = new HashMap<>(classByteMap);
         }
 
@@ -104,6 +108,23 @@ public class ClassByteTool {
         @Override
         public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind, FileObject sibling) throws IOException {
             return new MemoryJavaFileObjectOutput(className);
+        }
+
+        @Override
+        public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
+            Iterable<JavaFileObject> r= APIJavaFileObjects.list(packageName,kinds,recurse);
+            if(r!=null){
+                return r;
+            }
+            return super.list(location,packageName,kinds,recurse);
+        }
+
+        @Override
+        public String inferBinaryName(Location location, JavaFileObject file) {
+            if(file instanceof APIJavaFileObjects.JFO){
+                return ((JFO) file).getBinaryName();
+            }
+            return super.inferBinaryName(location, file);
         }
 
         class MemoryJavaFileObjectOutput extends SimpleJavaFileObject {

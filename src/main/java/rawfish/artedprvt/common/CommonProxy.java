@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import rawfish.artedprvt.api.API;
 import rawfish.artedprvt.core.CoreInitializer;
 import rawfish.artedprvt.core.UserOptions;
 import rawfish.artedprvt.core.app.App;
@@ -24,6 +25,8 @@ public class CommonProxy {
 
         ScriptEngineInit.init();
         App.init();
+
+        API.init();
     }
 
     public void postInit(FMLPostInitializationEvent event) {
