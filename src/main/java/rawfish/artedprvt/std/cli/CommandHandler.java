@@ -314,6 +314,48 @@ public class CommandHandler {
         return new HandleResult(infoText, sp0);
     }
 
+    public static boolean frequent(String input, int pos) {
+        List<String> spaces = new ArrayList<>();
+        List<String> items = new ArrayList<>();
+        char[] chars = input.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        boolean isSpace = true;
+        for (char c : chars) {
+            if (isSpace == (c == ' ')) {
+                sb.append(c);
+            } else {
+                if (isSpace) {
+                    spaces.add(sb.toString());
+                } else {
+                    items.add(sb.toString());
+                }
+                isSpace = !isSpace;
+                sb = new StringBuilder();
+                sb.append(c);
+            }
+
+        }
+        if (isSpace) {
+            spaces.add(sb.toString());
+        } else {
+            items.add(sb.toString());
+        }
+        if (items.size() < spaces.size()) {
+            items.add("");
+        }
+
+        String i0 = items.get(0);
+        if (i0.length() > 0 && i0.charAt(0) == '/') {
+            i0 = i0.substring(1);
+        }
+        Command command = commandMap.get(i0);
+        if (command == null) {
+            return false;
+        }
+
+        return command.frequent();
+    }
+
     public static synchronized void reset() {
         commandMap.values().forEach((Command::reset));
     }

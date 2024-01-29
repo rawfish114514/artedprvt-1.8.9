@@ -22,6 +22,11 @@ public abstract class Command implements ProcessInterface, CompleteInterface, Fo
     public void reset() {
     }
 
+    @Solvable
+    public boolean frequent(){
+        return false;
+    }
+
 
     private final String commandName;
 

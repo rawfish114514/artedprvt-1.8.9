@@ -84,7 +84,8 @@ public class CommandLiteralGuiChat extends GuiChat {
         formatField.updateCursorCounter();
         text = inputField.getText();
         pos = inputField.getCursorPosition();
-        if (!text.equals(oldText)) {
+        boolean f = CommandHandler.frequent(text, pos);
+        if (!text.equals(oldText) || f) {
             oldText = text;
             HandleResult result = CommandHandler.handleFormat(text, pos);
             if (result.isHandle()) {
@@ -94,7 +95,7 @@ public class CommandLiteralGuiChat extends GuiChat {
                 formatField.setText(text);
             }
         }
-        if (pos != oldPos || tab) {
+        if (pos != oldPos || tab || f) {
             oldPos = pos;
             tab = false;
             HandleResult result = CommandHandler.handleInfo(text, pos);

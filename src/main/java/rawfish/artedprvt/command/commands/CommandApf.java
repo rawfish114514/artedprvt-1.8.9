@@ -30,9 +30,7 @@ public class CommandApf extends Command {
         commandList.add(new CommandOptions("options"));
         commandList.add(new CommandProject("project"));
         commandList.add(new CommandPros("pros"));
-        commandList.add(new CommandScript("script"));
         commandList.add(new CommandStops("stops"));
-        commandList.add(new CommandStt("stt"));
         commandList.add(new CommandWork("work"));
     }
 
