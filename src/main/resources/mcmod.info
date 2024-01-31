@@ -1,9 +1,9 @@
 [{
   "modid": "artedprvt",
-  "name": "Artedprvt Frame",
-  "version": "1.3",
+  "name": "Artedprvt Framework",
+  "version": "3.0",
   "mcversion": "1.8.9",
-  "url": "http://artedprvt.com",
+  "url": "https://artedprvt.com",
   "updateUrl": "",
   "authorList": ["rawfish"],
   "credits": "",
