@@ -4,7 +4,6 @@ import com.electronwill.toml.Toml;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +31,8 @@ import java.util.zip.ZipInputStream;
 public class ProjectInitializer {
     public static final Map<String, ProjectInitializer> initializerMap = new HashMap<String, ProjectInitializer>() {{
         try {
-            put("test", new ProjectInitializer(new FileInputStream(new File("C:/Users/Administrator/Desktop/init.zip"))));
+            put("java", new ProjectInitializer(ProjectInitializer.class.getResourceAsStream("/i/java_i.zip")));
+            put("script", new ProjectInitializer(ProjectInitializer.class.getResourceAsStream("/i/script_i.zip")));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -114,6 +114,9 @@ public class ProjectInitializer {
         Map<String, Object> toml = Toml.read(pitoml);
         List<Object> dependList = (List) toml.get("depend");
 
+        if (dependList == null) {
+            return;
+        }
         for (Object dependObject : dependList) {
             Map<String, Object> depend = (Map<String, Object>) dependObject;
             String target = depend.get("target").toString();
@@ -139,6 +142,9 @@ public class ProjectInitializer {
 
         libs = new ArrayList<>();
 
+        if (dependList == null) {
+            return;
+        }
         for (Object dependObject : dependList) {
             Map<String, Object> depend = (Map<String, Object>) dependObject;
             String target = depend.get("target").toString();

@@ -1,20 +1,18 @@
 package com.artedprvt.core.localization.types;
 
-import com.artedprvt.core.localization.Translatable;
-
-public class SES implements Translatable {
-    public static String
-            ses0 = "",
-            ses1 = "",
-            ses2 = "",
-            ses3 = "",
-            ses4 = "",
-            ses5 = "",
-            ses6 = "",
-            ses7 = "",
-            ses8 = "",
-            ses9 = "",
-            ses10 = "",
+public class SES {
+    public static final String
+            ses0 = "系统方法调用异常: {0}",
+            ses1 = "找不到模块: {0}",
+            ses2 = "找不到脚本语言: {0}: {1}",
+            ses3 = "找不到包: {0}",
+            ses4 = "包名不合法: {0}",
+            ses5 = "模块名不合法: {0}",
+            ses6 = "模块完整名不合法: {0}",
+            ses7 = "不能使用 {0} 作为包名的开头: {1}",
+            ses8 = "info.toml的字段: {0} 不合法,名称过长,应该不超过24",
+            ses9 = "找不到可用于脚本语言 {0} 的引擎",
+            ses10 = "未定义的组: {0}",
             ses11 = "",
             ses12 = "",
             ses13 = "",

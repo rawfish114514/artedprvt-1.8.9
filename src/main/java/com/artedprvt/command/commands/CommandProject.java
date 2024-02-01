@@ -1,6 +1,8 @@
 package com.artedprvt.command.commands;
 
 import com.artedprvt.command.TaskProcess;
+import com.artedprvt.core.localization.types.CIS;
+import com.artedprvt.core.localization.types.CMS;
 import com.artedprvt.std.cli.util.Literals;
 import com.artedprvt.work.Project;
 import com.artedprvt.work.ProjectInitializer;
@@ -21,6 +23,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -41,32 +44,32 @@ public class CommandProject extends BaseCommand {
 
                     if (args.size() == 0) {
                         if (isOpen) {
-                            messager.gold("已打开项目: " + project.getDir());
+                            messager.gold(MessageFormat.format(CMS.cms5,project.getDir()));
                         } else {
-                            messager.white("未打开项目");
+                            messager.white(CMS.cms6);
                         }
                         return;
                     }
                     if (args.size() == 1) {
                         String arg0 = args.get(0);
                         if (arg0.equals("open")) {
-                            messager.red("参数不够，需要文件目录。");
+                            messager.red(CMS.cms7);
                             return;
                         }
                         if (arg0.equals("init")) {
-                            messager.red("参数不够，需要初始化器。");
+                            messager.red(CMS.cms8);
                             return;
                         }
                         if (arg0.equals("load")) {
                             //load
 
                             if (!isOpen) {
-                                messager.red("未打开项目");
+                                messager.red(CMS.cms6);
                                 return;
                             }
 
                             if (!project.isInit()) {
-                                messager.red("未初始化");
+                                messager.red(CMS.cms10);
                                 project.closeLog();
                                 return;
                             }
@@ -74,7 +77,7 @@ public class CommandProject extends BaseCommand {
                             try {
                                 project.initLog();
                             } catch (IOException e) {
-                                messager.red("日志初始化失败");
+                                messager.red(CMS.cms11);
                                 project.closeLog();
                                 return;
                             }
@@ -86,21 +89,21 @@ public class CommandProject extends BaseCommand {
                                 a:
                                 {
                                     try {
-                                        messager.white("验证");
+                                        messager.white(CMS.cms12);
                                         project.verify();
                                     } catch (Exception e) {
-                                        messager.red("验证失败");
+                                        messager.red(CMS.cms13);
 
                                         e.printStackTrace();
                                         break a;
                                     }
-                                    messager.white("验证成功");
+                                    messager.white(CMS.cms14);
 
                                     try {
-                                        messager.white("加载");
+                                        messager.white(CMS.cms15);
                                         project.load();
                                     } catch (Exception e) {
-                                        messager.red("加载失败");
+                                        messager.red(CMS.cms16);
 
                                         e.printStackTrace();
                                         break a;
@@ -111,23 +114,23 @@ public class CommandProject extends BaseCommand {
 
                                 if (!success) a:{
                                     try {
-                                        messager.white("编译");
+                                        messager.white(CMS.cms17);
                                         project.compile();
                                     } catch (Exception e) {
-                                        messager.red("编译失败");
+                                        messager.red(CMS.cms18);
                                         messager.red(e.getMessage());
 
                                         e.printStackTrace();
                                         break a;
                                     }
-                                    messager.white("编译成功");
+                                    messager.white(CMS.cms19);
 
                                     try {
-                                        messager.white("加载");
+                                        messager.white(CMS.cms20);
                                         project.load();
                                         success = true;
                                     } catch (Exception e) {
-                                        messager.red("加载失败");
+                                        messager.red(CMS.cms21);
                                         messager.red(e.getMessage());
 
                                         e.printStackTrace();
@@ -136,9 +139,9 @@ public class CommandProject extends BaseCommand {
 
                                 time = System.currentTimeMillis() - time;
                                 if (success) {
-                                    messager.gold("加载成功 (" + time + "ms)");
+                                    messager.gold(MessageFormat.format(CMS.cms22,time));
                                 } else {
-                                    messager.red("已失败 " + Formatting.GRAY + "(" + time + "ms)");
+                                    messager.red(MessageFormat.format(CMS.cms23,Formatting.GRAY+time));
                                 }
                                 return;
                             } finally {
@@ -148,14 +151,14 @@ public class CommandProject extends BaseCommand {
                         if (arg0.equals("close")) {
                             if (isOpen) {
                                 project.close();
-                                messager.white("已关闭项目");
+                                messager.white(CMS.cms24);
                             } else {
-                                messager.red("未打开项目");
+                                messager.red(CMS.cms6);
                             }
 
                             return;
                         }
-                        messager.red("无效命令");
+                        messager.red(CMS.cms26);
                         return;
                     }
                     if (args.size() == 2) {
@@ -163,16 +166,16 @@ public class CommandProject extends BaseCommand {
                         String arg1 = args.get(1);
                         if (arg0.equals("open")) {
                             if (isOpen) {
-                                messager.red("已存在打开的项目");
+                                messager.red(CMS.cms27);
                                 return;
                             }
                             File file = new File(arg1);
                             if (!file.isDirectory()) {
-                                messager.red("不存在或不是目录");
+                                messager.red(CMS.cms28);
                                 return;
                             }
                             Project project1 = new Project(arg1);
-                            messager.gold("已打开项目: " + project1.getDir());
+                            messager.gold(MessageFormat.format(CMS.cms5,project1.getDir()));
                             return;
                         }
                         if (arg0.equals("init")) {
@@ -181,9 +184,9 @@ public class CommandProject extends BaseCommand {
                                 if (initializer != null) {
                                     try {
                                         project.init(initializer);
-                                        messager.gold("初始化完成");
+                                        messager.gold(CMS.cms29);
                                     } catch (Exception e) {
-                                        messager.red("初始化异常");
+                                        messager.red(CMS.cms30);
                                         messager.red(e.getMessage());
                                         e.printStackTrace();
                                     }
@@ -197,18 +200,18 @@ public class CommandProject extends BaseCommand {
                                             try {
                                                 url = new URL("file:" + arg1);
                                             } catch (MalformedURLException ex) {
-                                                messager.red("找不到初始化器");
+                                                messager.red(CMS.cms31);
                                                 e.printStackTrace();
                                                 return;
                                             }
                                         } else {
-                                            messager.red("找不到初始化器");
+                                            messager.red(CMS.cms31);
                                             return;
                                         }
                                     }
                                     ByteArrayOutputStream byteArrayOutputStream;
                                     try {
-                                        messager.white("下载初始化器");
+                                        messager.white(CMS.cms32);
                                         URLConnection connection = url.openConnection();
                                         connection.setReadTimeout(10000);
                                         connection.connect();
@@ -218,19 +221,19 @@ public class CommandProject extends BaseCommand {
                                         while ((n = inputStream.read()) != -1) {
                                             byteArrayOutputStream.write(n);
                                         }
-                                        messager.white("下载完成");
+                                        messager.white(CMS.cms33);
                                     } catch (UnknownServiceException e) {
-                                        messager.red("协议不支持输入: " + url.getProtocol());
+                                        messager.red(MessageFormat.format(CMS.cms34,url.getProtocol()));
                                         e.printStackTrace();
 
                                         return;
                                     } catch (SocketTimeoutException e) {
-                                        messager.red("连接超时 10000ms");
+                                        messager.red(CMS.cms35);
                                         e.printStackTrace();
 
                                         return;
                                     } catch (IOException e) {
-                                        messager.red("I/O异常");
+                                        messager.red(CMS.cms36);
                                         e.printStackTrace();
 
                                         return;
@@ -238,7 +241,7 @@ public class CommandProject extends BaseCommand {
                                     try {
                                         initializer = new ProjectInitializer(new ByteArrayInputStream(byteArrayOutputStream.toByteArray()));
                                     } catch (Exception e) {
-                                        messager.red("初始化器异常");
+                                        messager.red(CMS.cms37);
                                         messager.red(e.getMessage());
 
                                         return;
@@ -246,22 +249,22 @@ public class CommandProject extends BaseCommand {
 
                                     try {
                                         project.init(initializer);
-                                        messager.gold("初始化完成");
+                                        messager.gold(CMS.cms29);
                                     } catch (Exception e) {
-                                        messager.red("初始化异常");
+                                        messager.red(CMS.cms30);
                                         messager.red(e.getMessage());
                                         e.printStackTrace();
                                     }
                                 }
                             } else {
-                                messager.red("未打开项目");
+                                messager.red(CMS.cms6);
                             }
                             return;
                         }
                     }
-                    messager.red("参数异常");
+                    messager.red(CMS.cms38);
                 } else {
-                    messager.red("有项目相关的任务正在执行");
+                    messager.red(CMS.cms39);
                 }
             }
 
@@ -353,20 +356,20 @@ public class CommandProject extends BaseCommand {
         if (args.size() == 0) {
             if (project != null) {
                 if (project.isLoaded()) {
-                    return Literals.infoFactory().string("项目管理工具 §d[" + project.getDir() + "]");
+                    return Literals.infoFactory().string(MessageFormat.format(CIS.cis6,Formatting.LIGHT_PURPLE,project.getDir()));
                 }
-                return Literals.infoFactory().string("项目管理工具 §a[" + project.getDir() + "]");
+                return Literals.infoFactory().string(MessageFormat.format(CIS.cis6,Formatting.GREEN,project.getDir()));
             }
-            return Literals.infoFactory().string("项目管理工具 §c未打开项目");
+            return Literals.infoFactory().string(MessageFormat.format(CIS.cis6,Formatting.RED,CIS.cis7));
         }
         if (args.size() == 1) {
             return Literals.infoFactory().map(
                     Literals.infoMapBuilder()
-                            .string("open", "打开项目")
-                            .string("init", "初始化项目")
-                            .string("load", "加载项目")
-                            .string("close", "关闭项目"),
-                    Literals.infoFactory().string("无效命令")
+                            .string("open", CIS.cis8)
+                            .string("init", CIS.cis9)
+                            .string("load", CIS.cis10)
+                            .string("close", CIS.cis11),
+                    Literals.infoFactory().string(CIS.cis2)
             );
         }
         if (args.size() == 2) {
@@ -377,12 +380,12 @@ public class CommandProject extends BaseCommand {
                 if (new File(arg1).isDirectory()) {
                     return Literals.emptyInfo();
                 }
-                return Literals.infoFactory().string("无效目录");
+                return Literals.infoFactory().string(CIS.cis12);
             }
             if (arg0.equals("init")) {
                 //初始化
                 if (arg1.isEmpty()) {
-                    return Literals.infoFactory().string("选择内置初始化器或指定URL");
+                    return Literals.infoFactory().string(CIS.cis13);
                 }
                 ProjectInitializer initializer = ProjectInitializer.initializerMap.get(arg1);
                 if (initializer == null) {
@@ -399,9 +402,9 @@ public class CommandProject extends BaseCommand {
                         }
                     }
                     if (url == null) {
-                        return Literals.infoFactory().string("无效URL");
+                        return Literals.infoFactory().string(CIS.cis14);
                     }
-                    return Literals.infoFactory().string("从此位置下载初始化器");
+                    return Literals.infoFactory().string(CIS.cis15);
                 }
                 return Literals.infoFactory().string(initializer.getDescription());
             }

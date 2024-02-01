@@ -3,12 +3,15 @@ package com.artedprvt.command.commands;
 import com.artedprvt.command.BaseCommand;
 import com.artedprvt.core.CoreInitializer;
 import com.artedprvt.core.app.AppProcess;
+import com.artedprvt.core.localization.types.CIS;
+import com.artedprvt.core.localization.types.CMS;
 import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.InfoHandler;
 import com.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import com.artedprvt.std.cli.util.Literals;
 import com.artedprvt.command.FormatMessager;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,13 +38,13 @@ public class CommandPros extends BaseCommand {
             String arg0=args.get(0);
             AppProcess appProcess=appProcessMap.get(arg0);
             if(appProcess==null){
-                messager.red("找不到 pid 为 "+arg0+" 的应用进程");
+                messager.red(MessageFormat.format(CMS.cms40,arg0));
                 return;
             }
             messager.send(getAppProcessInfo(appProcess));
             return;
         }
-        messager.red("参数异常");
+        messager.red(CMS.cms38);
     }
 
     @Override
@@ -72,14 +75,14 @@ public class CommandPros extends BaseCommand {
     @Override
     public InfoHandler info(List<String> args) {
         if(args.size()==0){
-            return Literals.infoFactory().string("查看运行中的应用进程");
+            return Literals.infoFactory().string(CIS.cis16);
         }
         getAppProcesses();
 
         if(args.size()==1){
             String arg0=args.get(0);
             if(arg0.isEmpty()){
-                return Literals.infoFactory().string("pid");
+                return Literals.infoFactory().string(CIS.cis17);
             }
             AppProcess appProcess=appProcessMap.get(arg0);
             if(appProcess!=null){

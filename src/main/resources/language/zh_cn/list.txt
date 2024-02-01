@@ -1,4 +1,0 @@
-com.artedprvt.core.localization.types.CIS;commandinfo.toml
-com.artedprvt.core.localization.types.CMS;commandmessage.toml
-com.artedprvt.core.localization.types.SES;scriptexception.toml
-com.artedprvt.core.localization.types.TMS;taskmanager.toml

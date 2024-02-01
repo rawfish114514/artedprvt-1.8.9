@@ -27,7 +27,6 @@ public class CommandApf extends Command {
         commandList = new ArrayList<>();
 
         commandList.add(new CommandApp("app"));
-        commandList.add(new CommandOptions("options"));
         commandList.add(new CommandProject("project"));
         commandList.add(new CommandPros("pros"));
         commandList.add(new CommandStops("stops"));
@@ -37,7 +36,7 @@ public class CommandApf extends Command {
     @Override
     public void process(List<String> args, Messager messager) {
         if (args.size() < 1) {
-            messager.send(Formatting.DARK_RED + getName() + CMS.cms1);
+            messager.send(Formatting.DARK_RED + getName() + CMS.cms0);
             return;
         }
         for (Command command : commandList) {
@@ -46,7 +45,7 @@ public class CommandApf extends Command {
                 return;
             }
         }
-        messager.send(Formatting.DARK_RED + getName() + MessageFormat.format(CMS.cms13, args.get(0)));
+        messager.send(Formatting.DARK_RED + getName() + MessageFormat.format(CMS.cms1, args.get(0)));
     }
 
     @Override
@@ -98,10 +97,10 @@ public class CommandApf extends Command {
     @Override
     public InfoHandler info(List<String> args) {
         if (args.size() == 0) {
-            return Literals.infoFactory().string("模组命令集合");
+            return Literals.infoFactory().string(CIS.cis0);
         }
         if (args.size() == 1 && args.get(0).isEmpty()) {
-            return Literals.infoFactory().string(CIS.cis4);
+            return Literals.infoFactory().string(CIS.cis1);
         }
         Command c = null;
         for (Command command : commandList) {
@@ -110,7 +109,7 @@ public class CommandApf extends Command {
             }
         }
         if (c == null) {
-            return Literals.infoFactory().string(CIS.cis0);
+            return Literals.infoFactory().string(CIS.cis2);
         }
         return c.info(args.subList(1, args.size()));
     }

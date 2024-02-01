@@ -1,6 +1,5 @@
 package com.artedprvt.core.app.script.rhino;
 
-import com.artedprvt.core.localization.Localization;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.NativeJavaClass;
@@ -29,9 +28,6 @@ public class RhinoServiceEngine implements ServiceEngine {
     public Object call(String code, String func, Object... args) throws Exception {
         Context rhino = Context.enter();
         ScriptableObject scope = rhino.initStandardObjects();
-        NativeObject object = new NativeObject();
-        object.put("language", object, Localization.getLanguage());
-        scope.put("core", scope, object);
         rhino.evaluateString(scope, code, "service", 1, null);
         Object f = scope.get(func);
         if (f == null) {

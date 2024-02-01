@@ -7,6 +7,8 @@ import com.artedprvt.core.app.App;
 import com.artedprvt.core.app.AppTarget;
 import com.artedprvt.core.app.AppType;
 import com.artedprvt.core.app.Home;
+import com.artedprvt.core.localization.types.CIS;
+import com.artedprvt.core.localization.types.CMS;
 import com.artedprvt.std.cli.CompleteInterface;
 import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.FormatInterface;
@@ -14,6 +16,7 @@ import com.artedprvt.std.cli.InfoHandler;
 import com.artedprvt.std.cli.InfoInterface;
 import com.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import com.artedprvt.std.cli.util.Literals;
+import com.artedprvt.std.text.Formatting;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,7 +33,7 @@ public class CommandApp extends BaseCommand {
     @Override
     public void process(List<String> args, FormatMessager messager) {
         if (args.size() == 0) {
-            messager.red("参数异常，必须指定应用程序路径");
+            messager.red(CMS.cms2);
             return;
         }
 
@@ -42,7 +45,7 @@ public class CommandApp extends BaseCommand {
         String appPath = args.get(0);
         AppTarget<?> appTarget = nameAppTargetMap.get(appPath);
         if (appTarget == null) {
-            messager.red("找不到应用程序");
+            messager.red(CMS.cms3);
             return;
         }
         try {
@@ -50,7 +53,7 @@ public class CommandApp extends BaseCommand {
             appProcess.start();
         } catch (Exception e) {
             e.printStackTrace();
-            messager.red("应用程序创建失败");
+            messager.red(CMS.cms4);
         }
 
     }
@@ -115,15 +118,15 @@ public class CommandApp extends BaseCommand {
             return Literals.emptyInfo();
         }
         if (args.size() == 0) {
-            return Literals.infoFactory().string("运行应用程序");
+            return Literals.infoFactory().string(CIS.cis3);
         }
         String appPath = args.get(0);
         if (appPath.isEmpty()) {
-            return Literals.infoFactory().string("应用程序路径");
+            return Literals.infoFactory().string(CIS.cis4);
         }
         AppTarget<?> appTarget = nameAppTargetMap.get(appPath);
         if (appTarget == null) {
-            return Literals.infoFactory().string("§c应用程序不存在");
+            return Literals.infoFactory().string(Formatting.RED+CIS.cis5);
         }
         Object result = appTarget.request("literal.info");
         if (result instanceof InfoInterface) {

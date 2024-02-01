@@ -1,7 +1,7 @@
 package com.artedprvt.common;
 
+import com.artedprvt.command.CommandLoader;
 import com.artedprvt.core.CoreInitializer;
-import com.artedprvt.core.UserOptions;
 import com.artedprvt.core.app.App;
 import com.artedprvt.core.app.script.engine.ScriptEngineInit;
 import com.artedprvt.core.app.script.rhino.Rhino;
@@ -18,10 +18,10 @@ public class CommonProxy {
     }
 
     public void init(FMLInitializationEvent event) {
+        new CommandLoader();
         new EventLoader();
         CoreInitializer.init();
         ClassGroupLoader.load();
-        UserOptions.load();
 
         ScriptEngineInit.init();
         App.init();

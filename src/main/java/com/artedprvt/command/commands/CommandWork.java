@@ -1,7 +1,10 @@
 package com.artedprvt.command.commands;
 
 import com.artedprvt.command.TaskProcess;
+import com.artedprvt.core.localization.types.CIS;
+import com.artedprvt.core.localization.types.CMS;
 import com.artedprvt.std.cli.util.Literals;
+import com.artedprvt.std.text.Formatting;
 import com.artedprvt.work.Project;
 import com.artedprvt.command.BaseCommand;
 import com.artedprvt.command.FormatMessager;
@@ -11,6 +14,7 @@ import com.artedprvt.std.cli.util.FormatHandlerListBuilder;
 import com.artedprvt.work.PhaseHandle;
 import com.artedprvt.work.WorkRuntime;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -58,7 +62,7 @@ public class CommandWork extends BaseCommand {
                                             if (goals.contains(arg)) {
                                                 processed.add(arg);
                                             } else {
-                                                messager.red("找不到 phase 或 goal: " + arg);
+                                                messager.red(MessageFormat.format(CMS.cms41,arg));
                                                 return;
                                             }
                                         }
@@ -85,17 +89,17 @@ public class CommandWork extends BaseCommand {
                                 if (existPhaseOrGoal || existCommand) {
 
                                 } else {
-                                    messager.red("找不到 phase 或 goal 或 command: " + arg0);
+                                    messager.red(MessageFormat.format(CMS.cms42,arg0));
                                 }
                             }
                         } else {
-                            messager.red("未加载项目");
+                            messager.red(CMS.cms9);
                         }
                     } else {
-                        messager.red("未打开项目");
+                        messager.red(CMS.cms6);
                     }
                 } else {
-                    messager.red("有项目相关的任务正在执行");
+                    messager.red(CMS.cms39);
                 }
             }
 
@@ -189,7 +193,7 @@ public class CommandWork extends BaseCommand {
         if (project != null) {
             if (project.isLoaded()) {
                 if (args.size() == 0) {
-                    return Literals.infoFactory().string("项目构建工具 §d[" + project.getDir() + "]");
+                    return Literals.infoFactory().string(MessageFormat.format(CIS.cis19, Formatting.LIGHT_PURPLE,project.getDir()));
                 }
                 WorkRuntime workRuntime = project.getRuntime();
                 String arg0 = args.get(0);
@@ -224,7 +228,7 @@ public class CommandWork extends BaseCommand {
             }
         }
         if (args.size() == 0) {
-            return Literals.infoFactory().string("项目构建工具 §c未加载项目");
+            return Literals.infoFactory().string(MessageFormat.format(CIS.cis6,Formatting.RED,CIS.cis20));
         }
         return Literals.emptyInfo();
     }
