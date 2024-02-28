@@ -1166,11 +1166,12 @@ public class ProjectTool {
             log.println("read ended");
 
             log.println("</load>");
+
+            WorkRuntime workRuntime = new WorkRuntime(projectSystem, ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
+
             log.println("[LOAD] SUCCESSFUL");
 
-
-            return new WorkRuntime(projectSystem, ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
-
+            return workRuntime;
         } catch (RuntimeException e) {
             e.printStackTrace(log);
             log.println("<[LOAD] FAILED");
