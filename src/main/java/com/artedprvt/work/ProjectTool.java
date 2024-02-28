@@ -1317,7 +1317,7 @@ public class ProjectTool {
 
     /**
      * 转换类名的命名规则
-     * 要求以per为前缀
+     * 要求以pre为前缀
      * 剩余部分从大驼峰转换为蛇并返回
      *
      * @param pre 前缀

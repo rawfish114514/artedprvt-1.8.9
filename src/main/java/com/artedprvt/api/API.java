@@ -15,7 +15,7 @@ public class API {
 
     public static void init() {
         try {
-            read(API.class.getResourceAsStream("/artedprvt.jar"));
+            read(API.class.getResourceAsStream("/lib.jar"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

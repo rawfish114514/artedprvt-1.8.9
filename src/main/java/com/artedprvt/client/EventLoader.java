@@ -25,7 +25,7 @@ public class EventLoader {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderOverlay(RenderGameOverlayEvent.Text event) {
         if (event.left != null && event.left.size() > 0 && event.left.get(0) != null) {
-            event.left.set(0, event.left.get(0) + DebugInfo.call(Minecraft.getMinecraft().gameSettings.showDebugInfo));
+            event.left.add(0,DebugInfo.call(Minecraft.getMinecraft().gameSettings.showDebugInfo));
         }
     }
 

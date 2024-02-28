@@ -30,7 +30,6 @@ public class DebugInfo {
                 }
             }
 
-            sb.append("  ");
             sb.append("§cArted§bprvt§r");
             sb.append(" ");
             sb.append(version);
