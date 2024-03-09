@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.util;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.InfoHandler;
 import com.artedprvt.std.cli.info.InfoHandlerEmpty;
@@ -13,76 +13,76 @@ import java.util.regex.Pattern;
 /**
  * 封装使用处理程序的方法
  */
-@Solvable
+@InterfaceView
 public class Literals {
     private static List<String> emptyComplete = Collections.emptyList();
 
-    @Solvable
+    @InterfaceView
     public static List<String> emptyComplete() {
         return emptyComplete;
     }
 
     private static List<FormatHandler> emptyFormat = Collections.emptyList();
 
-    @Solvable
+    @InterfaceView
     public static List<FormatHandler> emptyFormat() {
         return emptyFormat;
     }
 
     private static InfoHandler emptyInfo = new InfoHandlerEmpty();
 
-    @Solvable
+    @InterfaceView
     public static InfoHandler emptyInfo() {
         return emptyInfo;
     }
 
-    @Solvable
+    @InterfaceView
     public static StringListBuilder stringListBuilder() {
         return new StringListBuilder();
     }
 
-    @Solvable
+    @InterfaceView
     public static FormatHandlerListBuilder formatListBuilder() {
         return new FormatHandlerListBuilder();
     }
 
-    @Solvable
+    @InterfaceView
     public static FormatHandlerMapBuilder formatMapBuilder() {
         return new FormatHandlerMapBuilder();
     }
 
-    @Solvable
+    @InterfaceView
     public static InfoHandlerMapBuilder infoMapBuilder() {
         return new InfoHandlerMapBuilder();
     }
 
     private static InfoHandlerFactory infoHandlerFactory = new InfoHandlerFactory();
 
-    @Solvable
+    @InterfaceView
     public static InfoHandlerFactory infoFactory() {
         return infoHandlerFactory;
     }
 
     private static FormatHandlerFactory formatHandlerFactory = new FormatHandlerFactory();
 
-    @Solvable
+    @InterfaceView
     public static FormatHandlerFactory formatFactory() {
         return formatHandlerFactory;
     }
 
-    @Solvable
+    @InterfaceView
     public static FormatHandler format(FormatHandler formatHandler) {
         return formatHandler;
     }
 
-    @Solvable
+    @InterfaceView
     public static InfoHandler info(InfoHandler infoHandler) {
         return infoHandler;
     }
 
     public static final Pattern fc = Pattern.compile("[0-9a-fkm-or]*");
 
-    @Solvable
+    @InterfaceView
     public static String fcToString(String value) {
         Matcher matcher = fc.matcher(value);
         if (matcher.matches()) {
@@ -97,7 +97,7 @@ public class Literals {
         return "";
     }
 
-    @Solvable
+    @InterfaceView
     public static String fcSubstring(String s, int begin, int end) {
         String formats = "123456789abcdeflmnor";
         int index = 0;
@@ -184,17 +184,17 @@ public class Literals {
         return sb.toString();
     }
 
-    @Solvable
+    @InterfaceView
     public static String fcSubstring(String s, int begin) {
         return fcSubstring(s, begin, fcLength(s));
     }
 
-    @Solvable
+    @InterfaceView
     public static int fcLength(String s) {
         return fcClear(s).length();
     }
 
-    @Solvable
+    @InterfaceView
     public static String fcClear(String s) {
         return s.replaceAll("§[1-9a-flmnor]", "");
     }

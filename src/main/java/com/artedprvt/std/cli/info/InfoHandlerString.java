@@ -1,19 +1,19 @@
 package com.artedprvt.std.cli.info;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.InfoHandler;
 
-@Solvable
+@InterfaceView
 public class InfoHandlerString implements InfoHandler {
     private String string;
 
-    @Solvable
+    @InterfaceView
     public InfoHandlerString(String string) {
         this.string = string;
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public String handleInfo(String source) {
         return string;
     }

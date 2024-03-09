@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.format;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.util.ParseResult;
 import com.artedprvt.std.cli.util.parser.ArgumentsParserSet;
@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * 集合
  */
-@Solvable
+@InterfaceView
 public class FormatHandlerSet implements FormatHandler {
     private Set<String> set;
     private FormatHandler trueHandler;
@@ -23,7 +23,7 @@ public class FormatHandlerSet implements FormatHandler {
      * @param trueHandler  成功处理程序
      * @param falseHandler 失败处理程序
      */
-    @Solvable
+    @InterfaceView
     public FormatHandlerSet(
             Collection<String> set,
             FormatHandler trueHandler,
@@ -34,7 +34,7 @@ public class FormatHandlerSet implements FormatHandler {
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public String handleFormat(String source) {
         ParseResult result = ArgumentsParserSet.parse(set, source);
         if (result.isCorrect()) {

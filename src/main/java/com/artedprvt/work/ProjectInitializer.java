@@ -32,7 +32,6 @@ public class ProjectInitializer {
     public static final Map<String, ProjectInitializer> initializerMap = new HashMap<String, ProjectInitializer>() {{
         try {
             put("java", new ProjectInitializer(ProjectInitializer.class.getResourceAsStream("/i/java_i.zip")));
-            put("script", new ProjectInitializer(ProjectInitializer.class.getResourceAsStream("/i/script_i.zip")));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

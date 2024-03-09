@@ -1,18 +1,18 @@
 package com.artedprvt.std.cli;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 /**
  * 传递消息
  */
-@Solvable
+@InterfaceView
 public interface Messager {
     /**
      * 发送消息
      *
      * @param message 消息
      */
-    @Solvable
+    @InterfaceView
     void send(String message);
 
     /**
@@ -22,7 +22,7 @@ public interface Messager {
      * @param message 消息
      * @param hover   悬浮消息
      */
-    @Solvable
+    @InterfaceView
     void send(String message, String hover);
 
     /**
@@ -30,7 +30,7 @@ public interface Messager {
      *
      * @return if true is can hover
      */
-    @Solvable
+    @InterfaceView
     boolean canHover();
 
     /**
@@ -44,7 +44,7 @@ public interface Messager {
      * @param buttons
      * @return
      */
-    @Solvable
+    @InterfaceView
     int dialog(String message, String... buttons);
 
     /**
@@ -52,6 +52,6 @@ public interface Messager {
      *
      * @return
      */
-    @Solvable
+    @InterfaceView
     boolean canDialog();
 }

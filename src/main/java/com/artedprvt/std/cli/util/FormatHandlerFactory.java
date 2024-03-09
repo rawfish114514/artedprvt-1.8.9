@@ -5,31 +5,31 @@ import com.artedprvt.std.cli.format.FormatHandlerEmpty;
 import com.artedprvt.std.cli.format.FormatHandlerNumber;
 import com.artedprvt.std.cli.format.FormatHandlerRegex;
 import com.artedprvt.std.cli.format.FormatHandlerSet;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@Solvable
+@InterfaceView
 public class FormatHandlerFactory {
-    @Solvable
+    @InterfaceView
     public FormatHandler append(String string) {
         return new FormatHandlerAppend(string);
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandler empty() {
         return new FormatHandlerEmpty();
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandler number() {
         return new FormatHandlerNumber();
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandler regex(
             String regex,
             String template,
@@ -38,7 +38,7 @@ public class FormatHandlerFactory {
         return new FormatHandlerRegex(regex, template, groupHandlerMap, falseHandler);
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandler regex(
             Pattern regex,
             String template,
@@ -47,7 +47,7 @@ public class FormatHandlerFactory {
         return new FormatHandlerRegex(regex, template, groupHandlerMap, falseHandler);
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandler set(
             Collection<String> set,
             FormatHandler trueHandler,

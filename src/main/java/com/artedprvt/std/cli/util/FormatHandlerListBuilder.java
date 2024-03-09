@@ -5,7 +5,7 @@ import com.artedprvt.std.cli.format.FormatHandlerEmpty;
 import com.artedprvt.std.cli.format.FormatHandlerNumber;
 import com.artedprvt.std.cli.format.FormatHandlerRegex;
 import com.artedprvt.std.cli.format.FormatHandlerSet;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 
 import java.util.ArrayList;
@@ -14,22 +14,22 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 
-@Solvable
+@InterfaceView
 public class FormatHandlerListBuilder extends ArrayList<FormatHandler> {
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder adds(FormatHandler formatHandler) {
         add(formatHandler);
         return this;
 
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder append(String string) {
         add(new FormatHandlerAppend(string));
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder append(String... strings) {
         for (String string : strings) {
             append(string);
@@ -37,19 +37,19 @@ public class FormatHandlerListBuilder extends ArrayList<FormatHandler> {
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder empty() {
         add(new FormatHandlerEmpty());
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder number() {
         add(new FormatHandlerNumber());
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder regex(
             String regex,
             String template,
@@ -59,7 +59,7 @@ public class FormatHandlerListBuilder extends ArrayList<FormatHandler> {
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder regex(
             Pattern regex,
             String template,
@@ -69,7 +69,7 @@ public class FormatHandlerListBuilder extends ArrayList<FormatHandler> {
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerListBuilder set(
             Collection<String> set,
             FormatHandler trueHandler,

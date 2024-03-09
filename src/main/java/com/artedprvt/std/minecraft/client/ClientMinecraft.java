@@ -1,23 +1,23 @@
 package com.artedprvt.std.minecraft.client;
 
 import net.minecraft.client.Minecraft;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public class ClientMinecraft {
     private Minecraft minecraft;
 
-    @Solvable
+    @InterfaceView
     public ClientMinecraft() {
         minecraft = Minecraft.getMinecraft();
     }
 
-    @Solvable
+    @InterfaceView
     public ClientPlayerEntity getPlayer() {
         return new ClientPlayerEntity(minecraft.thePlayer);
     }
 
-    @Solvable
+    @InterfaceView
     public ClientWorld getWorld() {
         return new ClientWorld(minecraft.theWorld);
     }

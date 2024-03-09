@@ -1,19 +1,19 @@
 package com.artedprvt.std.cli.util;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-@Solvable
+@InterfaceView
 public class StringListBuilder extends ArrayList<String> {
-    @Solvable
+    @InterfaceView
     public StringListBuilder adds(String string) {
         add(string);
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public StringListBuilder adds(String... strings) {
         addAll(Arrays.asList(strings));
         return this;

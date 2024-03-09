@@ -1,15 +1,15 @@
 package com.artedprvt.std.cli.format;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 
 /**
  * 无
  */
-@Solvable
+@InterfaceView
 public class FormatHandlerEmpty implements FormatHandler {
     @Override
-    @Solvable
+    @InterfaceView
     public String handleFormat(String source) {
         return source;
     }

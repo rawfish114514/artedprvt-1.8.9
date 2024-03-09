@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.util;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.Command;
 import com.artedprvt.std.cli.CompleteInterface;
 import com.artedprvt.std.cli.FormatHandler;
@@ -12,7 +12,7 @@ import com.artedprvt.std.cli.ProcessInterface;
 
 import java.util.List;
 
-@Solvable
+@InterfaceView
 public class CommandBuilder {
     private String name;
     private ProcessInterface process;
@@ -20,36 +20,36 @@ public class CommandBuilder {
     private FormatInterface format;
     private InfoInterface info;
 
-    @Solvable
+    @InterfaceView
     public CommandBuilder(String name) {
         this.name = name;
     }
 
-    @Solvable
+    @InterfaceView
     public CommandBuilder process(ProcessInterface process) {
         this.process = process;
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public CommandBuilder complete(CompleteInterface complete) {
         this.complete = complete;
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public CommandBuilder format(FormatInterface format) {
         this.format = format;
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public CommandBuilder info(InfoInterface info) {
         this.info = info;
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public Command build() {
         return new ProxyCommand(name, process, complete, format, info);
     }

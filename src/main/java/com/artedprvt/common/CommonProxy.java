@@ -3,7 +3,6 @@ package com.artedprvt.common;
 import com.artedprvt.command.CommandLoader;
 import com.artedprvt.core.CoreInitializer;
 import com.artedprvt.core.app.App;
-import com.artedprvt.std.cgl.ClassGroupLoader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -17,7 +16,6 @@ public class CommonProxy {
         new CommandLoader();
         new EventLoader();
         CoreInitializer.init();
-        ClassGroupLoader.load();
 
         App.init();
     }

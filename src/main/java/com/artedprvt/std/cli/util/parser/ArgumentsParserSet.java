@@ -1,15 +1,15 @@
 package com.artedprvt.std.cli.util.parser;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.util.ArgumentsParserInterface;
 import com.artedprvt.std.cli.util.ParseResult;
 
 import java.util.Collection;
 
 @ArgumentsParserInterface
-@Solvable
+@InterfaceView
 public class ArgumentsParserSet {
-    @Solvable
+    @InterfaceView
     public static ParseResult parse(
             Collection<String> sets,
             String source) {

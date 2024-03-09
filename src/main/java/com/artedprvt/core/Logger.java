@@ -1,15 +1,15 @@
 package com.artedprvt.core;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public abstract class Logger {
     /**
      * 记录INFO级别的日志消息
      *
      * @param message
      */
-    @Solvable
+    @InterfaceView
     public abstract void info(String message);
 
     /**
@@ -17,7 +17,7 @@ public abstract class Logger {
      *
      * @param message
      */
-    @Solvable
+    @InterfaceView
     public abstract void warn(String message);
 
     /**
@@ -25,7 +25,7 @@ public abstract class Logger {
      *
      * @param message
      */
-    @Solvable
+    @InterfaceView
     public abstract void error(String message);
 
     /**
@@ -34,7 +34,7 @@ public abstract class Logger {
      * @param level   日志消息级别
      * @param message
      */
-    @Solvable
+    @InterfaceView
     public void log(Level level, String message) {
         switch (level) {
             case INFO:
@@ -60,13 +60,13 @@ public abstract class Logger {
     /**
      * 日志消息级别
      */
-    @Solvable
+    @InterfaceView
     enum Level {
-        @Solvable
+        @InterfaceView
         INFO,
-        @Solvable
+        @InterfaceView
         WARN,
-        @Solvable
+        @InterfaceView
         ERROR,
     }
 

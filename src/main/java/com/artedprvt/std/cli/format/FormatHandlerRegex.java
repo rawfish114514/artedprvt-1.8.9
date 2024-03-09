@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.format;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.util.ParseResult;
 import com.artedprvt.std.cli.util.parser.ArgumentsParserRegex;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * 格式
  */
-@Solvable
+@InterfaceView
 public class FormatHandlerRegex implements FormatHandler {
     private Pattern pattern;
     private String template;
@@ -26,7 +26,7 @@ public class FormatHandlerRegex implements FormatHandler {
      * @param groupHandlerMap 方案 定义group的格式处理程序 {groupName:formatter...}
      * @param falseHandler    失败的格式处理程序
      */
-    @Solvable
+    @InterfaceView
     public FormatHandlerRegex(
             Pattern pattern,
             String template,
@@ -38,7 +38,7 @@ public class FormatHandlerRegex implements FormatHandler {
         this.falseHandler = falseHandler;
     }
 
-    @Solvable
+    @InterfaceView
     public FormatHandlerRegex(
             String regex,
             String template,
@@ -48,7 +48,7 @@ public class FormatHandlerRegex implements FormatHandler {
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public synchronized String handleFormat(String source) {
         ParseResult result = ArgumentsParserRegex.parse(pattern, groupHandlerMap.keySet(), source);
         if (result.isCorrect()) {

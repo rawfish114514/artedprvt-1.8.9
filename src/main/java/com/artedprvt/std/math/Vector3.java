@@ -1,25 +1,25 @@
 package com.artedprvt.std.math;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public class Vector3 extends Vector {
-    @Solvable
+    @InterfaceView
     public Vector3(double x, double y, double z) {
         super(x, y, z);
     }
 
-    @Solvable
+    @InterfaceView
     public double getX() {
         return get(0);
     }
 
-    @Solvable
+    @InterfaceView
     public double getY() {
         return get(1);
     }
 
-    @Solvable
+    @InterfaceView
     public double getZ() {
         return get(2);
     }

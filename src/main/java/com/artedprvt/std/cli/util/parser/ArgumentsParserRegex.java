@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.util.parser;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.util.ArgumentsParserInterface;
 import com.artedprvt.std.cli.util.ParseResult;
 
@@ -11,9 +11,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @ArgumentsParserInterface
-@Solvable
+@InterfaceView
 public class ArgumentsParserRegex {
-    @Solvable
+    @InterfaceView
     public static ParseResult parse(
             Pattern pattern,
             Collection<String> groups,
@@ -36,11 +36,11 @@ public class ArgumentsParserRegex {
     }
 
 
-    @Solvable
+    @InterfaceView
     public static final Pattern patternNumber = Pattern.compile(
             "(?<symbol>[+-]|)(?<number>[0-9]+((\\.[0-9]+)|))(?<invalid>.*)");
 
-    @Solvable
+    @InterfaceView
     public static final Set<String> groupsNumber = new HashSet<String>() {{
         add("symbol");
         add("number");

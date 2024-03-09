@@ -2,6 +2,7 @@ package com.artedprvt.work;
 
 import com.artedprvt.api.APIJavaFileObjects;
 import com.artedprvt.api.APIJavaFileObjects.JFO;
+import com.artedprvt.api.JarClasses;
 
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
@@ -16,6 +17,7 @@ import javax.tools.ToolProvider;
 import java.io.ByteArrayOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -28,7 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ClassByteTool {
-    public static Map<String, byte[]> compile(Map<String, String> sourceMap) throws IOException {
+    public static Map<String, byte[]> compile(Map<String, String> sourceMap,InputStream... jarClassesList) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
 
@@ -38,7 +40,9 @@ public class ClassByteTool {
         }
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
         MemoryJavaFileManager fileManager = new MemoryJavaFileManager(compiler.getStandardFileManager(diagnostics, Locale.CHINA, StandardCharsets.UTF_8));
-
+        for(InputStream jarClasses:jarClassesList){
+            fileManager.addJarClasses(jarClasses);
+        }
         JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, diagnostics, null, null, sourceList);
         boolean success = task.call();
 
@@ -86,10 +90,21 @@ public class ClassByteTool {
         protected MemoryJavaFileManager(JavaFileManager fileManager) {
             super(fileManager);
             classByteMap = new HashMap<>();
+
+            jarClassesList=new ArrayList<>();
         }
 
         Map<String, byte[]> classByteMap;
 
+        List<JarClasses> jarClassesList;
+
+        void addJarClasses(InputStream inputStream){
+            try {
+                jarClassesList.add(new JarClasses(inputStream));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         void putClassByte(String name, byte[] bytes) {
             classByteMap.put(name, bytes);
@@ -112,9 +127,19 @@ public class ClassByteTool {
 
         @Override
         public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
-            Iterable<JavaFileObject> r= APIJavaFileObjects.list(packageName,kinds,recurse);
-            if(r!=null){
-                return r;
+            List<JavaFileObject> classes=new ArrayList<>();
+            List<JavaFileObject> getClasses= APIJavaFileObjects.nativeClasses(packageName,kinds,recurse);
+            if(getClasses!=null){
+                classes.addAll(getClasses);
+            }
+            for(JarClasses jarClasses:jarClassesList){
+                getClasses=jarClasses.list(packageName,recurse);
+                if (getClasses != null) {
+                    classes.addAll(getClasses);
+                }
+            }
+            if(!classes.isEmpty()){
+                return classes;
             }
             return super.list(location,packageName,kinds,recurse);
         }

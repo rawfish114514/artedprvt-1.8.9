@@ -1,11 +1,11 @@
 package com.artedprvt.std.minecraft.entity;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.math.Vector3;
 
 import java.util.UUID;
 
-@Solvable
+@InterfaceView
 public class Entity {
     protected net.minecraft.entity.Entity Mentity;
 
@@ -17,22 +17,22 @@ public class Entity {
         return Mentity;
     }
 
-    @Solvable
+    @InterfaceView
     public int getId() {
         return Mentity.getEntityId();
     }
 
-    @Solvable
+    @InterfaceView
     public String getName() {
         return Mentity.getName();
     }
 
-    @Solvable
+    @InterfaceView
     public UUID getUUID() {
         return Mentity.getUniqueID();
     }
 
-    @Solvable
+    @InterfaceView
     public Vector3 getPosition() {
         return new Vector3(Mentity.posX, Mentity.posY, Mentity.posZ);
     }

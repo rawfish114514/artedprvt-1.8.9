@@ -13,7 +13,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.Messager;
 
 import java.util.ArrayList;
@@ -22,14 +22,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Solvable
+@InterfaceView
 public class ChatConsole implements Messager, InProcess {
     private Logger logger = null;
     private GuiNewChat MguiNewChat = null;
     private boolean log = true;
     private boolean longtime = false;
 
-    @Solvable
+    @InterfaceView
     public ChatConsole() {
         Process process = up();
         if (process != null) {
@@ -46,12 +46,12 @@ public class ChatConsole implements Messager, InProcess {
         }
     }
 
-    @Solvable
+    @InterfaceView
     public ChatConsole print(ChatComponent chat) {
         return print(chat, 0);
     }
 
-    @Solvable
+    @InterfaceView
     public ChatConsole print(ChatComponent chat, int id) {
         if (isGuiNewChatNonnull()) {
             printChat(LTM_ChatComponent_IChatComponent(chat), id);
@@ -61,17 +61,17 @@ public class ChatConsole implements Messager, InProcess {
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public ChatConsole print(String chat) {
         return print(chat, 0);
     }
 
-    @Solvable
+    @InterfaceView
     public ChatConsole print(String chat, int id) {
         return print(new ChatComponent(String.valueOf(chat)), id);
     }
 
-    @Solvable
+    @InterfaceView
     public ChatConsole delete(int id) {
         if (isGuiNewChatNonnull()) {
             synchronized (this) {
@@ -98,7 +98,7 @@ public class ChatConsole implements Messager, InProcess {
     boolean close = false;
 
     @Override
-    public void close() {
+    public void close() throws Exception {
         if (longtime) {
             return;
         }
@@ -138,19 +138,19 @@ public class ChatConsole implements Messager, InProcess {
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public void send(String message) {
         print(message);
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public void send(String message, String hover) {
         print(new ChatComponent(message, hover));
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public boolean canHover() {
         return true;
     }
@@ -158,7 +158,7 @@ public class ChatConsole implements Messager, InProcess {
     static Object target = null;
 
     @Override
-    @Solvable
+    @InterfaceView
     public int dialog(String message, String... buttons) {
         if (buttons.length == 0) {
             throw new RuntimeException("对话框没有按钮");
@@ -233,7 +233,7 @@ public class ChatConsole implements Messager, InProcess {
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public boolean canDialog() {
         return true;
     }
@@ -259,7 +259,7 @@ public class ChatConsole implements Messager, InProcess {
         }
 
         @Override
-        public void close() {
+        public void close() throws Exception {
             synchronized (this) {
                 click = null;
             }
@@ -286,7 +286,7 @@ public class ChatConsole implements Messager, InProcess {
         }
 
         @Override
-        public void close() {
+        public void close() throws Exception {
             synchronized (this) {
                 if (hover instanceof ChatHoverString) {
                     return;

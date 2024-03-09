@@ -1,10 +1,10 @@
 package com.artedprvt.core;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
-public interface InProcess {
-    @Solvable
+@InterfaceView
+public interface InProcess extends AutoCloseable {
+    @InterfaceView
     default Process up() {
         Thread thread = Thread.currentThread();
         Process process = null;
@@ -17,6 +17,6 @@ public interface InProcess {
         return process;
     }
 
-    @Solvable
-    void close();
+    @InterfaceView
+    void close() throws Exception;
 }

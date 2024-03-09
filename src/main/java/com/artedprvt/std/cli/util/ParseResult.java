@@ -1,33 +1,33 @@
 package com.artedprvt.std.cli.util;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Solvable
+@InterfaceView
 public class ParseResult {
     private boolean correct;
 
     private Map<String, String> map;
 
-    @Solvable
+    @InterfaceView
     public ParseResult(boolean correct) {
         this.correct = correct;
         map = new HashMap<>();
     }
 
-    @Solvable
+    @InterfaceView
     public void put(String key, String value) {
         map.put(key, value);
     }
 
-    @Solvable
+    @InterfaceView
     public String get(String key) {
         return map.get(key);
     }
 
-    @Solvable
+    @InterfaceView
     public boolean isCorrect() {
         return correct;
     }

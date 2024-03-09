@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.format;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.util.parser.ArgumentsParserRegex;
 
@@ -9,9 +9,9 @@ import java.util.HashMap;
 /**
  * 数字
  */
-@Solvable
+@InterfaceView
 public class FormatHandlerNumber extends FormatHandlerRegex {
-    @Solvable
+    @InterfaceView
     public FormatHandlerNumber() {
         super(ArgumentsParserRegex.patternNumber,
                 "§?symbol§?number§?invalid",

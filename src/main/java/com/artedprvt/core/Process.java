@@ -1,14 +1,14 @@
 package com.artedprvt.core;
 
 import com.artedprvt.Artedprvt;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Solvable
+@InterfaceView
 public abstract class Process {
     /**
      * 进程状态
@@ -70,7 +70,7 @@ public abstract class Process {
 
     public abstract ProcessIdLevel pidLevel();
 
-    @Solvable
+    @InterfaceView
     public abstract Logger logger();
 
     /**

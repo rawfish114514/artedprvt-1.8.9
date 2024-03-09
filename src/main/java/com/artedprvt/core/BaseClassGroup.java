@@ -1,30 +1,30 @@
 package com.artedprvt.core;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@Solvable
+@InterfaceView
 public class BaseClassGroup implements ClassGroup {
     private final String name;
     private final Set<Class> set;
 
     //super
-    @Solvable
+    @InterfaceView
     public BaseClassGroup(Object name) {
         this.name = String.valueOf(name);
         set = new HashSet<>();
     }
 
-    @Solvable
+    @InterfaceView
     //operate
     protected void add(Class clas) {
         set.add(clas);
     }
 
-    @Solvable
+    @InterfaceView
     //operate
     protected void union(BaseClassGroup target) {
         if (target.permission()) {

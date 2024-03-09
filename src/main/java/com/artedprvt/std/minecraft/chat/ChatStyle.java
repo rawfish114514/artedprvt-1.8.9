@@ -1,10 +1,10 @@
 package com.artedprvt.std.minecraft.chat;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.Objects;
 
-@Solvable
+@InterfaceView
 public class ChatStyle {
     private String chat;
 
@@ -12,61 +12,61 @@ public class ChatStyle {
 
     private ChatHover hover = null;
 
-    @Solvable
+    @InterfaceView
     public ChatStyle() {
         this("");
     }
 
-    @Solvable
+    @InterfaceView
     public ChatStyle(String chat) {
         this.chat = chat;
     }
 
-    @Solvable
+    @InterfaceView
     public ChatStyle(String chat, String hover) {
         this(chat);
         hover(hover);
     }
 
-    @Solvable
+    @InterfaceView
     public ChatStyle click(ChatClick chatClick) {
         click = chatClick;
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public ChatStyle hover(ChatHover chatHover) {
         hover = chatHover;
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public ChatStyle hover(String chatHover) {
         hover = new ChatHoverString(chatHover);
         return this;
     }
 
-    @Solvable
+    @InterfaceView
     public String getChat() {
         return chat;
     }
 
-    @Solvable
+    @InterfaceView
     public ChatClick getClick() {
         return click;
     }
 
-    @Solvable
+    @InterfaceView
     public ChatHover getHover() {
         return hover;
     }
 
-    @Solvable
+    @InterfaceView
     public boolean isClickNonnull() {
         return Objects.nonNull(click);
     }
 
-    @Solvable
+    @InterfaceView
     public boolean isHoverNonnull() {
         return Objects.nonNull(hover);
     }

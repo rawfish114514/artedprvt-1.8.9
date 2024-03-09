@@ -1,6 +1,6 @@
 package com.artedprvt.std.cli.util;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.InfoHandler;
 import com.artedprvt.std.cli.info.InfoHandlerEmpty;
 import com.artedprvt.std.cli.info.InfoHandlerMap;
@@ -8,21 +8,21 @@ import com.artedprvt.std.cli.info.InfoHandlerString;
 
 import java.util.Map;
 
-@Solvable
+@InterfaceView
 public class InfoHandlerFactory {
-    @Solvable
+    @InterfaceView
     public InfoHandler empty() {
         return new InfoHandlerEmpty();
     }
 
-    @Solvable
+    @InterfaceView
     public InfoHandler map(
             Map<String, InfoHandler> map,
             InfoHandler falseHandler) {
         return new InfoHandlerMap(map, falseHandler);
     }
 
-    @Solvable
+    @InterfaceView
     public InfoHandler string(String string) {
         return new InfoHandlerString(string);
     }

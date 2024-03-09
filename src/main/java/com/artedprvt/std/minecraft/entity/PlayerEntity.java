@@ -1,9 +1,9 @@
 package com.artedprvt.std.minecraft.entity;
 
 import net.minecraft.entity.player.EntityPlayer;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public class PlayerEntity extends Entity {
     public PlayerEntity(EntityPlayer MentityPlayer) {
         super(MentityPlayer);

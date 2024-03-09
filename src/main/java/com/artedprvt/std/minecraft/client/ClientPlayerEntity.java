@@ -2,15 +2,15 @@ package com.artedprvt.std.minecraft.client;
 
 import com.artedprvt.std.minecraft.entity.PlayerEntity;
 import net.minecraft.client.entity.EntityPlayerSP;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public class ClientPlayerEntity extends PlayerEntity {
     public ClientPlayerEntity(EntityPlayerSP MentityPlayerSP) {
         super(MentityPlayerSP);
     }
 
-    @Solvable
+    @InterfaceView
     public ClientNetwork getNetwork() {
         return new ClientNetwork(((EntityPlayerSP) Mentity).sendQueue);
     }

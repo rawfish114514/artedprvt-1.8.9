@@ -1,10 +1,10 @@
 package com.artedprvt.std.cli;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.List;
 
-@Solvable
+@InterfaceView
 public interface ProcessInterface {
     /**
      * 执行这个命令
@@ -12,6 +12,6 @@ public interface ProcessInterface {
      * @param args     参数列表
      * @param messager
      */
-    @Solvable
+    @InterfaceView
     void process(List<String> args, Messager messager);
 }

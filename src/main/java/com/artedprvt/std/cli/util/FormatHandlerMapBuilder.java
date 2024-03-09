@@ -1,13 +1,13 @@
 package com.artedprvt.std.cli.util;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
 
 import java.util.HashMap;
 
-@Solvable
+@InterfaceView
 public class FormatHandlerMapBuilder extends HashMap<String, FormatHandler> {
-    @Solvable
+    @InterfaceView
     public FormatHandlerMapBuilder puts(String string, FormatHandler formatHandler) {
         put(string, formatHandler);
         return this;

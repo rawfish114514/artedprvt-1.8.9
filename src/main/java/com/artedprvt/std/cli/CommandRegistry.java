@@ -1,24 +1,25 @@
 package com.artedprvt.std.cli;
 
 import com.artedprvt.core.InProcess;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
-@Solvable
+@InterfaceView
 public class CommandRegistry implements InProcess {
     private boolean up;
 
     private Map<String, Command> commandMap = new HashMap<>();
 
-    @Solvable
+    @InterfaceView
     public CommandRegistry() {
         up = up() != null;
     }
 
 
-    @Solvable
+    @InterfaceView
     public void register(Command command) {
         if (up) {
             if (CommandHandler.register(command)) {
@@ -31,12 +32,12 @@ public class CommandRegistry implements InProcess {
         }
     }
 
-    @Solvable
+    @InterfaceView
     public void unregister(Command command) {
         unregister(command.getName());
     }
 
-    @Solvable
+    @InterfaceView
     public void unregister(String name) {
         if (up) {
             if (commandMap.get(name) != null) {
@@ -54,9 +55,9 @@ public class CommandRegistry implements InProcess {
     }
 
     @Override
-    @Solvable
-    public void close() {
-        for (String name : commandMap.keySet()) {
+    @InterfaceView
+    public void close() throws Exception {
+        for (String name : new HashSet<>(commandMap.keySet())) {
             this.unregister(name);
         }
     }

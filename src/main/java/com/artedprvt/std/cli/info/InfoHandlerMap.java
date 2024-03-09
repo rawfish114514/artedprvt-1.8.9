@@ -2,7 +2,7 @@ package com.artedprvt.std.cli.info;
 
 import com.artedprvt.std.cli.util.ParseResult;
 import com.artedprvt.std.cli.util.parser.ArgumentsParserSet;
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.InfoHandler;
 
 import java.util.Map;
@@ -10,12 +10,12 @@ import java.util.Map;
 /**
  * 映射
  */
-@Solvable
+@InterfaceView
 public class InfoHandlerMap implements InfoHandler {
     private Map<String, InfoHandler> map;
     private InfoHandler falseHandler;
 
-    @Solvable
+    @InterfaceView
     public InfoHandlerMap(
             Map<String, InfoHandler> map,
             InfoHandler falseHandler) {
@@ -24,7 +24,7 @@ public class InfoHandlerMap implements InfoHandler {
     }
 
     @Override
-    @Solvable
+    @InterfaceView
     public String handleInfo(String source) {
         ParseResult result = ArgumentsParserSet.parse(map.keySet(), source);
         if (result.isCorrect()) {

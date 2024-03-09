@@ -1,17 +1,17 @@
 package com.artedprvt.std.math;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public class Vector {
     private final double[] doubles;
 
-    @Solvable
+    @InterfaceView
     public Vector(double... doubles) {
         this.doubles = doubles;
     }
 
-    @Solvable
+    @InterfaceView
     public double get(int index) {
         return doubles[index];
     }

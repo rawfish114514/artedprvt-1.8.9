@@ -74,7 +74,11 @@ public abstract class SystemProcess extends Process implements Runnable {
         InProcess inProcess;
         for (int i = 0; i < inProcessList.size(); ) {
             inProcess = inProcessList.get(i);
-            inProcess.close();
+            try {
+                inProcess.close();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             inProcessList.remove(inProcess);
         }
     }

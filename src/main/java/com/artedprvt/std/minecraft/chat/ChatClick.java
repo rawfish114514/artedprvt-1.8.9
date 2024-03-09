@@ -1,9 +1,9 @@
 package com.artedprvt.std.minecraft.chat;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
-@Solvable
+@InterfaceView
 public interface ChatClick {
-    @Solvable
+    @InterfaceView
     void click();
 }

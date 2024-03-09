@@ -1,10 +1,10 @@
 package com.artedprvt.std.cli;
 
-import com.artedprvt.api.Solvable;
+import com.artedprvt.iv.anno.InterfaceView;
 
 import java.util.List;
 
-@Solvable
+@InterfaceView
 public interface FormatInterface {
     /**
      * 参数格式
@@ -16,6 +16,6 @@ public interface FormatInterface {
      * @param args 完整的参数列表
      * @return 返回参数的格式列表 不能为null
      */
-    @Solvable
+    @InterfaceView
     List<? extends FormatHandler> format(List<String> args);
 }
