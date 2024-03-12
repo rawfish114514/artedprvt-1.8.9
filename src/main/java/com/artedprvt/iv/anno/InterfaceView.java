@@ -14,6 +14,5 @@ import java.lang.annotation.Target;
         ElementType.FIELD,
         ElementType.METHOD,
         ElementType.CONSTRUCTOR})
-@InterfaceView
 public @interface InterfaceView {
 }
