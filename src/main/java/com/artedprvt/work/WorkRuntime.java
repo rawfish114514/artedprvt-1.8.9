@@ -35,13 +35,17 @@ public class WorkRuntime {
     private Map<String, String> phaseLifecycleMap = new HashMap<>();
     private Map<String, String> goalLifecycleMap = new HashMap<>();
 
+    private String mainClass;
+
     public WorkRuntime(
+            String mainClass,
             ProjectSystem projectSystem,
             ClassLoader classLoader,
             List<PhaseData> phaseDataList,
             List<LifecycleData> lifecycleDataList,
             List<GoalData> goalDataList,
             List<CommandData> commandDataList) {
+        this.mainClass=mainClass;
         this.projectSystem = projectSystem;
         this.classLoader = classLoader;
         phaseDataList.forEach(v -> phaseDataMap.put(v.phaseName, v));
@@ -146,8 +150,8 @@ public class WorkRuntime {
             commandRefNameList.add(commandRefName);
         }
 
-        Class apClass = classLoader.loadClass("com.artedprvt.work._0.ap");
-        ProjectAccess projectAccess = (ProjectAccess) apClass.newInstance();
+        Class c = classLoader.loadClass(mainClass);
+        ProjectAccess projectAccess = (ProjectAccess) c.newInstance();
         projectAccess.main(projectSystem);
     }
 

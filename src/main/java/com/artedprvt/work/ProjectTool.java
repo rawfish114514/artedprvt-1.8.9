@@ -5,30 +5,27 @@ import com.artedprvt.std.cli.ProcessInterface;
 import com.artedprvt.work.anno.Command;
 import com.artedprvt.work.anno.Exclude;
 import com.artedprvt.work.anno.Goal;
+import com.artedprvt.work.anno.Initializer;
 import com.artedprvt.work.anno.Lifecycle;
 import com.artedprvt.work.anno.Phase;
-import com.artedprvt.work.anno.ProjectScript;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OptionalDataException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.math.BigInteger;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -36,15 +33,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class ProjectTool {
     /**
      * 编译源码并输出字节码
      *
-     * @param apSource    源码
-     * @param libs        库输入流
+     * @param sourceMap   源码
+     * @param mainClass   主类完整类名
      * @param bytesOutput 字节码输出流 最后关闭
      * @param log         日志输出流
      * @param args        参数
@@ -52,7 +47,7 @@ public class ProjectTool {
      * @throws ClassNotFoundException
      * @throws NoSuchAlgorithmException
      */
-    public static void compile(String apSource, InputStream[] libs, OutputStream bytesOutput, PrintWriter log, String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
+    public static void compile(Map<String, String> sourceMap, String mainClass, OutputStream bytesOutput, PrintWriter log, String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
         try {
             if (args == null) {
                 args = new String[0];
@@ -62,33 +57,6 @@ public class ProjectTool {
             log.println("args: " + String.join(", ", args));
 
             log.println("<compile> java source");
-
-            Map<String, String> sourceMap = new HashMap<>();
-            sourceMap.put("com/artedprvt/work/_0/ap.java", apSource);
-            for (int i = 0; i < libs.length; i++) {
-                InputStream lib = libs[i];
-
-
-                ZipInputStream zip = new ZipInputStream(
-                        lib,
-                        Charset.forName("cp437"));
-                Reader reader = new InputStreamReader(zip, StandardCharsets.UTF_8);
-
-                ZipEntry entry = null;
-                while ((entry = zip.getNextEntry()) != null) {
-                    if (entry.getName().endsWith(".java")) {
-                        if (!entry.isDirectory()) {
-                            int n;
-                            StringBuilder sb = new StringBuilder();
-                            while ((n = reader.read()) != -1) {
-                                sb.append((char) n);
-                            }
-                            sourceMap.put(entry.getName().replace(File.separator, "/"), sb.toString());
-                        }
-                    }
-                }
-                zip.close();
-            }
 
 
             Map<String, byte[]> classByteMap = ClassByteTool.compile(sourceMap);
@@ -104,45 +72,45 @@ public class ProjectTool {
             log.println("</compile> java source");
 
             //处理Class ap
-            log.println("<handle> ap.java");
+            log.println("<handle> main-class");
 
-            String ap_name = null;
-            String ap_description = null;
-            String ap_created = null;
+            String initializer_name = null;
+            String initializer_description = null;
+            String initializer_author = null;
 
             List<Class> phaseClasses = new ArrayList<>();
             List<Class> lifecycleClasses = new ArrayList<>();
             List<Class> goalClasses = new ArrayList<>();
             List<Class> commandClasses = new ArrayList<>();
 
-            //验证Class ap 有唯一的注解 ProjectScript 且实现 ProjectAccess
+            //验证Class mainClass 有唯一的注解 Initializer 且实现 ProjectAccess
             {
-                Class c = map.get("com.artedprvt.work._0.ap");
+                Class c = map.get(mainClass);
                 if (c == null) {
-                    throw new RuntimeException("找不到: class com.artedprvt.work._0.ap");
+                    throw new RuntimeException("找不到: class " + mainClass);
                 }
-                if (!script(c)) {
-                    throw new RuntimeException("class com.artedprvt.work._0.ap 不是 ProjectScript 单注解");
+                if (!initializer(c)) {
+                    throw new RuntimeException("class " + mainClass + " 不是 Initializer 单注解");
                 }
                 if (exclude(c)) {
-                    throw new RuntimeException("class com.artedprvt.work._0.ap 不是 ProjectScript 单注解");
+                    throw new RuntimeException("class " + mainClass + " 排除了");
                 }
                 if (!ProjectAccess.class.isAssignableFrom(c)) {
-                    throw new RuntimeException("class com.artedprvt.work._0.ap 未实现 ProjectAccess 接口");
+                    throw new RuntimeException("class " + mainClass + " 未实现 ProjectAccess 接口");
                 }
-                ProjectScript projectScript = single(ProjectScript.class, c);
-                ap_name = projectScript.name();
-                ap_description = projectScript.description();
-                ap_created = projectScript.created();
+                Initializer initializer = single(Initializer.class, c);
+                initializer_name = initializer.name();
+                initializer_description = initializer.description();
+                initializer_author = initializer.author();
 
                 map.remove("com.artedprvt.work._0.ap");
 
-                log.println("name: " + ap_name);
-                log.println("description: " + ap_description);
-                log.println("created: " + ap_created);
+                log.println("name: " + initializer_name);
+                log.println("description: " + initializer_description);
+                log.println("author: " + initializer_author);
             }
 
-            log.println("</handle> ap.java");
+            log.println("</handle> main-class");
 
             log.println("<register>");
 
@@ -220,42 +188,6 @@ public class ProjectTool {
 
             //验证并提取数据
             log.println("<data>");
-
-            //验证包名
-            {
-                log.println("<package>");
-
-                for (Class c : phaseClasses) {
-                    if (!c.getName().equals("com.artedprvt.work._0." + c.getSimpleName())) {
-                        throw new RuntimeException("包名必须是 com.artedprvt.work._0: " + c);
-                    }
-
-                    log.println(c);
-                }
-                for (Class c : lifecycleClasses) {
-                    if (!c.getName().equals("com.artedprvt.work._0." + c.getSimpleName())) {
-                        throw new RuntimeException("包名必须是 com.artedprvt.work._0: " + c);
-                    }
-
-                    log.println(c);
-                }
-                for (Class c : goalClasses) {
-                    if (!c.getName().equals("com.artedprvt.work._0." + c.getSimpleName())) {
-                        throw new RuntimeException("包名必须是 com.artedprvt.work._0: " + c);
-                    }
-
-                    log.println(c);
-                }
-                for (Class c : commandClasses) {
-                    if (!c.getName().equals("com.artedprvt.work._0." + c.getSimpleName())) {
-                        throw new RuntimeException("包名必须是 com.artedprvt.work._0: " + c);
-                    }
-
-                    log.println(c);
-                }
-
-                log.println("</package>");
-            }
 
             {
                 log.println("<data> Phase");
@@ -614,7 +546,7 @@ public class ProjectTool {
 
                 //计算核心字节和源码校验和
                 {
-                    checksum = checksum(apSource, classBlockBytes, registerBlockBytes);
+                    checksum = checksum(unionSource(sourceMap), classBlockBytes, registerBlockBytes);
 
                     log.println("checksum " + new BigInteger(1, checksum).toString(16));
                 }
@@ -628,14 +560,12 @@ public class ProjectTool {
                 {
                     log.println("<block-head>");
 
-                    //写入文件头 0x1145140019198100 写入"ap.java" 15字节
-                    log.println("\"ap.java\"");
+                    //写入文件头 0x1145140019198100
 
                     headBlock.write(new byte[]{
                             0x11, 0x45, 0x14, 0x00,
                             0x19, 0x19, -0x7f, 0x00,
                     });
-                    headBlock.write("ap.java".getBytes(StandardCharsets.UTF_8));
 
                     //写入apf版本校验 64字节
                     byte[] apfcheck = apfcheck();
@@ -651,10 +581,10 @@ public class ProjectTool {
 
                     ObjectOut out = new ObjectOut(headBlock);
 
-                    //写入项目脚本的名称描述创建 写入类数据块大小 写入注册数据块大小 写入校验和 写入头数据块大小 写入填充大小
-                    out.writeString(ap_name);
-                    out.writeString(ap_description);
-                    out.writeString(ap_created);
+                    //写入项目脚本的名称描述作者 写入类数据块大小 写入注册数据块大小 写入校验和 写入头数据块大小 写入填充大小
+                    out.writeString(initializer_name);
+                    out.writeString(initializer_description);
+                    out.writeString(initializer_author);
                     out.writeInt(classBlockByteSize);
                     out.writeInt(registerBlockByteSize);
                     out.write(checksum);
@@ -718,7 +648,7 @@ public class ProjectTool {
     /**
      * 验证源码和字节码正确性
      *
-     * @param source     源码
+     * @param sourceMap  源码
      * @param bytesInput 字节码输入流 最后关闭
      * @param log        日志输出流
      * @param args       参数
@@ -726,7 +656,7 @@ public class ProjectTool {
      * @throws ClassNotFoundException
      * @throws NoSuchAlgorithmException
      */
-    public static void verify(String source, InputStream bytesInput, PrintWriter log, String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
+    public static void verify(Map<String, String> sourceMap, InputStream bytesInput, PrintWriter log, String[] args) throws IOException, ClassNotFoundException, NoSuchAlgorithmException {
         try {
             if (args == null) {
                 args = new String[0];
@@ -739,10 +669,8 @@ public class ProjectTool {
 
             log.println("<verify>");
 
-            //检查文件头 0x1145140019198100 "ap.java" 15字节
+            //检查文件头 0x1145140019198100
             {
-                log.println("verify \"ap.java\"");
-
                 if (input.read() == 0x11
                         && input.read() == 0x45
                         && input.read() == 0x14
@@ -754,14 +682,6 @@ public class ProjectTool {
                 ) {
                 } else {
                     throw new RuntimeException("读取不正确 文件头不正确 期望 0x1145140019198100");
-                }
-
-                byte[] bytes = new byte[7];
-                input.readFully(bytes);
-                String s = new String(bytes, StandardCharsets.UTF_8);
-                if (s.equals("ap.java")) {
-                } else {
-                    throw new RuntimeException("读取不正确 文件头不正确 期望 \"ap.java\"");
                 }
             }
 
@@ -797,9 +717,9 @@ public class ProjectTool {
                 log.println(new BigInteger(1, vmcheck0).toString(16));
             }
 
-            String ap_name;
-            String ap_description;
-            String ap_created;
+            String initializer_name;
+            String initializer_description;
+            String initializer_author;
 
             int classBlockByteSize;
             int registerBlockByteSize;
@@ -807,13 +727,13 @@ public class ProjectTool {
             int headBlockByteSize;
             int compSize;
 
-            //读取项目脚本的名称描述创建 读取类数据块大小 读取注册数据块大小 读取校验和 读取头数据块大小 读取填充大小
+            //读取项目脚本的名称描述作者 读取类数据块大小 读取注册数据块大小 读取校验和 读取头数据块大小 读取填充大小
             {
                 ObjectIn in = new ObjectIn(input);
 
-                ap_name = in.readString();
-                ap_description = in.readString();
-                ap_created = in.readString();
+                initializer_name = in.readString();
+                initializer_description = in.readString();
+                initializer_author = in.readString();
 
                 classBlockByteSize = in.readInt();
                 registerBlockByteSize = in.readInt();
@@ -843,9 +763,9 @@ public class ProjectTool {
                     }
                 }
 
-                log.println("name: " + ap_name);
-                log.println("description: " + ap_description);
-                log.println("created: " + ap_created);
+                log.println("name: " + initializer_name);
+                log.println("description: " + initializer_description);
+                log.println("author: " + initializer_author);
                 log.println("class: " + classBlockByteSize + " byte");
                 log.println("register: " + registerBlockByteSize + " byte");
                 log.println("head: " + headBlockByteSize + " byte");
@@ -880,7 +800,7 @@ public class ProjectTool {
             {
                 log.println("verify checksum");
 
-                byte[] checksum0 = checksum(source, classBlockBytes, registerBlockBytes);
+                byte[] checksum0 = checksum(unionSource(sourceMap), classBlockBytes, registerBlockBytes);
                 if (!Arrays.equals(checksum0, checksum)) {
                     throw new RuntimeException("核心字节校验和不一致 源码或字节码发生变化");
                 }
@@ -913,7 +833,7 @@ public class ProjectTool {
      * @throws NoSuchAlgorithmException
      * @throws ClassNotFoundException
      */
-    public static WorkRuntime load(ProjectSystem projectSystem, InputStream bytesInput, PrintWriter log, String[] args) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
+    public static WorkRuntime load(String mainClass, ProjectSystem projectSystem, InputStream bytesInput, PrintWriter log, String[] args) throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         try {
             if (args == null) {
                 args = new String[0];
@@ -926,10 +846,8 @@ public class ProjectTool {
 
             log.println("<load>");
 
-            //检查文件头 0x1145140019198100 "ap.java" 15字节
+            //检查文件头 0x1145140019198100
             {
-                log.println("verify \"ap.java\"");
-
                 if (input.read() == 0x11
                         && input.read() == 0x45
                         && input.read() == 0x14
@@ -941,14 +859,6 @@ public class ProjectTool {
                 ) {
                 } else {
                     throw new RuntimeException("读取不正确 文件头不正确 期望 0x1145140019198100");
-                }
-
-                byte[] bytes = new byte[7];
-                input.readFully(bytes);
-                String s = new String(bytes, StandardCharsets.UTF_8);
-                if (s.equals("ap.java")) {
-                } else {
-                    throw new RuntimeException("读取不正确 文件头不正确 期望 \"ap.java\"");
                 }
             }
 
@@ -980,9 +890,9 @@ public class ProjectTool {
                 log.println("verify vmcheck " + new BigInteger(1, vmcheck0).toString(16));
             }
 
-            String ap_name;
-            String ap_description;
-            String ap_created;
+            String initializer_name;
+            String initializer_description;
+            String initializer_author;
 
             int classBlockByteSize;
             int registerBlockByteSize;
@@ -990,13 +900,13 @@ public class ProjectTool {
             int headBlockByteSize;
             int compSize;
 
-            //读取项目脚本的名称描述创建 读取类数据块大小 读取注册数据块大小 读取校验和 读取头数据块大小 读取填充大小
+            //读取项目脚本的名称描述作者 读取类数据块大小 读取注册数据块大小 读取校验和 读取头数据块大小 读取填充大小
             {
                 ObjectIn in = new ObjectIn(input);
 
-                ap_name = in.readString();
-                ap_description = in.readString();
-                ap_created = in.readString();
+                initializer_name = in.readString();
+                initializer_description = in.readString();
+                initializer_author = in.readString();
 
                 classBlockByteSize = in.readInt();
                 registerBlockByteSize = in.readInt();
@@ -1026,9 +936,9 @@ public class ProjectTool {
                     }
                 }
 
-                log.println("name: " + ap_name);
-                log.println("description: " + ap_description);
-                log.println("created: " + ap_created);
+                log.println("name: " + initializer_name);
+                log.println("description: " + initializer_description);
+                log.println("author: " + initializer_author);
                 log.println("class: " + classBlockByteSize + " byte");
                 log.println("register: " + registerBlockByteSize + " byte");
                 log.println("head: " + headBlockByteSize + " byte");
@@ -1167,7 +1077,7 @@ public class ProjectTool {
 
             log.println("</load>");
 
-            WorkRuntime workRuntime = new WorkRuntime(projectSystem, ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
+            WorkRuntime workRuntime = new WorkRuntime(mainClass, projectSystem, ClassByteTool.inMemoryCreate(classByteMap), phaseDataList, lifecycleDataList, goalDataList, commandDataList);
 
             log.println("[LOAD] SUCCESSFUL");
 
@@ -1190,7 +1100,7 @@ public class ProjectTool {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public static byte[] apfcheck() throws NoSuchAlgorithmException {
+    private static byte[] apfcheck() throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-512");
         String vms = new StringBuilder()
                 .append(Environment.MODID).append(';')
@@ -1208,7 +1118,7 @@ public class ProjectTool {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public static byte[] vmcheck() throws NoSuchAlgorithmException {
+    private static byte[] vmcheck() throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-512");
         String vms = new StringBuilder()
                 .append(System.getProperty("java.version")).append(';')
@@ -1217,6 +1127,18 @@ public class ProjectTool {
                 .append(System.getProperty("java.vm.vendor")).append(';')
                 .append(System.getProperty("java.vm.name")).append(';').toString();
         return digest.digest(vms.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private static String unionSource(Map<String, String> sourceMap) {
+        List<String> keyList = new ArrayList<>(sourceMap.keySet());
+        Collections.sort(keyList);
+        StringBuilder sb = new StringBuilder();
+        for (String key : keyList) {
+            sb.append(key);
+            sb.append(".");
+            sb.append(sourceMap.get(key));
+        }
+        return sb.toString();
     }
 
     /**
@@ -1230,7 +1152,7 @@ public class ProjectTool {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public static byte[] checksum(String source, byte[] classBlockBytes, byte[] registerBlockBytes) throws NoSuchAlgorithmException {
+    private static byte[] checksum(String source, byte[] classBlockBytes, byte[] registerBlockBytes) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-512");
         byte[] checkSource = digest.digest(source.getBytes(StandardCharsets.UTF_8));
         digest.update(classBlockBytes);
@@ -1246,12 +1168,12 @@ public class ProjectTool {
 
     /**
      * 提取注解
-     * Phase,Lifecycle,Goal,Command,ProjectScript
+     * Phase,Lifecycle,Goal,Command,Initializer
      *
      * @param annotations
      * @return
      */
-    public static Annotation[] filter(Annotation[] annotations) {
+    private static Annotation[] filter(Annotation[] annotations) {
         List<Annotation> list = new ArrayList<>();
         for (Annotation annotation : annotations) {
             Class c = annotation.annotationType();
@@ -1259,7 +1181,7 @@ public class ProjectTool {
                     || c == Lifecycle.class
                     || c == Goal.class
                     || c == Command.class
-                    || c == ProjectScript.class) {
+                    || c == Initializer.class) {
                 list.add(annotation);
             }
         }
@@ -1267,14 +1189,14 @@ public class ProjectTool {
     }
 
     /**
-     * ProjectScript 单注解
+     * Initializer 单注解
      *
      * @param annotatedElement
      * @return
      */
-    public static boolean script(AnnotatedElement annotatedElement) {
+    private static boolean initializer(AnnotatedElement annotatedElement) {
         Annotation[] annotations = filter(annotatedElement.getAnnotations());
-        return annotations.length == 1 && annotations[0].annotationType() == ProjectScript.class;
+        return annotations.length == 1 && annotations[0].annotationType() == Initializer.class;
     }
 
     /**
@@ -1283,7 +1205,7 @@ public class ProjectTool {
      * @param annotatedElement
      * @return
      */
-    public static boolean exclude(AnnotatedElement annotatedElement) {
+    private static boolean exclude(AnnotatedElement annotatedElement) {
         for (Annotation annotation : annotatedElement.getAnnotations()) {
             Class c = annotation.annotationType();
             if (c == Exclude.class) {
@@ -1301,7 +1223,7 @@ public class ProjectTool {
      * @param <T>
      * @return
      */
-    public static <T extends Annotation> T single(Class<T> tClass, AnnotatedElement annotatedElement) {
+    private static <T extends Annotation> T single(Class<T> tClass, AnnotatedElement annotatedElement) {
         Annotation[] annotations = filter(annotatedElement.getAnnotations());
         if (annotations.length == 1) {
             if (annotations[0].annotationType() == tClass) {
@@ -1313,8 +1235,8 @@ public class ProjectTool {
         return null;
     }
 
-    public static Pattern camelCase = Pattern.compile("([A-Z][a-z]*)+");
-    public static Pattern capital = Pattern.compile("[A-Z][a-z]*");
+    private static Pattern camelCase = Pattern.compile("([A-Z][a-z]*)+");
+    private static Pattern capital = Pattern.compile("[A-Z][a-z]*");
 
     /**
      * 转换类名的命名规则
@@ -1325,7 +1247,7 @@ public class ProjectTool {
      * @param c   类
      * @return
      */
-    public static String named(String pre, Class c) {
+    private static String named(String pre, Class c) {
         String name = c.getSimpleName();
         if (name.startsWith(pre)) {
             name = name.substring(pre.length());

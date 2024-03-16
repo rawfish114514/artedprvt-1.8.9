@@ -1,19 +1,26 @@
 package com.artedprvt.work;
 
+import com.electronwill.toml.Toml;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
+import java.nio.file.FileVisitor;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -68,23 +75,23 @@ public class Project {
 
 
     /**
-     * 编译 ap.java 并输出 ap.bytes
+     * 编译
      */
     public void compile() throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         throwLogNull();
-        ProjectTool.compile(getSource(), getLibsIn(), getBytesOut(), log, null);
+        ProjectTool.compile(getSourceMap(), getMainClass(), getBytesOut(), log, null);
     }
 
     /**
-     * 验证 ap.bytes 是否可用
+     * 验证
      */
     public void verify() throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         throwLogNull();
-        ProjectTool.verify(getSource(), getBytesIn(), log, null);
+        ProjectTool.verify(getSourceMap(), getBytesIn(), log, null);
     }
 
     /**
-     * 加载ap.bytes
+     * 加载
      */
     public void load() throws IOException, NoSuchAlgorithmException, ClassNotFoundException {
         throwLogNull();
@@ -92,7 +99,7 @@ public class Project {
             runtime.close();
             runtime = null;
         }
-        runtime = ProjectTool.load(new ProjectSystem(this), getBytesIn(), log, null);
+        runtime = ProjectTool.load(getMainClass(), new ProjectSystem(this), getBytesIn(), log, null);
     }
 
     public void close() {
@@ -135,8 +142,8 @@ public class Project {
     }
 
     public boolean isInit() {
-        File file = new File(target, "ap.java");
-        return file.isFile();
+        File file = new File(target, ".apf");
+        return file.isDirectory();
     }
 
     public boolean isLoaded() {
@@ -148,50 +155,62 @@ public class Project {
     }
 
 
-    public String getSource() throws IOException {
-        File ap_java = new File(target, "ap.java");
-        if (!ap_java.isFile()) {
-            throw new RuntimeException("找不到ap.java文件");
-        }
-        Reader reader = new InputStreamReader(new FileInputStream(ap_java), StandardCharsets.UTF_8);
+    public Map<String, String> getSourceMap() throws IOException {
+        Map<String, String> map = new HashMap<>();
+        File java = new File(target, ".apf/script/java");
+        Files.walkFileTree(java.toPath(), new FileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
 
-        int n;
-        StringBuilder sb = new StringBuilder();
-        while ((n = reader.read()) != -1) {
-            sb.append((char) n);
-        }
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                String name = target.toPath().relativize(file).toString().replace(File.separatorChar, '/');
+                map.put(name, new String(Files.readAllBytes(file), StandardCharsets.UTF_8));
+                return FileVisitResult.CONTINUE;
+            }
 
-        return sb.toString();
+            @Override
+            public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        return map;
     }
 
     public InputStream getBytesIn() throws FileNotFoundException {
-        File ap_bytes = new File(target, ".apf/ap.bytes");
+        File ap_bytes = new File(target, ".apf/.bytes");
         if (!ap_bytes.isFile()) {
-            throw new RuntimeException("找不到ap.bytes文件");
+            throw new RuntimeException("找不到.bytes文件");
         }
         return new FileInputStream(ap_bytes);
     }
 
     public OutputStream getBytesOut() throws IOException {
-        File ap_bytes = new File(target, ".apf/ap.bytes");
+        File ap_bytes = new File(target, ".apf/.bytes");
         if (!ap_bytes.isFile()) {
             ap_bytes.createNewFile();
         }
         return new FileOutputStream(ap_bytes);
     }
 
-    public InputStream[] getLibsIn() throws FileNotFoundException {
-        File ap_libs = new File(target, ".apf/libs");
-        if (!ap_libs.isDirectory()) {
-            return new InputStream[0];
-        }
-        File[] libs = ap_libs.listFiles();
-        InputStream[] inputStreams = new InputStream[libs.length];
+    private String mainClass;
 
-        for (int i = 0; i < libs.length; i++) {
-            inputStreams[i] = new FileInputStream(libs[i]);
+    public String getMainClass() throws IOException {
+        if (mainClass == null) {
+            File init = new File(target, ".apf/script/init.toml");
+            byte[] bytes = Files.readAllBytes(init.toPath());
+            Map<String, Object> map = Toml.read(new String(bytes, StandardCharsets.UTF_8));
+            mainClass = map.get("main-class").toString();
         }
-        return inputStreams;
+        return mainClass;
     }
 
     /* 单例和非阻塞同步 */
