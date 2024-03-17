@@ -10,10 +10,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -71,7 +77,9 @@ public class ProjectInitializer {
 
     private byte[] init;
 
-    private String description="";
+    private String description = "";
+
+    private List<String> noWrite=new ArrayList<>();
 
     /**
      * 加载
@@ -81,16 +89,24 @@ public class ProjectInitializer {
             throw new RuntimeException("必要文件缺失: init.toml");
         }
         init = map.remove("init.toml");
-        Map<String,Object> initData= Toml.read(new String(init, StandardCharsets.UTF_8));
-        if(initData.containsKey("description")){
-            description=initData.get("description").toString();
+        Map<String, Object> initData = Toml.read(new String(init, StandardCharsets.UTF_8));
+        if (initData.containsKey("description")) {
+            description = initData.get("description").toString();
         }
-        if(!initData.containsKey("main-class")){
+        if (!initData.containsKey("main-class")) {
             throw new RuntimeException("必要键缺失: main-class");
         }
         for (String name : new ArrayList<>(map.keySet())) {
             if (name.endsWith(".java")) {
                 sourceMap.put(name, map.remove(name));
+            }
+        }
+
+        if(initData.containsKey("no-write")){
+            Object o=initData.get("no-write");
+            if(o instanceof List){
+                List<Object> list=(List<Object>)o;
+                noWrite=list.stream().map(Object::toString).collect(Collectors.toList());
             }
         }
 
@@ -103,8 +119,29 @@ public class ProjectInitializer {
      * @return
      */
     public void initialize(Project project) throws IOException {
+        Path apf = new File(project.getTarget(), ".apf").toPath();
+
+        Files.walkFileTree(apf, new SimpleFileVisitor<Path>() {
+                    @Override
+                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                        Files.delete(file);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                    @Override
+                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                        Files.delete(dir);
+                        return FileVisitResult.CONTINUE;
+                    }
+
+                }
+        );
         for (String name : map.keySet()) {
-            writeToFile(new File(project.getTarget(), name), map.get(name));
+            File f=new File(project.getTarget(), name);
+            if(noWrite.contains(name)&&f.isFile()){
+                continue;
+            }
+            writeToFile(f, map.get(name));
         }
         File script = new File(project.getTarget(), ".apf/script");
         writeToFile(new File(script, "init.toml"), init);

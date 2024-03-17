@@ -65,12 +65,7 @@ public class Project {
      * @param initializer
      */
     public void init(ProjectInitializer initializer) throws IOException {
-        File[] files = target.listFiles();
-        if (files.length == 0) {
-            initializer.initialize(this);
-        } else {
-            throw new RuntimeException("非空目录不能初始化");
-        }
+        initializer.initialize(this);
     }
 
 
