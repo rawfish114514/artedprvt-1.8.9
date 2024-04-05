@@ -23,7 +23,7 @@ public abstract class Command implements ProcessInterface, CompleteInterface, Fo
     }
 
     @InterfaceView
-    public boolean frequent(){
+    public boolean frequent() {
         return false;
     }
 

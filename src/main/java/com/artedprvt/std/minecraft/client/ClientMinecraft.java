@@ -1,24 +1,15 @@
 package com.artedprvt.std.minecraft.client;
 
-import net.minecraft.client.Minecraft;
 import com.artedprvt.iv.anno.InterfaceView;
+import net.minecraft.client.Minecraft;
 
 @InterfaceView
-public class ClientMinecraft {
-    private Minecraft minecraft;
+public interface ClientMinecraft {
+    Minecraft v_getMinecraft();
 
     @InterfaceView
-    public ClientMinecraft() {
-        minecraft = Minecraft.getMinecraft();
-    }
+    ClientEntityPlayer getPlayer();
 
     @InterfaceView
-    public ClientPlayerEntity getPlayer() {
-        return new ClientPlayerEntity(minecraft.thePlayer);
-    }
-
-    @InterfaceView
-    public ClientWorld getWorld() {
-        return new ClientWorld(minecraft.theWorld);
-    }
+    ClientWorld getWorld();
 }

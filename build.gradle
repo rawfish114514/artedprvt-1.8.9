@@ -9,7 +9,7 @@ buildscript {
         }
         maven {
             name = "forge http"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://files.minecraftforge.net/maven"
         }
     }
     dependencies {

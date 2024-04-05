@@ -1,8 +1,8 @@
 package com.artedprvt.std.cli.format;
 
-import com.artedprvt.std.cli.util.Literals;
 import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.FormatHandler;
+import com.artedprvt.std.cli.util.Literals;
 
 /**
  * 附加

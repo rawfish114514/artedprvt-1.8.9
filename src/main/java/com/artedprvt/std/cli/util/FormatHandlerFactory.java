@@ -1,12 +1,12 @@
 package com.artedprvt.std.cli.util;
 
+import com.artedprvt.iv.anno.InterfaceView;
+import com.artedprvt.std.cli.FormatHandler;
 import com.artedprvt.std.cli.format.FormatHandlerAppend;
 import com.artedprvt.std.cli.format.FormatHandlerEmpty;
 import com.artedprvt.std.cli.format.FormatHandlerNumber;
 import com.artedprvt.std.cli.format.FormatHandlerRegex;
 import com.artedprvt.std.cli.format.FormatHandlerSet;
-import com.artedprvt.iv.anno.InterfaceView;
-import com.artedprvt.std.cli.FormatHandler;
 
 import java.util.Collection;
 import java.util.Map;

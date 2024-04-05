@@ -79,7 +79,7 @@ public class ProjectInitializer {
 
     private String description = "";
 
-    private List<String> noWrite=new ArrayList<>();
+    private List<String> noWrite = new ArrayList<>();
 
     /**
      * 加载
@@ -102,11 +102,11 @@ public class ProjectInitializer {
             }
         }
 
-        if(initData.containsKey("no-write")){
-            Object o=initData.get("no-write");
-            if(o instanceof List){
-                List<Object> list=(List<Object>)o;
-                noWrite=list.stream().map(Object::toString).collect(Collectors.toList());
+        if (initData.containsKey("no-write")) {
+            Object o = initData.get("no-write");
+            if (o instanceof List) {
+                List<Object> list = (List<Object>) o;
+                noWrite = list.stream().map(Object::toString).collect(Collectors.toList());
             }
         }
 
@@ -119,26 +119,31 @@ public class ProjectInitializer {
      * @return
      */
     public void initialize(Project project) throws IOException {
-        Path apf = new File(project.getTarget(), ".apf").toPath();
+        File apf = new File(project.getTarget(), ".apf");
+        if (apf.isDirectory()) {
+            Files.walkFileTree(apf.toPath(), new SimpleFileVisitor<Path>() {
+                        @Override
+                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                            Files.delete(file);
+                            return FileVisitResult.CONTINUE;
+                        }
 
-        Files.walkFileTree(apf, new SimpleFileVisitor<Path>() {
-                    @Override
-                    public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                        Files.delete(file);
-                        return FileVisitResult.CONTINUE;
+                        @Override
+                        public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                            Files.delete(dir);
+                            return FileVisitResult.CONTINUE;
+                        }
+
                     }
+            );
+        }
+        if (apf.exists()) {
+            apf.delete();
+        }
 
-                    @Override
-                    public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                        Files.delete(dir);
-                        return FileVisitResult.CONTINUE;
-                    }
-
-                }
-        );
         for (String name : map.keySet()) {
-            File f=new File(project.getTarget(), name);
-            if(noWrite.contains(name)&&f.isFile()){
+            File f = new File(project.getTarget(), name);
+            if (noWrite.contains(name) && f.isFile()) {
                 continue;
             }
             writeToFile(f, map.get(name));

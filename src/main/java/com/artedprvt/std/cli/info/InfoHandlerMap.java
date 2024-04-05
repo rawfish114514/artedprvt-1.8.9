@@ -1,9 +1,9 @@
 package com.artedprvt.std.cli.info;
 
-import com.artedprvt.std.cli.util.ParseResult;
-import com.artedprvt.std.cli.util.parser.ArgumentsParserSet;
 import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.cli.InfoHandler;
+import com.artedprvt.std.cli.util.ParseResult;
+import com.artedprvt.std.cli.util.parser.ArgumentsParserSet;
 
 import java.util.Map;
 

@@ -4,6 +4,8 @@ import com.artedprvt.core.Environment;
 import com.artedprvt.core.InProcess;
 import com.artedprvt.core.Logger;
 import com.artedprvt.core.Process;
+import com.artedprvt.iv.anno.InterfaceView;
+import com.artedprvt.std.cli.Messager;
 import com.artedprvt.std.cli.util.Literals;
 import com.artedprvt.std.text.Formatting;
 import net.minecraft.client.Minecraft;
@@ -13,8 +15,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
-import com.artedprvt.iv.anno.InterfaceView;
-import com.artedprvt.std.cli.Messager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @InterfaceView
 public class ChatConsole implements Messager, InProcess {
     private Logger logger = null;
-    private GuiNewChat MguiNewChat = null;
+    private GuiNewChat v_guiNewChat = null;
     private boolean log = true;
     private boolean longtime = false;
 
@@ -40,7 +40,7 @@ public class ChatConsole implements Messager, InProcess {
             if (Objects.nonNull(minecraft)) {
                 GuiIngame guiIngame = minecraft.ingameGUI;
                 if (Objects.nonNull(guiIngame)) {
-                    MguiNewChat = guiIngame.getChatGUI();
+                    v_guiNewChat = guiIngame.getChatGUI();
                 }
             }
         }
@@ -75,7 +75,7 @@ public class ChatConsole implements Messager, InProcess {
     public ChatConsole delete(int id) {
         if (isGuiNewChatNonnull()) {
             synchronized (this) {
-                MguiNewChat.deleteChatLine(id);
+                v_guiNewChat.deleteChatLine(id);
             }
         }
         return this;
@@ -103,17 +103,17 @@ public class ChatConsole implements Messager, InProcess {
             return;
         }
         logger = null;
-        MguiNewChat = null;
+        v_guiNewChat = null;
         close = true;
     }
 
     private boolean isGuiNewChatNonnull() {
-        return Objects.nonNull(MguiNewChat);
+        return Objects.nonNull(v_guiNewChat);
     }
 
     private void printChat(IChatComponent chatComponent, int chatLineId) {
         synchronized (this) {
-            MguiNewChat.printChatMessageWithOptionalDeletion(chatComponent, chatLineId);
+            v_guiNewChat.printChatMessageWithOptionalDeletion(chatComponent, chatLineId);
         }
     }
 

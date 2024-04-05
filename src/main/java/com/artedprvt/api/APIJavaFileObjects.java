@@ -12,10 +12,12 @@ import java.io.Reader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class APIJavaFileObjects {
     private static Map<String, byte[]> map = new HashMap<>();
@@ -93,7 +95,7 @@ public class APIJavaFileObjects {
     }
 
     private static class CS{
-        public static String[] strings;
+        public static List<String> strings;
 
         static {
             try {
@@ -103,7 +105,7 @@ public class APIJavaFileObjects {
             }
         }
 
-        private static String[] readClasses() throws IOException {
+        private static List<String> readClasses() throws IOException {
             Reader reader=new InputStreamReader(CS.class.getResourceAsStream("/classes.txt"), StandardCharsets.UTF_8);
             StringBuilder sb=new StringBuilder();
             int n;
@@ -111,7 +113,7 @@ public class APIJavaFileObjects {
             while((n=reader.read())!=-1){
                 sb.append((char)n);
             }
-            return sb.toString().split(";");
+            return Arrays.stream(sb.toString().split(";")).map(String::trim).collect(Collectors.toList());
         }
     }
 }

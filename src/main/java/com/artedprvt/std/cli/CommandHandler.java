@@ -1,9 +1,9 @@
 package com.artedprvt.std.cli;
 
-import org.apache.commons.lang3.StringUtils;
 import com.artedprvt.std.cli.util.HandleResult;
 import com.artedprvt.std.cli.util.Literals;
 import com.artedprvt.std.minecraft.chat.ChatConsole;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

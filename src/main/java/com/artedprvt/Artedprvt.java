@@ -58,7 +58,7 @@ public class Artedprvt {
                 "\n\n作者以及更多信息 ↓\nhttps://space.bilibili.com/455906194";
     }
 
-    public String tempVersion = "";
+    public String tempVersion = "std 2024/4/2";
 
     public String otherDescription() {
         if (tempVersion.isEmpty()) {
