@@ -1,7 +1,7 @@
-package com.artedprvt.std.minecraftvp.client;
+package com.artedprvt.std.impls.minecraft.client;
 
 import com.artedprvt.std.minecraft.client.ClientEntityPlayer;
-import com.artedprvt.std.minecraftvp.entity.VanillaProxyEntityPlayer;
+import com.artedprvt.std.impls.minecraft.entity.VanillaProxyEntityPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 
 public class VanillaProxyClientEntityPlayer extends VanillaProxyEntityPlayer implements ClientEntityPlayer {

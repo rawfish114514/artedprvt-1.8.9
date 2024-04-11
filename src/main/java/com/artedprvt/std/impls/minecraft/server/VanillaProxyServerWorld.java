@@ -1,7 +1,7 @@
-package com.artedprvt.std.minecraftvp.server;
+package com.artedprvt.std.impls.minecraft.server;
 
 import com.artedprvt.std.minecraft.server.ServerWorld;
-import com.artedprvt.std.minecraftvp.world.VanillaProxyWorld;
+import com.artedprvt.std.impls.minecraft.world.VanillaProxyWorld;
 import net.minecraft.world.WorldServer;
 
 public class VanillaProxyServerWorld extends VanillaProxyWorld implements ServerWorld {

@@ -1,7 +1,7 @@
 package com.artedprvt.std.minecraft.server;
 
 import com.artedprvt.iv.anno.InterfaceView;
-import com.artedprvt.std.minecraftvp.server.VanillaProxyServerMinecraft;
+import com.artedprvt.std.impls.minecraft.server.VanillaProxyServerMinecraft;
 
 @InterfaceView
 public class ServerHelper {

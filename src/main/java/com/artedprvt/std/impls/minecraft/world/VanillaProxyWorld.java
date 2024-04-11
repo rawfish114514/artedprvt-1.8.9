@@ -1,11 +1,11 @@
-package com.artedprvt.std.minecraftvp.world;
+package com.artedprvt.std.impls.minecraft.world;
 
 import com.artedprvt.std.minecraft.entity.Entity;
 import com.artedprvt.std.minecraft.entity.EntityCow;
 import com.artedprvt.std.minecraft.entity.EntityPlayer;
 import com.artedprvt.std.minecraft.world.World;
-import com.artedprvt.std.minecraftvp.entity.VanillaProxyEntityCow;
-import com.artedprvt.std.minecraftvp.entity.VanillaProxyEntityPlayer;
+import com.artedprvt.std.impls.minecraft.entity.VanillaProxyEntityCow;
+import com.artedprvt.std.impls.minecraft.entity.VanillaProxyEntityPlayer;
 
 import java.util.ArrayList;
 import java.util.List;

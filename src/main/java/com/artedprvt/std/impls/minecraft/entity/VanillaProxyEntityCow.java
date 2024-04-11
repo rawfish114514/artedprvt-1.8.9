@@ -1,4 +1,4 @@
-package com.artedprvt.std.minecraftvp.entity;
+package com.artedprvt.std.impls.minecraft.entity;
 
 import com.artedprvt.std.minecraft.entity.EntityCow;
 import net.minecraft.world.World;

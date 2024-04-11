@@ -1,4 +1,4 @@
-package com.artedprvt.std.minecraftvp.server;
+package com.artedprvt.std.impls.minecraft.server;
 
 import com.artedprvt.std.minecraft.server.ServerMinecraft;
 import com.artedprvt.std.minecraft.server.ServerWorld;

@@ -50,7 +50,7 @@ public class ClassByteTool {
         MessageFormat format = new MessageFormat("Error on line {0} in {1}\n");
         // 处理编译错误
         for (Diagnostic<? extends JavaFileObject> diagnostic : diagnostics.getDiagnostics()) {
-            sb.append(format.format(new Object[]{diagnostic.getLineNumber(), diagnostic.getSource().toUri()}));
+            //sb.append(format.format(new Object[]{diagnostic.getLineNumber(), diagnostic.getSource().toUri()}));
             sb.append(diagnostic.getMessage(Locale.CHINA));
         }
 

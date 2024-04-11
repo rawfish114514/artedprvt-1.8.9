@@ -1,4 +1,4 @@
-package com.artedprvt.std.minecraftvp.client;
+package com.artedprvt.std.impls.minecraft.client;
 
 import com.artedprvt.std.minecraft.client.ClientMinecraft;
 import net.minecraft.client.Minecraft;

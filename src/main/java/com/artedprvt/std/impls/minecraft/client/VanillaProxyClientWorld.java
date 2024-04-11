@@ -1,8 +1,7 @@
-package com.artedprvt.std.minecraftvp.client;
+package com.artedprvt.std.impls.minecraft.client;
 
 import com.artedprvt.std.minecraft.client.ClientWorld;
-import com.artedprvt.std.minecraft.entity.Entity;
-import com.artedprvt.std.minecraftvp.world.VanillaProxyWorld;
+import com.artedprvt.std.impls.minecraft.world.VanillaProxyWorld;
 import net.minecraft.client.multiplayer.WorldClient;
 
 public class VanillaProxyClientWorld extends VanillaProxyWorld implements ClientWorld {

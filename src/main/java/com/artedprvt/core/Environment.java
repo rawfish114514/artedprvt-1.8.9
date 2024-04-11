@@ -20,7 +20,7 @@ public class Environment {
     /**
      * 模组版本
      */
-    public static final String MODVERSION = "1.3";
+    public static final String MODVERSION = "4.0";
 
     /**
      * mc版本
