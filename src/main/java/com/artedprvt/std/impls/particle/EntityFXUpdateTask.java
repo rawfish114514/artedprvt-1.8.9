@@ -16,9 +16,9 @@ public final class EntityFXUpdateTask implements Runnable {
     public void run() {
         List<EntityFX> removeList = new ArrayList<>();
 
-        EntityFX entityFX;
-        for (int i = 0; i < entityFXList.size(); i++) {
-            entityFX = entityFXList.get(i);
+        EntityFX[] entityFXArray =new EntityFX[entityFXList.size()];
+        entityFXList.toArray(entityFXArray);
+        for (EntityFX entityFX:entityFXArray) {
             entityFX.onUpdate();
             if (entityFX.isDead) {
                 removeList.add(entityFX);

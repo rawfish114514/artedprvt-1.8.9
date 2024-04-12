@@ -5,19 +5,17 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public final class UnionListView<O, E extends O> extends ArrayList<O> {
+public final class UnionListView<O, E> extends ArrayList<O> {
     Map<String, List<E>> stringListMap;
     List<List<E>> listList;
-    E nullValue;
     ReadWriteLock lock;
     Lock readLock;
     Lock writeLock;
 
-    public UnionListView(List<O> defaultList, E nullValue) {
+    public UnionListView(List<O> defaultList) {
         super(defaultList);
         stringListMap = new HashMap<>();
         listList = new ArrayList<>();
-        this.nullValue = nullValue;
 
         lock = new ReentrantReadWriteLock();
         readLock = lock.readLock();

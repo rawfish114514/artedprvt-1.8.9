@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import java.util.concurrent.Callable;
 
 public final class RenderTask implements Callable<WorldRenderer> {
-    final VanillaControlParticle[] particles;
+    final ParticleImpl[] particles;
     final AsyncWorldRenderer worldRenderer;
     final Entity entity;
     final float partialTicks;
@@ -16,7 +16,7 @@ public final class RenderTask implements Callable<WorldRenderer> {
     final float rotationXY;
     final float rotationXZ;
 
-    public RenderTask(VanillaControlParticle[] particles,
+    public RenderTask(ParticleImpl[] particles,
                       AsyncWorldRenderer worldRenderer, Entity entity,
                       float partialTicks, float rotationX, float rotationZ,
                       float rotationYZ, float rotationXY, float rotationXZ) {
@@ -34,8 +34,8 @@ public final class RenderTask implements Callable<WorldRenderer> {
     @Override
     public WorldRenderer call() {
         int offset = 0;
-        for (VanillaControlParticle particle : particles) {
-            particle.asyncRenderParticle(offset,
+        for (ParticleImpl particle : particles) {
+            particle.render(offset,
                     worldRenderer, partialTicks,
                     rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 

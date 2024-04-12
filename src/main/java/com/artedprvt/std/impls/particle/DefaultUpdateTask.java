@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultUpdateTask extends UpdateTask {
-    public DefaultUpdateTask(List<VanillaControlParticle> particleList) {
+    public DefaultUpdateTask(List<ParticleImpl> particleList) {
         super(particleList);
     }
 
     @Override
     public void run() {
-        List<VanillaControlParticle> removeList = new ArrayList<>();
+        List<ParticleImpl> removeList = new ArrayList<>();
 
-        VanillaControlParticle[] particles = new VanillaControlParticle[particleList.size()];
+        ParticleImpl[] particles = new ParticleImpl[particleList.size()];
         particleList.toArray(particles);
-        for (VanillaControlParticle particle : particles) {
-            particle.onUpdate();
-            if (particle.isDead) {
+        for (ParticleImpl particle : particles) {
+            particle.update();
+            if (particle.dead) {
                 removeList.add(particle);
             }
         }

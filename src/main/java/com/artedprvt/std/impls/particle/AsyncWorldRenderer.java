@@ -41,7 +41,7 @@ public final class AsyncWorldRenderer extends WorldRenderer {
     public void vertex(int offset,
                        float x, float y, float z,
                        float u, float v,
-                       byte r, byte g, byte b, byte a,
+                       int r, int g, int b, int a,
                        short b1, short b2) {
         // vertex 12 bytes
         byteBuffer.putFloat(offset, x);
@@ -53,10 +53,10 @@ public final class AsyncWorldRenderer extends WorldRenderer {
         byteBuffer.putFloat(offset + 16, v);
 
         // color 4 bytes
-        byteBuffer.put(offset + 20, r);
-        byteBuffer.put(offset + 21, g);
-        byteBuffer.put(offset + 22, b);
-        byteBuffer.put(offset + 23, a);
+        byteBuffer.put(offset + 20, (byte) r);
+        byteBuffer.put(offset + 21, (byte) g);
+        byteBuffer.put(offset + 22, (byte) b);
+        byteBuffer.put(offset + 23, (byte) a);
 
         // light 4 bytes
         byteBuffer.putShort(offset + 24, b1);

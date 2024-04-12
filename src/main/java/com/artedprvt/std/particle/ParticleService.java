@@ -1,29 +1,31 @@
 package com.artedprvt.std.particle;
 
 import com.artedprvt.iv.anno.InterfaceView;
-import com.artedprvt.std.minecraft.world.World;
 
-import java.util.Collection;
 import java.util.List;
 
+/**
+ * 粒子服务
+ */
 @InterfaceView
-public interface EffectSpawn {
-    @InterfaceView
-    void setWorld(World world);
-
+public interface ParticleService {
     /**
      * 创建粒子
-     * @param x 初始位置
-     * @param y 初始位置
-     * @param z 初始位置
+     *
+     * @param x   初始位置
+     * @param y   初始位置
+     * @param z   初始位置
      * @param age 年龄 逻辑刻
      * @return
      */
     @InterfaceView
-    Particle createParticle(double x, double y, double z, int age);
+    Particle createParticle(float x, float y, float z, int age);
 
     /**
      * 添加粒子
+     * 同时注册粒子
+     * 粒子被粒子系统接管 对其更新和渲染
+     *
      * @param particle
      */
     @InterfaceView
@@ -31,7 +33,10 @@ public interface EffectSpawn {
 
     /**
      * 添加粒子列表
-     * @param particles 所有粒子的年龄应相同 以此获取最高性能
+     * 同时注册粒子
+     * 粒子被粒子系统接管 对其更新和渲染
+     *
+     * @param particles
      */
     @InterfaceView
     void spawnParticles(List<Particle> particles);

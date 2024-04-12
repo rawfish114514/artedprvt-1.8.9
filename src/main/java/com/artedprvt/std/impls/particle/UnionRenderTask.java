@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public class UnionRenderTask implements Callable<WorldRenderer> {
-    final List<VanillaControlParticle> particleList;
+    final List<ParticleImpl> particleList;
     final AsyncWorldRenderer worldRenderer;
     final Entity entity;
     final float partialTicks;
@@ -17,7 +17,7 @@ public class UnionRenderTask implements Callable<WorldRenderer> {
     final float rotationXY;
     final float rotationXZ;
 
-    public UnionRenderTask(List<VanillaControlParticle> particleList,
+    public UnionRenderTask(List<ParticleImpl> particleList,
                            AsyncWorldRenderer worldRenderer, Entity entity,
                            float partialTicks, float rotationX, float rotationZ,
                            float rotationYZ, float rotationXY, float rotationXZ) {
@@ -35,10 +35,10 @@ public class UnionRenderTask implements Callable<WorldRenderer> {
     @Override
     public WorldRenderer call() {
         int offset = 0;
-        VanillaControlParticle[] particles=new VanillaControlParticle[particleList.size()];
+        ParticleImpl[] particles=new ParticleImpl[particleList.size()];
         particleList.toArray(particles);
-        for (VanillaControlParticle particle : particles) {
-            particle.asyncRenderParticle(offset,
+        for (ParticleImpl particle : particles) {
+            particle.render(offset,
                     worldRenderer, partialTicks,
                     rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 

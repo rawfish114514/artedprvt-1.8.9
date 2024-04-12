@@ -1,84 +1,124 @@
 package com.artedprvt.std.particle;
 
 import com.artedprvt.iv.anno.InterfaceView;
-import net.minecraft.client.particle.EntityFX;
 
+/**
+ * 粒子
+ */
 @InterfaceView
 public interface Particle {
-    EntityFX v_getEntityFX();
-
+    /**
+     * 设置修改器
+     * @param modifier
+     */
     @InterfaceView
-    void setParticleUpdate(ParticleUpdate particleUpdate);
+    void setModifier(ParticleModifier modifier);
 
+    /**
+     * 获取修改器
+     * @return
+     */
     @InterfaceView
-    int counting();
+    ParticleModifier getModifier();
 
+    /**
+     * 移除修改器
+     */
     @InterfaceView
-    void setColor(int r,int g,int b);
+    void removeModifier();
 
+    /**
+     * 设置更新
+     * @param updating
+     */
     @InterfaceView
-    void setScale(float s);
+    void setUpdating(boolean updating);
 
+    /**
+     * 获取更新
+     * @return
+     */
     @InterfaceView
-    void setMaxAge(int n);
+    boolean isUpdating();
 
+    /**
+     * 设置最大年龄
+     *
+     * @param maxAge 最大年龄 单位 tick
+     */
     @InterfaceView
-    void setPos(double x, double y, double z);
+    void setMaxAge(int maxAge);
 
-    @InterfaceView
-    void setSpeed(double x, double y, double z);
-
-    @InterfaceView
-    void setAccel(double x, double y, double z);
-
-    @InterfaceView
-    int[] getColor();
-
-    @InterfaceView
-    float getScale();
-
+    /**
+     * 获取最大年龄
+     *
+     * @return
+     */
     @InterfaceView
     int getMaxAge();
 
+    /**
+     * 获取年龄
+     *
+     * @return
+     */
     @InterfaceView
     int getAge();
 
+    /**
+     * 设置颜色
+     *
+     * @param r
+     * @param g
+     * @param b
+     */
     @InterfaceView
-    double[] getPos();
+    void setColor(int r, int g, int b);
 
+    /**
+     * 获取颜色
+     *
+     * @return
+     */
     @InterfaceView
-    double[] getSpeed();
+    int[] getColor();
 
+    /**
+     * 设置位置
+     *
+     * @param x
+     * @param y
+     */
     @InterfaceView
-    double[] getAccel();
+    void setPos(float x, float y, float z);
 
+    /**
+     * 获取位置
+     *
+     * @return
+     */
     @InterfaceView
-    void initInts(int length);
+    float[] getPos();
 
+    /**
+     * 设置缩放
+     *
+     * @param s
+     */
     @InterfaceView
-    void initDoubles(int length);
+    void setScale(float s);
 
+    /**
+     * 获取缩放
+     *
+     * @return
+     */
     @InterfaceView
-    int getIntsLength();
+    float getScale();
 
+    /**
+     * 更新
+     */
     @InterfaceView
-    int getDoublesLength();
-
-    @InterfaceView
-    void setInt(int index, int value);
-
-    @InterfaceView
-    void setDouble(int index, double value);
-
-    @InterfaceView
-    int getInt(int index);
-
-    @InterfaceView
-    double getDouble(int index);
-
-    @InterfaceView
-    double transInt(int index0, int index1, double value);
-
-    @InterfaceView
-    double transDouble(int index0, int index1, double value);
+    void update();
 }

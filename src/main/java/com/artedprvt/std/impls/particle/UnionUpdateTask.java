@@ -1,22 +1,29 @@
 package com.artedprvt.std.impls.particle;
 
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 合并的粒子列表
+ * 可以根据特征优化
+ */
 public class UnionUpdateTask extends UpdateTask {
-    public UnionUpdateTask(List<VanillaControlParticle> particleList) {
+    public UnionUpdateTask(List<ParticleImpl> particleList) {
         super(particleList);
     }
 
     @Override
     public void run() {
-        VanillaControlParticle[] particles = new VanillaControlParticle[particleList.size()];
+        List<ParticleImpl> removeList = new ArrayList<>();
+
+        ParticleImpl[] particles = new ParticleImpl[particleList.size()];
         particleList.toArray(particles);
-        for (VanillaControlParticle particle : particles) {
-            if (particle.isDead) {
-                particleList.clear();
-                return;
+        for (ParticleImpl particle : particles) {
+            particle.update();
+            if (particle.dead) {
+                removeList.add(particle);
             }
-            particle.onUpdate();
         }
+        particleList.removeAll(removeList);
     }
 }

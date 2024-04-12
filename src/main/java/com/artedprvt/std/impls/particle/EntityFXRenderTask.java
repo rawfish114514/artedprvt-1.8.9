@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 public final class EntityFXRenderTask implements Callable<WorldRenderer> {
-    final List<EntityFX> entityFXList;
+    final EntityFX[] entityFXArray;
     final WorldRenderer worldRenderer;
     final Entity entity;
     final float partialTicks;
@@ -18,11 +18,11 @@ public final class EntityFXRenderTask implements Callable<WorldRenderer> {
     final float rotationXY;
     final float rotationXZ;
 
-    public EntityFXRenderTask(List<EntityFX> entityFXList,
+    public EntityFXRenderTask(EntityFX[] entityFXArray,
                               WorldRenderer worldRenderer, Entity entity,
                               float partialTicks, float rotationX, float rotationZ,
                               float rotationYZ, float rotationXY, float rotationXZ) {
-        this.entityFXList = entityFXList;
+        this.entityFXArray = entityFXArray;
         this.worldRenderer = worldRenderer;
         this.entity = entity;
         this.partialTicks = partialTicks;
@@ -35,7 +35,7 @@ public final class EntityFXRenderTask implements Callable<WorldRenderer> {
 
     @Override
     public WorldRenderer call() {
-        for (EntityFX entityFX : entityFXList) {
+        for (EntityFX entityFX : entityFXArray) {
             entityFX.renderParticle(worldRenderer, entity, partialTicks,
                     rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 

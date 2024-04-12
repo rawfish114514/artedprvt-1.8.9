@@ -15,9 +15,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
 
 /**
@@ -31,16 +29,20 @@ public final class AsyncEffectRender extends EffectRenderer {
         this.renderer = rendererIn;
 
         init(256);
-        updateTP = (ThreadPoolExecutor) Executors.newFixedThreadPool(32);
-        renderTP = (ThreadPoolExecutor) Executors.newFixedThreadPool(256);
+        updateTP = new ThreadPoolExecutor(128, 128,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>());
+        renderTP = new ThreadPoolExecutor(512, 512,
+                0L, TimeUnit.MILLISECONDS,
+                new LinkedBlockingQueue<Runnable>());
     }
 
     /**
-     * @param capacity 非合并粒子列表容量
+     * @param capacity 粒子容器容量
      */
     void init(int capacity) {
-        particleListNameList = new ArrayList<>();
-        uParticleListNameList = new ArrayList<>();
+        defaultListParticleList = new ArrayList<>();
+        unionListParticleList = new ArrayList<>();
         this.capacity = capacity;
 
         fx01WorldRenderer = new WorldRenderer(1 << 25);
@@ -51,107 +53,90 @@ public final class AsyncEffectRender extends EffectRenderer {
         }
     }
 
+    //封建颗粒社会 非常低效率 使我粒子系统妥协
     public List<EntityFX>[][] fxLayers;
+    public final Object fxl = new Object();
 
-    ThreadPoolExecutor updateTP;
-    ThreadPoolExecutor renderTP;
-
-
-    int capacity;
-    List<String> particleListNameList;
-    List<String> uParticleListNameList;
-
-    final Object pll = new Object();
-
-    WorldRenderer fx01WorldRenderer;
-    List<AsyncWorldRenderer> worldRendererList;
+    public final ThreadPoolExecutor updateTP;
+    public final ThreadPoolExecutor renderTP;
 
 
-    UnionListView<EntityFX, VanillaControlParticle> unionListView = null;
+    public int capacity;
+    public List<List<ParticleImpl>> defaultListParticleList;
+    public List<List<ParticleImpl>> unionListParticleList;
+
+    public final Object pll = new Object();
+
+    public WorldRenderer fx01WorldRenderer;
+    public List<AsyncWorldRenderer> worldRendererList;
 
 
-    public List<VanillaControlParticle> getParticleList() {
+    public List<ParticleImpl> getParticleList() {
         synchronized (pll) {
-            List<VanillaControlParticle> particleList = null;
-            for (int i = 0; i < particleListNameList.size(); i++) {
-                particleList = unionListView.get(particleListNameList.get(i));
+            List<ParticleImpl> particleList = null;
+            for (int i = defaultListParticleList.size() - 1; i > -1; i--) {
+                particleList = defaultListParticleList.get(i);
                 if (particleList.size() < capacity) {
                     return particleList;
                 }
             }
-            particleList = new CopyOnWriteArrayList<VanillaControlParticle>();
-            String name = "p" + Math.random();
-            unionListView.put(name, particleList);
-            particleListNameList.add(name);
+            particleList = new CopyOnWriteArrayList<ParticleImpl>();
+            defaultListParticleList.add(particleList);
             return particleList;
         }
     }
 
-    public void addParticle(VanillaControlParticle particle) {
+    public void addParticle(ParticleImpl particle) {
         getParticleList().add(particle);
     }
 
-    public void addParticles(List<VanillaControlParticle> particleList) {
+    public void addParticles(List<ParticleImpl> particleList) {
         for (int i = 0; i < particleList.size(); i += capacity) {
             int endIndex = Math.min(i + capacity, particleList.size());
-            List<VanillaControlParticle> list = particleList.subList(i, endIndex);
-            String name = "up" + Math.random();
-            unionListView.put(name, new CopyOnWriteArrayList<VanillaControlParticle>(list));
-            uParticleListNameList.add(name);
+            List<ParticleImpl> list = particleList.subList(i, endIndex);
+            unionListParticleList.add(new CopyOnWriteArrayList<>(list));
         }
     }
 
     @Override
     public void addEffect(EntityFX effect) {
-        if (effect == null) return; //Forge: Prevent modders from being bad and adding nulls causing untraceable NPEs.
+        if (effect == null)
+            return; //Forge: Prevent modders from being bad and adding nulls causing untraceable NPEs.
         int i = effect.getFXLayer();
         int j = effect.getAlpha() != 1.0F ? 0 : 1;
 
-        this.fxLayers[i][j].add(effect);
+        synchronized (fxl) {
+            this.fxLayers[i][j].add(effect);
+        }
     }
 
     @Override
     public void updateEffects() {
-        updateTP.purge();
-
         for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 2; ++j) {
                 updateTP.submit(new EntityFXUpdateTask(fxLayers[i][j]));
             }
         }
 
-        for (int i = 0; i < particleListNameList.size(); i++) {
-            String name = particleListNameList.get(i);
-            updateTP.submit(new DefaultUpdateTask(unionListView.get(name)));
+        for (int i = 0; i < defaultListParticleList.size(); i++) {
+            updateTP.submit(new DefaultUpdateTask(defaultListParticleList.get(i)));
         }
-        for (int i = 0; i < uParticleListNameList.size(); i++) {
-            String name = uParticleListNameList.get(i);
-            updateTP.submit(new UnionUpdateTask(unionListView.get(name)));
+        for (int i = 0; i < unionListParticleList.size(); i++) {
+            updateTP.submit(new UnionUpdateTask(unionListParticleList.get(i)));
         }
 
         synchronized (pll) {
-            List<String> removeList = new ArrayList<>();
-
-            for (int i = 0; i < particleListNameList.size(); i++) {
-                if (unionListView.get(particleListNameList.get(i)).isEmpty()) {
-                    removeList.add(particleListNameList.get(i));
+            for (int i = defaultListParticleList.size() - 1; i > -1; i--) {
+                if (defaultListParticleList.get(i).isEmpty()) {
+                    defaultListParticleList.remove(i);
                 }
             }
 
-            for (String name : removeList) {
-                particleListNameList.remove(name);
-                unionListView.remove(name);
-            }
 
-            for (int i = 0; i < uParticleListNameList.size(); i++) {
-                if (unionListView.get(uParticleListNameList.get(i)).isEmpty()) {
-                    removeList.add(uParticleListNameList.get(i));
+            for (int i = unionListParticleList.size() - 1; i > -1; i--) {
+                if (unionListParticleList.get(i).isEmpty()) {
+                    unionListParticleList.remove(i);
                 }
-            }
-
-            for (String name : removeList) {
-                uParticleListNameList.remove(name);
-                unionListView.remove(name);
             }
         }
     }
@@ -186,8 +171,6 @@ public final class AsyncEffectRender extends EffectRenderer {
 
     @Override
     public void renderParticles(Entity entityIn, float partialTicks) {
-        renderTP.purge();
-
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
 
@@ -200,12 +183,15 @@ public final class AsyncEffectRender extends EffectRenderer {
         EntityFX.interpPosY = entityIn.lastTickPosY + (entityIn.posY - entityIn.lastTickPosY) * (double) partialTicks;
         EntityFX.interpPosZ = entityIn.lastTickPosZ + (entityIn.posZ - entityIn.lastTickPosZ) * (double) partialTicks;
 
+        ParticleImpl.interpX = (float) EntityFX.interpPosX;
+        ParticleImpl.interpY = (float) EntityFX.interpPosY;
+        ParticleImpl.interpZ = (float) EntityFX.interpPosZ;
+
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(770, 771);
         GlStateManager.alphaFunc(516, 0.003921569F);
 
         worldRenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
-
 
         for (int i = 0; i < fxLayers.length; i++) {
             for (int j = 0; j < fxLayers[i].length; j++) {
@@ -216,7 +202,12 @@ public final class AsyncEffectRender extends EffectRenderer {
                     continue;
                 }
                 bindTexture(i, j);
-                new EntityFXRenderTask(fxLayers[i][j],
+                EntityFX[] entityFXArray;
+                synchronized (fxl) {
+                    entityFXArray = new EntityFX[fxLayers[i][j].size()];
+                    fxLayers[i][j].toArray(entityFXArray);
+                }
+                new EntityFXRenderTask(entityFXArray,
                         worldRenderer, entityIn,
                         partialTicks, f, f4, f1, f2, f3).call();
             }
@@ -229,15 +220,20 @@ public final class AsyncEffectRender extends EffectRenderer {
 
         fx01WorldRenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 
+        EntityFX[] entityFXArray;
+        synchronized (fxl) {
+            entityFXArray = new EntityFX[fxLayers[0][1].size()];
+            fxLayers[0][1].toArray(entityFXArray);
+        }
         futureList.add(renderTP.submit(
-                new EntityFXRenderTask(new ArrayList<>(unionListView),
+                new EntityFXRenderTask(entityFXArray,
                         fx01WorldRenderer, entityIn,
                         partialTicks, f, f4, f1, f2, f3)));
 
         synchronized (pll) {
             int a = 0;
-            a = submitRenderTask(entityIn, partialTicks, f, f1, f2, f3, f4, a, futureList, particleListNameList);
-            submitUnionRenderTask(entityIn, partialTicks, f, f1, f2, f3, f4, a, futureList, uParticleListNameList);
+            a = submitRenderTask(entityIn, partialTicks, f, f1, f2, f3, f4, a, futureList, defaultListParticleList);
+            submitUnionRenderTask(entityIn, partialTicks, f, f1, f2, f3, f4, a, futureList, unionListParticleList);
         }
 
 
@@ -261,14 +257,14 @@ public final class AsyncEffectRender extends EffectRenderer {
     public int submitRenderTask(
             Entity entityIn, float partialTicks,
             float f, float f1, float f2, float f3, float f4,
-            int a, List<Future<WorldRenderer>> futureList, List<String> particleListNameList) {
-        for (int i = 0; i < particleListNameList.size(); i++) {
+            int a, List<Future<WorldRenderer>> futureList, List<List<ParticleImpl>> defaultListParticleList) {
+        for (int i = 0; i < defaultListParticleList.size(); i++) {
             if (worldRendererList.size() > a) {
                 AsyncWorldRenderer asyncWorldRenderer = worldRendererList.get(a++);
                 asyncWorldRenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 
-                List<VanillaControlParticle> particleList = unionListView.get(particleListNameList.get(i));
-                VanillaControlParticle[] particles = new VanillaControlParticle[particleList.size()];
+                List<ParticleImpl> particleList = defaultListParticleList.get(i);
+                ParticleImpl[] particles = new ParticleImpl[particleList.size()];
                 particleList.toArray(particles);
                 futureList.add(renderTP.submit(
                         new RenderTask(particles,
@@ -284,13 +280,13 @@ public final class AsyncEffectRender extends EffectRenderer {
     public int submitUnionRenderTask(
             Entity entityIn, float partialTicks,
             float f, float f1, float f2, float f3, float f4,
-            int a, List<Future<WorldRenderer>> futureList, List<String> particleListNameList) {
-        for (int i = 0; i < particleListNameList.size(); i++) {
+            int a, List<Future<WorldRenderer>> futureList, List<List<ParticleImpl>> unionListParticleList) {
+        for (int i = 0; i < unionListParticleList.size(); i++) {
             if (worldRendererList.size() > a) {
                 AsyncWorldRenderer asyncWorldRenderer = worldRendererList.get(a++);
                 asyncWorldRenderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 
-                List<VanillaControlParticle> particleList = unionListView.get(particleListNameList.get(i));
+                List<ParticleImpl> particleList = unionListParticleList.get(i);
                 futureList.add(renderTP.submit(
                         new UnionRenderTask(particleList,
                                 asyncWorldRenderer, entityIn,
@@ -331,18 +327,23 @@ public final class AsyncEffectRender extends EffectRenderer {
 
     @Override
     public String getStatistics() {
-        //printActiveCount();
-        int i = unionListView.sumSize();
+        int size = 0;
 
-        for (int j = 0; j < 4; ++j) {
-            for (int k = 0; k < 2; ++k) {
-                if (i == 0 && k == 1) {
-                    continue;
-                }
-                i += this.fxLayers[j][k].size();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 2; j++) {
+                size += fxLayers[i][j].size();
             }
         }
 
-        return "" + i;
+        synchronized (pll) {
+            for (int i = 0; i < defaultListParticleList.size(); i++) {
+                size += defaultListParticleList.get(i).size();
+            }
+
+            for (int i = 0; i < unionListParticleList.size(); i++) {
+                size += unionListParticleList.get(i).size();
+            }
+        }
+        return "" + size;
     }
 }

@@ -2,10 +2,10 @@ package com.artedprvt.std.impls.particle;
 
 import net.minecraft.client.particle.EntityFX;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class NullableList extends ArrayList<EntityFX> {
+public final class NullableList extends CopyOnWriteArrayList<EntityFX> {
     public net.minecraft.world.World v_world;
 
     public NullableList(net.minecraft.world.World v_world, Collection<? extends EntityFX> c) {
@@ -27,7 +27,7 @@ public final class NullableList extends ArrayList<EntityFX> {
     }
 
     public EntityFX getNull() {
-        return new NullVanillaControlParticle(v_world, 0, 0, 0);
+        return new NullParticle(v_world, 0, 0, 0);
     }
 
     @Override
