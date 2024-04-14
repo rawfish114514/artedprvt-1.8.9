@@ -122,8 +122,10 @@ public class ParticleImpl implements Particle {
             dead = true;
             return;
         }
-
         putLast();
+        if(modifier!=null){
+            modifier.modify(this);
+        }
         putAdds();
     }
 

@@ -1,6 +1,5 @@
 package com.artedprvt.std.impls.minecraft.entity;
 
-import com.artedprvt.std.math.Vector3;
 import com.artedprvt.std.minecraft.entity.Entity;
 
 public class VanillaProxyEntity implements Entity {
@@ -26,14 +25,24 @@ public class VanillaProxyEntity implements Entity {
     }
 
     @Override
-    public Vector3 getPosition() {
-        return new Vector3(v_entity.posX, v_entity.posY, v_entity.posZ);
+    public double[] getPosition() {
+        return new double[]{v_entity.posX, v_entity.posY, v_entity.posZ};
     }
 
     @Override
-    public void setPosition(Vector3 vector3) {
-        v_entity.posX=vector3.getX();
-        v_entity.posY=vector3.getY();
-        v_entity.posZ=vector3.getZ();
+    public void setPosition(double x, double y, double z) {
+        v_entity.posX=x;
+        v_entity.posY=y;
+        v_entity.posZ=z;
+    }
+
+    @Override
+    public float getRotationYaw() {
+        return v_entity.rotationYaw;
+    }
+
+    @Override
+    public float getRotationPitch() {
+        return v_entity.rotationPitch;
     }
 }

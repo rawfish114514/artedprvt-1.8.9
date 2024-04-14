@@ -36,6 +36,9 @@ public final class EntityFXRenderTask implements Callable<WorldRenderer> {
     @Override
     public WorldRenderer call() {
         for (EntityFX entityFX : entityFXArray) {
+            if(entityFX==null){
+                continue;
+            }
             entityFX.renderParticle(worldRenderer, entity, partialTicks,
                     rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 

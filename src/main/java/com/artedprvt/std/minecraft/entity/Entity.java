@@ -1,7 +1,6 @@
 package com.artedprvt.std.minecraft.entity;
 
 import com.artedprvt.iv.anno.InterfaceView;
-import com.artedprvt.std.math.Vector3;
 
 @InterfaceView
 public interface Entity {
@@ -14,8 +13,15 @@ public interface Entity {
     String getName();
 
     @InterfaceView
-    Vector3 getPosition();
+    double[] getPosition();
 
     @InterfaceView
-    void setPosition(Vector3 vector3);
+    void setPosition(double x, double y, double z);
+
+    @InterfaceView
+    float getRotationYaw();
+
+    @InterfaceView
+    float getRotationPitch();
+
 }

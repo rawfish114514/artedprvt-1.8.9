@@ -47,16 +47,23 @@ public class ParticleSystem {
             }
 
 
-            if (effectRenderer.getClass() != AsyncEffectRender.class) {
-                AsyncEffectRender asyncEffectRender = new AsyncEffectRender(
-                        Minecraft.getMinecraft().theWorld, Minecraft.getMinecraft().renderEngine
-                );
-                asyncEffectRender.fxLayers = fxLayers;
-                field.set(asyncEffectRender, fxLayers);
-                Minecraft.getMinecraft().effectRenderer = asyncEffectRender;
-            }
+            AsyncEffectRender asyncEffectRender = new AsyncEffectRender(
+                    Minecraft.getMinecraft().theWorld, Minecraft.getMinecraft().renderEngine
+            );
+            asyncEffectRender.fxLayers = fxLayers;
+            field.set(asyncEffectRender, fxLayers);
+            Minecraft.getMinecraft().effectRenderer = asyncEffectRender;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onUnload(WorldEvent.Unload unload) {
+        EffectRenderer effectRenderer = Minecraft.getMinecraft().effectRenderer;
+        if (effectRenderer instanceof AsyncEffectRender) {
+            AsyncEffectRender asyncEffectRender = (AsyncEffectRender) effectRenderer;
+            asyncEffectRender.clear();
         }
     }
 }

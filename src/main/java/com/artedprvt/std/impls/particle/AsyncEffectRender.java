@@ -346,4 +346,9 @@ public final class AsyncEffectRender extends EffectRenderer {
         }
         return "" + size;
     }
+
+    public void clear() {
+        defaultListParticleList = new ArrayList<>();
+        unionListParticleList = new ArrayList<>();
+    }
 }
