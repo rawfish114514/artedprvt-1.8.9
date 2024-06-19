@@ -1,6 +1,9 @@
 package com.artedprvt.core.localization.types;
 
+import com.artedprvt.iv.anno.InterfaceView;
+
 public class CIS {
+
     public static final String
             cis0 = "模组命令集合",
             cis1 = "命令",
