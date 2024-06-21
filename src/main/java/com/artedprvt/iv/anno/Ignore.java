@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Repeatable(Ignores.class)
+@InterfaceView
 public @interface Ignore {
+    @InterfaceView
     Class<?> value();
 }

@@ -1,9 +1,7 @@
 package com.artedprvt.std.minecraft.event;
 
-import com.artedprvt.std.impls.minecraft.event.VanillaProxyEvent;
+import com.artedprvt.iv.anno.InterfaceView;
 
+@InterfaceView
 public class EventHelper {
-    public static Event createEvent() {
-        return new VanillaProxyEvent();
-    }
 }

@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
+@InterfaceView
 public @interface Ignores {
+    @InterfaceView
     Ignore[] value();
 }

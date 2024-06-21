@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Repeatable(PassedLinks.class)
+@InterfaceView
 public @interface PassedLink {
+    @InterfaceView
     Class<?> value();
 }
