@@ -16,7 +16,17 @@ public class VanillaProxyBaseEvent<T extends net.minecraftforge.fml.common.event
     }
 
     @Override
+    public boolean isCancelable() {
+        return v_event.isCancelable();
+    }
+
+    @Override
     public boolean isCanceled() {
         return v_event.isCanceled();
+    }
+
+    @Override
+    public void setCanceled(boolean cancel) {
+        v_event.setCanceled(cancel);
     }
 }

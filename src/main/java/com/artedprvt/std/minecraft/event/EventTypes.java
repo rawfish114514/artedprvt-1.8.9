@@ -2,8 +2,11 @@ package com.artedprvt.std.minecraft.event;
 
 import com.artedprvt.iv.anno.InterfaceView;
 import com.artedprvt.std.impls.minecraft.event.VanillaProxyEvent;
-import com.artedprvt.std.impls.minecraft.event.game.VanillaProxyEventClientTick;
-import com.artedprvt.std.minecraft.event.game.EventClientTick;
+import com.artedprvt.std.impls.minecraft.event.entity.player.VanillaProxyEventPlayerInteract;
+import com.artedprvt.std.impls.minecraft.event.game.VanillaProxyEventTick;
+import com.artedprvt.std.minecraft.event.entity.player.EventPlayerInteract;
+import com.artedprvt.std.minecraft.event.game.EventTick;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 @InterfaceView
@@ -15,8 +18,14 @@ public class EventTypes extends EventHelper {
             VanillaProxyEvent::new);
 
     @InterfaceView
-    public static final EventType<EventClientTick> CLIENT_TICK = new EventType<>(
-            EventClientTick.class,
-            TickEvent.ClientTickEvent.class,
-            (v) -> new VanillaProxyEventClientTick((TickEvent.ClientTickEvent) v));
+    public static final EventType<EventTick> TICK = new EventType<>(
+            EventTick.class,
+            TickEvent.class,
+            (v) -> new VanillaProxyEventTick((TickEvent) v));
+
+    @InterfaceView
+    public static final EventType<EventPlayerInteract> PLAYER_INTERACT = new EventType<>(
+            EventPlayerInteract.class,
+            PlayerInteractEvent.class,
+            (v) -> new VanillaProxyEventPlayerInteract((PlayerInteractEvent) v));
 }

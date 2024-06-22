@@ -1,7 +1,5 @@
 package com.artedprvt.std.minecraft.event;
 
-import com.artedprvt.std.impls.minecraft.event.VanillaProxyEvent;
-import com.artedprvt.std.minecraft.event.game.EventClientTick;
 import net.minecraftforge.fml.common.eventhandler.IEventListener;
 
 import java.util.ArrayList;
