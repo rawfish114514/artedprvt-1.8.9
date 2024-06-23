@@ -1,6 +1,7 @@
 package com.artedprvt.std.minecraft.event.entity.player;
 
 import com.artedprvt.iv.anno.InterfaceView;
+import com.artedprvt.std.minecraft.entity.EntityPlayer;
 import com.artedprvt.std.minecraft.event.Event;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
@@ -24,5 +25,8 @@ public interface EventPlayerInteract extends Event {
 
     @InterfaceView
     Action getAction();
+
+    @InterfaceView
+    EntityPlayer getPlayer();
 
 }

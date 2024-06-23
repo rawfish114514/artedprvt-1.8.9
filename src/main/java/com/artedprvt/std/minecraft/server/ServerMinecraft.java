@@ -8,5 +8,5 @@ public interface ServerMinecraft {
     MinecraftServer v_getMinecraftServer();
 
     @InterfaceView
-    ServerWorld getWorld(int dimension);
+    WorldServer getWorld(int dimension);
 }

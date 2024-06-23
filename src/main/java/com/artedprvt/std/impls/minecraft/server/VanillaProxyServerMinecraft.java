@@ -1,7 +1,7 @@
 package com.artedprvt.std.impls.minecraft.server;
 
 import com.artedprvt.std.minecraft.server.ServerMinecraft;
-import com.artedprvt.std.minecraft.server.ServerWorld;
+import com.artedprvt.std.minecraft.server.WorldServer;
 import net.minecraft.server.MinecraftServer;
 
 public class VanillaProxyServerMinecraft implements ServerMinecraft {
@@ -17,7 +17,7 @@ public class VanillaProxyServerMinecraft implements ServerMinecraft {
     }
 
     @Override
-    public ServerWorld getWorld(int dimension) {
-        return new VanillaProxyServerWorld(v_minecraftServer.worldServerForDimension(dimension));
+    public WorldServer getWorld(int dimension) {
+        return new VanillaProxyWorldServer(v_minecraftServer.worldServerForDimension(dimension));
     }
 }

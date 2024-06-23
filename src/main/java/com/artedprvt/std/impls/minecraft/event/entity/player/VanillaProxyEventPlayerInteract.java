@@ -1,6 +1,8 @@
 package com.artedprvt.std.impls.minecraft.event.entity.player;
 
+import com.artedprvt.std.impls.minecraft.entity.VanillaProxyEntityPlayer;
 import com.artedprvt.std.impls.minecraft.event.VanillaProxyBaseEvent;
+import com.artedprvt.std.minecraft.entity.EntityPlayer;
 import com.artedprvt.std.minecraft.event.entity.player.EventPlayerInteract;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
@@ -12,5 +14,10 @@ public class VanillaProxyEventPlayerInteract extends VanillaProxyBaseEvent<Playe
     @Override
     public Action getAction() {
         return Action.values()[v_event.action.ordinal()];
+    }
+
+    @Override
+    public EntityPlayer getPlayer() {
+        return new VanillaProxyEntityPlayer(v_event.entityPlayer);
     }
 }

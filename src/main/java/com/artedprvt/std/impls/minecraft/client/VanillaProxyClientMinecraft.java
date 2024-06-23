@@ -16,12 +16,12 @@ public class VanillaProxyClientMinecraft implements ClientMinecraft {
     }
 
     @Override
-    public VanillaProxyClientEntityPlayer getPlayer() {
-        return new VanillaProxyClientEntityPlayer(v_minecraft.thePlayer);
+    public VanillaProxyEntityClientPlayer getPlayer() {
+        return new VanillaProxyEntityClientPlayer(v_minecraft.thePlayer);
     }
 
     @Override
-    public VanillaProxyClientWorld getWorld() {
-        return new VanillaProxyClientWorld(v_minecraft.theWorld);
+    public VanillaProxyWorldClient getWorld() {
+        return new VanillaProxyWorldClient(v_minecraft.theWorld);
     }
 }

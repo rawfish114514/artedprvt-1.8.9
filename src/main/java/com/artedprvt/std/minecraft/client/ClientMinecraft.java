@@ -8,8 +8,8 @@ public interface ClientMinecraft {
     Minecraft v_getMinecraft();
 
     @InterfaceView
-    ClientEntityPlayer getPlayer();
+    EntityClientPlayer getPlayer();
 
     @InterfaceView
-    ClientWorld getWorld();
+    WorldClient getWorld();
 }

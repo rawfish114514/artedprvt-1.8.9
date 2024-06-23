@@ -26,11 +26,15 @@ public class ListenerListAdapter<T extends Event> implements IEventListener {
     public void invoke(net.minecraftforge.fml.common.eventhandler.Event v_event) {
         if (eventType.v_eventClass.isAssignableFrom(v_event.getClass())) {
             T event = eventType.newInstance(v_event);
-            for (EventListener<T> listener : listeners) {
-                listener.onEvent(event);
-                if (event.isCanceled()) {
-                    break;
+            try {
+                for (EventListener<T> listener : listeners) {
+                    listener.onEvent(event);
+                    if (event.isCanceled()) {
+                        break;
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -12,19 +12,19 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 @InterfaceView
 public class EventTypes extends EventHelper {
     @InterfaceView
-    public static final EventType<Event> ALL = new EventType<>(
+    public static final EventType<Event> all = new EventType<>(
             Event.class,
             net.minecraftforge.fml.common.eventhandler.Event.class,
             VanillaProxyEvent::new);
 
     @InterfaceView
-    public static final EventType<EventTick> TICK = new EventType<>(
+    public static final EventType<EventTick> tick = new EventType<>(
             EventTick.class,
             TickEvent.class,
             (v) -> new VanillaProxyEventTick((TickEvent) v));
 
     @InterfaceView
-    public static final EventType<EventPlayerInteract> PLAYER_INTERACT = new EventType<>(
+    public static final EventType<EventPlayerInteract> player_interact = new EventType<>(
             EventPlayerInteract.class,
             PlayerInteractEvent.class,
             (v) -> new VanillaProxyEventPlayerInteract((PlayerInteractEvent) v));
