@@ -118,12 +118,32 @@ public class ParticleImpl implements Particle {
     public float addsZ;
 
     public void update() {
+        if (maxAge - age < 8) {
+            switch (maxAge - age) {
+                case 0:
+                case 1:
+                    textureUV = textureUV0;
+                    break;
+                case 2:
+                case 3:
+                    textureUV = textureUV1;
+                    break;
+                case 4:
+                case 5:
+                    textureUV = textureUV2;
+                    break;
+                case 6:
+                case 7:
+                    textureUV = textureUV3;
+                    break;
+            }
+        }
         if (++age == maxAge) {
             dead = true;
             return;
         }
         putLast();
-        if(modifier!=null){
+        if (modifier != null) {
             modifier.modify(this);
         }
         putAdds();
@@ -149,8 +169,14 @@ public class ParticleImpl implements Particle {
 
     public static final short skyLight = 240;
     public static final short blockLight = 240;
-    public static final float textureBegin = 0;
-    public static final float textureEnd = 0.0624375f;
+    public static TextureUV textureUV4 = new TextureUV(0.25f, 0.625f);
+    public static TextureUV textureUV3 = new TextureUV(0.1875f, 0.625f);
+    public static TextureUV textureUV2 = new TextureUV(0.125f, 0.625f);
+    public static TextureUV textureUV1 = new TextureUV(0.0625f, 0.625f);
+    public static TextureUV textureUV0 = new TextureUV(0f, 0.625f);
+
+    public TextureUV textureUV = textureUV4;
+
 
     public void render(int offset,
                        final AsyncWorldRenderer asyncWorldRenderer,
@@ -185,7 +211,7 @@ public class ParticleImpl implements Particle {
                 x1 - rXY,
                 y1,
                 z1 - rXZ,
-                textureEnd, textureEnd,
+                textureUV.xEnd, textureUV.yEnd,
                 red, green, blue, alpha,
                 skyLight, blockLight);
 
@@ -194,7 +220,7 @@ public class ParticleImpl implements Particle {
                 x1 + rXY,
                 y2,
                 z1 + rXZ,
-                textureEnd, textureBegin,
+                textureUV.xEnd, textureUV.yBegin,
                 red, green, blue, alpha,
                 skyLight, blockLight);
 
@@ -203,7 +229,7 @@ public class ParticleImpl implements Particle {
                 x2 + rXY,
                 y2,
                 z2 + rXZ,
-                textureBegin, textureBegin,
+                textureUV.xBegin, textureUV.yBegin,
                 red, green, blue, alpha,
                 skyLight, blockLight);
 
@@ -212,8 +238,22 @@ public class ParticleImpl implements Particle {
                 x2 - rXY,
                 y1,
                 z2 - rXZ,
-                textureBegin, textureEnd,
+                textureUV.xBegin, textureUV.yEnd,
                 red, green, blue, alpha,
                 skyLight, blockLight);
+    }
+
+    public static class TextureUV {
+        float xBegin;
+        float yBegin;
+        float xEnd;
+        float yEnd;
+
+        TextureUV(float xBegin, float yBegin) {
+            this.xBegin = xBegin;
+            this.yBegin = yBegin;
+            this.xEnd = xBegin + 0.0625f;
+            this.yEnd = yBegin + 0.0625f;
+        }
     }
 }

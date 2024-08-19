@@ -1,9 +1,14 @@
 package com.artedprvt.core;
 
+import com.artedprvt.core.app.java.JavaAppMain;
+import com.electronwill.toml.Toml;
+
+import java.io.InputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadMXBean;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 抽象进程，主要完成这几个功能和工作
@@ -11,7 +16,7 @@ import java.util.List;
  * 要求实现进程线程
  * 要求实现异常处理程序
  */
-public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Process implements Runnable {
+public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Process {
     protected List<InProcess> inProcessList;
 
     protected AbstractThread<T> mainThread;
@@ -41,10 +46,41 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
         }
         ret = START;
         threads = new ArrayList<>();
-        mainThread = createThread(this);
+        mainThread = createThread(this::mainRun);
 
         mainThread.start();
     }
+
+    private void mainRun() {
+        begin();
+        try {
+            run();
+            Thread currentThread = Thread.currentThread();
+
+            List<AbstractThread<T>> daemons = new ArrayList<>();
+            for (AbstractThread<T> thread : threads) {
+                if (currentThread != thread) {
+                    if (thread.isAlive()) {
+                        if (thread.isDaemon()) {
+                            daemons.add(thread);
+                        } else {
+                            thread.join();
+                        }
+                    }
+                }
+            }
+
+            for (AbstractThread<T> thread : daemons) {
+                thread.stop();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            end(0);
+        }
+    }
+
+    public abstract void run() throws Exception;
 
     /**
      * 准备工作完成
@@ -73,7 +109,7 @@ public abstract class AbstractProcess<T extends AbstractProcess<T>> extends Proc
                 end(exitCode);
                 mainThread.stop();
             } else {
-                AbstractThread t;
+                AbstractThread<T> t;
                 for (int i = 0; i < threads.size(); i++) {
                     t = threads.get(i);
                     if (!t.equals(currentThread)) {

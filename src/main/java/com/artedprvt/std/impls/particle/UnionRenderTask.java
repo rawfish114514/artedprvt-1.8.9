@@ -37,12 +37,16 @@ public class UnionRenderTask implements Callable<WorldRenderer> {
         int offset = 0;
         ParticleImpl[] particles=new ParticleImpl[particleList.size()];
         particleList.toArray(particles);
-        for (ParticleImpl particle : particles) {
-            particle.render(offset,
-                    worldRenderer, partialTicks,
-                    rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
+        try {
+            for (ParticleImpl particle : particles) {
+                particle.render(offset,
+                        worldRenderer, partialTicks,
+                        rotationX, rotationZ, rotationYZ, rotationXY, rotationXZ);
 
-            offset += AsyncWorldRenderer.PARTICLE_RENDER_SIZE;
+                offset += AsyncWorldRenderer.PARTICLE_RENDER_SIZE;
+            }
+        }catch (NullPointerException e) {
+            e.printStackTrace();
         }
         return worldRenderer;
     }

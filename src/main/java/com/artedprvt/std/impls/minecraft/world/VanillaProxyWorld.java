@@ -1,11 +1,14 @@
 package com.artedprvt.std.impls.minecraft.world;
 
+import com.artedprvt.std.impls.minecraft.block.VanillaProxyBlockState;
+import com.artedprvt.std.minecraft.block.BlockState;
 import com.artedprvt.std.minecraft.entity.Entity;
 import com.artedprvt.std.minecraft.entity.EntityCow;
 import com.artedprvt.std.minecraft.entity.EntityPlayer;
 import com.artedprvt.std.minecraft.world.World;
 import com.artedprvt.std.impls.minecraft.entity.VanillaProxyEntityCow;
 import com.artedprvt.std.impls.minecraft.entity.VanillaProxyEntityPlayer;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,5 +43,15 @@ public class VanillaProxyWorld implements World {
     @Override
     public EntityCow createEntityCow() {
         return new VanillaProxyEntityCow(v_world);
+    }
+
+    @Override
+    public BlockState getBlockState(int x, int y, int z) {
+        return new VanillaProxyBlockState(v_world.getBlockState(new BlockPos(x, y, z)));
+    }
+
+    @Override
+    public boolean setBlockState(int x, int y, int z, BlockState blockState) {
+        return v_world.setBlockState(new BlockPos(x, y, z), blockState.v_getIBlockState());
     }
 }

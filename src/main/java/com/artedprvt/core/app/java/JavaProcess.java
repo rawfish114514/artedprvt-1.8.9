@@ -52,25 +52,17 @@ public class JavaProcess extends AppProcess<JavaProcess> {
     }
 
     @Override
-    public void run() {
-        begin();
-        try {
-            InputStream inputStream = classLoader.getResourceAsStream("info.toml");
-            Map<String, Object> info = Toml.read(inputStream);
-            String main = info.get("main").toString();
+    public void run() throws Exception {
+        InputStream inputStream = classLoader.getResourceAsStream("info.toml");
+        Map<String, Object> info = Toml.read(inputStream);
+        String main = info.get("main").toString();
 
-            Class mainClass = classLoader.loadClass(main);
-            if (JavaAppMain.class.isAssignableFrom(mainClass)) {
-                JavaAppMain javaAppMain = (JavaAppMain) mainClass.newInstance();
-                javaAppMain.run();
-            } else {
-                throw new RuntimeException("主类异常");
-            }
-
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            end(0);
+        Class mainClass = classLoader.loadClass(main);
+        if (JavaAppMain.class.isAssignableFrom(mainClass)) {
+            JavaAppMain javaAppMain = (JavaAppMain) mainClass.newInstance();
+            javaAppMain.run();
+        } else {
+            throw new RuntimeException("主类异常");
         }
     }
 

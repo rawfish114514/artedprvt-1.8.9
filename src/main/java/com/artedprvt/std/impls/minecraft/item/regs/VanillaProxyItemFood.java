@@ -1,5 +1,6 @@
-package com.artedprvt.std.impls.minecraft.item;
+package com.artedprvt.std.impls.minecraft.item.regs;
 
+import com.artedprvt.std.impls.minecraft.item.VanillaProxyBaseItemType;
 import com.artedprvt.std.minecraft.item.ItemStack;
 import com.artedprvt.std.minecraft.item.regs.ItemFood;
 
